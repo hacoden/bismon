@@ -885,6 +885,8 @@ objputattr_BM (objectval_tyBM * obj, const objectval_tyBM * objattr,
   else if (isgenuineval_BM (valattr))
     obj->ob_attrassoc =
       assoc_addattr_BM (obj->ob_attrassoc, objattr, valattr);
+  else
+    WEAKASSERTRET_BM (isgenuineval_BM (valattr));
 }                               /* end objputattr_BM */
 
 void
