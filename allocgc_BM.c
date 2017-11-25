@@ -96,35 +96,35 @@ gcmark_BM (struct garbcoll_stBM *gc, value_tyBM val, int depth)
     case tyClosure_BM:
       closuregcmark_BM (gc, (closure_tyBM *) val, depth);
       return;
-    case tydata_assocpairs_BM:
-    case tydata_assocbucket_BM:
+    case typayl_assocpairs_BM:
+    case typayl_assocbucket_BM:
       assocgcmark_BM (gc, (anyassoc_tyBM *) val, depth);
       return;
-    case tydata_hashsetobj_BM:
+    case typayl_hashsetobj_BM:
       hashsetgcmark_BM (gc, (struct hashsetobj_stBM *) val);
       return;
-    case tydata_listtop_BM:
+    case typayl_listtop_BM:
       listgcmark_BM (gc, (struct listtop_stBM *) val, depth);
       return;
-    case tydata_strbuffer_BM:
+    case typayl_strbuffer_BM:
       strbuffergcmark_BM (gc, (struct strbuffer_stBM *) val, depth);
       return;
-    case tydata_loader_BM:
+    case typayl_loader_BM:
       loadergcmark_BM (gc, (struct loader_stBM *) val);
       return;
-    case tydata_dumper_BM:
+    case typayl_dumper_BM:
       dumpgcmark_BM (gc, (struct dumper_stBM *) val);
       return;
-    case tydata_quasinode_BM:
+    case typayl_quasinode_BM:
       quasinodegcmark_BM (gc, (quasinode_tyBM *) val, depth);
       return;
-    case tydata_vectval_BM:
+    case typayl_vectval_BM:
       datavectgcmark_BM (gc, (struct datavectval_stBM *) val, depth);
       return;
-    case tydata_classinfo_BM:
+    case typayl_classinfo_BM:
       classinfogcmark_BM (gc, (struct classinfo_stBM *) val, depth);
       return;
-    case tydata_dict_BM:
+    case typayl_dict_BM:
       dictgcmark_BM (gc, (struct dict_stBM *) val, depth);
       return;
     default:
@@ -163,37 +163,37 @@ valgcdestroy_BM (struct garbcoll_stBM *gc, value_tyBM val)
     case tyClosure_BM:
       closuregcdestroy_BM (gc, (closure_tyBM *) val);
       return;
-    case tydata_assocpairs_BM:
+    case typayl_assocpairs_BM:
       assocpairgcdestroy_BM (gc, (struct assocpairs_stBM *) val);
       return;
-    case tydata_assocbucket_BM:
+    case typayl_assocbucket_BM:
       assocbucketgcdestroy_BM (gc, (struct assocbucket_stBM *) val);
       return;
-    case tydata_hashsetobj_BM:
+    case typayl_hashsetobj_BM:
       hashsetgcdestroy_BM (gc, (struct hashsetobj_stBM *) val);
       return;
-    case tydata_listtop_BM:
+    case typayl_listtop_BM:
       listgcdestroy_BM (gc, (struct listtop_stBM *) val);
       return;
-    case tydata_strbuffer_BM:
+    case typayl_strbuffer_BM:
       strbuffergcdestroy_BM (gc, (struct strbuffer_stBM *) val);
       return;
-    case tydata_loader_BM:
+    case typayl_loader_BM:
       loadergcdestroy_BM (gc, (struct loader_stBM *) val);
       return;
-    case tydata_vectval_BM:
+    case typayl_vectval_BM:
       datavectgcdestroy_BM (gc, (struct datavectval_stBM *) val);
       return;
-    case tydata_classinfo_BM:
+    case typayl_classinfo_BM:
       classinfogcdestroy_BM (gc, (struct classinfo_stBM *) val);
       return;
-    case tydata_dict_BM:
+    case typayl_dict_BM:
       dictgcdestroy_BM (gc, (struct dict_stBM *) val);
       return;
-    case tydata_parser_BM:
+    case typayl_parser_BM:
       parsergcdestroy_BM (gc, (struct parser_stBM *) val);
       return;
-    case tydata_dumper_BM:
+    case typayl_dumper_BM:
       dumpgcdestroy_BM (gc, (struct dumper_stBM *) val);
       return;
     default:
@@ -232,37 +232,37 @@ valgckeep_BM (struct garbcoll_stBM *gc, value_tyBM val)
     case tyClosure_BM:
       closuregckeep_BM (gc, (closure_tyBM *) val);
       return;
-    case tydata_assocpairs_BM:
+    case typayl_assocpairs_BM:
       assocpairgckeep_BM (gc, (struct assocpairs_stBM *) val);
       return;
-    case tydata_assocbucket_BM:
+    case typayl_assocbucket_BM:
       assocbucketgckeep_BM (gc, (struct assocbucket_stBM *) val);
       return;
-    case tydata_hashsetobj_BM:
+    case typayl_hashsetobj_BM:
       hashsetgckeep_BM (gc, (struct hashsetobj_stBM *) val);
       return;
-    case tydata_listtop_BM:
+    case typayl_listtop_BM:
       listgckeep_BM (gc, (struct listtop_stBM *) val);
       return;
-    case tydata_strbuffer_BM:
+    case typayl_strbuffer_BM:
       strbuffergckeep_BM (gc, (struct strbuffer_stBM *) val);
       return;
-    case tydata_vectval_BM:
+    case typayl_vectval_BM:
       datavectgckeep_BM (gc, (struct datavectval_stBM *) val);
       return;
-    case tydata_loader_BM:
+    case typayl_loader_BM:
       loadergckeep_BM (gc, (struct loader_stBM *) val);
       return;
-    case tydata_classinfo_BM:
+    case typayl_classinfo_BM:
       classinfogckeep_BM (gc, (struct classinfo_stBM *) val);
       return;
-    case tydata_dict_BM:
+    case typayl_dict_BM:
       dictgckeep_BM (gc, (struct dict_stBM *) val);
       return;
-    case tydata_parser_BM:
+    case typayl_parser_BM:
       parsergckeep_BM (gc, (struct parser_stBM *) val);
       return;
-    case tydata_dumper_BM:
+    case typayl_dumper_BM:
       dumpgckeep_BM (gc, (struct dumper_stBM *) val);
       return;
     default:
@@ -303,7 +303,7 @@ gcframemark_BM (struct garbcoll_stBM *gc, struct stackframe_stBM *stkfram,
       // this really should never happen
       if (framcnt++ > MAXSIZE_BM / 4)
         FATAL_BM ("too big framcnt=%u, curfram=%p", framcnt, stkfram);
-      if (((typedhead_tyBM *) stkfram)->htyp == tydata_StackFrame_BM)
+      if (((typedhead_tyBM *) stkfram)->htyp == typayl_StackFrame_BM)
         {
           if (stkfram->stkfram_descr)
             gcobjmark_BM (gc, stkfram->stkfram_descr);
@@ -314,7 +314,7 @@ gcframemark_BM (struct garbcoll_stBM *gc, struct stackframe_stBM *stkfram,
           for (unsigned ix = 0; ix < framsize; ix++)
             gcmark_BM (gc, stkfram->stkfram_locals[ix], depth + 1);
         }
-      else if (((typedhead_tyBM *) stkfram)->htyp == tydata_SpecialFrame_BM)
+      else if (((typedhead_tyBM *) stkfram)->htyp == typayl_SpecialFrame_BM)
         {
           struct specialframe_stBM *specfram
             = (struct specialframe_stBM *) stkfram;
@@ -354,13 +354,13 @@ fullgarbagecollection_BM (struct stackframe_stBM *stkfram)
       typedhead_tyBM *curp = allocationvec_vBM->al_ptr[ix];
       if (!curp)
         continue;
-      if (curp->htyp < type_FIRST_BM || curp->htyp > tydata_LAST_BM)
+      if (curp->htyp < type_FIRST_BM || curp->htyp > typayl_LAST_BM)
         {
           fflush (NULL);
           FATAL_BM ("corrupted allocated#%ld @%p (htyp %d)", ix, curp,
                     (int) (curp->htyp));
         };
-      assert (curp->htyp >= type_FIRST_BM && curp->htyp <= tydata_LAST_BM);
+      assert (curp->htyp >= type_FIRST_BM && curp->htyp <= typayl_LAST_BM);
       curp->hgc = CLEARMGC_BM;
       oldnbval++;
     }
@@ -387,7 +387,7 @@ fullgarbagecollection_BM (struct stackframe_stBM *stkfram)
       typedhead_tyBM *curp = allocationvec_vBM->al_ptr[ix];
       if (!curp)
         continue;
-      assert (curp->htyp >= type_FIRST_BM && curp->htyp <= tydata_LAST_BM);
+      assert (curp->htyp >= type_FIRST_BM && curp->htyp <= typayl_LAST_BM);
       if (curp->hgc == CLEARMGC_BM)
         {
           allocationvec_vBM->al_ptr[ix] = NULL;
@@ -415,7 +415,7 @@ fullgarbagecollection_BM (struct stackframe_stBM *stkfram)
       typedhead_tyBM *curp = allocationvec_vBM->al_ptr[ix];
       if (!curp)
         continue;
-      assert (curp->htyp >= type_FIRST_BM && curp->htyp <= tydata_LAST_BM);
+      assert (curp->htyp >= type_FIRST_BM && curp->htyp <= typayl_LAST_BM);
       newallvec->al_ptr[newcntall++] = curp;
       allocationvec_vBM->al_ptr[ix] = NULL;
     }

@@ -28,50 +28,50 @@ enum gctyenum_BM
   ty_SpareF_BM = 13,
   ty_SpareG_BM = 14,
   ty_SpareH_BM = 15,
-  tydata_vectval_BM,
-  tydata_assocbucket_BM,
-  tydata_assocpairs_BM,
-  tydata_hashsetobj_BM,
-  tydata_listtop_BM,
-  tydata_loader_BM,
-  tydata_parser_BM,
-  tydata_classinfo_BM,
-  tydata_strbuffer_BM,
-  tydata_dumper_BM,
-  tydata_dict_BM,
-#define tydata_LAST_BM tydata_dict_BM
-  tydata__SpareA_BM,
-  tydata__SpareB_BM,
-  tydata__SpareC_BM,
-  tydata__SpareD_BM,
-  tydata__SpareE_BM,
-  tydata__SpareF_BM,
-  tydata__SpareG_BM,
-  tydata__SpareH_BM,
-  tydata__SpareI_BM,
-  tydata__SpareJ_BM,
-  tydata__SpareK_BM,
-  tydata__SpareL_BM,
-  tydata__SpareM_BM,
-  tydata__SpareN_BM,
-  tydata__SpareO_BM,
-  tydata__SpareP_BM,
-  tydata__SpareQ_BM,
-  tydata__SpareR_BM,
-  tydata__SpareS_BM,
-  tydata__SpareT_BM,
-  tydata__SpareU_BM,
-  tydata__SpareV_BM,
-  tydata__SpareW_BM,
-  tydata__SpareX_BM,
-  tydata__SpareY_BM,
-  tydata__SpareZ_BM,
+  typayl_vectval_BM,
+  typayl_assocbucket_BM,
+  typayl_assocpairs_BM,
+  typayl_hashsetobj_BM,
+  typayl_listtop_BM,
+  typayl_loader_BM,
+  typayl_parser_BM,
+  typayl_classinfo_BM,
+  typayl_strbuffer_BM,
+  typayl_dumper_BM,
+  typayl_dict_BM,
+#define typayl_LAST_BM typayl_dict_BM
+  typayl__SpareA_BM,
+  typayl__SpareB_BM,
+  typayl__SpareC_BM,
+  typayl__SpareD_BM,
+  typayl__SpareE_BM,
+  typayl__SpareF_BM,
+  typayl__SpareG_BM,
+  typayl__SpareH_BM,
+  typayl__SpareI_BM,
+  typayl__SpareJ_BM,
+  typayl__SpareK_BM,
+  typayl__SpareL_BM,
+  typayl__SpareM_BM,
+  typayl__SpareN_BM,
+  typayl__SpareO_BM,
+  typayl__SpareP_BM,
+  typayl__SpareQ_BM,
+  typayl__SpareR_BM,
+  typayl__SpareS_BM,
+  typayl__SpareT_BM,
+  typayl__SpareU_BM,
+  typayl__SpareV_BM,
+  typayl__SpareW_BM,
+  typayl__SpareX_BM,
+  typayl__SpareY_BM,
+  typayl__SpareZ_BM,
   ///
-  tydata_quasinode_BM,          // stack allocated!
+  typayl_quasinode_BM,          // stack allocated!
   //
   //
-  tydata_SpecialFrame_BM = 0xfffe,
-  tydata_StackFrame_BM = 0xffff
+  typayl_SpecialFrame_BM = 0xfffe,
+  typayl_StackFrame_BM = 0xffff
 };
 struct typedhead_stBM
 {
@@ -157,14 +157,16 @@ typedef void anyassoc_tyBM;
 
 
 struct datavectval_stBM
-{                               /* tydata_vectval_BM */
+{                               /* typayl_vectval_BM */
   typedsize_tyBM pA;            /// rlen is allocated size, siz is used length
+  objectval_tyBM *payl_owner;
   value_tyBM vec_data[];        // of rlen elements
 };
 
-struct strbuffer_stBM           /* for tydata_strbuffer_BM, in scalar.c */
+struct strbuffer_stBM           /* for typayl_strbuffer_BM, in scalar.c */
 {
   typedhead_tyBM pA;            // rlen is maximal length
+  objectval_tyBM *payl_owner;
   int sbuf_indent;              /* current indentation */
   char *sbuf_dbuf;              /* malloc-ed buffer */
   size_t sbuf_size;             /* malloc-ed size */
@@ -173,8 +175,9 @@ struct strbuffer_stBM           /* for tydata_strbuffer_BM, in scalar.c */
 };
 
 struct assocbucket_stBM
-{                               /* tydata_assocbucket_BM */
+{                               /* typayl_assocbucket_BM */
   typedsize_tyBM pA;
+  objectval_tyBM *payl_owner;
   // rlen is allocated length of abuck_pairs,
   // size is total count of entries
   struct assocpairs_stBM *abuck_pairs[];        // of rlen assocpairs
@@ -187,20 +190,23 @@ struct assocentry_stBM
 };
 
 struct assocpairs_stBM
-{                               /* tydata_assocpairs_BM */
+{                               /* typayl_assocpairs_BM */
   typedsize_tyBM pa;            // rlen is allocated size, size is used count
+  objectval_tyBM *payl_owner;
   struct assocentry_stBM apairs_ent[];
 };
 
 struct hashsetobj_stBM
-{                               /* tydata_hashsetobj_BM */
-  typedsize_tyBM pa;            // rlen is allocated size, size is used count
+{                               /* typayl_hashsetobj_BM */
+  typedsize_tyBM pa;            // rlen is allocated size, size is used count 
+  objectval_tyBM *payl_owner;
   objectval_tyBM *hashset_objs[];
 };
 
 struct classinfo_stBM
 {
   typedhead_tyBM pA;            // rlen & hash are unused
+  objectval_tyBM *payl_owner;
   objectval_tyBM *clinf_superclass;
   anyassoc_tyBM *clinf_dictmeth;
 };
@@ -215,6 +221,7 @@ enum dumpstate_enBM
 struct dumper_stBM
 {
   typedhead_tyBM pA;            // rlen & hash are unused
+  objectval_tyBM *payl_owner;
   enum dumpstate_enBM dump_state;
   objectval_tyBM *dump_object;
   const stringval_tyBM *dump_dir;
@@ -250,8 +257,9 @@ struct listlink_stBM            ///internal, not a value
 };
 
 struct listtop_stBM
-{                               // for  tydata_listtop_BM
+{                               // for  typayl_listtop_BM
   typedhead_tyBM pa;            // rlen is number of values in the list
+  objectval_tyBM *payl_owner;
   unsigned list_nblinks;        // number of struct listlink_stBM
   struct listlink_stBM *list_first;
   struct listlink_stBM *list_last;
@@ -275,10 +283,10 @@ struct nodetree_stBM
   value_tyBM nodt_sons[];
 };
 
-typedef struct nodetree_stBM tree_tyBM; /* for tyClosure_BM or tyNode_BM or tydata_quasinode_BM */
+typedef struct nodetree_stBM tree_tyBM; /* for tyClosure_BM or tyNode_BM or typayl_quasinode_BM */
 typedef struct nodetree_stBM node_tyBM; /* for tyNode_BM */
 typedef struct nodetree_stBM closure_tyBM;      /* for tyClosure_BM */
-typedef struct nodetree_stBM quasinode_tyBM;    /* for tydata_quasinode_BM */
+typedef struct nodetree_stBM quasinode_tyBM;    /* for typayl_quasinode_BM */
 
 
 struct stackframe_stBM;
@@ -297,6 +305,7 @@ struct object_stBM              /*tyObject_BM */
   rawid_tyBM ob_id;
   uint8_t ob_space;
   double ob_mtime;
+  pthread_mutex_t ob_mtx;
   objectval_tyBM *ob_class;
   struct datavectval_stBM *ob_compvec;
   anyassoc_tyBM *ob_attrassoc;
@@ -310,7 +319,7 @@ struct object_stBM              /*tyObject_BM */
 };
 
 struct stackframe_stBM
-{                               // for tydata_StackFrame_BM, sitting on the callstack
+{                               // for typayl_StackFrame_BM, sitting on the callstack
   typedhead_tyBM stkfram_pA;    // rlen is the number of values
   struct stackframe_stBM *stkfram_prev;
   objectval_tyBM *stkfram_descr;
@@ -325,7 +334,7 @@ struct specialframe_stBM;
 struct garbcoll_stBM;
 typedef void specialframe_marker_sigBM (struct garbcoll_stBM *,
                                         struct specialframe_stBM *);
-struct specialframe_stBM        // for tydata_SpecialFrame_BM
+struct specialframe_stBM        // for typayl_SpecialFrame_BM
 {
   typedhead_tyBM pA;            // rlen is unused
   struct stackframe_stBM *specfram_prev;
@@ -336,8 +345,9 @@ struct specialframe_stBM        // for tydata_SpecialFrame_BM
 };
 
 struct loader_stBM              // malloc-ed then free-d at load time
-{                               // for tydata_loader_BM
+{                               // for typayl_loader_BM
   typedhead_tyBM pa;            // rlen is unused
+  objectval_tyBM *payl_owner;
   unsigned ld_magic;            /* always LOADERMAGIC_BM */
   unsigned ld_maxnum;           /* highest number of store*.bmon files */
   double ld_startelapsedtime;
@@ -520,9 +530,10 @@ struct parserops_stBM
   parser_decorate_start_nesting_sigBM *parsop_decorate_start_nesting_rout;
 };
 
-struct parser_stBM              /* for tydata_parser_BM */
+struct parser_stBM              /* for typayl_parser_BM */
 {
   typedhead_tyBM pa;            // rlen is unused
+  objectval_tyBM *payl_owner;
   const struct parserops_stBM *pars_ops;
   FILE *pars_file;
   const char *pars_path;
@@ -543,7 +554,8 @@ struct parser_stBM              /* for tydata_parser_BM */
 struct dict_stBM
 {
   typedhead_tyBM pa;
-  uintptr_t dict_data[8];       /* actually a std::map */
+  objectval_tyBM *payl_owner;
+  uintptr_t dict_data[8];       /* actually a C++ std::map */
 };
 
 struct garbcoll_stBM

@@ -473,7 +473,7 @@ struct dict_stBM*
 dictmake_BM(void)
 {
   struct dict_stBM*dict = //
-    (struct dict_stBM*)allocgcty_BM(tydata_dict_BM, sizeof(struct dict_stBM));
+    (struct dict_stBM*)allocgcty_BM(typayl_dict_BM, sizeof(struct dict_stBM));
   static_assert (sizeof (dict->dict_data) >= sizeof(dictmap_claBM), "too small dictdata");
   static_assert (alignof (dict->dict_data) >= alignof(dictmap_claBM), "too small dictdata");
   new(dict->dict_data) dictmap_claBM();

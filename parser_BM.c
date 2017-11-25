@@ -46,7 +46,7 @@ makeparser_of_file_BM (FILE * f)
   if (!f)
     return NULL;
   struct parser_stBM *pars =    //
-    allocgcty_BM (tydata_parser_BM, sizeof (struct parser_stBM));
+    allocgcty_BM (typayl_parser_BM, sizeof (struct parser_stBM));
   pars->pars_file = f;
   pars->pars_filemem = NULL;
   pars->pars_filesize = 0;

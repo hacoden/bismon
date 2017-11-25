@@ -16,6 +16,7 @@ static inline intptr_t getint_BM (value_tyBM v);
 static inline value_tyBM taggedint_BM (intptr_t i);
 
 static inline int valtype_BM (const value_tyBM v);
+static inline bool isgenuineval_BM (const value_tyBM v);
 static inline objectval_tyBM *valclass_BM (const value_tyBM v);
 extern const closure_tyBM *valfindmethod_BM (const value_tyBM recv,
                                              const objectval_tyBM *

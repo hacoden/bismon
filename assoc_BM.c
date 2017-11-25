@@ -12,7 +12,7 @@ assocpair_put_BM (struct assocpairs_stBM *apairs,
     {
       unsigned newsiz = TINYSIZE_BM / 3;
       newpairs =
-        allocgcty_BM (tydata_assocpairs_BM,
+        allocgcty_BM (typayl_assocpairs_BM,
                       sizeof (struct assocpairs_stBM) +
                       newsiz * sizeof (struct assocentry_stBM));
       ((typedhead_tyBM *) newpairs)->rlen = newsiz;
@@ -23,7 +23,7 @@ assocpair_put_BM (struct assocpairs_stBM *apairs,
       newpairs->apairs_ent[0].asso_val = val;
       return newpairs;
     };
-  assert (valtype_BM (apairs) == tydata_assocpairs_BM);
+  assert (valtype_BM (apairs) == typayl_assocpairs_BM);
   unsigned oldlen = ((typedhead_tyBM *) apairs)->rlen;
   unsigned oldcnt = ((typedsize_tyBM *) apairs)->size;
   assert (oldcnt <= oldlen);
@@ -44,7 +44,7 @@ assocpair_put_BM (struct assocpairs_stBM *apairs,
       if (newlen >= MAXSIZE_BM)
         FATAL_BM ("too big assocpairs %lu for oldlen %u", newlen, oldlen);
       newpairs =
-        allocgcty_BM (tydata_assocpairs_BM,
+        allocgcty_BM (typayl_assocpairs_BM,
                       sizeof (struct assocpairs_stBM) +
                       newlen * sizeof (struct assocentry_stBM));
       ((typedhead_tyBM *) newpairs)->rlen = newlen;
@@ -96,7 +96,7 @@ static unsigned
 assoc_buckix_for_key_BM (const struct assocbucket_stBM *abuck,
                          const objectval_tyBM * obkey)
 {
-  assert (valtype_BM ((const value_tyBM) abuck) == tydata_assocbucket_BM);
+  assert (valtype_BM ((const value_tyBM) abuck) == typayl_assocbucket_BM);
   assert (valtype_BM ((const value_tyBM) obkey) == tyObject_BM);
   hash_tyBM hkey = objecthash_BM (obkey);
   assert (hkey != 0);
@@ -110,8 +110,8 @@ assoc_reorganize_BM (anyassoc_tyBM ** passoc, unsigned gap)
 {
   assert (passoc != NULL);
   anyassoc_tyBM *oldassoc = *passoc;
-  bool oldassocisbucket = valtype_BM (oldassoc) == tydata_assocbucket_BM;
-  bool oldassocispairs = valtype_BM (oldassoc) == tydata_assocpairs_BM;
+  bool oldassocisbucket = valtype_BM (oldassoc) == typayl_assocbucket_BM;
+  bool oldassocispairs = valtype_BM (oldassoc) == typayl_assocpairs_BM;
   assert (!oldassoc || isassoc_BM (oldassoc));
   unsigned oldcnt = assoc_nbkeys_BM (oldassoc);
   unsigned long newish = (oldcnt + gap + oldcnt / 128 + gap / 64);
@@ -127,7 +127,7 @@ assoc_reorganize_BM (anyassoc_tyBM ** passoc, unsigned gap)
       else
         newpairsiz = TINYSIZE_BM;
       struct assocpairs_stBM *newpairs = newpairsiz ?
-        allocgcty_BM (tydata_assocpairs_BM,
+        allocgcty_BM (typayl_assocpairs_BM,
                       sizeof (struct assocpairs_stBM) +
                       newpairsiz * sizeof (struct assocentry_stBM)) : NULL;
       if (newpairs)
@@ -145,7 +145,7 @@ assoc_reorganize_BM (anyassoc_tyBM ** passoc, unsigned gap)
                 ((struct assocbucket_stBM *) oldassoc)->abuck_pairs[buckix];
               if (curbuckpair)
                 {
-                  assert (valtype_BM (curbuckpair) == tydata_assocpairs_BM);
+                  assert (valtype_BM (curbuckpair) == typayl_assocpairs_BM);
                   unsigned bucklen = ((typedhead_tyBM *) curbuckpair)->rlen;
                   for (unsigned pix = 0; pix < bucklen; pix++)
                     {
@@ -176,7 +176,7 @@ assoc_reorganize_BM (anyassoc_tyBM ** passoc, unsigned gap)
       else if (oldassocispairs)
         {
           struct assocpairs_stBM *oldpairs = oldassoc;
-          assert (valtype_BM (oldpairs) == tydata_assocpairs_BM);
+          assert (valtype_BM (oldpairs) == typayl_assocpairs_BM);
           unsigned bucklen = ((typedhead_tyBM *) oldpairs)->rlen;
           unsigned newpaircnt = 0;
           for (unsigned pix = 0; pix < bucklen; pix++)
@@ -206,7 +206,7 @@ assoc_reorganize_BM (anyassoc_tyBM ** passoc, unsigned gap)
     FATAL_BM ("new assoc wish %lu too big", newish);
   unsigned newnbuckets =
     prime_above_BM (newish / (TINYSIZE_BM - 3) + gap / 128 + 4);
-  struct assocbucket_stBM *newbuckets = allocgcty_BM (tydata_assocbucket_BM,
+  struct assocbucket_stBM *newbuckets = allocgcty_BM (typayl_assocbucket_BM,
                                                       sizeof (struct
                                                               assocbucket_stBM)
                                                       +
@@ -223,7 +223,7 @@ assoc_reorganize_BM (anyassoc_tyBM ** passoc, unsigned gap)
             ((struct assocbucket_stBM *) oldassoc)->abuck_pairs[buckix];
           if (curbuckpair)
             {
-              assert (valtype_BM (curbuckpair) == tydata_assocpairs_BM);
+              assert (valtype_BM (curbuckpair) == typayl_assocpairs_BM);
               unsigned bucklen = ((typedhead_tyBM *) curbuckpair)->rlen;
               for (unsigned pix = 0; pix < bucklen; pix++)
                 {
@@ -253,7 +253,7 @@ assoc_reorganize_BM (anyassoc_tyBM ** passoc, unsigned gap)
   else if (oldassocispairs)
     {
       struct assocpairs_stBM *oldpairs = oldassoc;
-      assert (valtype_BM (oldpairs) == tydata_assocpairs_BM);
+      assert (valtype_BM (oldpairs) == typayl_assocpairs_BM);
       unsigned bucklen = ((typedhead_tyBM *) oldpairs)->rlen;
       unsigned addedcnt = 0;
       for (unsigned pix = 0; pix < bucklen; pix++)
@@ -284,7 +284,7 @@ void
 assocpairgcdestroy_BM (struct garbcoll_stBM *gc, struct assocpairs_stBM *assp)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) assp)->htyp == tydata_assocpairs_BM);
+  assert (((typedhead_tyBM *) assp)->htyp == typayl_assocpairs_BM);
   unsigned len = ((typedhead_tyBM *) assp)->rlen;
   memset (assp, 0, sizeof (*assp) + len * sizeof (struct assocentry_stBM));
   free (assp);
@@ -295,7 +295,7 @@ void
 assocpairgckeep_BM (struct garbcoll_stBM *gc, struct assocpairs_stBM *assp)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) assp)->htyp == tydata_assocpairs_BM);
+  assert (((typedhead_tyBM *) assp)->htyp == typayl_assocpairs_BM);
   unsigned len = ((typedhead_tyBM *) assp)->rlen;
   assert (len < MAXSIZE_BM);
   gc->gc_keptbytes += sizeof (*assp) + len * sizeof (struct assocentry_stBM);
@@ -306,7 +306,7 @@ assocbucketgcdestroy_BM (struct garbcoll_stBM *gc,
                          struct assocbucket_stBM *abuck)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) abuck)->htyp == tydata_assocbucket_BM);
+  assert (((typedhead_tyBM *) abuck)->htyp == typayl_assocbucket_BM);
   unsigned nbuckets = ((typedhead_tyBM *) abuck)->rlen;
   memset (abuck, 0, sizeof (*abuck) + nbuckets * sizeof (void *));
   free (abuck);
@@ -319,7 +319,7 @@ assocbucketgckeep_BM (struct garbcoll_stBM *gc,
                       struct assocbucket_stBM *abuck)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) abuck)->htyp == tydata_assocbucket_BM);
+  assert (((typedhead_tyBM *) abuck)->htyp == typayl_assocbucket_BM);
   unsigned nbuckets = ((typedhead_tyBM *) abuck)->rlen;
   assert (nbuckets < MAXSIZE_BM);
   gc->gc_keptbytes += sizeof (*abuck) + nbuckets * sizeof (void *);
@@ -342,7 +342,7 @@ assoc_setattrs_BM (const anyassoc_tyBM * assoc)
   if (!arr)
     FATAL_BM ("out of memory for %u keys in assoc", nbkeys);
   unsigned keycnt = 0;
-  if (valtype_BM ((const value_tyBM) assoc) == tydata_assocbucket_BM)
+  if (valtype_BM ((const value_tyBM) assoc) == typayl_assocbucket_BM)
     {
       unsigned nbuckets = ((typedhead_tyBM *) assoc)->rlen;
       for (unsigned buckix = 0; buckix < nbuckets; buckix++)
@@ -351,7 +351,7 @@ assoc_setattrs_BM (const anyassoc_tyBM * assoc)
             ((struct assocbucket_stBM *) assoc)->abuck_pairs[buckix];
           if (curbuckpair)
             {
-              assert (valtype_BM (curbuckpair) == tydata_assocpairs_BM);
+              assert (valtype_BM (curbuckpair) == typayl_assocpairs_BM);
               unsigned bucklen = ((typedhead_tyBM *) curbuckpair)->rlen;
               for (unsigned pix = 0; pix < bucklen; pix++)
                 {
@@ -367,7 +367,7 @@ assoc_setattrs_BM (const anyassoc_tyBM * assoc)
             }
         }
     }
-  else if (valtype_BM ((const value_tyBM) assoc) == tydata_assocpairs_BM)
+  else if (valtype_BM ((const value_tyBM) assoc) == typayl_assocpairs_BM)
     {
       const struct assocpairs_stBM *curpairs = assoc;
       unsigned bucklen = ((typedhead_tyBM *) curpairs)->rlen;
@@ -402,16 +402,16 @@ assoc_getattr_BM (const anyassoc_tyBM * assoc, const objectval_tyBM * obattr)
   if (valtype_BM ((const value_tyBM) obattr) != tyObject_BM)
     return NULL;
   const struct assocpairs_stBM *curpairs = NULL;
-  if (valtype_BM ((const value_tyBM) assoc) == tydata_assocbucket_BM)
+  if (valtype_BM ((const value_tyBM) assoc) == typayl_assocbucket_BM)
     {
       unsigned buckix = assoc_buckix_for_key_BM (assoc, obattr);
       curpairs =
         ((const struct assocbucket_stBM *) assoc)->abuck_pairs[buckix];
       assert (!curpairs
               || valtype_BM ((const value_tyBM) curpairs) ==
-              tydata_assocpairs_BM);
+              typayl_assocpairs_BM);
     }
-  else if (valtype_BM ((const value_tyBM) assoc) == tydata_assocpairs_BM)
+  else if (valtype_BM ((const value_tyBM) assoc) == typayl_assocpairs_BM)
     curpairs = assoc;
   if (!curpairs)
     return NULL;
@@ -430,7 +430,8 @@ anyassoc_tyBM *
 assoc_addattr_BM (anyassoc_tyBM * assoc,
                   const objectval_tyBM * obattr, value_tyBM val)
 {
-  if (valtype_BM ((const value_tyBM) obattr) != tyObject_BM || !val)
+  if (valtype_BM ((const value_tyBM) obattr) != tyObject_BM
+      || !isgenuineval_BM (val))
     {
       if (!isassoc_BM (assoc))
         return NULL;
@@ -441,7 +442,7 @@ assoc_addattr_BM (anyassoc_tyBM * assoc,
       return assocpair_put_BM (NULL, obattr, val);
     }
   unsigned nbkeys = assoc_nbkeys_BM (assoc);
-  if (valtype_BM ((const value_tyBM) assoc) == tydata_assocpairs_BM)
+  if (valtype_BM ((const value_tyBM) assoc) == typayl_assocpairs_BM)
     {
       struct assocpairs_stBM *curpairs = assoc;
       if (nbkeys < TINYSIZE_BM)
@@ -450,25 +451,25 @@ assoc_addattr_BM (anyassoc_tyBM * assoc,
         };
       assoc_reorganize_BM (&assoc, 2 + nbkeys / 8);
     };
-  if (valtype_BM ((const value_tyBM) assoc) == tydata_assocbucket_BM)
+  if (valtype_BM ((const value_tyBM) assoc) == typayl_assocbucket_BM)
     {
       struct assocbucket_stBM *abuck = (struct assocbucket_stBM *) assoc;
       unsigned nbbuckets = ((typedhead_tyBM *) abuck)->rlen;
       if (nbkeys > nbbuckets * TINYSIZE_BM)
         assoc_reorganize_BM (&assoc, 3 + nbkeys / 64);
     };
-  if (valtype_BM ((const value_tyBM) assoc) == tydata_assocpairs_BM)
+  if (valtype_BM ((const value_tyBM) assoc) == typayl_assocpairs_BM)
     {
       return assocpair_put_BM ((struct assocpairs_stBM *) assoc, obattr, val);
     }
-  else if (valtype_BM ((const value_tyBM) assoc) == tydata_assocbucket_BM)
+  else if (valtype_BM ((const value_tyBM) assoc) == typayl_assocbucket_BM)
     {
       unsigned buckix = assoc_buckix_for_key_BM (assoc, obattr);
       struct assocpairs_stBM *curpairs =
         ((const struct assocbucket_stBM *) assoc)->abuck_pairs[buckix];
       assert (!curpairs
               || valtype_BM ((const value_tyBM) curpairs) ==
-              tydata_assocpairs_BM);
+              typayl_assocpairs_BM);
       unsigned oldpaircnt =
         curpairs ? ((typedsize_tyBM *) curpairs)->size : 0;
       struct assocpairs_stBM *newpairs =
@@ -498,20 +499,20 @@ assoc_removeattr_BM (anyassoc_tyBM * assoc, const objectval_tyBM * obattr)
   if (valtype_BM ((const value_tyBM) obattr) != tyObject_BM)
     return assoc;
   unsigned nbkeys = assoc_nbkeys_BM (assoc);
-  if (valtype_BM ((const value_tyBM) assoc) == tydata_assocbucket_BM)
+  if (valtype_BM ((const value_tyBM) assoc) == typayl_assocbucket_BM)
     {
       struct assocbucket_stBM *abuck = (struct assocbucket_stBM *) assoc;
       unsigned nbbuckets = ((typedhead_tyBM *) abuck)->rlen;
       if (nbkeys < (nbbuckets * TINYSIZE_BM) / 2)
         assoc_reorganize_BM (&assoc, 2);
-      if (valtype_BM ((const value_tyBM) assoc) == tydata_assocbucket_BM)
+      if (valtype_BM ((const value_tyBM) assoc) == typayl_assocbucket_BM)
         {
           unsigned buckix = assoc_buckix_for_key_BM (assoc, obattr);
           struct assocpairs_stBM *curpairs =
             ((const struct assocbucket_stBM *) assoc)->abuck_pairs[buckix];
           assert (!curpairs
                   || valtype_BM ((const value_tyBM) curpairs) ==
-                  tydata_assocpairs_BM);
+                  typayl_assocpairs_BM);
           if (curpairs)
             {
               unsigned nbent = ((typedhead_tyBM *) curpairs)->rlen;
@@ -531,7 +532,7 @@ assoc_removeattr_BM (anyassoc_tyBM * assoc, const objectval_tyBM * obattr)
             }
         }
     }
-  if (valtype_BM ((const value_tyBM) assoc) == tydata_assocpairs_BM)
+  if (valtype_BM ((const value_tyBM) assoc) == typayl_assocpairs_BM)
     {
       struct assocpairs_stBM *curpairs = assoc;
       unsigned nbent = ((typedhead_tyBM *) curpairs)->rlen;
@@ -540,7 +541,7 @@ assoc_removeattr_BM (anyassoc_tyBM * assoc, const objectval_tyBM * obattr)
         {
           assoc_reorganize_BM (&assoc, 1);
           assert (valtype_BM ((const value_tyBM) assoc) ==
-                  tydata_assocpairs_BM);
+                  typayl_assocpairs_BM);
           curpairs = assoc;
         }
       nbent = ((typedhead_tyBM *) curpairs)->rlen;
@@ -571,7 +572,7 @@ assocgcmark_BM (struct garbcoll_stBM *gc, anyassoc_tyBM * assoc, int depth)
     return;
   ((typedhead_tyBM *) assoc)->hgc = MARKGC_BM;
   gc->gc_nbmarks++;
-  if (valtype_BM ((const value_tyBM) assoc) == tydata_assocbucket_BM)
+  if (valtype_BM ((const value_tyBM) assoc) == typayl_assocbucket_BM)
     {
       unsigned nbuckets = ((typedhead_tyBM *) assoc)->rlen;
       for (unsigned buckix = 0; buckix < nbuckets; buckix++)
@@ -580,7 +581,7 @@ assocgcmark_BM (struct garbcoll_stBM *gc, anyassoc_tyBM * assoc, int depth)
             ((struct assocbucket_stBM *) assoc)->abuck_pairs[buckix];
           if (curbuckpair)
             {
-              assert (valtype_BM (curbuckpair) == tydata_assocpairs_BM);
+              assert (valtype_BM (curbuckpair) == typayl_assocpairs_BM);
               uint8_t oldbuckmark = ((typedhead_tyBM *) curbuckpair)->hgc;
               if (oldbuckmark)
                 continue;
@@ -603,7 +604,7 @@ assocgcmark_BM (struct garbcoll_stBM *gc, anyassoc_tyBM * assoc, int depth)
             }
         }
     }
-  else if (valtype_BM ((const value_tyBM) assoc) == tydata_assocpairs_BM)
+  else if (valtype_BM ((const value_tyBM) assoc) == typayl_assocpairs_BM)
     {
       const struct assocpairs_stBM *curpairs = assoc;
       unsigned bucklen = ((typedhead_tyBM *) curpairs)->rlen;

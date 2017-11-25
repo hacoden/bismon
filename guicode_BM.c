@@ -841,7 +841,7 @@ ROUTINEOBJNAME_BM (_4IshjBIv6ol_5korHKUIjeK)    //
       return (const value_tyBM) _.objbrows;
     }
   int tyval = valtype_BM (_.curval);
-  WEAKASSERT_BM (tyval == tydata_hashsetobj_BM);
+  WEAKASSERT_BM (tyval == typayl_hashsetobj_BM);
   _.setk = hashsetobj_to_set_BM (_.curval);
   gtk_text_buffer_insert_with_tags (brobuf,
                                     &browserit_BM, "|hset:|", -1,
@@ -904,7 +904,7 @@ ROUTINEOBJNAME_BM (_5KWAjUEGiiq_2B6rbvkCcgc)    //
                                             miscomm_brotag_BM, NULL);
         }
         break;
-      case tydata_vectval_BM:
+      case typayl_vectval_BM:
         {
           const struct datavectval_stBM *dvec = _.curval;
           snprintf (vcommbuf, sizeof (vcommbuf), "|xvector l:%u| ",
@@ -914,8 +914,8 @@ ROUTINEOBJNAME_BM (_5KWAjUEGiiq_2B6rbvkCcgc)    //
                                             miscomm_brotag_BM, NULL);
         }
         break;
-      case tydata_assocbucket_BM:
-      case tydata_assocpairs_BM:
+      case typayl_assocbucket_BM:
+      case typayl_assocpairs_BM:
         {
           const anyassoc_tyBM *assoc = assoccast_BM (_.curval);
           unsigned nbkeys = assoc_nbkeys_BM (assoc);
@@ -952,7 +952,7 @@ ROUTINEOBJNAME_BM (_5KWAjUEGiiq_2B6rbvkCcgc)    //
             free (arr), arr = NULL;
         }
         break;
-      case tydata_hashsetobj_BM:
+      case typayl_hashsetobj_BM:
         {
           const struct hashsetobj_stBM *hset = hashsetobjcast_BM (_.curval);
           snprintf (vcommbuf, sizeof (vcommbuf), "|xhset card:%u| ",
@@ -965,7 +965,7 @@ ROUTINEOBJNAME_BM (_5KWAjUEGiiq_2B6rbvkCcgc)    //
                            (struct stackframe_stBM *) &_, depth, 1);
         }
         break;
-      case tydata_listtop_BM:
+      case typayl_listtop_BM:
         {
           const struct listtop_stBM *lis = _.curval;
           snprintf (vcommbuf, sizeof (vcommbuf), "|xlist l:%u| ",
@@ -975,28 +975,28 @@ ROUTINEOBJNAME_BM (_5KWAjUEGiiq_2B6rbvkCcgc)    //
                                             miscomm_brotag_BM, NULL);
         }
         break;
-      case tydata_loader_BM:
+      case typayl_loader_BM:
         {
           gtk_text_buffer_insert_with_tags (brobuf,
                                             &browserit_BM, "|xloader|", -1,
                                             miscomm_brotag_BM, NULL);
         }
         break;
-      case tydata_parser_BM:
+      case typayl_parser_BM:
         {
           gtk_text_buffer_insert_with_tags (brobuf,
                                             &browserit_BM, "|xparser|", -1,
                                             miscomm_brotag_BM, NULL);
         }
         break;
-      case tydata_classinfo_BM:
+      case typayl_classinfo_BM:
         {
           gtk_text_buffer_insert_with_tags (brobuf,
                                             &browserit_BM, "|xclassinfo|", -1,
                                             miscomm_brotag_BM, NULL);
         }
         break;
-      case tydata_strbuffer_BM:
+      case typayl_strbuffer_BM:
         {
           const struct strbuffer_stBM *sbuf = _.curval;
           snprintf (vcommbuf, sizeof (vcommbuf), "|xsbuf l:%u| ",
@@ -1006,14 +1006,14 @@ ROUTINEOBJNAME_BM (_5KWAjUEGiiq_2B6rbvkCcgc)    //
                                             miscomm_brotag_BM, NULL);
         }
         break;
-      case tydata_dumper_BM:
+      case typayl_dumper_BM:
         {
           gtk_text_buffer_insert_with_tags (brobuf,
                                             &browserit_BM, "|xdumper|", -1,
                                             miscomm_brotag_BM, NULL);
         }
         break;
-      case tydata_dict_BM:
+      case typayl_dict_BM:
         {
           const struct dict_stBM *dic = _.curval;
           snprintf (vcommbuf, sizeof (vcommbuf), "|xdict s.%u| ",

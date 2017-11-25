@@ -58,7 +58,7 @@
   { struct stackframe_stBM __frame; __VA_ARGS__; } _ =          \
     { .__frame = {.stkfram_pA=                                  \
                   (typedhead_tyBM)                              \
-                  {.htyp= tydata_StackFrame_BM,                 \
+                  {.htyp= typayl_StackFrame_BM,                 \
                    .hgc=0,                                      \
                    .rlen=(sizeof(_)                             \
                           - offsetof(struct stackframe_stBM,    \
@@ -72,7 +72,7 @@
 #define LOCALQNODESIZED_BM(Qnam,Conn,Siz) struct {			\
     struct nodetree_stBM __ntree; value_tyBM qsons[Siz]; } Qnam =	\
       { .__ntree = { .pA = { .pA					\
-			     = { .htyp= tydata_quasinode_BM,		\
+			     = { .htyp= typayl_quasinode_BM,		\
 				 .hgc=0, .hash=0 }, .size = (Siz) },	\
 		     .nodt_conn= (Conn) }, .qsons= {} }
 
@@ -80,7 +80,7 @@
   struct nodetree_stBM __ftree; __VA_ARGS__; } Qnam =			\
       { .__ftree = { .pA						\
 		     = { .pA						\
-			 = { .htyp= tydata_quasinode_BM,		\
+			 = { .htyp= typayl_quasinode_BM,		\
 			     .hgc=0, .hash=0 },				\
 			 .size =					\
 			  ((sizeof(Qnam)-offsetof(tree_tyBM,nodt_sons)) \

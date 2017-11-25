@@ -7,7 +7,7 @@ void
 loadergcmark_BM (struct garbcoll_stBM *gc, struct loader_stBM *ld)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM ((const value_tyBM) ld) == tydata_loader_BM);
+  assert (valtype_BM ((const value_tyBM) ld) == typayl_loader_BM);
   assert (ld->ld_magic == LOADERMAGIC_BM);
   gcmark_BM (gc, ld->ld_objhset, 0);
   gcmark_BM (gc, ld->ld_modhset, 0);
@@ -18,7 +18,7 @@ void
 loadergcdestroy_BM (struct garbcoll_stBM *gc, struct loader_stBM *ld)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM ((const value_tyBM) ld) == tydata_loader_BM);
+  assert (valtype_BM ((const value_tyBM) ld) == typayl_loader_BM);
   assert (ld->ld_magic == LOADERMAGIC_BM);
   fprintf (stderr, "loadergcdestroy_BM called ld @%p\n", (void *) ld);
   memset (ld, 0, sizeof (*ld));
@@ -30,7 +30,7 @@ void
 loadergckeep_BM (struct garbcoll_stBM *gc, struct loader_stBM *ld)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM ((const value_tyBM) ld) == tydata_loader_BM);
+  assert (valtype_BM ((const value_tyBM) ld) == typayl_loader_BM);
   assert (ld->ld_magic == LOADERMAGIC_BM);
   fprintf (stderr, "loadergckeep_BM called ld @%p\n", (void *) ld);
   gc->gc_keptbytes += sizeof (struct loader_stBM);
@@ -108,8 +108,8 @@ load_initial_BM (const char *ldirpath)
     FATAL_BM ("too many store files %d to load", maxnum);
   printf ("got %d store files in loaded directory %s\n", nbfiles, ldirpath);
   struct loader_stBM *ld =      //
-    allocgcty_BM (tydata_loader_BM, sizeof (struct loader_stBM));
-  // ((typedhead_tyBM *) ld)->htyp = tydata_loader_BM;
+    allocgcty_BM (typayl_loader_BM, sizeof (struct loader_stBM));
+  // ((typedhead_tyBM *) ld)->htyp = typayl_loader_BM;
   // ((typedhead_tyBM *) ld)->hgc = 0;
   ((typedhead_tyBM *) ld)->rlen = 0;
   ld->ld_magic = LOADERMAGIC_BM;

@@ -341,11 +341,11 @@ setgcmark_BM (struct garbcoll_stBM *gc, setval_tyBM * set)
 struct datavectval_stBM *
 datavect_grow_BM (struct datavectval_stBM *dvec, unsigned gap)
 {
-  if (valtype_BM ((const value_tyBM) dvec) != tydata_vectval_BM)
+  if (valtype_BM ((const value_tyBM) dvec) != typayl_vectval_BM)
     {
       unsigned siz = prime_above_BM (gap);
       dvec =
-        allocgcty_BM (tydata_vectval_BM,
+        allocgcty_BM (typayl_vectval_BM,
                       sizeof (struct datavectval_stBM)
                       + siz * sizeof (void *));
       ((typedhead_tyBM *) dvec)->rlen = siz;
@@ -363,7 +363,7 @@ datavect_grow_BM (struct datavectval_stBM *dvec, unsigned gap)
     sizeof (struct datavectval_stBM) + siz * sizeof (void *);
   assert (vecsiz < ((4L * MAXSIZE_BM / 3) + 5L) * sizeof (void *));
   struct datavectval_stBM *newdvec =    //
-    allocgcty_BM (tydata_vectval_BM, vecsiz);
+    allocgcty_BM (typayl_vectval_BM, vecsiz);
   ((typedhead_tyBM *) newdvec)->rlen = siz;
   ((typedsize_tyBM *) newdvec)->size = oldcnt + gap;
   memcpy (newdvec->vec_data, dvec->vec_data, oldcnt * sizeof (void *));
@@ -374,7 +374,7 @@ void
 datavectgcdestroy_BM (struct garbcoll_stBM *gc, struct datavectval_stBM *dvec)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) dvec)->htyp == tydata_vectval_BM);
+  assert (((typedhead_tyBM *) dvec)->htyp == typayl_vectval_BM);
   unsigned siz = ((typedhead_tyBM *) dvec)->rlen;
   assert (siz < MAXSIZE_BM);
   unsigned long vecsiz =
@@ -390,7 +390,7 @@ void
 datavectgckeep_BM (struct garbcoll_stBM *gc, struct datavectval_stBM *dvec)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) dvec)->htyp == tydata_vectval_BM);
+  assert (((typedhead_tyBM *) dvec)->htyp == typayl_vectval_BM);
   unsigned siz = ((typedhead_tyBM *) dvec)->rlen;
   assert (siz < MAXSIZE_BM);
   unsigned long vecsiz =
@@ -403,11 +403,11 @@ datavectgckeep_BM (struct garbcoll_stBM *gc, struct datavectval_stBM *dvec)
 struct datavectval_stBM *
 datavect_reserve_BM (struct datavectval_stBM *dvec, unsigned gap)
 {
-  if (valtype_BM ((const value_tyBM) dvec) != tydata_vectval_BM)
+  if (valtype_BM ((const value_tyBM) dvec) != typayl_vectval_BM)
     {
       unsigned siz = prime_above_BM (gap);
       dvec =
-        allocgcty_BM (tydata_vectval_BM,
+        allocgcty_BM (typayl_vectval_BM,
                       sizeof (struct datavectval_stBM)
                       + siz * sizeof (void *));
       ((typedhead_tyBM *) dvec)->rlen = siz;
@@ -423,7 +423,7 @@ datavect_reserve_BM (struct datavectval_stBM *dvec, unsigned gap)
   unsigned long vecsiz = sizeof (*dvec) + siz * sizeof (void *);
   assert (vecsiz < ((4L * MAXSIZE_BM / 3) + 5L) * sizeof (void *));
   struct datavectval_stBM *newdvec =    //
-    allocgcty_BM (tydata_vectval_BM, vecsiz);
+    allocgcty_BM (typayl_vectval_BM, vecsiz);
   ((typedhead_tyBM *) newdvec)->rlen = siz;
   ((typedsize_tyBM *) newdvec)->size = oldcnt;
   memcpy (newdvec->vec_data, dvec->vec_data, oldcnt * sizeof (void *));
@@ -435,11 +435,11 @@ datavect_reserve_BM (struct datavectval_stBM *dvec, unsigned gap)
 struct datavectval_stBM *
 datavect_append_BM (struct datavectval_stBM *dvec, value_tyBM val)
 {
-  if (valtype_BM ((const value_tyBM) dvec) != tydata_vectval_BM)
+  if (valtype_BM ((const value_tyBM) dvec) != typayl_vectval_BM)
     {
       unsigned siz = TINYSIZE_BM / 2;
       dvec =
-        allocgcty_BM (tydata_vectval_BM,
+        allocgcty_BM (typayl_vectval_BM,
                       sizeof (struct datavectval_stBM)
                       + siz * sizeof (void *));
       ((typedhead_tyBM *) dvec)->rlen = siz;
@@ -447,6 +447,8 @@ datavect_append_BM (struct datavectval_stBM *dvec, value_tyBM val)
       dvec->vec_data[0] = val;
       return dvec;
     }
+  if (!isgenuineval_BM (val))
+    val = NULL;
   unsigned oldlen = ((typedhead_tyBM *) dvec)->rlen;
   unsigned oldcnt = ((typedsize_tyBM *) dvec)->size;
   if (oldcnt + 1 <= oldlen)
@@ -459,7 +461,7 @@ datavect_append_BM (struct datavectval_stBM *dvec, value_tyBM val)
     FATAL_BM ("datavect_append too big %u", oldlen);
   unsigned newsiz = prime_above_BM (oldcnt + oldcnt / 5 + 4);
   struct datavectval_stBM *newdvec =    //
-    allocgcty_BM (tydata_vectval_BM,
+    allocgcty_BM (typayl_vectval_BM,
                   sizeof (struct datavectval_stBM)
                   + newsiz * sizeof (void *));
   ((typedhead_tyBM *) newdvec)->rlen = newsiz;
@@ -474,7 +476,7 @@ struct datavectval_stBM *
 datavect_insert_BM (struct datavectval_stBM *dvec,
                     int rk, value_tyBM * valarr, unsigned len)
 {
-  if (valtype_BM ((const value_tyBM) dvec) != tydata_vectval_BM)
+  if (valtype_BM ((const value_tyBM) dvec) != typayl_vectval_BM)
     return NULL;
   if (len == 0 || valarr == NULL)
     return dvec;
@@ -491,12 +493,18 @@ datavect_insert_BM (struct datavectval_stBM *dvec,
       unsigned newsiz =
         prime_above_BM (oldcnt + len + oldcnt / 16 + len / 32 + 1);
       struct datavectval_stBM *newdvec =        //
-        allocgcty_BM (tydata_vectval_BM,
+        allocgcty_BM (typayl_vectval_BM,
                       sizeof (struct datavectval_stBM)
                       + newsiz * sizeof (void *));
       ((typedhead_tyBM *) newdvec)->rlen = newsiz;
       memcpy (newdvec->vec_data, dvec->vec_data, rk * sizeof (void *));
-      memcpy (newdvec->vec_data + rk, valarr, len * sizeof (void *));
+      for (unsigned ix = 0; ix < len; ix++)
+        {
+          value_tyBM curval = valarr[ix];
+          if (!isgenuineval_BM (curval))
+            curval = NULL;
+          newdvec->vec_data[rk + ix] = curval;
+        };
       memcpy (newdvec->vec_data + rk + len, dvec->vec_data + rk,
               (oldcnt - rk) * sizeof (void *));
       ((typedsize_tyBM *) newdvec)->size = oldcnt + len;
@@ -506,6 +514,13 @@ datavect_insert_BM (struct datavectval_stBM *dvec,
     {
       memmove (dvec->vec_data + rk + oldcnt, dvec->vec_data + rk,
                (oldcnt - rk) * sizeof (void *));
+      for (unsigned ix = 0; ix < len; ix++)
+        {
+          value_tyBM curval = valarr[ix];
+          if (!isgenuineval_BM (curval))
+            curval = NULL;
+          dvec->vec_data[rk + ix] = curval;
+        };
       memcpy (dvec->vec_data + rk, valarr, len * sizeof (void *));
       ((typedsize_tyBM *) dvec)->size = oldcnt + len;
       return dvec;
@@ -516,7 +531,7 @@ datavect_insert_BM (struct datavectval_stBM *dvec,
 struct datavectval_stBM *
 datavect_remove_BM (struct datavectval_stBM *dvec, int rk, unsigned len)
 {
-  if (valtype_BM ((const value_tyBM) dvec) != tydata_vectval_BM)
+  if (valtype_BM ((const value_tyBM) dvec) != typayl_vectval_BM)
     return NULL;
   if (len == 0)
     return dvec;
@@ -534,7 +549,7 @@ datavect_remove_BM (struct datavectval_stBM *dvec, int rk, unsigned len)
       if (newsiz < oldlen)
         {
           struct datavectval_stBM *newdvec =    //
-            allocgcty_BM (tydata_vectval_BM,
+            allocgcty_BM (typayl_vectval_BM,
                           sizeof (struct datavectval_stBM)
                           + newsiz * sizeof (void *));
           ((typedhead_tyBM *) newdvec)->rlen = newsiz;
@@ -556,7 +571,7 @@ const node_tyBM *
 datavect_to_node_BM (struct datavectval_stBM *dvec,
                      const objectval_tyBM * obconn)
 {
-  if (valtype_BM ((const value_tyBM) dvec) != tydata_vectval_BM)
+  if (valtype_BM ((const value_tyBM) dvec) != typayl_vectval_BM)
     return NULL;
   if (!isobject_BM ((const value_tyBM) obconn))
     return NULL;
@@ -571,7 +586,7 @@ datavectgcmark_BM (struct garbcoll_stBM *gc,
                    const struct datavectval_stBM *dvec, int depth)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM ((const value_tyBM) dvec) == tydata_vectval_BM);
+  assert (valtype_BM ((const value_tyBM) dvec) == typayl_vectval_BM);
   uint8_t oldmark = ((typedhead_tyBM *) dvec)->hgc;
   if (oldmark)
     return;

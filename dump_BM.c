@@ -5,7 +5,7 @@ void
 dumpgcmark_BM (struct garbcoll_stBM *gc, struct dumper_stBM *du)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) du)->htyp == tydata_dumper_BM);
+  assert (((typedhead_tyBM *) du)->htyp == typayl_dumper_BM);
   gcmark_BM (gc, (value_tyBM) du->dump_object, 0);
   gcmark_BM (gc, (value_tyBM) du->dump_dir, 0);
   gcmark_BM (gc, (value_tyBM) du->dump_hset, 0);
@@ -17,20 +17,20 @@ void
 dumpgcdestroy_BM (struct garbcoll_stBM *gc, struct dumper_stBM *du)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) du)->htyp == tydata_dumper_BM);
+  assert (((typedhead_tyBM *) du)->htyp == typayl_dumper_BM);
 }                               /* end dumpgcdestroy_BM */
 
 void
 dumpgckeep_BM (struct garbcoll_stBM *gc, struct dumper_stBM *du)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) du)->htyp == tydata_dumper_BM);
+  assert (((typedhead_tyBM *) du)->htyp == typayl_dumper_BM);
 }                               /* end dumpgckeep_BM */
 
 bool
 dumpobjisdumpable_BM (struct dumper_stBM *du, const objectval_tyBM * obj)
 {
-  if (valtype_BM ((const value_tyBM) du) != tydata_dumper_BM)
+  if (valtype_BM ((const value_tyBM) du) != typayl_dumper_BM)
     return false;
   if (!isobject_BM ((const value_tyBM) obj))
     return false;
@@ -40,7 +40,7 @@ dumpobjisdumpable_BM (struct dumper_stBM *du, const objectval_tyBM * obj)
 bool
 dumpvalisdumpable_BM (struct dumper_stBM * du, const value_tyBM val)
 {
-  if (valtype_BM ((const value_tyBM) du) != tydata_dumper_BM)
+  if (valtype_BM ((const value_tyBM) du) != typayl_dumper_BM)
     return false;
   if (val && !isobject_BM (val))
     return true;
@@ -50,7 +50,7 @@ dumpvalisdumpable_BM (struct dumper_stBM * du, const value_tyBM val)
 void
 dumpscanobj_BM (struct dumper_stBM *du, const objectval_tyBM * obj)
 {
-  if (valtype_BM ((const value_tyBM) du) != tydata_dumper_BM)
+  if (valtype_BM ((const value_tyBM) du) != typayl_dumper_BM)
     return;
   if (!isobject_BM ((const value_tyBM) obj))
     return;
@@ -74,7 +74,7 @@ dumpscanobj_BM (struct dumper_stBM *du, const objectval_tyBM * obj)
 void
 dumpscanvalue_BM (struct dumper_stBM *du, const value_tyBM val, int depth)
 {
-  if (valtype_BM ((const value_tyBM) du) != tydata_dumper_BM)
+  if (valtype_BM ((const value_tyBM) du) != typayl_dumper_BM)
     return;
   if (depth > MAXDEPTHGC_BM)
     FATAL_BM ("too deep depth %d", depth);
@@ -133,7 +133,7 @@ dump_BM (const char *dirname, struct stackframe_stBM *stkf)
   if (g_mkdir_with_parents (dirname, 0750))
     FATAL_BM ("failed to mkdir with parents %s", dirname);
   _.dudirv = makestring_BM (dirname);
-  _.curdu = allocgcty_BM (tydata_dumper_BM, sizeof (struct dumper_stBM));
+  _.curdu = allocgcty_BM (typayl_dumper_BM, sizeof (struct dumper_stBM));
   _.curdu->dump_state = dum_scan;
   _.curdu->dump_dir = _.dudirv;
   _.curdu->dump_hset = hashsetobj_grow_BM (NULL, 256);
@@ -172,7 +172,7 @@ dump_run_todo_BM (struct dumper_stBM *du, struct stackframe_stBM *stkf)
                  struct dumper_stBM *curdu;
                  const closure_tyBM * curclo;
     );
-  assert (valtype_BM ((const value_tyBM) du) == tydata_dumper_BM);
+  assert (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
   _.curdu = du;
   while (listlength_BM (du->dump_todolist) > 0)
     {
@@ -200,7 +200,7 @@ dump_scan_object_content_BM (struct dumper_stBM *du,
                  const objectval_tyBM * curattrobj;
                  value_tyBM curval;
     );
-  assert (valtype_BM ((const value_tyBM) du) == tydata_dumper_BM);
+  assert (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
   assert (valtype_BM ((const value_tyBM) objarg) == tyObject_BM);
   _.curdu = du;
   _.curobj = objarg;
@@ -258,7 +258,7 @@ dump_scan_pass_BM (struct dumper_stBM *du, struct stackframe_stBM *stkf)
                  const objectval_tyBM * curobj;
     );
   _.curdu = du;
-  assert (valtype_BM ((const value_tyBM) du) == tydata_dumper_BM);
+  assert (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
   _.predefset = setpredefinedobjects_BM ();
   _.globalset = setglobalobjects_BM ();
   dumpscanvalue_BM (du, (value_tyBM) _.predefset, 0);
@@ -290,11 +290,11 @@ dump_emit_pass_BM (struct dumper_stBM *du, struct stackframe_stBM *stkf)
                  struct hashsetobj_stBM *hsetspace[LASTSPACE__BM];
     );
   _.curdu = du;
-  assert (valtype_BM ((const value_tyBM) du) == tydata_dumper_BM);
+  assert (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
   for (unsigned spix = PredefSp_BM; spix < LASTSPACE__BM; spix++)
     _.hsetspace[spix] = hashsetobj_grow_BM (NULL, 80);
   struct hashsetobj_stBM *dhset = du->dump_hset;
-  assert (valtype_BM ((const value_tyBM) dhset) == tydata_hashsetobj_BM);
+  assert (valtype_BM ((const value_tyBM) dhset) == typayl_hashsetobj_BM);
   {
     unsigned alsiz = ((typedhead_tyBM *) dhset)->rlen;
     for (unsigned ix = 0; ix < alsiz; ix++)
@@ -342,8 +342,8 @@ dump_emit_space_BM (struct dumper_stBM *du, unsigned spix,
                     struct hashsetobj_stBM *hspa,
                     struct stackframe_stBM *stkf)
 {
-  assert (valtype_BM ((const value_tyBM) du) == tydata_dumper_BM);
-  assert (valtype_BM ((const value_tyBM) hspa) == tydata_hashsetobj_BM);
+  assert (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
+  assert (valtype_BM ((const value_tyBM) hspa) == typayl_hashsetobj_BM);
   assert (spix >= PredefSp_BM && spix < LASTSPACE__BM);
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  struct dumper_stBM *curdu;     //
@@ -453,7 +453,7 @@ dump_emit_object_BM (struct dumper_stBM *du, const objectval_tyBM * curobj,
                      FILE * spfil, struct stackframe_stBM *stkf)
 {
 
-  assert (valtype_BM ((const value_tyBM) du) == tydata_dumper_BM);
+  assert (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
   assert (valtype_BM ((const value_tyBM) curobj) == tyObject_BM);
   assert (spfil != NULL);
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,

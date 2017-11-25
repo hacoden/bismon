@@ -300,7 +300,7 @@ strbuffergcmark_BM (struct garbcoll_stBM *gc, struct strbuffer_stBM *sbuf,
                     int depth __attribute__ ((unused)))
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) sbuf)->htyp == tydata_strbuffer_BM);
+  assert (((typedhead_tyBM *) sbuf)->htyp == typayl_strbuffer_BM);
   assert (sbuf->sbuf_dbuf);
   assert (sbuf->sbuf_size > 0);
   assert (sbuf->sbuf_curp >= sbuf->sbuf_dbuf
@@ -312,7 +312,7 @@ void
 strbuffergcdestroy_BM (struct garbcoll_stBM *gc, struct strbuffer_stBM *sbuf)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) sbuf)->htyp == tydata_strbuffer_BM);
+  assert (((typedhead_tyBM *) sbuf)->htyp == typayl_strbuffer_BM);
   assert (sbuf->sbuf_dbuf);
   size_t siz = sbuf->sbuf_size;
   assert (siz > 0 && siz < MAXSIZE_BM);
@@ -331,7 +331,7 @@ void
 strbuffergckeep_BM (struct garbcoll_stBM *gc, struct strbuffer_stBM *sbuf)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) sbuf)->htyp == tydata_strbuffer_BM);
+  assert (((typedhead_tyBM *) sbuf)->htyp == typayl_strbuffer_BM);
   assert (sbuf->sbuf_dbuf);
   size_t siz = sbuf->sbuf_size;
   assert (siz > 0 && siz < MAXSIZE_BM);
@@ -355,7 +355,7 @@ strbuffermake_BM (unsigned maxsize)
     FATAL_BM ("malloc %zu bytes failed (%m)", inisizew * sizeof (void *));
   memset (dbuf, 0, inisizew * sizeof (void *));
   struct strbuffer_stBM *sbuf =
-    allocgcty_BM (tydata_strbuffer_BM, sizeof (*sbuf));
+    allocgcty_BM (typayl_strbuffer_BM, sizeof (*sbuf));
   ((typedhead_tyBM *) sbuf)->rlen = maxsize;
   sbuf->sbuf_indent = 0;
   sbuf->sbuf_dbuf = dbuf;

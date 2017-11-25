@@ -332,7 +332,8 @@ ROUTINEOBJNAME_BM (_07qYMXftJRR_9dde2ASz4e9)    //  prepare_routine°basiclo_min
       return NULL;
     }
   _.routprep = makeobj_BM ();
-  objputclass_BM (_.routprep, k_simple_routine_preparation);
+  objputclass_BM (_.routprep,
+                  (objectval_tyBM *) k_simple_routine_preparation);
   unsigned nbargs = tuplesize_BM (_.tupargs);
   unsigned nbclosed = tuplesize_BM (_.tupclosed);
   unsigned nblocals = setcardinal_BM (_.setlocals);
@@ -436,7 +437,7 @@ ROUTINEOBJNAME_BM (_07qYMXftJRR_9dde2ASz4e9)    //  prepare_routine°basiclo_min
   _.routprep->ob_data = _.routassoc;
   _.obhsetblock = makeobj_BM ();
   _.obhsetblock->ob_data = hashsetobj_grow_BM (NULL, 15);
-  objputclass_BM (_.obhsetblock, k_hset_object);
+  objputclass_BM (_.obhsetblock, (objectval_tyBM *) k_hset_object);
   objputattr_BM (_.routprep, k_blocks, _.obhsetblock);
   objputattr_BM (_.routprep, k_prepare_routine, _.recv);
   objputattr_BM (_.routprep, k_in, _.modgen);
@@ -690,7 +691,7 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
         {
           fprintf (stderr,
                    "collect_blocks°basiclo_block miniscan_expr for expix#%d failed",
-                   objectdbg_BM (_.curob), argix);
+                   argix);
           return NULL;
         }
     }

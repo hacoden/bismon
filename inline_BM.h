@@ -65,6 +65,17 @@ valtype_BM (const value_tyBM v)
   return tyNone_BM;
 }                               /* end valtype_BM */
 
+
+bool
+isgenuineval_BM (const value_tyBM v)
+{
+  int ty = valtype_BM (v);
+  if (ty > type_LASTREAL_BM)
+    return false;
+  return ty != tyNone_BM;
+}                               /* end isgenuineval_BM */
+
+
 objectval_tyBM *
 valclass_BM (const value_tyBM v)
 {
@@ -384,7 +395,8 @@ objputcomp_BM (objectval_tyBM * obj, int rk, const value_tyBM valcomp)
     return;
   if (!obj->ob_compvec)
     return;
-  datavectputnth_BM (obj->ob_compvec, rk, valcomp);
+  if (!valcomp || isgenuineval_BM (valcomp))
+    datavectputnth_BM (obj->ob_compvec, rk, valcomp);
 }                               /* end objputcomp_BM */
 
 void
@@ -411,6 +423,8 @@ objappendcomp_BM (objectval_tyBM * obj, value_tyBM compval)
 {
   if (!isobject_BM ((const value_tyBM) obj))
     return;
+  if (compval && !isgenuineval_BM (compval))
+    return;
   obj->ob_compvec = datavect_append_BM (obj->ob_compvec, compval);
 }                               /* end objappendcomp_BM */
 
@@ -430,7 +444,7 @@ objhasclassinfo_BM (const objectval_tyBM * obj)
     return false;
   return (obj->ob_data
           && valtype_BM ((const value_tyBM) (obj->ob_data)) ==
-          tydata_classinfo_BM);
+          typayl_classinfo_BM);
 }                               /* end objhasclassinfo_BM */
 
 objectval_tyBM *
@@ -440,7 +454,7 @@ objgetclassinfosuperclass_BM (const objectval_tyBM * obj)
     return NULL;
   struct classinfo_stBM *clinf =        //
     (struct classinfo_stBM *) (obj->ob_data);
-  assert (valtype_BM ((const value_tyBM) clinf) == tydata_classinfo_BM);
+  assert (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
   objectval_tyBM *superob = clinf->clinf_superclass;
   assert (!superob || isobject_BM ((const value_tyBM) superob));
   return superob;
@@ -467,7 +481,7 @@ objgetclassinfomethod_BM (const objectval_tyBM * obj,
     return NULL;
   struct classinfo_stBM *clinf =        //
     (struct classinfo_stBM *) (obj->ob_data);
-  assert (valtype_BM ((const value_tyBM) clinf) == tydata_classinfo_BM);
+  assert (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
   const closure_tyBM *clos = (const closure_tyBM *)     //
     assoc_getattr_BM (clinf->clinf_dictmeth,
                       obselector);
@@ -482,7 +496,7 @@ objgetclassinfosetofselectors_BM (const objectval_tyBM * obj)
     return NULL;
   struct classinfo_stBM *clinf =        //
     (struct classinfo_stBM *) (obj->ob_data);
-  assert (valtype_BM ((const value_tyBM) clinf) == tydata_classinfo_BM);
+  assert (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
   const setval_tyBM *set =      //
     assoc_setattrs_BM (clinf->clinf_dictmeth);
   assert (!set || valtype_BM ((const value_tyBM) set) == tySet_BM);
@@ -493,7 +507,7 @@ objgetclassinfosetofselectors_BM (const objectval_tyBM * obj)
 bool
 isstrbuffer_BM (const value_tyBM val)
 {
-  return val && valtype_BM (val) == tydata_strbuffer_BM;
+  return val && valtype_BM (val) == typayl_strbuffer_BM;
 }                               /* end isstrbuffer_BM */
 
 
@@ -572,7 +586,7 @@ bool
 isassoc_BM (const value_tyBM v)
 {
   int ty = valtype_BM (v);
-  return ty == tydata_assocbucket_BM || ty == tydata_assocpairs_BM;
+  return ty == typayl_assocbucket_BM || ty == typayl_assocpairs_BM;
 }                               /* end isassoc_BM */
 
 anyassoc_tyBM *
@@ -587,12 +601,12 @@ unsigned
 assoc_nbkeys_BM (const anyassoc_tyBM * assoc)
 {
   int ty = valtype_BM ((value_tyBM) assoc);
-  if (ty == tydata_assocpairs_BM)
+  if (ty == typayl_assocpairs_BM)
     {
       struct assocpairs_stBM *apair = (struct assocpairs_stBM *) assoc;
       return ((typedsize_tyBM *) apair)->size;
     }
-  else if (ty == tydata_assocbucket_BM)
+  else if (ty == typayl_assocbucket_BM)
     {
       struct assocbucket_stBM *abuck = (struct assocbucket_stBM *) assoc;
       return ((typedsize_tyBM *) abuck)->size;
@@ -611,7 +625,7 @@ make_assoc_BM (unsigned len)
 unsigned
 datavectlen_BM (const struct datavectval_stBM *dvec)
 {
-  if (valtype_BM ((const value_tyBM) dvec) != tydata_vectval_BM)
+  if (valtype_BM ((const value_tyBM) dvec) != typayl_vectval_BM)
     return 0;
   return ((typedsize_tyBM *) dvec)->size;
 }                               /* end datavectlen_BM */
@@ -619,7 +633,7 @@ datavectlen_BM (const struct datavectval_stBM *dvec)
 const value_tyBM *
 datavectdata_BM (const struct datavectval_stBM *dvec)
 {
-  if (valtype_BM ((const value_tyBM) dvec) != tydata_vectval_BM)
+  if (valtype_BM ((const value_tyBM) dvec) != typayl_vectval_BM)
     return NULL;
   return dvec->vec_data;
 }                               /* end datavectdata_BM */
@@ -706,7 +720,7 @@ stringcast_BM (const value_tyBM v)
 struct hashsetobj_stBM *
 hashsetobjcast_BM (const value_tyBM v)
 {
-  if (valtype_BM ((const value_tyBM) v) != tydata_hashsetobj_BM)
+  if (valtype_BM ((const value_tyBM) v) != typayl_hashsetobj_BM)
     return NULL;
   return (struct hashsetobj_stBM *) v;
 }                               /* end hashsetobjcast_BM */
@@ -714,7 +728,7 @@ hashsetobjcast_BM (const value_tyBM v)
 unsigned
 hashsetobj_cardinal_BM (struct hashsetobj_stBM *hset)
 {
-  if (valtype_BM ((const value_tyBM) hset) != tydata_hashsetobj_BM)
+  if (valtype_BM ((const value_tyBM) hset) != typayl_hashsetobj_BM)
     return 0;
   return ((typedsize_tyBM *) hset)->size;
 }                               /* end hashsetobj_cardinal_BM */
@@ -724,7 +738,7 @@ hashsetobj_cardinal_BM (struct hashsetobj_stBM *hset)
 bool
 islist_BM (const value_tyBM v)
 {
-  return (valtype_BM (v) == tydata_listtop_BM);
+  return (valtype_BM (v) == typayl_listtop_BM);
 }
 
 value_tyBM
@@ -776,7 +790,7 @@ bool
 istree_BM (const value_tyBM v)
 {
   int ty = valtype_BM (v);
-  return (ty == tyClosure_BM || ty == tyNode_BM || ty == tydata_quasinode_BM);
+  return (ty == tyClosure_BM || ty == tyNode_BM || ty == typayl_quasinode_BM);
 }                               /* end istree_BM */
 
 bool
@@ -897,7 +911,7 @@ bool
 isparser_BM (const value_tyBM v)
 {
   int ty = valtype_BM (v);
-  return ty == tydata_parser_BM;
+  return ty == typayl_parser_BM;
 }                               /* end isparser_BM */
 
 const struct parser_stBM *
@@ -1005,7 +1019,7 @@ bool
 isdict_BM (const value_tyBM v)
 {
   int ty = valtype_BM (v);
-  return ty == tydata_dict_BM;
+  return ty == typayl_dict_BM;
 }                               /* end isdict_BM */
 
 bool

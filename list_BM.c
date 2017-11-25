@@ -5,7 +5,7 @@ struct listtop_stBM *
 makelist_BM (void)
 {
   struct listtop_stBM *lis =    //
-    allocgcty_BM (tydata_listtop_BM,
+    allocgcty_BM (typayl_listtop_BM,
                   sizeof (struct listtop_stBM));
   ((typedhead_tyBM *) lis)->rlen = 0;
   lis->list_nblinks = 0;
@@ -18,7 +18,7 @@ void
 listgcdestroy_BM (struct garbcoll_stBM *gc, struct listtop_stBM *lis)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) lis)->htyp == tydata_listtop_BM);
+  assert (((typedhead_tyBM *) lis)->htyp == typayl_listtop_BM);
   size_t frsiz = 0;
   struct listlink_stBM *curl = lis->list_first;
   unsigned linkscnt = 0;
@@ -44,7 +44,7 @@ void
 listgckeep_BM (struct garbcoll_stBM *gc, struct listtop_stBM *lis)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) lis)->htyp == tydata_listtop_BM);
+  assert (((typedhead_tyBM *) lis)->htyp == typayl_listtop_BM);
   unsigned nblinks = lis->list_nblinks;
   assert (nblinks < MAXSIZE_BM);
   gc->gc_keptbytes +=           //
@@ -368,7 +368,7 @@ void
 listgcmark_BM (struct garbcoll_stBM *gc, struct listtop_stBM *lis, int depth)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM ((const value_tyBM) lis) == tydata_listtop_BM);
+  assert (valtype_BM ((const value_tyBM) lis) == typayl_listtop_BM);
   uint8_t oldmark = ((typedhead_tyBM *) lis)->hgc;
   if (oldmark)
     return;

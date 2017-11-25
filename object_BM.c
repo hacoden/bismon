@@ -471,7 +471,7 @@ hashsetobj_insert_BM (struct hashsetobj_stBM *hset,
 {
   if (valtype_BM ((const value_tyBM) obj) != tyObject_BM)
     return false;
-  if (valtype_BM ((const value_tyBM) hset) != tydata_hashsetobj_BM)
+  if (valtype_BM ((const value_tyBM) hset) != typayl_hashsetobj_BM)
     return false;
   unsigned alsiz = ((typedhead_tyBM *) hset)->rlen;
   unsigned ucnt = ((typedsize_tyBM *) hset)->size;
@@ -530,11 +530,11 @@ hashsetobj_insert_BM (struct hashsetobj_stBM *hset,
 struct hashsetobj_stBM *
 hashsetobj_grow_BM (struct hashsetobj_stBM *hset, unsigned gap)
 {
-  if (!hset || valtype_BM ((const value_tyBM) hset) != tydata_hashsetobj_BM)
+  if (!hset || valtype_BM ((const value_tyBM) hset) != typayl_hashsetobj_BM)
     {
       unsigned newsiz = prime_above_BM (4 * gap / 3 + 10);
       hset =                    //
-        allocgcty_BM (tydata_hashsetobj_BM,
+        allocgcty_BM (typayl_hashsetobj_BM,
                       sizeof (struct hashsetobj_stBM)
                       + newsiz * sizeof (void *));
       ((typedhead_tyBM *) hset)->rlen = newsiz;
@@ -549,7 +549,7 @@ hashsetobj_grow_BM (struct hashsetobj_stBM *hset, unsigned gap)
   if (alsiz >= newsiz)
     return hset;
   struct hashsetobj_stBM *newhset =     //
-    allocgcty_BM (tydata_hashsetobj_BM,
+    allocgcty_BM (typayl_hashsetobj_BM,
                   sizeof (struct hashsetobj_stBM) + newsiz * sizeof (void *));
   ((typedhead_tyBM *) newhset)->rlen = newsiz;
   ((typedsize_tyBM *) newhset)->size = 0;
@@ -571,7 +571,7 @@ hashsetobj_contains_BM (struct hashsetobj_stBM * hset,
 {
   if (valtype_BM ((const value_tyBM) obj) != tyObject_BM)
     return false;
-  if (valtype_BM ((const value_tyBM) hset) != tydata_hashsetobj_BM)
+  if (valtype_BM ((const value_tyBM) hset) != typayl_hashsetobj_BM)
     return false;
   unsigned alsiz = ((typedhead_tyBM *) hset)->rlen;
   unsigned ucnt = ((typedsize_tyBM *) hset)->size;
@@ -601,7 +601,7 @@ hashsetobj_contains_BM (struct hashsetobj_stBM * hset,
 struct hashsetobj_stBM *
 hashsetobj_add_BM (struct hashsetobj_stBM *hset, const objectval_tyBM * obj)
 {
-  if (valtype_BM ((const value_tyBM) hset) != tydata_hashsetobj_BM)
+  if (valtype_BM ((const value_tyBM) hset) != typayl_hashsetobj_BM)
     {
       if (valtype_BM ((const value_tyBM) obj) != tyObject_BM)
         return NULL;
@@ -631,7 +631,7 @@ struct hashsetobj_stBM *
 hashsetobj_remove_BM (struct hashsetobj_stBM *hset,
                       const objectval_tyBM * obj)
 {
-  if (valtype_BM ((const value_tyBM) hset) != tydata_hashsetobj_BM)
+  if (valtype_BM ((const value_tyBM) hset) != typayl_hashsetobj_BM)
     return NULL;
   if (valtype_BM ((const value_tyBM) obj) != tyObject_BM)
     return hset;
@@ -685,7 +685,7 @@ hashsetobj_remove_BM (struct hashsetobj_stBM *hset,
 const setval_tyBM *
 hashsetobj_to_set_BM (struct hashsetobj_stBM *hset)
 {
-  if (valtype_BM ((const value_tyBM) hset) != tydata_hashsetobj_BM)
+  if (valtype_BM ((const value_tyBM) hset) != typayl_hashsetobj_BM)
     return NULL;
   unsigned alsiz = ((typedhead_tyBM *) hset)->rlen;
   unsigned ucnt = ((typedsize_tyBM *) hset)->size;
@@ -719,7 +719,7 @@ void
 hashsetgcmark_BM (struct garbcoll_stBM *gc, struct hashsetobj_stBM *hset)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM ((const value_tyBM) hset) == tydata_hashsetobj_BM);
+  assert (valtype_BM ((const value_tyBM) hset) == typayl_hashsetobj_BM);
   uint8_t oldmark = ((typedhead_tyBM *) hset)->hgc;
   if (oldmark)
     return;
@@ -745,7 +745,7 @@ void
 hashsetgcdestroy_BM (struct garbcoll_stBM *gc, struct hashsetobj_stBM *hset)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) hset)->htyp == tydata_hashsetobj_BM);
+  assert (((typedhead_tyBM *) hset)->htyp == typayl_hashsetobj_BM);
   unsigned alsiz = ((typedhead_tyBM *) hset)->rlen;
   memset (hset, 0, sizeof (*hset) + alsiz * sizeof (void *));
   free (hset);
@@ -756,7 +756,7 @@ void
 hashsetgckeep_BM (struct garbcoll_stBM *gc, struct hashsetobj_stBM *hset)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) hset)->htyp == tydata_hashsetobj_BM);
+  assert (((typedhead_tyBM *) hset)->htyp == typayl_hashsetobj_BM);
   unsigned alsiz = ((typedhead_tyBM *) hset)->rlen;
   assert (alsiz < MAXSIZE_BM);
   gc->gc_keptbytes += sizeof (*hset) + alsiz * sizeof (void *);
@@ -825,7 +825,7 @@ void
 gcmarkpredefinedobjects_BM (struct garbcoll_stBM *gc)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM (hashset_predefined_objects_BM) == tydata_hashsetobj_BM);
+  assert (valtype_BM (hashset_predefined_objects_BM) == typayl_hashsetobj_BM);
   // clear the mark of statically allocated predefined
 #define HAS_PREDEF_BM(Id,Hi,Lo,Hash) {					\
     assert (valtype_BM(&predefdata##Id##_BM) == tyObject_BM);		\
@@ -882,7 +882,7 @@ objputattr_BM (objectval_tyBM * obj, const objectval_tyBM * objattr,
     return;
   if (!valattr)
     obj->ob_attrassoc = assoc_removeattr_BM (obj->ob_attrassoc, objattr);
-  else
+  else if (isgenuineval_BM (valattr))
     obj->ob_attrassoc =
       assoc_addattr_BM (obj->ob_attrassoc, objattr, valattr);
 }                               /* end objputattr_BM */
@@ -913,7 +913,7 @@ classinfogcmark_BM (struct garbcoll_stBM *gc, struct classinfo_stBM *clinf,
                     int depth)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM ((const value_tyBM) clinf) == tydata_classinfo_BM);
+  assert (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
   uint8_t oldmark = ((typedhead_tyBM *) clinf)->hgc;
   if (oldmark)
     return;
@@ -929,7 +929,7 @@ void
 classinfogcdestroy_BM (struct garbcoll_stBM *gc, struct classinfo_stBM *clinf)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM ((const value_tyBM) clinf) == tydata_classinfo_BM);
+  assert (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
   memset (clinf, 0, sizeof (*clinf));
   free (clinf);
   gc->gc_freedbytes += sizeof (*clinf);
@@ -939,7 +939,7 @@ void
 classinfogckeep_BM (struct garbcoll_stBM *gc, struct classinfo_stBM *clinf)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM ((const value_tyBM) clinf) == tydata_classinfo_BM);
+  assert (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
   gc->gc_keptbytes += sizeof (*clinf);
 }                               /* end classinfogckeep_BM */
 
@@ -951,7 +951,7 @@ objputclassinfo_BM (objectval_tyBM * obj, objectval_tyBM * superclass)
   if (superclass && !isobject_BM ((const value_tyBM) superclass))
     return;
   struct classinfo_stBM *clinf =        //
-    allocgcty_BM (tydata_classinfo_BM, sizeof (struct classinfo_stBM));
+    allocgcty_BM (typayl_classinfo_BM, sizeof (struct classinfo_stBM));
   clinf->clinf_superclass = superclass;
   clinf->clinf_dictmeth = NULL;
   obj->ob_data = clinf;
@@ -972,7 +972,7 @@ objclassinfoputmethod_BM (objectval_tyBM * obj, objectval_tyBM * obselector,
     return;
   struct classinfo_stBM *clinf =        //
     (struct classinfo_stBM *) (obj->ob_data);
-  assert (valtype_BM ((const value_tyBM) clinf) == tydata_classinfo_BM);
+  assert (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
   clinf->clinf_dictmeth =       //
     assoc_addattr_BM (clinf->clinf_dictmeth, obselector, (value_tyBM) clos);
 }                               /* end objclassinfoputmethod_BM */
@@ -989,7 +989,7 @@ objclassinforemovemethod_BM (objectval_tyBM * obj,
     return;
   struct classinfo_stBM *clinf =        //
     (struct classinfo_stBM *) (obj->ob_data);
-  assert (valtype_BM ((const value_tyBM) clinf) == tydata_classinfo_BM);
+  assert (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
   clinf->clinf_dictmeth =       //
     assoc_removeattr_BM (clinf->clinf_dictmeth, obselector);
 }                               /* end objclassinforemovemethod_BM */
