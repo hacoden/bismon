@@ -80,6 +80,7 @@ ROUTINEOBJNAME_BM (_5mnsT1wsdWs_2Qnqsf3wqaP)    // prepare_routine:basiclo_funct
   /// assign _0cBpCT3lEHS_338HjZpF4UE:
   _.assocbind = make_assoc_BM (10);
   /// run _2hJWe55ydpv_5kaGdOUymFI:
+#warning the putattr of bindings is wrong, since an assoc
   objputattr_BM (_.routprepob, k_bindings, _.assocbind);
   /// assign _9YS82HkgghD_71BLsDAKRfg
   _.args = objgetattr_BM (_.recv, k_arguments);
