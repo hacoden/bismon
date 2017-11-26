@@ -148,7 +148,10 @@ extern void objputspacenum_BM (objectval_tyBM * obj, unsigned spanum);
 static inline unsigned objspacenum_BM (const objectval_tyBM * obj);
 static inline objectval_tyBM *objclass_BM (const objectval_tyBM * obj);
 extern void objputclass_BM (objectval_tyBM * obj, objectval_tyBM * objclass);
-
+// return true on success
+static inline bool objlock_BM (objectval_tyBM * obj);
+static inline bool objunlock_BM (objectval_tyBM * obj);
+static inline bool objtrylock_BM (objectval_tyBM * obj);
 static inline value_tyBM objgetattr_BM (const objectval_tyBM * obj,
                                         const objectval_tyBM * objattr);
 static inline unsigned objnbattrs_BM (const objectval_tyBM * obj);

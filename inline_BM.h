@@ -306,6 +306,37 @@ isobject_BM (const value_tyBM v)
   return valtype_BM (v) == tyObject_BM;
 }                               /* end isobject_BM */
 
+bool
+objlock_BM (objectval_tyBM * obj)
+{
+  if (valtype_BM (obj) != tyObject_BM)
+    return false;
+  if (pthread_mutex_lock (&obj->ob_mutex))
+    return false;
+  return true;
+}                               /* end objlock_BM */
+
+bool
+objunlock_BM (objectval_tyBM * obj)
+{
+  if (valtype_BM (obj) != tyObject_BM)
+    return false;
+  if (pthread_mutex_unlock (&obj->ob_mutex))
+    return false;
+  return true;
+}                               /* end objunlock_BM */
+
+bool
+objtrylock_BM (objectval_tyBM * obj)
+{
+  if (valtype_BM (obj) != tyObject_BM)
+    return false;
+  if (pthread_mutex_trylock (&obj->ob_mutex))
+    return false;
+  return true;
+}                               /* end objtrylock_BM */
+
+
 objectval_tyBM *
 objectcast_BM (const value_tyBM v)
 {

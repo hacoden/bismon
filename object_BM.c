@@ -18,6 +18,7 @@
 
 #include "_bm_global.h"
 
+static pthread_mutexattr_t objmutexattr_BM;
 
 static struct hashsetobj_stBM *hashset_predefined_objects_BM;
 
@@ -272,6 +273,7 @@ makeobjofid_BM (const rawid_tyBM id)
   pob = allocgcty_BM (tyObject_BM, sizeof (objectval_tyBM));
   pob->ob_id = id;
   pob->ob_class = BMP_object;
+  pthread_mutex_init (&pob->ob_mutex, &objmutexattr_BM);
   ((typedhead_tyBM *) pob)->hash = hashid_BM (id);
   addtobucket_BM (curbuck, pob);
   return pob;
@@ -798,6 +800,10 @@ register_predefined_object_BM (objectval_tyBM * pob)
 void
 initialize_predefined_objects_BM (void)
 {
+  if (pthread_mutexattr_init (&objmutexattr_BM))
+    FATAL_BM ("failed to init objmutexattr_BM");
+  if (pthread_mutexattr_settype (&objmutexattr_BM, PTHREAD_MUTEX_RECURSIVE))
+    FATAL_BM ("failed to settype objmutexattr_BM");
   hashset_predefined_objects_BM =       //
     hashsetobj_grow_BM (NULL, 2 * BM_NB_PREDEFINED + 50);
   //
