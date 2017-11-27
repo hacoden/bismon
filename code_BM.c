@@ -2554,10 +2554,8 @@ ROUTINEOBJNAME_BM (_0XbMOJqLLPZ_1t2wg2TwPRA)    //
     constix__LAST
   };
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * clos;
-                 const node_tyBM * rnodv;
-                 const node_tyBM * constnodv;
-                 objectval_tyBM * resobj;
+                 const closure_tyBM * clos; const node_tyBM * rnodv;
+                 const node_tyBM * constnodv; objectval_tyBM * resobj;
                  objectval_tyBM * closconn; const struct parser_stBM *pars;
                  value_tyBM inv; value_tyBM destv;
                  value_tyBM srcv;
@@ -3688,3 +3686,58 @@ ROUTINEOBJNAME_BM (_42gEKfF4qca_6gGwxSFC1FO)    //
 
 
 ////////////////
+
+///
+// readmacro routine for when-s
+extern objrout_sigBM ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3);
+
+value_tyBM
+ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
+(const closure_tyBM * clos, struct stackframe_stBM * stkf,      //
+ const value_tyBM arg1,         // node
+ const value_tyBM arg2,         // lineno
+ const value_tyBM arg3,         // colpos
+ const quasinode_tyBM * restargs __attribute__ ((unused)))
+{
+  enum
+  { constix_test,
+    constix_basiclo_when,
+    constix__LAST
+  };
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 const closure_tyBM * clos;
+                 const node_tyBM * rnodv; objectval_tyBM * resobj;
+                 const struct parser_stBM *pars;
+    );
+  _.clos = clos;
+  _.rnodv = nodecast_BM (arg1);
+  int lineno = getint_BM (arg2);
+  int colpos = getint_BM (arg3);
+  unsigned nodwidth = nodewidth_BM ((const value_tyBM) _.rnodv);
+  _.resobj = NULL;
+  _.pars = parsercast_BM (treenthson_BM ((const value_tyBM) restargs, 0));
+  DBGPRINTF_BM ("start readmacro cexpansion _42gEKfF4qca_6gGwxSFC1FO"
+                " lineno=%d colpos=%d nodwidth=%u", lineno, colpos, nodwidth);
+
+  const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) clos);
+  assert (closconn != NULL);
+  const node_tyBM *constnod = nodecast_BM (closconn->ob_data);
+  /*** constnod is
+   * const (test basiclo_when)
+   ***/
+  WEAKASSERT_BM (isnode_BM ((const value_tyBM) constnod)
+                 && nodewidth_BM ((const value_tyBM) constnod) >=
+                 constix__LAST
+                 && valhash_BM ((const value_tyBM) constnod) == 2502446012);
+  const objectval_tyBM *k_test =
+    objectcast_BM (nodenthson_BM ((const value_tyBM) constnod, constix_test));
+  WEAKASSERT_BM (k_test != NULL);
+  const objectval_tyBM *k_basiclo_when =
+    objectcast_BM (nodenthson_BM
+                   ((const value_tyBM) constnod, constix_basiclo_when));
+  WEAKASSERT_BM (k_basiclo_when != NULL);
+#warning unimplemented  when:readmacro _6gwxdBT3Mhv_8Gtgu8feoy3
+  return NULL;
+}                               // end when:readmacro _6gwxdBT3Mhv_8Gtgu8feoy3
+
+//////
