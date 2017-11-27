@@ -1,7 +1,4 @@
 // file misc_BM.cc
-extern "C" {
-#include "bismon.h"
-};
 
 #include <fnmatch.h>
 #include <map>
@@ -10,6 +7,10 @@ extern "C" {
 #include <vector>
 #include <unordered_map>
 #include <string>
+#include <atomic>
+extern "C" {
+#include "bismon.h"
+};
 
 //// order with strcmp
 struct StrcmpLess_BM

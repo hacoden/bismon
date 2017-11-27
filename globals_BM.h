@@ -11,7 +11,7 @@ extern const char bismon_directory[];
 extern const char bismon_makefile[];
 
 extern const char myhostname_BM[];
-extern bool want_garbage_collection_BM;
+extern atomic_bool want_garbage_collection_BM;
 extern bool gui_is_running_BM;
 extern bool newgui_BM;
 extern FILE *gui_command_log_file_BM;

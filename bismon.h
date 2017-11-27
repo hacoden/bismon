@@ -8,7 +8,17 @@
 
 #include <stddef.h>
 #include <stdint.h>
+
+#if __cplusplus
+using std::atomic_bool;
+using std::atomic_load;
+using std::atomic_store;
+#else
 // notice that <stdatomic.h> is not C++11 compatible
+#include <stdatomic.h>
+#endif
+
+
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>

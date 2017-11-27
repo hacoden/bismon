@@ -4,7 +4,7 @@
 
 struct allalloc_stBM *allocationvec_vBM;
 pthread_mutex_t allocationmutex_BM = PTHREAD_MUTEX_INITIALIZER;
-bool want_garbage_collection_BM;
+atomic_bool want_garbage_collection_BM;
 double last_gctime_BM;
 
 pthread_t mainthreadid_BM;
@@ -14,6 +14,7 @@ void
 initialize_garbage_collector_BM (void)
 {
   mainthreadid_BM = pthread_self ();
+  atomic_init (&want_garbage_collection_BM, false);
   pthread_mutex_init (&allocationmutex_BM, NULL);
   last_gctime_BM = clocktime_BM (CLOCK_REALTIME);
   unsigned alsiz = 2040;
@@ -47,7 +48,7 @@ allocgcty_BM (unsigned type, size_t sz)
       memcpy (new_allocvec->al_ptr, allocationvec_vBM->al_ptr,
               alloc_nb * sizeof (void *));
       free (allocationvec_vBM), allocationvec_vBM = new_allocvec;
-      want_garbage_collection_BM = true;
+      atomic_store (&want_garbage_collection_BM, true);
     }
   assert (sz > sizeof (typedhead_tyBM));
   assert (sz < MAXSIZE_BM * sizeof (double));
@@ -340,7 +341,7 @@ void
 fullgarbagecollection_BM (struct stackframe_stBM *stkfram)
 {
   assert (pthread_self () == mainthreadid_BM);
-  want_garbage_collection_BM = false;
+  atomic_store (&want_garbage_collection_BM, false);
   struct garbcoll_stBM GCdata = { };
   memset (&GCdata, 0, sizeof (GCdata));
   GCdata.gc_magic = GCMAGIC_BM;

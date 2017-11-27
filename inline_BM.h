@@ -1063,7 +1063,7 @@ openmodule_BM (const rawid_tyBM id, struct stackframe_stBM * stkf)
 void
 garbage_collect_if_wanted_BM (struct stackframe_stBM *stkf)
 {
-  if (want_garbage_collection_BM)
+  if (atomic_load (&want_garbage_collection_BM))
     fullgarbagecollection_BM (stkf);
 }                               /* end garbage_collect_if_wanted_BM */
 

@@ -4512,7 +4512,7 @@ gboolean
 guiperiodicgarbagecollection_BM (gpointer data __attribute__ ((unused)))
 {
   assert (data == NULL);
-  if (want_garbage_collection_BM && gtk_main_level () <= 1)
+  if (atomic_load (&want_garbage_collection_BM) && gtk_main_level () <= 1)
     {
       fullgarbagecollection_BM (NULL);
     }
