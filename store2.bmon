@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 207 objects
+// for 209 objects
 // with 0 modules
 
 
@@ -366,6 +366,20 @@ _9pCSj6h5qCP_1OZyKlhcrSY
 ~)
 
 !)_0277f6mOd9j_0tVZSXnTzUK
+
+
+
+!(_3fvdRZNCmJS_5bTAPr83mXg |=basiclo_when|
+!~ name (~ basiclo_when
+~)
+!@ 1511768220.40
+!$_0LK4TzFd6u1_0JFUsrQ4odG |=class|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "class for ^when in cond"
+!~ class (~ |supercl object:| _7T9OwSFlgov_0wVJaK1eZbn
+~)
+
+!)_3fvdRZNCmJS_5bTAPr83mXg
 
 
 
@@ -1077,6 +1091,15 @@ _7T9OwSFlgov_0wVJaK1eZbn |=object|
 
 
 
+!(_8dLpuaNoSGN_2tdmkpINCsu |=nb_conds|
+!~ name (~ nb_conds
+~)
+!@ 1511768164.86
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!)_8dLpuaNoSGN_2tdmkpINCsu
+
+
+
 !(_32eKNcTZ9HN_80t0nk47Mha |=numbers|
 !~ name (~ numbers
 ~)
@@ -1760,12 +1783,13 @@ _0EfjiBTrXEo_3ppwTZ0M7xf |=foreach_in_tuple|
 
 !(_0XbMOJqLLPZ_1t2wg2TwPRA
 !|*
-!@ 1506355088.16
+!@ 1511768164.86
 !$_2Ir1i8qnrA4_3jSkierlc5z |=basiclo_function|
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "readmacro:cond"
 
 !~value (~  * _5DDSY1YgVZr_6dOU4tiBldk ( _0eCRnBKQ0eQ_1atum3gUgEz |=basiclo_cond| 
+ _3fvdRZNCmJS_5bTAPr83mXg |=basiclo_when|  _8dLpuaNoSGN_2tdmkpINCsu |=nb_conds| 
 ) ~)
 
 !)_0XbMOJqLLPZ_1t2wg2TwPRA
@@ -2324,8 +2348,10 @@ _36MhHxakHKT_1ZzV5Xoj5LX
 
 
 !(_7XasLoEUKwe_9upxyFeheD5
-!@ 1511265759.89
+!@ 1511766307.32
 !$_4bYUiDmxrKK_6nPPlEl8y8x |=basiclo_block|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "body of successor_test_minifunc"
 !: _1xhcI0ZnQ6f_5xOLATXqawx |=origin|
  * _2U8Sj78DMbl_5eerKpaJsNq ()
 !)_7XasLoEUKwe_9upxyFeheD5
