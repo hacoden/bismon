@@ -3706,8 +3706,12 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
   };
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const closure_tyBM * clos;
-                 const node_tyBM * rnodv; objectval_tyBM * resobj;
+                 const node_tyBM * rnodv;
+                 objectval_tyBM * resobj;
+                 objectval_tyBM * resclass;
                  const struct parser_stBM *pars;
+                 value_tyBM * testexpv; value_tyBM * inv;
+                 value_tyBM * curson;
     );
   _.clos = clos;
   _.rnodv = nodecast_BM (arg1);
@@ -3736,8 +3740,44 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
     objectcast_BM (nodenthson_BM
                    ((const value_tyBM) constnod, constix_basiclo_when));
   WEAKASSERT_BM (k_basiclo_when != NULL);
+  ///
+  unsigned startix = 0;
+  if (nodwidth > 0
+      && (_.curson =
+          nodenthson_BM ((const value_tyBM) _.rnodv, startix)) != NULL
+      && isnode_BM (_.curson) && nodeconn_BM (_.curson) == BMP_in)
+    {
+      _.inv = nodenthson_BM (_.curson, 0);
+      if (!isobject_BM (_.inv))
+        {
+          if (_.pars)
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+                                  colpos,
+                                  "non-object `in` for run readmacro");
+          return NULL;
+        }
+      _.resobj = _.inv;
+      if (objectisinstance_BM (_.resobj, k_basiclo_when))
+        _.resclass = objclass_BM (_.resobj);
+      startix++;
+    }
+  _.testexpv = nodenthson_BM ((const value_tyBM) _.rnodv, startix);
+  if (!_.resclass)
+    _.resclass = (objectval_tyBM *) k_basiclo_when;
+  if (!_.resobj)
+    {
+      _.resobj = makeobj_BM ();
+      objputspacenum_BM (_.resobj, GlobalSp_BM);
+    };
+  objresetcomps_BM (_.resobj, 1);
+  objresetattrs_BM (_.resobj, 5);
+  objputattr_BM (_.resobj, BMP_origin, (const value_tyBM) _.rnodv);
+  if (_.testexpv)
+    objputattr_BM (_.resobj, k_test, (const value_tyBM) _.testexpv);
+  objputclass_BM (_.resobj, _.resclass);
+  objtouchnow_BM (_.resobj);
 #warning unimplemented  when:readmacro _6gwxdBT3Mhv_8Gtgu8feoy3
-  return NULL;
+  return _.resobj;
 }                               // end when:readmacro _6gwxdBT3Mhv_8Gtgu8feoy3
 
 //////
