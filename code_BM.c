@@ -3702,14 +3702,15 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
   enum
   { constix_test,
     constix_basiclo_when,
+    constix_basiclo_statement,
+    constix_basiclo_block,
     constix__LAST
   };
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const closure_tyBM * clos;
                  const node_tyBM * rnodv;
-                 objectval_tyBM * resobj;
-                 objectval_tyBM * resclass;
-                 const struct parser_stBM *pars;
+                 objectval_tyBM * resobj; objectval_tyBM * curobj;
+                 objectval_tyBM * resclass; const struct parser_stBM *pars;
                  value_tyBM * testexpv; value_tyBM * inv;
                  value_tyBM * curson;
     );
@@ -3727,12 +3728,11 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
   assert (closconn != NULL);
   const node_tyBM *constnod = nodecast_BM (closconn->ob_data);
   /*** constnod is
-   * const (test basiclo_when)
+   * const (test basiclo_when basiclo_statement basiclo_block)
    ***/
   WEAKASSERT_BM (isnode_BM ((const value_tyBM) constnod)
-                 && nodewidth_BM ((const value_tyBM) constnod) >=
-                 constix__LAST
-                 && valhash_BM ((const value_tyBM) constnod) == 2502446012);
+                 && nodewidth_BM ((const value_tyBM) constnod) == constix__LAST
+                 && valhash_BM ((const value_tyBM) constnod) == 612193748);
   const objectval_tyBM *k_test =
     objectcast_BM (nodenthson_BM ((const value_tyBM) constnod, constix_test));
   WEAKASSERT_BM (k_test != NULL);
@@ -3741,6 +3741,15 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
                    ((const value_tyBM) constnod, constix_basiclo_when));
   WEAKASSERT_BM (k_basiclo_when != NULL);
   ///
+  const objectval_tyBM *k_basiclo_statement =
+    objectcast_BM (nodenthson_BM
+                   ((const value_tyBM) constnod, constix_basiclo_statement));
+  WEAKASSERT_BM (k_basiclo_statement != NULL);
+  ///
+  const objectval_tyBM *k_basiclo_block =
+    objectcast_BM (nodenthson_BM
+                   ((const value_tyBM) constnod, constix_basiclo_block));
+  WEAKASSERT_BM (k_basiclo_block != NULL);
   unsigned startix = 0;
   if (nodwidth > 0
       && (_.curson =
@@ -3753,15 +3762,28 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
           if (_.pars)
             parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
                                   colpos,
-                                  "non-object `in` for run readmacro");
+                                  "non-object `in` for when readmacro");
           return NULL;
         }
-      _.resobj = _.inv;
+      _.resobj = (objectval_tyBM*)_.inv;
       if (objectisinstance_BM (_.resobj, k_basiclo_when))
         _.resclass = objclass_BM (_.resobj);
       startix++;
     }
   _.testexpv = nodenthson_BM ((const value_tyBM) _.rnodv, startix);
+  for (unsigned ix = startix + 1; ix < nodwidth; ix++)
+    {
+      _.curobj = objectcast_BM (nodenthson_BM (_.rnodv, ix));
+      if (!_.curobj || !objectisinstance_BM (_.curobj, k_basiclo_statement)
+          || !objectisinstance_BM (_.curobj, k_basiclo_block))
+        {
+          if (_.pars)
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+                                  colpos,
+                                  "bad arg #%d in when readmacro", ix);
+          return NULL;
+        };
+    }
   if (!_.resclass)
     _.resclass = (objectval_tyBM *) k_basiclo_when;
   if (!_.resobj)
@@ -3769,14 +3791,18 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
       _.resobj = makeobj_BM ();
       objputspacenum_BM (_.resobj, GlobalSp_BM);
     };
-  objresetcomps_BM (_.resobj, 1);
+  objresetcomps_BM (_.resobj, nodwidth - startix);
   objresetattrs_BM (_.resobj, 5);
   objputattr_BM (_.resobj, BMP_origin, (const value_tyBM) _.rnodv);
   if (_.testexpv)
     objputattr_BM (_.resobj, k_test, (const value_tyBM) _.testexpv);
+  for (unsigned ix = startix + 1; ix < nodwidth; ix++)
+    {
+      _.curobj = objectcast_BM (nodenthson_BM (_.rnodv, ix));
+      objputcomp_BM (_.resobj, ix - startix - 1, _.curobj);
+    };
   objputclass_BM (_.resobj, _.resclass);
   objtouchnow_BM (_.resobj);
-#warning unimplemented  when:readmacro _6gwxdBT3Mhv_8Gtgu8feoy3
   return _.resobj;
 }                               // end when:readmacro _6gwxdBT3Mhv_8Gtgu8feoy3
 
