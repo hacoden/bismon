@@ -8,8 +8,9 @@
 
 #include <stddef.h>
 #include <stdint.h>
-#include <stdbool.h>
+// notice that <stdatomic.h> is not C++11 compatible
 #include <stdlib.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>

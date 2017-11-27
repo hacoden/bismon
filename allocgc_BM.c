@@ -3,15 +3,18 @@
 #include "bismon.h"
 
 struct allalloc_stBM *allocationvec_vBM;
+pthread_mutex_t allocationmutex_BM = PTHREAD_MUTEX_INITIALIZER;
 bool want_garbage_collection_BM;
 double last_gctime_BM;
 
 pthread_t mainthreadid_BM;
 
+
 void
 initialize_garbage_collector_BM (void)
 {
   mainthreadid_BM = pthread_self ();
+  pthread_mutex_init (&allocationmutex_BM, NULL);
   last_gctime_BM = clocktime_BM (CLOCK_REALTIME);
   unsigned alsiz = 2040;
   allocationvec_vBM =
@@ -27,7 +30,7 @@ initialize_garbage_collector_BM (void)
 void *
 allocgcty_BM (unsigned type, size_t sz)
 {
-  assert (pthread_self () == mainthreadid_BM);
+  pthread_mutex_lock (&allocationmutex_BM);
   assert (allocationvec_vBM != NULL);
   unsigned long alloc_size = allocationvec_vBM->al_size;
   unsigned long alloc_nb = allocationvec_vBM->al_nb;
@@ -55,6 +58,7 @@ allocgcty_BM (unsigned type, size_t sz)
   newzon->htyp = type;
   allocationvec_vBM->al_ptr[alloc_nb++] = newzon;
   allocationvec_vBM->al_nb = alloc_nb;
+  pthread_mutex_unlock (&allocationmutex_BM);
   return newzon;
 }                               /* end allocgcty_BM */
 

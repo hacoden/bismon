@@ -28,7 +28,7 @@ extern struct timespec startrealtimespec_BM;
 extern struct loader_stBM *firstloader_BM;
 
 extern struct allalloc_stBM *allocationvec_vBM /*¤ allocgc_BM.c */ ;
-
+extern pthread_mutex_t allocationmutex_BM;
 #define HAS_PREDEF_BM(Id,Hi,Lo,Hash) \
   extern objectval_tyBM predefdata##Id##_BM; \
   extern objectval_tyBM* predefptr##Id##_BM;
