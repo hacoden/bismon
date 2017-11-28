@@ -204,6 +204,7 @@ dump_scan_object_content_BM (struct dumper_stBM *du,
   assert (valtype_BM ((const value_tyBM) objarg) == tyObject_BM);
   _.curdu = du;
   _.curobj = objarg;
+  objlock_BM (_.curobj);
   // scan the class
   _.curattrobj = objclass_BM (_.curobj);
   if (_.curattrobj)
@@ -244,6 +245,7 @@ dump_scan_object_content_BM (struct dumper_stBM *du,
   if (_.curobj->ob_data)
     send1_BM ((value_tyBM) _.curobj, BMP_dump_scan,
               (struct stackframe_stBM *) &_, du);
+  objunlock_BM (_.curobj);
   du->dump_scanedobjectcount++;
 }                               /* end dump_scan_object_content_BM   */
 
@@ -467,6 +469,7 @@ dump_emit_object_BM (struct dumper_stBM *du, const objectval_tyBM * curobj,
     );
   _.curdu = du;
   _.curobj = curobj;
+  objlock_BM (_.curobj);
   char curobjid[32] = "";
   idtocbuf32_BM (objid_BM (curobj), curobjid);
   fputc ('\n', spfil);
@@ -579,5 +582,6 @@ dump_emit_object_BM (struct dumper_stBM *du, const objectval_tyBM * curobj,
   fprintf (spfil, "!)%s\n", curobjid);
   fputc ('\n', spfil);
   fputc ('\n', spfil);
+  objunlock_BM (_.curobj);
   du->dump_emittedobjectcount++;
 }                               /* end dump_emit_object_BM */

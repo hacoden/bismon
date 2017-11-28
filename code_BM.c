@@ -3707,8 +3707,7 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
     constix__LAST
   };
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * clos;
-                 const node_tyBM * rnodv;
+                 const closure_tyBM * clos; const node_tyBM * rnodv;
                  objectval_tyBM * resobj; objectval_tyBM * curobj;
                  objectval_tyBM * resclass; const struct parser_stBM *pars;
                  value_tyBM * testexpv; value_tyBM * inv;
@@ -3731,7 +3730,8 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
    * const (test basiclo_when basiclo_statement basiclo_block)
    ***/
   WEAKASSERT_BM (isnode_BM ((const value_tyBM) constnod)
-                 && nodewidth_BM ((const value_tyBM) constnod) == constix__LAST
+                 && nodewidth_BM ((const value_tyBM) constnod) ==
+                 constix__LAST
                  && valhash_BM ((const value_tyBM) constnod) == 612193748);
   const objectval_tyBM *k_test =
     objectcast_BM (nodenthson_BM ((const value_tyBM) constnod, constix_test));
@@ -3765,7 +3765,7 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
                                   "non-object `in` for when readmacro");
           return NULL;
         }
-      _.resobj = (objectval_tyBM*)_.inv;
+      _.resobj = (objectval_tyBM *) _.inv;
       if (objectisinstance_BM (_.resobj, k_basiclo_when))
         _.resclass = objclass_BM (_.resobj);
       startix++;
