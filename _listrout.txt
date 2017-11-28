@@ -1,0 +1,69 @@
+_075tZNHCAMa_7XNNBaNM4qv ++ dump_data the predefined, arg2 is a rawdumper
+_07qYMXftJRR_9dde2ASz4e9 // prepare_routine°basiclo_minifunction
+_09DxyieS5Wz_7pkad4F88FA // browse_data°class
+_0B1PYH9bN34_3RZdP24AVyt // browse_value for tuples
+_0BAnB0xjs23_0WEOCOi5Nbe // browse_value for objects
+_0ekJdzLOqAI_8mejMqkwuKQ // remove°assoc_object
+_0gkYrIdnOg2_0wLEAh1QuYu // collect_blocks°basic_block
+_0HBMCM5CeLn_7L5YEV2jO7Y // browse_value for int-s
+_0kUyX0U19K2_5mcH4RCaBl9 ++ command_readmacro for block, arg4 is rawparser
+_0XbMOJqLLPZ_1t2wg2TwPRA ++ command_readmacro for cond, arg4 is rawparser
+_10XOFm9ui6R_06F8qZQynnA // complete_module°basiclo_*_module
+_1Geqz0vsOKB_2Dpdb1LDu23 ++ command_readmacro for assign, arg4 is rawparser
+_1gME6zn82Kf_8hzWibLFRfz // emit_module°plain_module
+_1ufPZmTnWhp_7FX9NANZCAW ++ command_readmacro for while, arg4 is rawparser
+_23ViGouPnAg_15P5mpG9x3d // browse_in_object°object-s
+_26FUvWKvkYr_5hyqhhV8NEh // get°hset_object
+_2juH5YMCcog_8pQGCuE5mod // add°hset_object
+_2qppG2LJu79_9ljkbLS0eFQ // init_class°object
+_3kMqlEugRVW_7DgwjR4CBbP ++ dump_value°int, arg2 is rawstrbuffer, arg3 is rawdumper
+_3rne4qbpnV9_0pywzeJp3Qr // browse_value°set
+_3Tc3E4uo2p5_4EXWCPwCR5b ++ dump_value°set, arg2 is rawstrbuffer, arg3 is rawdumper
+_3W8d51P1dJh_3b1BrOW6pua // todo_apply closures
+_3yJPC4SxGtF_6ilaF37wdxG ++ dump_data the types, arg2 is rawdumper
+_42gEKfF4qca_6gGwxSFC1FO ++ command_readmacro for cexpansions, arg4 is rawparser
+_4DvEF1tVGFD_6VVLpFn6FPW ++ dump_scan°hset_object, arg2 is rawdumper
+_4EBQMvthjcP_2OiZxZviSQc ++ dump_scan°class, arg2 is rawdumper
+_4ENXjApm7Qb_3bXo8F6Jg9z ++ dump_data the globals, arg2 is rawdumper
+_4icYJnKsN0o_4xm5UbQOMTe // get°assoc_object
+_4IshjBIv6ol_5korHKUIjeK // browse_data°hset_object
+_4zaM2Itdsuq_9qNJK0HbcQI // set°assoc_object
+_50d65bJypCN_6IJeVtssx9I // generate_module°basiclo_*_module
+_5788HpgOtVV_4zwZIr0jgmq ++ command_readmacro return, arg4 is rawparser
+_5D9kkPHSPxq_8suDXpjlzjE ++ dump_value°tuple, arg2 is rawstrbuffer, arg3 is rawdumper
+_5DDSY1YgVZr_6dOU4tiBldk // const function, returninf first closed value
+_5DyG7xVcxRI_1Ckpbj7b3QK ++ dump_data plain_dumpable_module, arg2 is rawdumper, arg3 is rawstrbuf
+_5hedSPIXD0o_5ef69rR2kzb // remove°hset_object
+_5KWAjUEGiiq_2B6rbvkCcgc // browse_data any object with extended value as data
+_5mnsT1wsdWs_2Qnqsf3wqaP // prepare_routine°basiclo_function 
+_5v30KC0IMxx_53ZzXprJTM6 ++ dump_value°node, arg2 is rawstrbuffer, arg3 is rawdumper
+_60NdV04Lel2_5FSZVWKbSL7 // put_data_value°basiclo_function
+_63Q0R4r8xa7_7XOAxxP5pi2 ++ command_readmacro exit, arg4 is rawparser
+_63ZPkXUI2Uv_6Cp3qmh6Uud
+_67IapmpeTLU_8MQKtlK8iAD
+_6eD9Y1qYcnj_8uVDhxjBpG8
+_6gRlN8loM4E_4pSsNmiCeIa
+_6gwxdBT3Mhv_8Gtgu8feoy3
+_6jvRZetUz36_978V6SKIWZC
+_6PmxiZR9WBe_13DwWExCALl
+_6SUnsQrN1BV_1WnLPm4QoOq
+_7CohjJ9tkfZ_4UMAIZCgwac
+_7D36kHemyWQ_0YfwWnUhR9Y
+_7fCcteNe7aR_3IKHeHjmzff
+_7fJKfG4SN0U_1QTu5J832xg
+_7GMLV81ntO3_4NHTv7fCL0A
+_7kMNgL8eJ09_6aEpofzWJDP
+_7ko2VZaPpqD_1eEmEcp0VV3
+_7mvOlkB1tAJ_3psVFz4QEAn
+_7sg0DjYTA8n_66vhff9SgXH
+_88cUYsDqSFO_0DKwKLSOmpm
+_8MU0cEcpEYN_5SVe0jrv36o
+_8uFPIAUyvE6_36pUIgGwmbf
+_8zNBXSMY2Ts_1VI5dmY4umA
+_91iTl2vqF09_72WJj4swbNi
+_979hCujWp2g_9tjRbM8Ht1l
+_9EytjXNb76D_1ZP3iSk9cuu
+_9imDBaAxOpp_2HI9AuWrEKD
+_9mdRnBqdqf5_9UvgSFA7wIY
+_9UhDZeDdg2r_55lUqYDPUiF
+_9zpvXnTuDeB_2B7ZiBtN8fA
