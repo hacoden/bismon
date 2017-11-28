@@ -3457,7 +3457,7 @@ ROUTINEOBJNAME_BM (_42gEKfF4qca_6gGwxSFC1FO)    //
  const value_tyBM arg1,         // node
  const value_tyBM arg2,         // lineno
  const value_tyBM arg3,         // colpos
- const quasinode_tyBM * restargs __attribute__ ((unused)))
+ const quasinode_tyBM * restargs /*arg4 is rawparser*/)
 {
   enum
   {
