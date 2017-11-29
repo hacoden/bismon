@@ -20,6 +20,7 @@ dumpgcdestroy_BM (struct garbcoll_stBM *gc, struct dumper_stBM *du)
   assert (((typedhead_tyBM *) du)->htyp == typayl_dumper_BM);
 }                               /* end dumpgcdestroy_BM */
 
+
 void
 dumpgckeep_BM (struct garbcoll_stBM *gc, struct dumper_stBM *du)
 {
@@ -28,9 +29,10 @@ dumpgckeep_BM (struct garbcoll_stBM *gc, struct dumper_stBM *du)
 }                               /* end dumpgckeep_BM */
 
 bool
-dumpobjisdumpable_BM (struct dumper_stBM *du, const objectval_tyBM * obj)
+obdumpobjisdumpable_BM (objectval_tyBM * dumpob, const objectval_tyBM * obj)
 {
-  if (valtype_BM ((const value_tyBM) du) != typayl_dumper_BM)
+  struct dumper_stBM *du = obdumpgetdumper_BM (dumpob);
+  if (!du)
     return false;
   if (!isobject_BM ((const value_tyBM) obj))
     return false;
@@ -38,19 +40,21 @@ dumpobjisdumpable_BM (struct dumper_stBM *du, const objectval_tyBM * obj)
 }                               /* end dumpobjisdumpable_BM */
 
 bool
-dumpvalisdumpable_BM (struct dumper_stBM * du, const value_tyBM val)
+obdumpvalisdumpable_BM (objectval_tyBM * dumpob, const value_tyBM val)
 {
-  if (valtype_BM ((const value_tyBM) du) != typayl_dumper_BM)
+  struct dumper_stBM *du = obdumpgetdumper_BM (dumpob);
+  if (!du)
     return false;
   if (val && !isobject_BM (val))
     return true;
-  return dumpobjisdumpable_BM (du, (const objectval_tyBM *) val);
+  return obdumpobjisdumpable_BM (dumpob, (const objectval_tyBM *) val);
 }                               /* end dumpvalisdumpable_BM */
 
 void
-dumpscanobj_BM (struct dumper_stBM *du, const objectval_tyBM * obj)
+obdumpscanobj_BM (objectval_tyBM * dumpob, const objectval_tyBM * obj)
 {
-  if (valtype_BM ((const value_tyBM) du) != typayl_dumper_BM)
+  struct dumper_stBM *du = obdumpgetdumper_BM (dumpob);
+  if (!du)
     return;
   if (!isobject_BM ((const value_tyBM) obj))
     return;
@@ -68,13 +72,14 @@ dumpscanobj_BM (struct dumper_stBM *du, const objectval_tyBM * obj)
     return;
   du->dump_hset = hashsetobj_add_BM (du->dump_hset, obj);
   listappend_BM (du->dump_scanlist, (value_tyBM) obj);
-}                               /* end dumpscanobj_BM */
+}                               /* end obdumpscanobj_BM */
 
 
 void
-dumpscanvalue_BM (struct dumper_stBM *du, const value_tyBM val, int depth)
+obdumpscanvalue_BM (objectval_tyBM * dumpob, const value_tyBM val, int depth)
 {
-  if (valtype_BM ((const value_tyBM) du) != typayl_dumper_BM)
+  struct dumper_stBM *du = obdumpgetdumper_BM (dumpob);
+  if (!du)
     return;
   if (depth > MAXDEPTHGC_BM)
     FATAL_BM ("too deep depth %d", depth);
@@ -86,23 +91,23 @@ dumpscanvalue_BM (struct dumper_stBM *du, const value_tyBM val, int depth)
       {
         unsigned siz = ((typedsize_tyBM *) val)->size;
         for (int ix = (int)siz - 1; ix >= 0; ix--)
-          dumpscanobj_BM (du, ((seqobval_tyBM *) val)->seq_objs[ix]);
+          obdumpscanobj_BM (dumpob, ((seqobval_tyBM *) val)->seq_objs[ix]);
       }
       break;
     case tyNode_BM:
     case tyClosure_BM:
       {
         const tree_tyBM *tree = (const tree_tyBM *) val;
-        dumpscanobj_BM (du, tree->nodt_conn);
-        if (!dumpobjisdumpable_BM (du, tree->nodt_conn))
+        obdumpscanobj_BM (dumpob, tree->nodt_conn);
+        if (!obdumpobjisdumpable_BM (dumpob, tree->nodt_conn))
           return;
         unsigned siz = ((typedsize_tyBM *) val)->size;
         for (int ix = (int)siz - 1; ix >= 0; ix--)
-          dumpscanvalue_BM (du, tree->nodt_sons[ix], depth + 1);
+          obdumpscanvalue_BM (dumpob, tree->nodt_sons[ix], depth + 1);
       }
       break;
     case tyObject_BM:
-      dumpscanobj_BM (du, (const objectval_tyBM *) val);
+      obdumpscanobj_BM (dumpob, (const objectval_tyBM *) val);
       break;
     default:
       return;
@@ -194,25 +199,25 @@ dump_scan_object_content_BM (struct dumper_stBM *du,
                              struct stackframe_stBM *stkf)
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 struct dumper_stBM *curdu;     //
-                 const objectval_tyBM * curobj; //
+                 objectval_tyBM * obdump;       //
+                 objectval_tyBM * curobj;       //
                  const setval_tyBM * setattrs;  //
                  const objectval_tyBM * curattrobj;
                  value_tyBM curval;
     );
   assert (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
   assert (valtype_BM ((const value_tyBM) objarg) == tyObject_BM);
-  _.curdu = du;
-  _.curobj = objarg;
+  _.obdump = du->dump_object;
+  _.curobj = (objectval_tyBM *) objarg;
   objlock_BM (_.curobj);
   // scan the class
   _.curattrobj = objclass_BM (_.curobj);
   if (_.curattrobj)
-    dumpscanobj_BM (_.curdu, _.curattrobj);
+    obdumpscanobj_BM (_.obdump, _.curattrobj);
   // scan the signature
   _.curattrobj = objsignature_BM (_.curobj);
   if (_.curattrobj && objarg->ob_routaddr)
-    dumpscanobj_BM (_.curdu, _.curattrobj);
+    obdumpscanobj_BM (_.obdump, _.curattrobj);
   // scan the attributes and their values
   _.curattrobj = NULL;
   _.setattrs = objsetattrs_BM ((objectval_tyBM *) _.curobj);
@@ -221,13 +226,13 @@ dump_scan_object_content_BM (struct dumper_stBM *du,
   for (int ix = 0; ix < (int) nbattrs; ix++)
     {
       _.curattrobj = setelemnth_BM (_.setattrs, ix);
-      dumpscanobj_BM (_.curdu, _.curattrobj);
-      if (!dumpobjisdumpable_BM (_.curdu, _.curattrobj))
+      obdumpscanobj_BM (_.obdump, _.curattrobj);
+      if (!obdumpobjisdumpable_BM (_.obdump, _.curattrobj))
         continue;
       _.curval =
         objgetattr_BM ((objectval_tyBM *) _.curobj,
                        (objectval_tyBM *) _.curattrobj);
-      dumpscanvalue_BM (_.curdu, _.curval, 0);
+      obdumpscanvalue_BM (_.obdump, _.curval, 0);
       _.curattrobj = NULL;
       _.curval = NULL;
     };
@@ -237,14 +242,13 @@ dump_scan_object_content_BM (struct dumper_stBM *du,
   for (int ix = 0; ix < (int) nbcomps; ix++)
     {
       _.curval = objgetcomp_BM ((objectval_tyBM *) _.curobj, ix);
-      dumpscanvalue_BM (_.curdu, _.curval, 0);
-
+      obdumpscanvalue_BM (_.obdump, _.curval, 0);
       _.curval = NULL;
     }
   // perhaps we should send first, and use its result...
   if (_.curobj->ob_data)
     send1_BM ((value_tyBM) _.curobj, BMP_dump_scan,
-              (struct stackframe_stBM *) &_, du);
+              (struct stackframe_stBM *) &_, _.obdump);
   objunlock_BM (_.curobj);
   du->dump_scanedobjectcount++;
 }                               /* end dump_scan_object_content_BM   */
@@ -254,17 +258,17 @@ static void
 dump_scan_pass_BM (struct dumper_stBM *du, struct stackframe_stBM *stkf)
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 struct dumper_stBM *curdu;     //
                  const setval_tyBM * predefset; //
                  const setval_tyBM * globalset; //
                  const objectval_tyBM * curobj;
+                 objectval_tyBM * obdump;
     );
-  _.curdu = du;
   assert (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
+  _.obdump = du->dump_object;
   _.predefset = setpredefinedobjects_BM ();
   _.globalset = setglobalobjects_BM ();
-  dumpscanvalue_BM (du, (value_tyBM) _.predefset, 0);
-  dumpscanvalue_BM (du, (value_tyBM) _.globalset, 0);
+  obdumpscanvalue_BM (_.obdump, (value_tyBM) _.predefset, 0);
+  obdumpscanvalue_BM (_.obdump, (value_tyBM) _.globalset, 0);
   while (listlength_BM (du->dump_scanlist) > 0)
     {
       _.curobj = listfirst_BM (du->dump_scanlist);
@@ -459,16 +463,16 @@ dump_emit_object_BM (struct dumper_stBM *du, const objectval_tyBM * curobj,
   assert (valtype_BM ((const value_tyBM) curobj) == tyObject_BM);
   assert (spfil != NULL);
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 struct dumper_stBM *curdu;     //
-                 const objectval_tyBM * curobj; //
+                 objectval_tyBM * dumpob;       //
+                 objectval_tyBM * curobj;       //
                  const objectval_tyBM * curattr;        //
                  value_tyBM curval;     //
                  const setval_tyBM * attrset;
                  struct strbuffer_stBM *sbuf;
                  value_tyBM dumpres;    //
     );
-  _.curdu = du;
-  _.curobj = curobj;
+  _.dumpob = du->dump_object;
+  _.curobj = (objectval_tyBM *) curobj;
   objlock_BM (_.curobj);
   char curobjid[32] = "";
   idtocbuf32_BM (objid_BM (curobj), curobjid);
@@ -482,7 +486,7 @@ dump_emit_object_BM (struct dumper_stBM *du, const objectval_tyBM * curobj,
       fputc ('\n', spfil);
   }
   if (curobj->ob_sig && curobj->ob_routaddr
-      && dumpobjisdumpable_BM (du, curobj->ob_sig))
+      && obdumpobjisdumpable_BM (_.dumpob, curobj->ob_sig))
     {
       _.curattr = curobj->ob_sig;
       if (_.curattr == BMP_function_sig)
@@ -500,7 +504,7 @@ dump_emit_object_BM (struct dumper_stBM *du, const objectval_tyBM * curobj,
     }
   if (curobj->ob_mtime > 0)
     fprintf (spfil, "!@ %.2f\n", curobj->ob_mtime);
-  if (curobj->ob_class && dumpobjisdumpable_BM (du, curobj->ob_class))
+  if (curobj->ob_class && obdumpobjisdumpable_BM (_.dumpob, curobj->ob_class))
     {
       char curclassid[32] = "";
       idtocbuf32_BM (objid_BM (curobj->ob_class), curclassid);
@@ -517,16 +521,16 @@ dump_emit_object_BM (struct dumper_stBM *du, const objectval_tyBM * curobj,
   for (unsigned atix = 0; atix < nbattrs; atix++)
     {
       _.curattr = setelemnth_BM (_.attrset, atix);
-      if (!dumpobjisdumpable_BM (du, _.curattr))
+      if (!obdumpobjisdumpable_BM (_.dumpob, _.curattr))
         continue;
       _.curval = objgetattr_BM (curobj, _.curattr);
-      if (!dumpvalisdumpable_BM (du, _.curval))
+      if (!obdumpvalisdumpable_BM (_.dumpob, _.curval))
         continue;
       strbufferreset_BM (_.sbuf);
       _.dumpres =
         send3_BM (_.curval, BMP_dump_value,
                   (struct stackframe_stBM *) &_,
-                  _.sbuf, du, taggedint_BM (0));
+                  _.sbuf, _.dumpob, taggedint_BM (0));
       if (!_.dumpres || strbufferlength_BM (_.sbuf) == 0)
         continue;
       char curattrid[32] = "";
@@ -548,13 +552,13 @@ dump_emit_object_BM (struct dumper_stBM *du, const objectval_tyBM * curobj,
       for (unsigned cpix = 0; cpix < nbcomp; cpix++)
         {
           _.curval = objgetcomp_BM (_.curobj, cpix);
-          if (dumpvalisdumpable_BM (du, _.curval))
+          if (obdumpvalisdumpable_BM (_.dumpob, _.curval))
             {
               strbufferreset_BM (_.sbuf);
               _.dumpres =
                 send3_BM (_.curval, BMP_dump_value,
                           (struct stackframe_stBM *) &_,
-                          _.sbuf, du, taggedint_BM (0));
+                          _.sbuf, _.dumpob, taggedint_BM (0));
               if (!_.dumpres || strbufferlength_BM (_.sbuf) == 0)
                 fputs ("!& __\n", spfil);
               else
@@ -573,7 +577,7 @@ dump_emit_object_BM (struct dumper_stBM *du, const objectval_tyBM * curobj,
   strbufferreset_BM (_.sbuf);
   /// dump the data
   _.dumpres = send2_BM ((const value_tyBM) _.curobj, BMP_dump_data,
-                        (struct stackframe_stBM *) &_, du, _.sbuf);
+                        (struct stackframe_stBM *) &_, _.dumpob, _.sbuf);
   if (_.dumpres && strbufferlength_BM (_.sbuf) > 0)
     {
       fputs (strbufferbytes_BM (_.sbuf), spfil);

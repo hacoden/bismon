@@ -32,7 +32,7 @@ MODULES_SOURCES= $(sort $(wildcard modules/modbm*.c))
 
 OBJECTS= $(patsubst %.c,%.o,$(BM_COLDSOURCES) $(GENERATED_CSOURCES)) $(patsubst %.cc,%.o,$(BM_CXXSOURCES))
 
-.PHONY: all clean indent count modules doc redump
+.PHONY: all clean indent count modules doc redump outdump
 all: bismon doc
 clean:
 	$(RM) .*~ *~ *% *.o *.so */*.so *.log */*~ */*.orig *.i *.orig *.gch README.html
@@ -126,3 +126,6 @@ count:
 
 redump: bismon
 	time ./bismon --dump-after-load . --batch
+outdump: bismon
+	rm -rf /tmp/bd
+	time ./bismon --dump-after-load /tmp/bd --batch

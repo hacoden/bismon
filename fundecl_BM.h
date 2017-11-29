@@ -572,15 +572,18 @@ extern void dumpgcmark_BM (struct garbcoll_stBM *gc, struct dumper_stBM *du);
 extern void dumpgcdestroy_BM (struct garbcoll_stBM *gc,
                               struct dumper_stBM *du);
 extern void dumpgckeep_BM (struct garbcoll_stBM *gc, struct dumper_stBM *du);
-extern bool dumpobjisdumpable_BM (struct dumper_stBM *du,
-                                  const objectval_tyBM * obj);
-extern bool dumpvalisdumpable_BM (struct dumper_stBM *du,
-                                  const value_tyBM val);
 
-extern void dumpscanobj_BM (struct dumper_stBM *du,
-                            const objectval_tyBM * obj);
-extern void dumpscanvalue_BM (struct dumper_stBM *du, const value_tyBM val,
-                              int depth);
+static inline struct dumper_stBM *obdumpgetdumper_BM (objectval_tyBM *
+                                                      dumpob);
+extern bool obdumpobjisdumpable_BM (objectval_tyBM * dumpob,
+                                    const objectval_tyBM * obj);
+extern bool obdumpvalisdumpable_BM (objectval_tyBM * dumpob,
+                                    const value_tyBM val);
+
+extern void obdumpscanobj_BM (objectval_tyBM * dumpob,
+                              const objectval_tyBM * obj);
+extern void obdumpscanvalue_BM (objectval_tyBM * dumpob, const value_tyBM val,
+                                int depth);
 
 //// parsing
 extern const char *lexkindname_BM (enum parslexkind_enBM k);

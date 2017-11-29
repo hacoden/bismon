@@ -1044,6 +1044,15 @@ parseradvanceutf8_BM (struct parser_stBM * pars, unsigned nbc)
 }                               /* end parseradvanceutf8_BM */
 
 ////
+struct dumper_stBM *
+obdumpgetdumper_BM (objectval_tyBM * dumpob)
+{
+  if (!isobject_BM (dumpob))
+    return NULL;
+  if (valtype_BM (dumpob->ob_data) == typayl_dumper_BM)
+    return (struct dumper_stBM *) (dumpob->ob_data);
+  return NULL;
+}                               /* end obdumpgetdumper_BM */
 
 ////////////////////////////////////////////////////////////////
 bool
