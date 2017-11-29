@@ -125,7 +125,7 @@ closuregcmark_BM (struct garbcoll_stBM *gc, closure_tyBM * clos, int depth)
   gcobjmark_BM (gc, clos->nodt_conn);
   unsigned size = ((typedsize_tyBM *) clos)->size;
   for (unsigned ix = 0; ix < size; ix++)
-    gcmark_BM (gc, clos->nodt_sons[ix], depth + 1);
+    gcvaluemark_BM (gc, clos->nodt_sons[ix], depth + 1);
 }                               /* end nodegcmark_BM */
 
 
@@ -259,7 +259,7 @@ nodegcmark_BM (struct garbcoll_stBM *gc, node_tyBM * nod, int depth)
   gcobjmark_BM (gc, nod->nodt_conn);
   unsigned size = ((typedsize_tyBM *) nod)->size;
   for (unsigned ix = 0; ix < size; ix++)
-    gcmark_BM (gc, nod->nodt_sons[ix], depth + 1);
+    gcvaluemark_BM (gc, nod->nodt_sons[ix], depth + 1);
 }                               /* end nodegcmark_BM */
 
 void
@@ -272,7 +272,7 @@ quasinodegcmark_BM (struct garbcoll_stBM *gc, quasinode_tyBM * qnod,
   gcobjmark_BM (gc, qnod->nodt_conn);
   unsigned size = ((typedsize_tyBM *) qnod)->size;
   for (unsigned ix = 0; ix < size; ix++)
-    gcmark_BM (gc, qnod->nodt_sons[ix], depth + 1);
+    gcvaluemark_BM (gc, qnod->nodt_sons[ix], depth + 1);
 }                               /* end quasinodegcmark_BM */
 
 

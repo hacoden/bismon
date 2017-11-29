@@ -121,11 +121,17 @@ extern void weakassertfailureat_BM (const char *condmsg, const char *fil,
 #define WEAKASSERTRET_BM(Cond) do { if(!(Cond)) \
       { weakassertfailureat_BM(#Cond,__FILE__,__LINE__); return; }} \
   while(0)
+#define WEAKASSERTWARN_BM(Cond) do { if(!(Cond)) \
+      { weakassertfailureat_BM(#Cond,__FILE__,__LINE__); }} \
+  while(0)
 #else
 #define WEAKASSERT_BM(Cond) do if(false && !(Cond)) \
       {  return 0; }} while(0)
 #define WEAKASSERTRET_BM(Cond) do if(false && !(Cond)) \
       {  return; }} while(0)
+#define WEAKASSERTWARN_BM(Cond) do { if(false && !(Cond)) \
+      { weakassertfailureat_BM(#Cond,__FILE__,__LINE__); } \
+  while(0)
 #endif /*NDEBUG*/
 // for readability, gravity argument to gtk_text_buffer_create_mark
 #define RIGHT_GRAVITY_BM FALSE

@@ -596,5 +596,5 @@ datavectgcmark_BM (struct garbcoll_stBM *gc,
   unsigned dcnt = ((typedsize_tyBM *) dvec)->size;
   assert (dcnt <= dlen);
   for (unsigned ix = 0; ix < dcnt; ix++)
-    gcmark_BM (gc, dvec->vec_data[ix], depth + 1);
+    gcvaluemark_BM (gc, dvec->vec_data[ix], depth + 1);
 }                               /* end datavectgcmark_BM  */

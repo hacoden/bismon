@@ -5,6 +5,8 @@
 
 typedef void *value_tyBM;
 
+typedef void *extendedval_tyBM;
+
 typedef uint32_t hash_tyBM;
 // types of garbage collected values
 enum gctyenum_BM

@@ -631,7 +631,11 @@ extern void parserskipspaces_BM (struct parser_stBM *pars);
 extern parstoken_tyBM parsertokenget_BM (struct parser_stBM *pars);
 
 // internal routines
-extern void gcmark_BM (struct garbcoll_stBM *gc, value_tyBM val, int depth);
+extern void gcvaluemark_BM (struct garbcoll_stBM *gc, value_tyBM val,
+                            int depth);
+extern void gcextendedmark_BM (struct garbcoll_stBM *gc,
+                               extendedval_tyBM xval, int depth);
+
 extern void gcobjmark_BM (struct garbcoll_stBM *gc, objectval_tyBM * obj);
 extern void gcframemark_BM (struct garbcoll_stBM *gc,
                             struct stackframe_stBM *stkfram, int depth);

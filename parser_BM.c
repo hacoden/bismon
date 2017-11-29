@@ -108,7 +108,7 @@ parsergcmark_BM (struct garbcoll_stBM *gc, struct parser_stBM *pars)
   ((typedhead_tyBM *) pars)->hgc = MARKGC_BM;
   gc->gc_nbmarks++;
   if (pars->pars_cvalue)
-    gcmark_BM (gc, pars->pars_cvalue, 0);
+    gcvaluemark_BM (gc, pars->pars_cvalue, 0);
 }                               /* end parsergcmark_BM */
 
 
@@ -399,13 +399,13 @@ gctokenmark_BM (struct garbcoll_stBM *gc, struct parstoken_stBM *tok)
     case plex_ID:
       break;
     case plex_CNAME:
-      gcmark_BM (gc, (void *) tok->tok_cname, 0);
+      gcvaluemark_BM (gc, (void *) tok->tok_cname, 0);
       break;
     case plex_WORD:
-      gcmark_BM (gc, (void *) tok->tok_word, 0);
+      gcvaluemark_BM (gc, (void *) tok->tok_word, 0);
       break;
     case plex_STRING:
-      gcmark_BM (gc, (void *) tok->tok_string, 0);
+      gcvaluemark_BM (gc, (void *) tok->tok_string, 0);
       break;
     case plex_NAMEDOBJ:
       gcobjmark_BM (gc, (void *) tok->tok_namedobj);

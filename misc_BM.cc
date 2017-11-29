@@ -341,7 +341,7 @@ gcmarkglobals_BM(struct garbcoll_stBM*gc)
 {
   for (auto it: mapglobals_BM)
     if (it.second && *it.second)
-      gcmark_BM(gc, *it.second, 0);
+      gcvaluemark_BM(gc, *it.second, 0);
 } // end gcmarkglobals_BM
 
 
@@ -495,8 +495,8 @@ dictgcmark_BM(struct garbcoll_stBM *gc, struct dict_stBM*dict,
   auto& dicm = *(dictmap_claBM*)dict->dict_data;
   for (auto it : dicm)
     {
-      gcmark_BM(gc, (const value_tyBM)it.first, depth+1);
-      gcmark_BM(gc, (const value_tyBM)it.second, depth+1);
+      gcvaluemark_BM(gc, (const value_tyBM)it.first, depth+1);
+      gcvaluemark_BM(gc, (const value_tyBM)it.second, depth+1);
     }
 } // end dictgcmark_BM
 

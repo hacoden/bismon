@@ -598,7 +598,7 @@ assocgcmark_BM (struct garbcoll_stBM *gc, anyassoc_tyBM * assoc, int depth)
                   if (curkeyob && curval)
                     {
                       gcobjmark_BM (gc, (objectval_tyBM *) curkeyob);
-                      gcmark_BM (gc, curval, depth + 1);
+                      gcvaluemark_BM (gc, curval, depth + 1);
                     }
                 }
             }
@@ -616,7 +616,7 @@ assocgcmark_BM (struct garbcoll_stBM *gc, anyassoc_tyBM * assoc, int depth)
           if (curkeyob && curval)
             {
               gcobjmark_BM (gc, (objectval_tyBM *) curkeyob);
-              gcmark_BM (gc, curval, depth + 1);
+              gcvaluemark_BM (gc, curval, depth + 1);
             }
         }
     }
