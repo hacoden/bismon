@@ -56,8 +56,7 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   const value_tyBM arg4 = treenthson_BM ((const value_tyBM) restargs, 0);
   assert (istaggedint_BM (arg4));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const setval_tyBM * recv;
-                 struct strbuffer_stBM *sbuf;
+                 const setval_tyBM * recv; struct strbuffer_stBM *sbuf;
                  objectval_tyBM * dumpob; value_tyBM depthv;
                  const objectval_tyBM * curobj;
     );
@@ -108,8 +107,7 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   const value_tyBM arg4 = treenthson_BM ((const value_tyBM) restargs, 0);
   assert (istaggedint_BM (arg4));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const tupleval_tyBM * recv;
-                 struct strbuffer_stBM *sbuf;
+                 const tupleval_tyBM * recv; struct strbuffer_stBM *sbuf;
                  objectval_tyBM * dumpob; value_tyBM depthv;
                  const objectval_tyBM * curobj;
     );
@@ -159,8 +157,8 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   const value_tyBM arg4 = treenthson_BM ((const value_tyBM) restargs, 0);
   assert (istaggedint_BM (arg4));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const node_tyBM * recv; struct strbuffer_stBM *sbuf;
-                 objectval_tyBM * dumpob;
+                 const node_tyBM * recv;
+                 struct strbuffer_stBM *sbuf; objectval_tyBM * dumpob;
                  value_tyBM depthv; value_tyBM curson;
                  const objectval_tyBM * connobj;
     );
@@ -214,7 +212,6 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   assert (!clos || isclosure_BM ((const value_tyBM) clos));
   assert (isclosure_BM (arg1)); // the closure to dump
   assert (valtype_BM (arg2) == typayl_strbuffer_BM);
-  assert (valtype_BM (arg3) == typayl_dumper_BM);
   assert (valtype_BM ((const value_tyBM) restargs) == typayl_quasinode_BM
           && treewidth_BM ((const value_tyBM) restargs) == 1);
   const value_tyBM arg4 = treenthson_BM ((const value_tyBM) restargs, 0);
@@ -1075,8 +1072,7 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   const value_tyBM arg4 = treenthson_BM ((const value_tyBM) restargs, 0);
   assert (istaggedint_BM (arg4));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const objectval_tyBM * recv;
-                 struct strbuffer_stBM *sbuf;
+                 const objectval_tyBM * recv; struct strbuffer_stBM *sbuf;
                  value_tyBM depthv; objectval_tyBM * dumpob;
                  const objectval_tyBM * curobj;
     );
@@ -1115,20 +1111,20 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   assert (!clos || isclosure_BM ((const value_tyBM) clos));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv;
-                 struct dumper_stBM *du; struct strbuffer_stBM *sbuf;
+                 objectval_tyBM * dumpob; struct strbuffer_stBM *sbuf;
                  value_tyBM closv;
     );
   assert (isobject_BM (arg1));
   _.recv = arg1;
-  assert (valtype_BM (arg2) == typayl_dumper_BM);
-  _.du = arg2;
+  WEAKASSERT_BM (obdumpgetdumper_BM (arg2) != NULL);
+  _.dumpob = arg2;
   assert (valtype_BM (arg3) == typayl_strbuffer_BM);
   assert (restargs == NULL);
   _.sbuf = arg3;
   _.closv = objgetattr_BM (_.recv, BMP_dump_data);
   if (isclosure_BM (_.closv))
     return apply3_BM (_.closv, (struct stackframe_stBM *) &_,
-                      (const value_tyBM) _.recv, _.du, _.sbuf);
+                      (const value_tyBM) _.recv, _.dumpob, _.sbuf);
   return (value_tyBM) _.recv;
 }                               /* end ROUTINE _6PmxiZR9WBe_13DwWExCALl */
 
@@ -1146,13 +1142,13 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   assert (!clos || isclosure_BM ((const value_tyBM) clos));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv;
-                 struct dumper_stBM *du; struct strbuffer_stBM *sbuf;
+                 objectval_tyBM * dumpob; struct strbuffer_stBM *sbuf;
                  value_tyBM obval;
     );
   assert (isobject_BM (arg1));
   _.recv = arg1;
-  assert (valtype_BM (arg2) == typayl_dumper_BM);
-  _.du = arg2;
+  WEAKASSERT_BM (obdumpgetdumper_BM (arg2) != NULL);
+  _.dumpob = arg2;
   assert (valtype_BM (arg3) == typayl_strbuffer_BM);
   assert (restargs == NULL);
   _.sbuf = arg3;
@@ -1164,7 +1160,7 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
       unsigned oldbuflen = strbufferlength_BM (_.sbuf);
       send3_BM (_.obval, BMP_dump_value,
                 (struct stackframe_stBM *) &_,
-                _.sbuf, _.du, taggedint_BM (1));
+                _.sbuf, _.dumpob, taggedint_BM (1));
       unsigned newbuflen = strbufferlength_BM (_.sbuf);
       if (newbuflen == oldbuflen)
         strbufferprintf_BM (_.sbuf, "\t |novalue| __");
@@ -1367,22 +1363,22 @@ const value_tyBM arg3 __attribute__ ((unused)),
 const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   assert (!clos || isclosure_BM ((const value_tyBM) clos));
-  assert (valtype_BM (arg2) == typayl_dumper_BM);
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv;
-                 struct dumper_stBM *du;
+                 objectval_tyBM * dumpob;
                  struct strbuffer_stBM *sbuf;
                  struct strbuffer_stBM *prsbuf;
                  const stringval_tyBM * filnamv;
                  const setval_tyBM * prset; const objectval_tyBM * curpredef;
                  value_tyBM closv;
     );
-  _.du = arg2;
+  struct dumper_stBM *duptr = obdumpgetdumper_BM (arg2);
+  WEAKASSERT_BM (duptr != NULL);
+  _.dumpob = arg2;
   _.closv = (const value_tyBM) clos;
   _.prsbuf = strbuffermake_BM (512 * 1024);
   _.filnamv = closurenthson_BM (_.closv, 0);
   assert (isstring_BM ((const value_tyBM) _.filnamv));
-  assert (valtype_BM (_.du) == typayl_dumper_BM);
   const char *basepath = bytstring_BM (_.filnamv);
   strbufferprintf_BM (_.prsbuf,
                       "// generated file for predefined %s\n", basepath);
@@ -1476,13 +1472,13 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
                       "#endif/*HAS_NAMED_PREDEF_BM*/\n\n");
   strbufferprintf_BM (_.prsbuf, "// end of generated file %s\n", basepath);
   char *filpath = NULL;
-  asprintf (&filpath, "%s/%s", bytstring_BM (_.du->dump_dir), basepath);
+  asprintf (&filpath, "%s/%s", bytstring_BM (duptr->dump_dir), basepath);
   if (!filpath)
     FATAL_BM ("asprintf failed for %s", basepath);
   strbufferwritetofile_BM (_.prsbuf, filpath);
   strbufferreset_BM (_.prsbuf);
   printf ("wrote predefined file %s\n", filpath);
-  ((struct dumper_stBM *) _.du)->dump_wrotefilecount++;
+  duptr->dump_wrotefilecount++;
   free (filpath), filpath = NULL;
   return _.closv;
 }                               /* end ROUTINE _075tZNHCAMa_7XNNBaNM4qv dumping predefined */
@@ -1502,10 +1498,9 @@ const value_tyBM arg3 __attribute__ ((unused)),
 const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   assert (!clos || isclosure_BM ((const value_tyBM) clos));
-  assert (valtype_BM (arg2) == typayl_dumper_BM);
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv;
-                 struct dumper_stBM *du;
+                 objectval_tyBM * dumpob;
                  struct strbuffer_stBM *sbuf;
                  struct strbuffer_stBM *prsbuf;
                  const stringval_tyBM * filnamv;
@@ -1513,13 +1508,14 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
                  const stringval_tyBM * curglobname;
                  value_tyBM closv;
     );
-  _.du = arg2;
+  struct dumper_stBM *duptr = obdumpgetdumper_BM (arg2);
+  WEAKASSERT_BM (duptr != NULL);
+  _.dumpob = arg2;
   _.closv = (const value_tyBM) clos;
   _.prsbuf = strbuffermake_BM (512 * 1024);
   _.filnamv = closurenthson_BM (_.closv, 0);
   _.nodglobv = nodeglobalnames_BM (BMP_node);
   assert (isstring_BM ((const value_tyBM) _.filnamv));
-  assert (valtype_BM (_.du) == typayl_dumper_BM);
   const char *basepath = bytstring_BM (_.filnamv);
   strbufferprintf_BM (_.prsbuf,
                       "// generated file for globals %s\n", basepath);
@@ -1543,13 +1539,13 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
   strbufferprintf_BM (_.prsbuf, "\n\n"
                       "// end of generated file %s\n", basepath);
   char *filpath = NULL;
-  asprintf (&filpath, "%s/%s", bytstring_BM (_.du->dump_dir), basepath);
+  asprintf (&filpath, "%s/%s", bytstring_BM (duptr->dump_dir), basepath);
   if (!filpath)
     FATAL_BM ("asprintf failed for %s", basepath);
   strbufferwritetofile_BM (_.prsbuf, filpath);
   strbufferreset_BM (_.prsbuf);
   printf ("wrote globals file %s\n", filpath);
-  ((struct dumper_stBM *) _.du)->dump_wrotefilecount++;
+  duptr->dump_wrotefilecount++;
   free (filpath), filpath = NULL;
   return _.closv;
 }                               /* end ROUTINE _4ENXjApm7Qb_3bXo8F6Jg9z dumping globals */
@@ -1587,20 +1583,21 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv;
                  value_tyBM closv;
-                 struct dumper_stBM *du;
+                 objectval_tyBM * dumpob;
                  struct strbuffer_stBM *sbuf;
                  struct strbuffer_stBM *prsbuf;
                  const stringval_tyBM * filnamv;
                  const tupleval_tyBM * tuptypes; objectval_tyBM * curtype;
                  value_tyBM emittedv;
     );
-  _.du = arg2;
+  struct dumper_stBM *duptr = obdumpgetdumper_BM (arg2);
+  WEAKASSERT_BM (duptr != NULL);
+  _.dumpob = arg2;
   _.closv = (const value_tyBM) clos;
   WEAKASSERT_BM (closurewidth_BM ((const value_tyBM) clos) >= closix__LAST);
   closconn = closureconn_BM ((const value_tyBM) clos);
   WEAKASSERT_BM (isobject_BM (closconn));
   constnodv = closconn->ob_data;
-  WEAKASSERT_BM (valtype_BM (_.du) == typayl_dumper_BM);
   /** constnodv is
       * const (c_type emit_c_type)
    **/
@@ -1693,13 +1690,13 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
       _.emittedv = NULL;
     };
   char *filpath = NULL;
-  asprintf (&filpath, "%s/%s", bytstring_BM (_.du->dump_dir), basepath);
+  asprintf (&filpath, "%s/%s", bytstring_BM (duptr->dump_dir), basepath);
   if (!filpath)
     FATAL_BM ("asprintf failed for %s", basepath);
   strbufferwritetofile_BM (_.prsbuf, filpath);
   strbufferreset_BM (_.prsbuf);
   printf ("wrote types file %s\n", filpath);
-  ((struct dumper_stBM *) _.du)->dump_wrotefilecount++;
+  duptr->dump_wrotefilecount++;
   free (filpath), filpath = NULL;
   return _.closv;
 }                               /* end of routine _3yJPC4SxGtF_6ilaF37wdxG dumping of ctypes */
