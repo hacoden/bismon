@@ -2281,14 +2281,14 @@ ROUTINEOBJNAME_BM (_5DyG7xVcxRI_1Ckpbj7b3QK)    //
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const closure_tyBM * clos; objectval_tyBM * obmod;
-                 struct dumper_stBM *dumper; struct strbuffer_stBM *sbuf;
+                 objectval_tyBM * dumpob; struct strbuffer_stBM *sbuf;
                  value_tyBM res;
     );
   _.clos = clos;
   assert (isobject_BM (arg1));
   _.obmod = arg1;
-  assert (valtype_BM (arg2) == typayl_dumper_BM);
-  _.dumper = arg2;
+  WEAKASSERT_BM (obdumpgetdumper_BM (arg2) != NULL);
+  _.dumpob = arg2;
   assert (valtype_BM (arg3) == typayl_strbuffer_BM);
   _.sbuf = arg3;
   DBGPRINTF_BM ("@@dump_data°plain_dumpable_module obmod=%s",
