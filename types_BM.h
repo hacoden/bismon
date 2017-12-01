@@ -161,14 +161,12 @@ typedef void anyassoc_tyBM;
 struct datavectval_stBM
 {                               /* typayl_vectval_BM */
   typedsize_tyBM pA;            /// rlen is allocated size, siz is used length
-  objectval_tyBM *payl_owner;
   value_tyBM vec_data[];        // of rlen elements
 };
 
 struct strbuffer_stBM           /* for typayl_strbuffer_BM, in scalar.c */
 {
   typedhead_tyBM pA;            // rlen is maximal length
-  objectval_tyBM *payl_owner;
   int sbuf_indent;              /* current indentation */
   char *sbuf_dbuf;              /* malloc-ed buffer */
   size_t sbuf_size;             /* malloc-ed size */
@@ -179,7 +177,6 @@ struct strbuffer_stBM           /* for typayl_strbuffer_BM, in scalar.c */
 struct assocbucket_stBM
 {                               /* typayl_assocbucket_BM */
   typedsize_tyBM pA;
-  objectval_tyBM *payl_owner;
   // rlen is allocated length of abuck_pairs,
   // size is total count of entries
   struct assocpairs_stBM *abuck_pairs[];        // of rlen assocpairs
@@ -194,21 +191,18 @@ struct assocentry_stBM
 struct assocpairs_stBM
 {                               /* typayl_assocpairs_BM */
   typedsize_tyBM pa;            // rlen is allocated size, size is used count
-  objectval_tyBM *payl_owner;
   struct assocentry_stBM apairs_ent[];
 };
 
 struct hashsetobj_stBM
 {                               /* typayl_hashsetobj_BM */
-  typedsize_tyBM pa;            // rlen is allocated size, size is used count 
-  objectval_tyBM *payl_owner;
+  typedsize_tyBM pa;            // rlen is allocated size, size is used count
   objectval_tyBM *hashset_objs[];
 };
 
 struct classinfo_stBM
 {
   typedhead_tyBM pA;            // rlen & hash are unused
-  objectval_tyBM *payl_owner;
   objectval_tyBM *clinf_superclass;
   anyassoc_tyBM *clinf_dictmeth;
 };
@@ -223,7 +217,6 @@ enum dumpstate_enBM
 struct dumper_stBM
 {
   typedhead_tyBM pA;            // rlen & hash are unused
-  objectval_tyBM *payl_owner;
   enum dumpstate_enBM dump_state;
   objectval_tyBM *dump_object;
   const stringval_tyBM *dump_dir;
@@ -261,7 +254,6 @@ struct listlink_stBM            ///internal, not a value
 struct listtop_stBM
 {                               // for  typayl_listtop_BM
   typedhead_tyBM pa;            // rlen is number of values in the list
-  objectval_tyBM *payl_owner;
   unsigned list_nblinks;        // number of struct listlink_stBM
   struct listlink_stBM *list_first;
   struct listlink_stBM *list_last;
@@ -349,7 +341,6 @@ struct specialframe_stBM        // for typayl_SpecialFrame_BM
 struct loader_stBM              // malloc-ed then free-d at load time
 {                               // for typayl_loader_BM
   typedhead_tyBM pa;            // rlen is unused
-  objectval_tyBM *payl_owner;
   unsigned ld_magic;            /* always LOADERMAGIC_BM */
   unsigned ld_maxnum;           /* highest number of store*.bmon files */
   double ld_startelapsedtime;
@@ -535,7 +526,6 @@ struct parserops_stBM
 struct parser_stBM              /* for typayl_parser_BM */
 {
   typedhead_tyBM pa;            // rlen is unused
-  objectval_tyBM *payl_owner;
   const struct parserops_stBM *pars_ops;
   FILE *pars_file;
   const char *pars_path;
@@ -556,7 +546,6 @@ struct parser_stBM              /* for typayl_parser_BM */
 struct dict_stBM
 {
   typedhead_tyBM pa;
-  objectval_tyBM *payl_owner;
   uintptr_t dict_data[8];       /* actually a C++ std::map */
 };
 
