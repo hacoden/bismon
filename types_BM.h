@@ -309,7 +309,7 @@ struct object_stBM              /*tyObject_BM */
     void *ob_routaddr;
   };
   objectval_tyBM *ob_sig;
-  value_tyBM ob_data;
+  extendedval_tyBM ob_payl;
 };
 
 struct stackframe_stBM

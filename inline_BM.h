@@ -430,13 +430,15 @@ objputcomp_BM (objectval_tyBM * obj, int rk, const value_tyBM valcomp)
     datavectputnth_BM (obj->ob_compvec, rk, valcomp);
 }                               /* end objputcomp_BM */
 
+
 void
 objreservecomps_BM (objectval_tyBM * obj, unsigned gap)
 {
   if (!isobject_BM ((const value_tyBM) obj))
     return;
   obj->ob_compvec = datavect_reserve_BM (obj->ob_compvec, gap);
-}
+}                               /* end objreservecomps_BM */
+
 
 void
 objresetcomps_BM (objectval_tyBM * obj, unsigned len)
@@ -445,8 +447,6 @@ objresetcomps_BM (objectval_tyBM * obj, unsigned len)
     return;
   obj->ob_compvec = datavect_reserve_BM (NULL, len);
 }                               /* end objresetcomps_BM */
-
-                        /* end objreservecomps_BM */
 
 
 void
@@ -468,14 +468,48 @@ objgrowcomps_BM (objectval_tyBM * obj, unsigned gap)
   obj->ob_compvec = datavect_grow_BM (obj->ob_compvec, gap);
 }                               /* end objgrowcomps_BM */
 
+extendedval_tyBM
+objpayload_BM (const objectval_tyBM * obj)
+{
+  if (!isobject_BM ((const value_tyBM) obj))
+    return NULL;
+  return obj->ob_payl;
+}                               /* end objpayload_BM */
+
+
+void
+objclearpayload_BM (objectval_tyBM * obj)
+{
+  if (!isobject_BM ((const value_tyBM) obj))
+    return;
+  extendedval_tyBM payl = obj->ob_payl;
+  if (!payl)
+    return;
+  obj->ob_payl = NULL;
+  deleteobjectpayload_BM (obj, payl);
+}                               /* end objclearpayload_BM */
+
+void
+objputpayload_BM (objectval_tyBM * obj, extendedval_tyBM payl)
+{
+  if (!isobject_BM ((const value_tyBM) obj))
+    return;
+  extendedval_tyBM oldpayl = obj->ob_payl;
+  if (oldpayl == payl)
+    return;
+  obj->ob_payl = NULL;
+  if (oldpayl)
+    deleteobjectpayload_BM (obj, oldpayl);
+  obj->ob_payl = payl;
+}                               /* end objputpayload_BM */
+
 bool
 objhasclassinfo_BM (const objectval_tyBM * obj)
 {
-  if (!isobject_BM ((const value_tyBM) obj))
+  extendedval_tyBM payl = objpayload_BM (obj);
+  if (!payl)
     return false;
-  return (obj->ob_data
-          && valtype_BM ((const value_tyBM) (obj->ob_data)) ==
-          typayl_classinfo_BM);
+  return (valtype_BM ((const value_tyBM) payl) == typayl_classinfo_BM);
 }                               /* end objhasclassinfo_BM */
 
 objectval_tyBM *
@@ -484,7 +518,7 @@ objgetclassinfosuperclass_BM (const objectval_tyBM * obj)
   if (!objhasclassinfo_BM (obj))
     return NULL;
   struct classinfo_stBM *clinf =        //
-    (struct classinfo_stBM *) (obj->ob_data);
+    (struct classinfo_stBM *) (obj->ob_payl);
   assert (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
   objectval_tyBM *superob = clinf->clinf_superclass;
   assert (!superob || isobject_BM ((const value_tyBM) superob));
@@ -511,7 +545,7 @@ objgetclassinfomethod_BM (const objectval_tyBM * obj,
   if (!isobject_BM ((const value_tyBM) obselector))
     return NULL;
   struct classinfo_stBM *clinf =        //
-    (struct classinfo_stBM *) (obj->ob_data);
+    (struct classinfo_stBM *) (obj->ob_payl);
   assert (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
   const closure_tyBM *clos = (const closure_tyBM *)     //
     assoc_getattr_BM (clinf->clinf_dictmeth,
@@ -526,7 +560,7 @@ objgetclassinfosetofselectors_BM (const objectval_tyBM * obj)
   if (!objhasclassinfo_BM (obj))
     return NULL;
   struct classinfo_stBM *clinf =        //
-    (struct classinfo_stBM *) (obj->ob_data);
+    (struct classinfo_stBM *) (obj->ob_payl);
   assert (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
   const setval_tyBM *set =      //
     assoc_setattrs_BM (clinf->clinf_dictmeth);
@@ -1047,10 +1081,11 @@ parseradvanceutf8_BM (struct parser_stBM * pars, unsigned nbc)
 struct dumper_stBM *
 obdumpgetdumper_BM (objectval_tyBM * dumpob)
 {
-  if (!isobject_BM (dumpob))
+  extendedval_tyBM payl = objpayload_BM (dumpob);
+  if (!payl)
     return NULL;
-  if (valtype_BM (dumpob->ob_data) == typayl_dumper_BM)
-    return (struct dumper_stBM *) (dumpob->ob_data);
+  if (valtype_BM (payl) == typayl_dumper_BM)
+    return (struct dumper_stBM *) (payl);
   return NULL;
 }                               /* end obdumpgetdumper_BM */
 

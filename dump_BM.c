@@ -148,7 +148,7 @@ dump_BM (const char *dirname, struct stackframe_stBM *stkf)
   _.curdu->dump_startelapsedtime = elapsedtime_BM ();
   _.curdu->dump_startcputime = cputime_BM ();
   _.duobj = makeobj_BM ();
-  _.duobj->ob_data = _.curdu;
+  objputpayload_BM (_.duobj, _.curdu);
   _.curdu->dump_object = _.duobj;
   dump_scan_pass_BM (_.curdu, (struct stackframe_stBM *) &_);
   dump_run_todo_BM (_.curdu, (struct stackframe_stBM *) &_);
@@ -246,7 +246,8 @@ dump_scan_object_content_BM (struct dumper_stBM *du,
       _.curval = NULL;
     }
   // perhaps we should send first, and use its result...
-  if (_.curobj->ob_data)
+  extendedval_tyBM payl = objpayload_BM (_.curobj);
+  if (payl)
     send1_BM ((value_tyBM) _.curobj, BMP_dump_scan,
               (struct stackframe_stBM *) &_, _.obdump);
   objunlock_BM (_.curobj);

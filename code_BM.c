@@ -368,7 +368,7 @@ ROUTINEOBJNAME_BM (_4EBQMvthjcP_2OiZxZviSQc)    // dump_scan°class
   // arg2 is the dumpob
   _.dumpob = objectcast_BM (arg2);
   WEAKASSERT_BM (obdumpgetdumper_BM (_.dumpob) != NULL);
-  assert (valtype_BM (_.recv->ob_data) == typayl_classinfo_BM);
+  WEAKASSERT_BM (objhasclassinfo_BM (_.recv));
   assert (arg3 == NULL);
   assert (restargs == NULL);
   _.supercl = objgetclassinfosuperclass_BM ((const value_tyBM) _.recv);
@@ -490,10 +490,11 @@ ROUTINEOBJNAME_BM (_4DvEF1tVGFD_6VVLpFn6FPW)    //  dump_scan°hset_object
   _.dumpob = objectcast_BM (arg2);
   WEAKASSERT_BM (obdumpgetdumper_BM (_.dumpob) != NULL);
   WEAKASSERT_BM (valtype_BM (arg2) == typayl_dumper_BM);
-  WEAKASSERT_BM (valtype_BM (_.recv->ob_data) == typayl_hashsetobj_BM);
+  extendedval_tyBM payl = objpayload_BM (_.recv);
+  WEAKASSERT_BM (valtype_BM (payl) == typayl_hashsetobj_BM);
   assert (arg3 == NULL);
   assert (restargs == NULL);
-  _.setv = hashsetobj_to_set_BM (_.recv->ob_data);
+  _.setv = hashsetobj_to_set_BM (payl);
   obdumpscanvalue_BM (_.dumpob, (value_tyBM) _.setv, 0);
   return (value_tyBM) _.recv;
 }                               /* end dump_scan°set_object ROUTINE _4DvEF1tVGFD_6VVLpFn6FPW */
@@ -532,7 +533,7 @@ ROUTINEOBJNAME_BM (_7GMLV81ntO3_4NHTv7fCL0A)    // dump_data°hset_object
   _.clos = clos;
   closconn = closureconn_BM ((const value_tyBM) clos);
   assert (isobject_BM (closconn));
-  constnodv = closconn->ob_data;
+  constnodv = objpayload_BM (closconn);
   WEAKASSERT_BM (isobject_BM (arg1));
   _.recv = arg1;
   WEAKASSERT_BM (valtype_BM (arg2) == typayl_dumper_BM);
@@ -540,7 +541,7 @@ ROUTINEOBJNAME_BM (_7GMLV81ntO3_4NHTv7fCL0A)    // dump_data°hset_object
   WEAKASSERT_BM (valtype_BM (arg3) == typayl_strbuffer_BM);
   WEAKASSERT_BM (restargs == NULL);
   _.sbuf = arg3;
-  WEAKASSERT_BM (valtype_BM (_.recv->ob_data) == typayl_hashsetobj_BM);
+  WEAKASSERT_BM (valtype_BM (objpayload_BM (_.recv)) == typayl_hashsetobj_BM);
   assert (arg3 == NULL);
   assert (restargs == NULL);
   /** constnodv is 
@@ -554,7 +555,7 @@ ROUTINEOBJNAME_BM (_7GMLV81ntO3_4NHTv7fCL0A)    // dump_data°hset_object
     objectcast_BM (nodenthson_BM ((void *) constnodv, constix_dump_value));
   WEAKASSERT_BM (k_dump_value == BMP_dump_value);
   k_put = objectcast_BM (nodenthson_BM ((void *) constnodv, constix_put));
-  _.setv = hashsetobj_to_set_BM (_.recv->ob_data);
+  _.setv = hashsetobj_to_set_BM (objpayload_BM (_.recv));
   strbufferprintf_BM (_.sbuf, "!~ todo (~\t");
   strbuffermoreindent_BM (_.sbuf);
   _.dumpres = send3_BM (k_put, BMP_dump_value,
@@ -593,7 +594,7 @@ ROUTINEOBJNAME_BM (_26FUvWKvkYr_5hyqhhV8NEh)    // get°hset_object
     return NULL;
   _.recv = arg1;
   _.elem = arg2;
-  hset = hashsetobjcast_BM (_.recv->ob_data);
+  hset = hashsetobjcast_BM (objpayload_BM (_.recv));
   if (!hset)
     return NULL;
   if (isobject_BM (_.elem))
@@ -657,12 +658,13 @@ ROUTINEOBJNAME_BM (_91iTl2vqF09_72WJj4swbNi)    // put°hset_object
     return NULL;
   _.putseqv = arg2;
   unsigned lnseq = sequencesize_BM (_.putseqv);
-  _.recv->ob_data = hashsetobj_grow_BM (NULL, 9 * lnseq / 8 + 2);
+  struct hashsetobj_stBM *hset = hashsetobj_grow_BM (NULL, 9 * lnseq / 8 + 2);
   for (unsigned ix = 0; ix < lnseq; ix++)
     {
       _.curob = sequencenthcomp_BM (_.putseqv, ix);
-      _.recv->ob_data = hashsetobj_add_BM (_.recv->ob_data, _.curob);
+      hset = hashsetobj_add_BM (hset, _.curob);
     };
+  objputpayload_BM (_.recv, hset);
   return _.recv;
 }                               /* end ROUTINE _91iTl2vqF09_72WJj4swbNi put°hset_object */
 
@@ -688,24 +690,24 @@ ROUTINEOBJNAME_BM (_2juH5YMCcog_8pQGCuE5mod)    // add°hset_object
   if (!isobject_BM (arg1))
     return NULL;
   _.recv = arg1;
-  hset = hashsetobjcast_BM (_.recv->ob_data);
+  hset = hashsetobjcast_BM (objpayload_BM (_.recv));
   _.addend = arg2;
   if (isobject_BM (_.addend))
     {
-      _.recv->ob_data = hset =
-        hashsetobj_add_BM (hset, (objectval_tyBM *) _.addend);
+      hset = hashsetobj_add_BM (hset, (objectval_tyBM *) _.addend);
+      objputpayload_BM (_.recv, hset);
       return _.recv;
     }
   else if (issequence_BM (_.addend))
     {
       unsigned nbadd = sequencesize_BM (_.addend);
-      _.recv->ob_data = hset = hashsetobj_grow_BM (hset, nbadd + 1);
+      hset = hashsetobj_grow_BM (hset, nbadd + 1);
       for (unsigned ix = 0; ix < nbadd; ix++)
         {
           _.curob = sequencenthcomp_BM (_.addend, ix);
           hset = hashsetobj_add_BM (hset, _.curob);
         };
-      _.recv->ob_data = hset;
+      objputpayload_BM (_.recv, hset);
       return _.recv;
     }
   return NULL;
@@ -732,15 +734,16 @@ ROUTINEOBJNAME_BM (_5hedSPIXD0o_5ef69rR2kzb)    // remove°hset_object
   if (!isobject_BM (arg1))
     return NULL;
   _.recv = arg1;
-  if (!_.recv->ob_data)
+  if (!objpayload_BM (_.recv))
     return _.recv;
-  hset = hashsetobjcast_BM (_.recv->ob_data);
+  hset = hashsetobjcast_BM (objpayload_BM (_.recv));
   if (!hset)
     return NULL;
   _.removedv = arg2;
   if (isobject_BM (_.removedv))
     {
-      _.recv->ob_data = hset = hashsetobj_remove_BM (hset, _.removedv);
+      hset = hashsetobj_remove_BM (hset, _.removedv);
+      objputpayload_BM (_.recv, hset);
       return _.recv;
     }
   else if (issequence_BM (_.removedv))
@@ -753,7 +756,7 @@ ROUTINEOBJNAME_BM (_5hedSPIXD0o_5ef69rR2kzb)    // remove°hset_object
         };
       if (nbrem > TINYSIZE_BM)
         hset = hashsetobj_grow_BM (hset, 1);    /* could reorganize the hset */
-      _.recv->ob_data = hset;
+      objputpayload_BM (_.recv, hset);
       return _.recv;
     }
   else
@@ -777,9 +780,9 @@ value_tyBM ROUTINEOBJNAME_BM (_88cUYsDqSFO_0DKwKLSOmpm) (const closure_tyBM * cl
   _.recv = arg1;
   if (!isobject_BM (arg1))
     return NULL;
-  if (valtype_BM (_.recv->ob_data) != typayl_hashsetobj_BM)
+  if (valtype_BM (objpayload_BM (_.recv)) != typayl_hashsetobj_BM)
     return NULL;
-  _.setv = hashsetobj_to_set_BM (_.recv->ob_data);
+  _.setv = hashsetobj_to_set_BM (objpayload_BM (_.recv));
   return (value_tyBM) _.setv;
 }                               /* end ROUTINE _88cUYsDqSFO_0DKwKLSOmpm set of hset_object */
 
@@ -807,10 +810,10 @@ ROUTINEOBJNAME_BM (_8MU0cEcpEYN_5SVe0jrv36o)    //  dump_scan°assoc_object
   _.recv = arg1;
   WEAKASSERT_BM (obdumpgetdumper_BM (arg2) != NULL);
   _.dumpob = arg2;
-  if (!_.recv->ob_data)
+  if (!objpayload_BM (_.recv))
     return (value_tyBM) _.recv;
-  WEAKASSERT_BM (isassoc_BM (_.recv->ob_data));
-  anyassoc_tyBM *assoc = assoccast_BM (_.recv->ob_data);
+  WEAKASSERT_BM (isassoc_BM (objpayload_BM (_.recv)));
+  anyassoc_tyBM *assoc = assoccast_BM (objpayload_BM (_.recv));
   if (!assoc)
     return NULL;
   assert (arg3 == NULL);
@@ -864,7 +867,7 @@ ROUTINEOBJNAME_BM (_9EytjXNb76D_1ZP3iSk9cuu)    // dump_data°assoc_object
   _.clos = clos;
   closconn = closureconn_BM ((const value_tyBM) clos);
   assert (isobject_BM (closconn));
-  constnodv = closconn->ob_data;
+  constnodv = objpayload_BM (closconn);
   WEAKASSERT_BM (isobject_BM (arg1));
   _.recv = arg1;
   WEAKASSERT_BM (obdumpgetdumper_BM (arg2) != NULL);
@@ -886,8 +889,8 @@ ROUTINEOBJNAME_BM (_9EytjXNb76D_1ZP3iSk9cuu)    // dump_data°assoc_object
   WEAKASSERT_BM (k_dump_value == BMP_dump_value);
   k_put = objectcast_BM (nodenthson_BM ((void *) constnodv, constix_put));
   WEAKASSERT_BM (isobject_BM ((value_tyBM) _.recv));
-  WEAKASSERT_BM (isassoc_BM (_.recv->ob_data));
-  anyassoc_tyBM *assoc = assoccast_BM (_.recv->ob_data);
+  WEAKASSERT_BM (isassoc_BM (objpayload_BM (_.recv)));
+  anyassoc_tyBM *assoc = assoccast_BM (objpayload_BM (_.recv));
   if (!assoc)
     return NULL;
   _.setv = assoc_setattrs_BM (assoc);
@@ -941,7 +944,7 @@ ROUTINEOBJNAME_BM (_4zaM2Itdsuq_9qNJK0HbcQI)    //  set°assoc_object
     );
   WEAKASSERT_BM (isobject_BM (arg1));
   _.recv = arg1;
-  anyassoc_tyBM *assoc = assoccast_BM (_.recv->ob_data);
+  anyassoc_tyBM *assoc = assoccast_BM (objpayload_BM (_.recv));
   if (!assoc)
     return NULL;
   _.setv = assoc_setattrs_BM (assoc);
@@ -967,7 +970,7 @@ ROUTINEOBJNAME_BM (_4icYJnKsN0o_4xm5UbQOMTe)    //  get°assoc_object
     );
   WEAKASSERT_BM (isobject_BM (arg1));
   _.recv = arg1;
-  anyassoc_tyBM *assoc = assoccast_BM (_.recv->ob_data);
+  anyassoc_tyBM *assoc = assoccast_BM (objpayload_BM (_.recv));
   if (!assoc)
     return NULL;
   if (!isobject_BM (arg2))
@@ -998,12 +1001,13 @@ ROUTINEOBJNAME_BM (_6eD9Y1qYcnj_8uVDhxjBpG8)    //  put°assoc_object
   _.recv = arg1;
   if (!isobject_BM ((value_tyBM) _.recv))
     return NULL;
-  anyassoc_tyBM *assoc = assoccast_BM (_.recv->ob_data);
+  anyassoc_tyBM *assoc = assoccast_BM (objpayload_BM (_.recv));
   if (!isobject_BM (arg2))
     return NULL;
   _.obattr = objectcast_BM (arg2);
   _.valattr = arg3;
-  _.recv->ob_data = assoc = assoc_addattr_BM (assoc, _.obattr, _.valattr);
+  assoc = assoc_addattr_BM (assoc, _.obattr, _.valattr);
+  objputpayload_BM (_.recv, assoc);
   return _.recv;
 }                               /* end ROUTINE _6eD9Y1qYcnj_8uVDhxjBpG8   put°assoc_object */
 
@@ -1028,13 +1032,14 @@ ROUTINEOBJNAME_BM (_0ekJdzLOqAI_8mejMqkwuKQ)    //  remove°assoc_object
   _.recv = arg1;
   if (!isobject_BM ((value_tyBM) _.recv))
     return NULL;
-  anyassoc_tyBM *assoc = assoccast_BM (_.recv->ob_data);
+  anyassoc_tyBM *assoc = assoccast_BM (objpayload_BM (_.recv));
   if (!isobject_BM (arg2))
     return NULL;
   _.attr = (arg2);
   if (isobject_BM (_.attr))
     {
-      _.recv->ob_data = assoc = assoc_removeattr_BM (assoc, _.attr);
+      assoc = assoc_removeattr_BM (assoc, _.attr);
+      objputpayload_BM (_.recv, assoc);
       return _.recv;
     }
   else if (issequence_BM (_.attr))
@@ -1045,7 +1050,7 @@ ROUTINEOBJNAME_BM (_0ekJdzLOqAI_8mejMqkwuKQ)    //  remove°assoc_object
           _.obattr = sequencenthcomp_BM (_.attr, ix);
           assoc = assoc_removeattr_BM (assoc, _.obattr);
         }
-      _.recv->ob_data = assoc;
+      objputpayload_BM (_.recv, assoc);
       return _.recv;
     }
   return NULL;
@@ -1152,7 +1157,7 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   assert (valtype_BM (arg3) == typayl_strbuffer_BM);
   assert (restargs == NULL);
   _.sbuf = arg3;
-  _.obval = _.recv->ob_data;
+  _.obval = objpayload_BM (_.recv);
   int tyval = valtype_BM (_.obval);
   if (tyval >= type_FIRST_BM && tyval <= type_LASTREAL_BM)
     {
@@ -1193,7 +1198,7 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   _.dumpob = arg2;
   assert (arg3 == NULL);
   assert (restargs == NULL);
-  _.obval = _.recv->ob_data;
+  _.obval = objpayload_BM (_.recv);
   int tyval = valtype_BM (_.obval);
   if (tyval >= type_FIRST_BM && tyval <= type_LASTREAL_BM)
     {
@@ -1597,7 +1602,7 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
   WEAKASSERT_BM (closurewidth_BM ((const value_tyBM) clos) >= closix__LAST);
   closconn = closureconn_BM ((const value_tyBM) clos);
   WEAKASSERT_BM (isobject_BM (closconn));
-  constnodv = closconn->ob_data;
+  constnodv = objpayload_BM (closconn);
   /** constnodv is
       * const (c_type emit_c_type)
    **/
@@ -1813,7 +1818,7 @@ ROUTINEOBJNAME_BM (_1gME6zn82Kf_8hzWibLFRfz)    //
   // assert (closurewidth_BM ((const value_tyBM) clos) >= closix__LAST);
   _.closconn = closureconn_BM ((const value_tyBM) clos);
   assert (isobject_BM (_.closconn));
-  _.constnodv = _.closconn->ob_data;
+  _.constnodv = objpayload_BM (_.closconn);
   /** constnodv is 
      * const (simple_module_generation
               prepare_module  plain_module generate_module)
@@ -1853,7 +1858,7 @@ ROUTINEOBJNAME_BM (_1gME6zn82Kf_8hzWibLFRfz)    //
           == 731255930 /* generate_module |=_9mq0jsuz4XQ_4doHfd987Q6| */ );
   objputclass_BM (_.modgenob, _.simple_module_generation);
   objputattr_BM (_.modgenob, _.plain_module, _.recv);
-  _.modgenob->ob_data = strbuffermake_BM (1024 * 1024);
+  objputpayload_BM (_.modgenob, strbuffermake_BM (1024 * 1024));
   objtouchnow_BM (_.modgenob);
   _.resprep = send1_BM (_.recv, _.prepare_module,
                         (struct stackframe_stBM *) &_, _.modgenob);
@@ -1937,7 +1942,7 @@ ROUTINEOBJNAME_BM (_8zNBXSMY2Ts_1VI5dmY4umA)    //
                 objectdbg1_BM (objclass_BM (_.modgen)));
   _.closconn = closureconn_BM ((const value_tyBM) clos);
   assert (isobject_BM (_.closconn));
-  _.constnodv = _.closconn->ob_data;
+  _.constnodv = objpayload_BM (_.closconn);
   /** _.constnodv should be
       * const (simple_module_generation functions_set 
                basiclo_function complete_module)
@@ -2131,7 +2136,7 @@ ROUTINEOBJNAME_BM (_60NdV04Lel2_5FSZVWKbSL7)    //
   _.nval = arg2;
   assert (isobject_BM (_.recv));
   assert (!objectisinstance_BM (_.recv, BMP_class));
-  _.recv->ob_data = _.nval;
+  objputpayload_BM (_.recv, _.nval);
   objtouchnow_BM (_.recv);
   return _.recv;
 }                               /* end ROUTINEOBJNAME_BM _60NdV04Lel2_5FSZVWKbSL7 */
@@ -2179,7 +2184,7 @@ ROUTINEOBJNAME_BM (_50d65bJypCN_6IJeVtssx9I)    //
      objectdbg_BM (_.recv), objectdbg1_BM (objclass_BM (_.recv)));
   _.closconn = closureconn_BM ((const value_tyBM) clos);
   assert (isobject_BM (_.closconn));
-  _.constnodv = _.closconn->ob_data;
+  _.constnodv = objpayload_BM (_.closconn);
   /** _.constnodv should be 
        * const (prepare_routine prepared_routines)
    **/
@@ -2344,7 +2349,7 @@ ROUTINEOBJNAME_BM (_0kUyX0U19K2_5mcH4RCaBl9)    //
   _.clos = clos;
   closconn = closureconn_BM ((const value_tyBM) clos);
   assert (isobject_BM (closconn));
-  constnodv = closconn->ob_data;
+  constnodv = objpayload_BM (closconn);
   if (!isnode_BM (arg1))
     return NULL;
   _.rnodv = arg1;
@@ -2478,7 +2483,7 @@ ROUTINEOBJNAME_BM (_1Geqz0vsOKB_2Dpdb1LDu23)    //
   _.clos = clos;
   const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) clos);
   assert (isobject_BM ((const value_tyBM) closconn));
-  const value_tyBM constnodv = closconn->ob_data;
+  const value_tyBM constnodv = objpayload_BM (closconn);
   if (!isnode_BM (arg1))
     return NULL;
   _.rnodv = arg1;
@@ -2592,11 +2597,10 @@ ROUTINEOBJNAME_BM (_0XbMOJqLLPZ_1t2wg2TwPRA)    //
   DBGPRINTF_BM ("start readmacro:cond _0XbMOJqLLPZ_1t2wg2TwPRA"
                 " lineno=%d colpos=%d nodwidth=%u", lineno, colpos, nodwidth);
   assert (isobject_BM (_.closconn));
-  _.constnodv = _.closconn->ob_data;
   if (!isnode_BM (arg1))
     return NULL;
   _.rnodv = arg1;
-  _.constnodv = _.closconn->ob_data;
+  _.constnodv = objpayload_BM (_.closconn);
   /** constnodv is 
      * const (basiclo_cond basiclo_when nb_conds)
   **/
@@ -2727,7 +2731,7 @@ ROUTINEOBJNAME_BM (_7ko2VZaPpqD_1eEmEcp0VV3)    //
   unsigned nodwidth = nodewidth_BM ((const value_tyBM) _.rnodv);
   _.pars = parsercast_BM (treenthson_BM ((const value_tyBM) restargs, 0));
   _.resobj = NULL;
-  _.constnodv = _.closconn->ob_data;
+  _.constnodv = objpayload_BM (_.closconn);
   /** constnodv is 
      * const (basiclo_intswitch)
   **/
@@ -2830,7 +2834,7 @@ ROUTINEOBJNAME_BM (_8uFPIAUyvE6_36pUIgGwmbf)    //
   unsigned nodwidth = nodewidth_BM ((const value_tyBM) _.rnodv);
   _.pars = parsercast_BM (treenthson_BM ((const value_tyBM) restargs, 0));
   _.resobj = NULL;
-  _.constnodv = _.closconn->ob_data;
+  _.constnodv = objpayload_BM (_.closconn);
   /** constnodv is 
      * const (basiclo_objswitch)
   **/
@@ -2928,7 +2932,7 @@ ROUTINEOBJNAME_BM (_6SUnsQrN1BV_1WnLPm4QoOq)    //
   int colpos = getint_BM (arg3);
   const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) clos);
   assert (closconn != NULL);
-  const node_tyBM *constnod = nodecast_BM (closconn->ob_data);
+  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
   /*** constnod is
    * const (basiclo_loop label)
    ***/
@@ -3048,7 +3052,7 @@ ROUTINEOBJNAME_BM (_63Q0R4r8xa7_7XOAxxP5pi2)    //
   _.pars = parsercast_BM (treenthson_BM ((const value_tyBM) restargs, 0));
   const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) clos);
   assert (closconn != NULL);
-  const node_tyBM *constnod = nodecast_BM (closconn->ob_data);
+  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
   /*** constnod is
    * const (basiclo_exit exit)
    ***/
@@ -3150,7 +3154,7 @@ ROUTINEOBJNAME_BM (_1ufPZmTnWhp_7FX9NANZCAW)    //
   _.pars = parsercast_BM (treenthson_BM ((const value_tyBM) restargs, 0));
   const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) clos);
   assert (closconn != NULL);
-  const node_tyBM *constnod = nodecast_BM (closconn->ob_data);
+  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
   /*** constnod is
    * const (basiclo_while while label)
    ***/
@@ -3296,7 +3300,7 @@ ROUTINEOBJNAME_BM (_5788HpgOtVV_4zwZIr0jgmq)    //
 
   const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) clos);
   assert (closconn != NULL);
-  const node_tyBM *constnod = nodecast_BM (closconn->ob_data);
+  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
   /*** constnod is
    * const (basiclo_return return)
    ***/
@@ -3398,7 +3402,7 @@ ROUTINEOBJNAME_BM (_7sg0DjYTA8n_66vhff9SgXH)    //
 
   const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) clos);
   assert (closconn != NULL);
-  const node_tyBM *constnod = nodecast_BM (closconn->ob_data);
+  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
   /*** constnod is
    * const (basiclo_run run)
    ***/
@@ -3514,7 +3518,7 @@ ROUTINEOBJNAME_BM (_42gEKfF4qca_6gGwxSFC1FO)    //
   objectval_tyBM *clos_curcexp =        //
     objectcast_BM (closurenthson_BM ((const value_tyBM) clos,
                                      closix_curcexp));
-  const node_tyBM *constnod = nodecast_BM (closconn->ob_data);
+  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
   /*** constnod is
    * const (basiclo_cexpansion basiclo_cexpander results arguments body expander)
    ***/
@@ -3738,7 +3742,7 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
 
   const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) clos);
   assert (closconn != NULL);
-  const node_tyBM *constnod = nodecast_BM (closconn->ob_data);
+  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
   /*** constnod is
    * const (test basiclo_when basiclo_statement basiclo_block)
    ***/

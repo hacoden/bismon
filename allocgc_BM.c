@@ -293,6 +293,52 @@ valgcdestroy_BM (struct garbcoll_stBM *gc, value_tyBM val)
     }
 }                               /* end valgcdestroy_BM */
 
+void
+deleteobjectpayload_BM (objectval_tyBM * obj, extendedval_tyBM payl)
+{
+  assert (isobject_BM (obj));
+  if (!payl)
+    return;
+  int ty = valtype_BM (payl);
+  if (!ty || ty == tyInt_BM)
+    return;
+  switch (ty)
+    {
+    case tyString_BM:
+    case tyObject_BM:
+    case tySet_BM:
+    case tyTuple_BM:
+    case tyNode_BM:
+    case tyClosure_BM:
+      return;
+    case typayl_assocpairs_BM:
+      return;
+    case typayl_assocbucket_BM:
+      return;
+    case typayl_hashsetobj_BM:
+      return;
+    case typayl_listtop_BM:
+      return;
+    case typayl_strbuffer_BM:
+      return;
+    case typayl_loader_BM:
+      return;
+    case typayl_vectval_BM:
+      return;
+    case typayl_classinfo_BM:
+      return;
+    case typayl_dict_BM:
+      return;
+    case typayl_parser_BM:
+      return;
+    case typayl_dumper_BM:
+      return;
+    default:
+      FATAL_BM ("deleteobjectpayload_BM ty#%d unexpected for payl@%p", ty,
+                payl);
+    }
+}                               /* end deleteobjectpayload_BM */
+
 
 void
 valgckeep_BM (struct garbcoll_stBM *gc, value_tyBM val)

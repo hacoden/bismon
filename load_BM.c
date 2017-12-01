@@ -500,7 +500,7 @@ load_modif_value_BM (struct loader_stBM *ld, int ix,
     parsererrorprintf_BM (ldpars, parserlineno_BM (ldpars),
                           parsercolpos_BM (ldpars),
                           "expect )~ after !~value (~ <value> ");
-  _.curldobj->ob_data = _.valv;
+  objputpayload_BM (_.curldobj, _.valv);
 }                               /* end load_modif_value_BM */
 
 

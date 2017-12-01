@@ -35,7 +35,7 @@ ROUTINEOBJNAME_BM (_5mnsT1wsdWs_2Qnqsf3wqaP)    // prepare_routine:basiclo_funct
   _.clos = clos;
   const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) clos);
   assert (closconn != NULL);
-  const node_tyBM *constnod = nodecast_BM (closconn->ob_data);
+  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
   /*** constnod is
       * const (arguments block locals constants simple_routine_preparation)
    ***/
@@ -181,7 +181,7 @@ ROUTINEOBJNAME_BM (_979hCujWp2g_9tjRbM8Ht1l)    // emit_c_type:c_enum
      objectdbg_BM (_.recv));
   const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) clos);
   assert (closconn != NULL);
-  const node_tyBM *constnod = nodecast_BM (closconn->ob_data);
+  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
   /*** constnod is
       * const (extending own_enumeration enumeration)
    ***/
@@ -241,11 +241,10 @@ ROUTINEOBJNAME_BM (_07qYMXftJRR_9dde2ASz4e9)    //  prepare_routine°basiclo_min
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const closure_tyBM * clos;
                  objectval_tyBM * modgen;
-                 setval_tyBM * prepvalset;
-                 objectval_tyBM * curprepob;
-                 objectval_tyBM * routprep;
-                 objectval_tyBM * obhsetblock;
+                 setval_tyBM * prepvalset; objectval_tyBM * curprepob;
+                 objectval_tyBM * routprep; objectval_tyBM * obhsetblock;
                  value_tyBM recv;
+#warning routassoc is not a value, but an extendedval
                  anyassoc_tyBM * routassoc;
                  const tupleval_tyBM * tupargs;
                  const tupleval_tyBM * tupclosed;
@@ -261,7 +260,7 @@ ROUTINEOBJNAME_BM (_07qYMXftJRR_9dde2ASz4e9)    //  prepare_routine°basiclo_min
   _.clos = clos;
   const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) clos);
   assert (closconn != NULL);
-  const node_tyBM *constnod = nodecast_BM (closconn->ob_data);
+  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
   /*** constnod is
       * const (arguments result constants closed locals numbers 
                body simple_routine_preparation
@@ -435,9 +434,9 @@ ROUTINEOBJNAME_BM (_07qYMXftJRR_9dde2ASz4e9)    //  prepare_routine°basiclo_min
       _.routassoc = assoc_addattr_BM (_.routassoc, _.curvar, _.curol);
       _.curol = NULL;
     }
-  _.routprep->ob_data = _.routassoc;
+  objputpayload_BM (_.routprep, _.routassoc);
   _.obhsetblock = makeobj_BM ();
-  _.obhsetblock->ob_data = hashsetobj_grow_BM (NULL, 15);
+  objputpayload_BM (_.obhsetblock, hashsetobj_grow_BM (NULL, 15));
   objputclass_BM (_.obhsetblock, (objectval_tyBM *) k_hset_object);
   objputattr_BM (_.routprep, k_blocks, _.obhsetblock);
   objputattr_BM (_.routprep, k_prepare_routine, _.recv);
@@ -502,7 +501,7 @@ ROUTINEOBJNAME_BM (_10XOFm9ui6R_06F8qZQynnA)    //
   WEAKASSERT_BM (isobject_BM (_.recv));
   _.modgen = (arg2);
   WEAKASSERT_BM (isobject_BM (_.modgen));
-  const node_tyBM *constnod = nodecast_BM (closconn->ob_data);
+  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
   /*** constnod is
       * const (functions_set plain_module basiclo_minifunction)
    ***/
@@ -587,7 +586,7 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
   _.clos = clos;
   const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) clos);
   assert (closconn != NULL);
-  const node_tyBM *constnod = nodecast_BM (closconn->ob_data);
+  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
   /*** constnod is
    * const (miniscan_var miniscan_expr miniscan_block
             miniscan_stmt basiclo_block basiclo_statement)
@@ -639,7 +638,7 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
     ("collect_blocks°basiclo_block _0gkYrIdnOg2_0wLEAh1QuYu start recv=%s routprep=%s depth=%d nbvar=%d nbargs=%d",
      objectdbg_BM (_.recv), objectdbg1_BM (_.routprep), depth, (int) nbargs,
      (int) nbvars);
-  _.routassoc = assoccast_BM (_.routprep->ob_data);
+  _.routassoc = assoccast_BM (objpayload_BM (_.routprep));
   if (!_.routassoc)
     {
       fprintf (stderr, "collect_blocks°basiclo_block bad routprep %s\n",

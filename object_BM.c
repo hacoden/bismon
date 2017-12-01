@@ -286,12 +286,13 @@ objectgcdestroy_BM (struct garbcoll_stBM *gc, objectval_tyBM * obj)
   assert (((typedhead_tyBM *) obj)->htyp == tyObject_BM);
   // remove the object name
   forgetnamedobject_BM (obj);
+  if (obj->ob_payl)
+    objclearpayload_BM (obj);
   obj->ob_space = TransientSp_BM;
   obj->ob_class = NULL;
   obj->ob_compvec = NULL;
   obj->ob_attrassoc = NULL;
   obj->ob_rout = NULL;
-  obj->ob_data = NULL;
   // should remove the object from its bucket
   const rawid_tyBM id = obj->ob_id;
   assert (validid_BM (id));
@@ -460,8 +461,8 @@ objectinteriorgcmark_BM (struct garbcoll_stBM *gc, objectval_tyBM * obj)
     datavectgcmark_BM (gc, obj->ob_compvec, 0);
   if (obj->ob_attrassoc)
     assocgcmark_BM (gc, obj->ob_attrassoc, 0);
-  if (obj->ob_data)
-    gcextendedmark_BM (gc, obj->ob_data, 0);
+  if (obj->ob_payl)
+    gcextendedmark_BM (gc, obj->ob_payl, 0);
 }                               /* end objectinteriorgcmark_BM */
 
 ////////////////////////////////////////////////////////////////
@@ -962,7 +963,7 @@ objputclassinfo_BM (objectval_tyBM * obj, objectval_tyBM * superclass)
     allocgcty_BM (typayl_classinfo_BM, sizeof (struct classinfo_stBM));
   clinf->clinf_superclass = superclass;
   clinf->clinf_dictmeth = NULL;
-  obj->ob_data = clinf;
+  objputpayload_BM (obj, clinf);
 }                               /* end objputclassinfo_BM */
 
 
@@ -979,7 +980,7 @@ objclassinfoputmethod_BM (objectval_tyBM * obj, objectval_tyBM * obselector,
   if (!objhasclassinfo_BM (obj))
     return;
   struct classinfo_stBM *clinf =        //
-    (struct classinfo_stBM *) (obj->ob_data);
+    (struct classinfo_stBM *) (obj->ob_payl);
   assert (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
   clinf->clinf_dictmeth =       //
     assoc_addattr_BM (clinf->clinf_dictmeth, obselector, (value_tyBM) clos);
@@ -996,7 +997,7 @@ objclassinforemovemethod_BM (objectval_tyBM * obj,
   if (!objhasclassinfo_BM (obj))
     return;
   struct classinfo_stBM *clinf =        //
-    (struct classinfo_stBM *) (obj->ob_data);
+    (struct classinfo_stBM *) (obj->ob_payl);
   assert (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
   clinf->clinf_dictmeth =       //
     assoc_removeattr_BM (clinf->clinf_dictmeth, obselector);
@@ -1018,7 +1019,7 @@ objclassinfoissubclass_BM (const objectval_tyBM * obj,
       if (!objhasclassinfo_BM (obj))
         return false;
       struct classinfo_stBM *clinf =    //
-        (struct classinfo_stBM *) (obj->ob_data);
+        (struct classinfo_stBM *) (obj->ob_payl);
       obj = clinf->clinf_superclass;
       count++;
     }

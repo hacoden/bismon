@@ -257,6 +257,15 @@ static inline void objappendcomp_BM (objectval_tyBM * obj,
                                      value_tyBM compval);
 static inline void objgrowcomps_BM (objectval_tyBM * obj, unsigned gap);
 
+///
+extern void deleteobjectpayload_BM (objectval_tyBM * obj,
+                                    extendedval_tyBM payl);
+static inline void objclearpayload_BM (objectval_tyBM * obj);
+static inline void objputpayload_BM (objectval_tyBM * obj,
+                                     extendedval_tyBM payl);
+static inline extendedval_tyBM objpayload_BM (const objectval_tyBM * obj);
+
+///
 extern const setval_tyBM *setpredefinedobjects_BM (void);
 extern void gcmarkpredefinedobjects_BM (struct garbcoll_stBM *gc);
 

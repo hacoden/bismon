@@ -172,7 +172,8 @@ ROUTINEOBJNAME_BM (_23ViGouPnAg_15P5mpG9x3d)    //
   }
   ///
   // extra data
-  if (_.objbrows->ob_data)
+  extendedval_tyBM payl = objpayload_BM (_.objbrows);
+  if (payl)
     {
       send1_BM ((const value_tyBM) _.objbrows, BMP_browse_data,
                 (struct stackframe_stBM *) &_, taggedint_BM (depth));
@@ -786,7 +787,7 @@ ROUTINEOBJNAME_BM (_9zpvXnTuDeB_2B7ZiBtN8fA)    //
   _.objbrows = (const objectval_tyBM *) arg1;
   int depth = getint_BM (arg2);
   assert (isobject_BM ((const value_tyBM) _.objbrows));
-  _.curval = _.objbrows->ob_data;
+  _.curval = objpayload_BM (_.objbrows);
   int tyval = valtype_BM (_.curval);
   GtkTextBuffer *brobuf = gtk_text_iter_get_buffer (&browserit_BM);
   if (tyval == tyInt_BM
@@ -831,7 +832,7 @@ ROUTINEOBJNAME_BM (_4IshjBIv6ol_5korHKUIjeK)    //
   int depth = getint_BM (arg2);
   assert (isobject_BM ((const value_tyBM) _.objbrows));
   GtkTextBuffer *brobuf = gtk_text_iter_get_buffer (&browserit_BM);
-  _.curval = _.objbrows->ob_data;
+  _.curval = objpayload_BM (_.objbrows);
   if (!_.curval)
     {
       gtk_text_buffer_insert_with_tags (brobuf,
@@ -877,7 +878,7 @@ ROUTINEOBJNAME_BM (_5KWAjUEGiiq_2B6rbvkCcgc)    //
   _.objbrows = (const objectval_tyBM *) arg1;
   int depth = getint_BM (arg2);
   assert (isobject_BM ((const value_tyBM) _.objbrows));
-  _.curval = _.objbrows->ob_data;
+  _.curval = objpayload_BM (_.objbrows);
   int tyval = valtype_BM (_.curval);
   char vcommbuf[64];
   memset (vcommbuf, 0, sizeof (vcommbuf));
