@@ -878,6 +878,7 @@ ROUTINEOBJNAME_BM (_5KWAjUEGiiq_2B6rbvkCcgc)    //
   _.objbrows = (const objectval_tyBM *) arg1;
   int depth = getint_BM (arg2);
   assert (isobject_BM ((const value_tyBM) _.objbrows));
+#warning should be improved
   _.curval = objpayload_BM (_.objbrows);
   int tyval = valtype_BM (_.curval);
   char vcommbuf[64];
@@ -1001,7 +1002,7 @@ ROUTINEOBJNAME_BM (_5KWAjUEGiiq_2B6rbvkCcgc)    //
         {
           const struct strbuffer_stBM *sbuf = _.curval;
           snprintf (vcommbuf, sizeof (vcommbuf), "|xsbuf l:%u| ",
-                    strbufferlength_BM (sbuf));
+                    objstrbufferlength_BM (_.objbrows));
           gtk_text_buffer_insert_with_tags (brobuf,
                                             &browserit_BM, vcommbuf, -1,
                                             miscomm_brotag_BM, NULL);

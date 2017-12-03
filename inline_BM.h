@@ -570,35 +570,27 @@ objgetclassinfosetofselectors_BM (const objectval_tyBM * obj)
 
 ////////////////////////////////////////////////////////////////
 bool
-isstrbuffer_BM (const value_tyBM val)
+objhasstrbuffer_BM (const objectval_tyBM * obj)
 {
-  return val && valtype_BM (val) == typayl_strbuffer_BM;
-}                               /* end isstrbuffer_BM */
+  extendedval_tyBM payl = objpayload_BM (obj);
+  if (!payl)
+    return false;
+  return (valtype_BM ((const value_tyBM) payl) == typayl_strbuffer_BM);
+}                               /* end objhasstrbuffer_BM */
+
 
 
 struct strbuffer_stBM *
-strbuffercast_BM (value_tyBM val)
+objgetstrbufferpayload_BM (objectval_tyBM * obj)
 {
-  if (isstrbuffer_BM (val))
-    return (struct strbuffer_stBM *) val;
-  return NULL;
-}                               /* end strbuffercast_BM */
-
-const char *
-strbufferbytes_BM (struct strbuffer_stBM *sbuf)
-{
-  if (!isstrbuffer_BM ((const value_tyBM) sbuf))
+  extendedval_tyBM payl = objpayload_BM (obj);
+  if (!payl)
     return NULL;
-  return sbuf->sbuf_dbuf;
-}                               /* end strbufferbytes_BM */
+  if (valtype_BM ((const value_tyBM) payl) == typayl_strbuffer_BM)
+    return (struct strbuffer_stBM *) payl;
+  return NULL;
+}                               /* end objgetstrbufferpayload_BM */
 
-int
-strbufferindentation_BM (struct strbuffer_stBM *sbuf)
-{
-  if (!isstrbuffer_BM ((const value_tyBM) sbuf))
-    return 0;
-  return sbuf->sbuf_indent;
-}                               /* end strbufferindentation_BM */
 
 ////////////////
 int

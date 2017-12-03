@@ -112,15 +112,15 @@ ROUTINEOBJNAME_BM (_6gRlN8loM4E_4pSsNmiCeIa)    // emit_c_type:c_opaque
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const closure_tyBM * clos; value_tyBM recv;
-                 struct strbuffer_stBM *prsbuf;
+                 objectval_tyBM * bufob;
     );
   assert (isclosure_BM ((const value_tyBM) clos));
   _.clos = clos;
   // retrieve arguments
   _.recv = /*ctype */ (arg1);
   WEAKASSERT_BM (isobject_BM (_.recv));
-  _.prsbuf = strbuffercast_BM (arg2);
-  WEAKASSERT_BM (_.prsbuf != NULL);
+  _.bufob = objectcast_BM (arg2);
+  WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
   DBGPRINTF_BM
     ("start  emit_c_type:c_opaque _6gRlN8loM4E_4pSsNmiCeIa recv=%s",
      objectdbg_BM (_.recv));
@@ -129,14 +129,15 @@ ROUTINEOBJNAME_BM (_6gRlN8loM4E_4pSsNmiCeIa)    // emit_c_type:c_opaque
   idtocbuf32_BM (objid_BM (_.recv), idbuf);
   if (nam)
     {
-      strbufferprintf_BM (_.prsbuf, "\n// opaque named type\n");
-      strbufferprintf_BM (_.prsbuf, "typedef void* %s_TyBM;\n", nam);
-      strbufferprintf_BM (_.prsbuf, "#define %s_TyBM %s_TyBM\n", idbuf, nam);
+      objstrbufferprintf_BM (_.bufob, "\n// opaque named type\n");
+      objstrbufferprintf_BM (_.bufob, "typedef void* %s_TyBM;\n", nam);
+      objstrbufferprintf_BM (_.bufob, "#define %s_TyBM %s_TyBM\n", idbuf,
+                             nam);
     }
   else
     {
-      strbufferprintf_BM (_.prsbuf, "\n// opaque anonymous type\n");
-      strbufferprintf_BM (_.prsbuf, "typedef void* %s_TyBM;\n", idbuf);
+      objstrbufferprintf_BM (_.bufob, "\n// opaque anonymous type\n");
+      objstrbufferprintf_BM (_.bufob, "typedef void* %s_TyBM;\n", idbuf);
     }
   return _.recv;
 }                               /* end emit_c_type:c_opaque _6gRlN8loM4E_4pSsNmiCeIa */
@@ -165,7 +166,7 @@ ROUTINEOBJNAME_BM (_979hCujWp2g_9tjRbM8Ht1l)    // emit_c_type:c_enum
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const closure_tyBM * clos;
                  value_tyBM recv;
-                 struct strbuffer_stBM *prsbuf;
+                 objectval_tyBM * prbufob;
                  const objectval_tyBM * extendingob;
                  const tupleval_tyBM * ownenumtup;
     );
@@ -174,8 +175,8 @@ ROUTINEOBJNAME_BM (_979hCujWp2g_9tjRbM8Ht1l)    // emit_c_type:c_enum
   // retrieve arguments
   _.recv = /*ctype */ (arg1);
   WEAKASSERT_BM (isobject_BM (_.recv));
-  _.prsbuf = strbuffercast_BM (arg2);
-  WEAKASSERT_BM (_.prsbuf != NULL);
+  WEAKASSERT_BM (objhasstrbuffer_BM (arg2));
+  _.prbufob = objectcast_BM (arg2);
   DBGPRINTF_BM
     ("start emit_c_type:c_enum _979hCujWp2g_9tjRbM8Ht1l recv=%s",
      objectdbg_BM (_.recv));
@@ -239,8 +240,7 @@ ROUTINEOBJNAME_BM (_07qYMXftJRR_9dde2ASz4e9)    //  prepare_routine°basiclo_min
     constix__LAST
   };
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * clos;
-                 objectval_tyBM * modgen;
+                 const closure_tyBM * clos; objectval_tyBM * modgen;
                  setval_tyBM * prepvalset; objectval_tyBM * curprepob;
                  objectval_tyBM * routprep; objectval_tyBM * obhsetblock;
                  value_tyBM recv;

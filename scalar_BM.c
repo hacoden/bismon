@@ -344,11 +344,14 @@ strbuffergckeep_BM (struct garbcoll_stBM *gc, struct strbuffer_stBM *sbuf)
 }                               /* end strbuffergckeep_BM */
 
 
-struct strbuffer_stBM *
-strbuffermake_BM (unsigned maxsize)
+bool
+objputstrbuffer_BM (objectval_tyBM * obj, unsigned maxsize)
 {
+  if (!isobject_BM ((value_tyBM) obj))
+    return false;
   if (maxsize > MAXSIZE_BM)
-    FATAL_BM ("too big maxsize %u", maxsize);
+    FATAL_BM ("strbuffermake: too big maxsize %u for obj %s", maxsize,
+              objectdbg_BM (obj));
   unsigned inisizew = (maxsize > 4096) ? 512 : 64;
   char *dbuf = malloc (inisizew * sizeof (void *));
   if (!dbuf)
@@ -362,13 +365,27 @@ strbuffermake_BM (unsigned maxsize)
   sbuf->sbuf_size = inisizew * sizeof (void *);
   sbuf->sbuf_curp = dbuf;
   sbuf->sbuf_lastnl = NULL;
-  return sbuf;
-}                               /* end strbuffermake_BM */
+  objputpayload_BM (obj, sbuf);
+  return true;
+}                               /* end objputstrbuffer_BM */
+
+
+const char *
+objstrbufferbytes_BM (objectval_tyBM * obj)
+{
+  if (!isobject_BM ((value_tyBM) obj))
+    return NULL;
+  struct strbuffer_stBM *sbuf = objgetstrbufferpayload_BM (obj);
+  if (!sbuf)
+    return NULL;
+  return sbuf->sbuf_dbuf;
+}                               /* end objstrbufferbytes_BM */
 
 void
-strbufferreserve_BM (struct strbuffer_stBM *sbuf, unsigned gap)
+objstrbufferreserve_BM (objectval_tyBM * obj, unsigned gap)
 {
-  if (!isstrbuffer_BM ((const value_tyBM) sbuf))
+  struct strbuffer_stBM *sbuf = objgetstrbufferpayload_BM (obj);
+  if (!sbuf)
     return;
   assert (sbuf->sbuf_dbuf);
   assert (sbuf->sbuf_size > 0);
@@ -425,58 +442,67 @@ strbufferreserve_BM (struct strbuffer_stBM *sbuf, unsigned gap)
 
 
 void
-strbufferreset_BM (struct strbuffer_stBM *sbuf)
+objstrbufferreset_BM (objectval_tyBM * obj)
 {
-  if (!isstrbuffer_BM ((const value_tyBM) sbuf))
+  struct strbuffer_stBM *sbuf = objgetstrbufferpayload_BM (obj);
+  if (!sbuf)
     return;
   memset (sbuf->sbuf_dbuf, 0, sbuf->sbuf_size);
   sbuf->sbuf_curp = sbuf->sbuf_dbuf;
   sbuf->sbuf_lastnl = NULL;
   sbuf->sbuf_indent = 0;
-}                               /* end strbufferreset_BM */
+}                               /* end objstrbufferreset_BM */
 
 unsigned
-strbufferlength_BM (const struct strbuffer_stBM *sbuf)
+objstrbufferlength_BM (const objectval_tyBM * obj)
 {
-  if (!isstrbuffer_BM ((const value_tyBM) sbuf))
+  struct strbuffer_stBM *sbuf =
+    objgetstrbufferpayload_BM ((objectval_tyBM *) obj);
+  if (!sbuf)
     return 0;
   assert (sbuf->sbuf_size < MAXSIZE_BM);
   assert (sbuf->sbuf_curp >= sbuf->sbuf_dbuf
           && sbuf->sbuf_curp < sbuf->sbuf_dbuf + sbuf->sbuf_size);
   return sbuf->sbuf_curp - sbuf->sbuf_dbuf;
-}                               /* end strbufferlength_BM */
+}                               /* end objstrbufferlength_BM */
 
 void
-strbufferclearindent_BM (struct strbuffer_stBM *sbuf)
+objstrbufferclearindent_BM (objectval_tyBM * obj)
 {
-  if (!isstrbuffer_BM ((const value_tyBM) sbuf))
+  struct strbuffer_stBM *sbuf = objgetstrbufferpayload_BM (obj);
+  if (!sbuf)
     return;
   sbuf->sbuf_indent = 0;
-}                               /* end  strbufferclearindent_BM */
+}                               /* end  objstrbufferclearindent_BM */
 
 
 
 void
-strbuffermoreindent_BM (struct strbuffer_stBM *sbuf)
+objstrbuffermoreindent_BM (objectval_tyBM * obj)
 {
-  if (!isstrbuffer_BM ((const value_tyBM) sbuf))
+  struct strbuffer_stBM *sbuf = objgetstrbufferpayload_BM (obj);
+  if (!sbuf)
     return;
   sbuf->sbuf_indent++;
-}                               /* end  strbuffermoreindent_BM */
+}                               /* end  objstrbuffermoreindent_BM */
 
 
 void
-strbufferlessindent_BM (struct strbuffer_stBM *sbuf)
+objstrbufferlessindent_BM (objectval_tyBM * obj)
 {
-  if (!isstrbuffer_BM ((const value_tyBM) sbuf))
+  struct strbuffer_stBM *sbuf = objgetstrbufferpayload_BM (obj);
+  if (!sbuf)
     return;
   sbuf->sbuf_indent--;
-}                               /* end  strbufferlessindent_BM */
+}                               /* end  objstrbufferlessindent_BM */
 
 
 static void
-strbufferunsafeappendcstr_BM (struct strbuffer_stBM *sbuf, const char *cstr)
+objstrbufferunsafeappendcstr_BM (objectval_tyBM * obj, const char *cstr)
 {
+  struct strbuffer_stBM *sbuf = objgetstrbufferpayload_BM (obj);
+  if (!sbuf)
+    return;
   size_t len = strlen (cstr);
   assert (sbuf->sbuf_dbuf);
   size_t siz = sbuf->sbuf_size;
@@ -485,7 +511,7 @@ strbufferunsafeappendcstr_BM (struct strbuffer_stBM *sbuf, const char *cstr)
   assert (sbuf->sbuf_curp >= sbuf->sbuf_dbuf
           && sbuf->sbuf_curp < sbuf->sbuf_dbuf + sbuf->sbuf_size);
   if (sbuf->sbuf_curp + len + 3 >= sbuf->sbuf_dbuf + sbuf->sbuf_size)
-    strbufferreserve_BM (sbuf, len + 2);
+    objstrbufferreserve_BM (obj, len + 2);
   int nloffset = -1;
   {
     char *lastnlcstr = strrchr (cstr, '\n');
@@ -500,35 +526,37 @@ strbufferunsafeappendcstr_BM (struct strbuffer_stBM *sbuf, const char *cstr)
   *sbuf->sbuf_curp = (char) 0;
   if (maxsiz > 0 && sbuf->sbuf_curp - sbuf->sbuf_dbuf > maxsiz)
     FATAL_BM ("strbufferappendcstr overflow %ud", maxsiz);
-}                               /* end strbufferunsafeappendcstr_BM  */
+}                               /* end objstrbufferunsafeappendcstr_BM  */
 
 
 void
-strbufferappendcstr_BM (struct strbuffer_stBM *sbuf, const char *cstr)
+objstrbufferappendcstr_BM (objectval_tyBM * obj, const char *cstr)
 {
-  if (!isstrbuffer_BM ((const value_tyBM) sbuf))
+  if (!objhasstrbuffer_BM (obj))
     return;
   if (!cstr || !cstr[0])
     return;
-  strbufferunsafeappendcstr_BM (sbuf, cstr);
-}                               /* end strbufferappendcstr_BM */
+  objstrbufferunsafeappendcstr_BM (obj, cstr);
+}                               /* end objstrbufferappendcstr_BM */
 
 void
-strbuffernewline_BM (struct strbuffer_stBM *sbuf)
+objstrbuffernewline_BM (objectval_tyBM * obj)
 {
-  if (!isstrbuffer_BM ((const value_tyBM) sbuf))
+  struct strbuffer_stBM *sbuf = objgetstrbufferpayload_BM (obj);
+  if (!sbuf)
     return;
   const char *nlb16 = "                \n";     // 16 spaces then newline
   int i = sbuf->sbuf_indent % 16;
   if (i < 0)
     i = 0;
-  strbufferunsafeappendcstr_BM (sbuf, nlb16 + (16 - i));
-}                               /* end of strbuffernewline_BM */
+  objstrbufferunsafeappendcstr_BM (obj, nlb16 + (16 - i));
+}                               /* end of objstrbuffernewline_BM */
 
 void
-strbufferrawprintf_BM (struct strbuffer_stBM *sbuf, const char *fmt, ...)
+objstrbufferrawprintf_BM (objectval_tyBM * obj, const char *fmt, ...)
 {
-  if (!isstrbuffer_BM ((const value_tyBM) sbuf))
+  struct strbuffer_stBM *sbuf = objgetstrbufferpayload_BM (obj);
+  if (!sbuf)
     return;
   if (!fmt || !fmt[0])
     return;
@@ -540,15 +568,16 @@ strbufferrawprintf_BM (struct strbuffer_stBM *sbuf, const char *fmt, ...)
   va_end (args);
   if (ln < 0 || tmpbuf == NULL)
     FATAL_BM ("strbufferrawprintf asprintf failure %m");
-  strbufferunsafeappendcstr_BM (sbuf, tmpbuf);
+  objstrbufferunsafeappendcstr_BM (obj, tmpbuf);
   free (tmpbuf), tmpbuf = NULL;
 }                               /* end strbufferrawprintf_BM  */
 
 
 void
-strbufferprintf_BM (struct strbuffer_stBM *sbuf, const char *fmt, ...)
+objstrbufferprintf_BM (objectval_tyBM * obj, const char *fmt, ...)
 {
-  if (!isstrbuffer_BM ((const value_tyBM) sbuf))
+  struct strbuffer_stBM *sbuf = objgetstrbufferpayload_BM (obj);
+  if (!sbuf)
     return;
   if (!fmt || !fmt[0])
     return;
@@ -560,50 +589,51 @@ strbufferprintf_BM (struct strbuffer_stBM *sbuf, const char *fmt, ...)
   va_end (args);
   if (ln < 0 || tmpbuf == NULL)
     FATAL_BM ("strbufferrawprintf asprintf failure %m");
-  strbufferreserve_BM (sbuf, 9 * ln / 8 + ln / 64 + 2);
+  objstrbufferreserve_BM (obj, 9 * ln / 8 + ln / 64 + 2);
   char *prev = tmpbuf;
   for (char *pc = tmpbuf; *pc; pc++)
     {
       if (*pc == '\n')
         {
           *pc = (char) 0;
-          strbufferappendcstr_BM (sbuf, prev);
-          strbuffernewline_BM (sbuf);
+          objstrbufferappendcstr_BM (obj, prev);
+          objstrbuffernewline_BM (obj);
           prev = pc + 1;
         }
       else if (*pc == '\t')
         {
           *pc = (char) 0;
-          strbufferappendcstr_BM (sbuf, prev);
+          objstrbufferappendcstr_BM (obj, prev);
           if (sbuf->sbuf_lastnl
               && sbuf->sbuf_curp >
               sbuf->sbuf_lastnl + 1 + (5 * STRBUFFERWANTEDWIDTH_BM) / 6)
-            strbuffernewline_BM (sbuf);
+            objstrbuffernewline_BM (obj);
           else
-            strbufferunsafeappendcstr_BM (sbuf, " ");
+            objstrbufferunsafeappendcstr_BM (obj, " ");
           prev = pc + 1;
         }
       else if (pc[1] == (char) 0)
         {
-          strbufferunsafeappendcstr_BM (sbuf, prev);
+          objstrbufferunsafeappendcstr_BM (obj, prev);
         }
     }
   free (tmpbuf), tmpbuf = NULL;
-}                               /* end strbufferprintf_BM */
+}                               /* end objstrbufferprintf_BM */
 
 void
-strbufferencodedutf8_BM (struct strbuffer_stBM *sbuf, const char *str,
-                         ssize_t bytelen)
+objstrbufferencodedutf8_BM (objectval_tyBM * obj, const char *str,
+                            ssize_t bytelen)
 {
-  if (!isstrbuffer_BM ((const value_tyBM) sbuf))
-    return;
   if (!str)
+    return;
+  struct strbuffer_stBM *sbuf = objgetstrbufferpayload_BM (obj);
+  if (!sbuf)
     return;
   if (bytelen < 0)
     bytelen = strlen (str);
   if (!g_utf8_validate (str, bytelen, NULL))
     return;
-  strbufferreserve_BM (sbuf, 9 * bytelen / 8 + 10);
+  objstrbufferreserve_BM (obj, 9 * bytelen / 8 + 10);
   const char *ends = str + bytelen;
   for (const char *pc = str; pc < ends; pc = g_utf8_next_char (pc))
     {
@@ -611,34 +641,34 @@ strbufferencodedutf8_BM (struct strbuffer_stBM *sbuf, const char *str,
       switch (uc)
         {
         case '\"':
-          strbufferunsafeappendcstr_BM (sbuf, "\\\"");
+          objstrbufferunsafeappendcstr_BM (obj, "\\\"");
           break;
         case '\'':
-          strbufferunsafeappendcstr_BM (sbuf, "\\\'");
+          objstrbufferunsafeappendcstr_BM (obj, "\\\'");
           break;
         case '\a':
-          strbufferunsafeappendcstr_BM (sbuf, "\\a");
+          objstrbufferunsafeappendcstr_BM (obj, "\\a");
           break;
         case '\b':
-          strbufferunsafeappendcstr_BM (sbuf, "\\b");
+          objstrbufferunsafeappendcstr_BM (obj, "\\b");
           break;
         case '\f':
-          strbufferunsafeappendcstr_BM (sbuf, "\\f");
+          objstrbufferunsafeappendcstr_BM (obj, "\\f");
           break;
         case '\n':
-          strbufferunsafeappendcstr_BM (sbuf, "\\n");
+          objstrbufferunsafeappendcstr_BM (obj, "\\n");
           break;
         case '\r':
-          strbufferunsafeappendcstr_BM (sbuf, "\\r");
+          objstrbufferunsafeappendcstr_BM (obj, "\\r");
           break;
         case '\t':
-          strbufferunsafeappendcstr_BM (sbuf, "\\t");
+          objstrbufferunsafeappendcstr_BM (obj, "\\t");
           break;
         case '\v':
-          strbufferunsafeappendcstr_BM (sbuf, "\\v");
+          objstrbufferunsafeappendcstr_BM (obj, "\\v");
           break;
         case '\033' /*ESCAPE*/:
-          strbufferunsafeappendcstr_BM (sbuf, "\\e");
+          objstrbufferunsafeappendcstr_BM (obj, "\\e");
           break;
         default:
           {
@@ -650,61 +680,62 @@ strbufferencodedutf8_BM (struct strbuffer_stBM *sbuf, const char *str,
               snprintf (ubuf, sizeof (ubuf), "\\u%04x", uc);
             else
               snprintf (ubuf, sizeof (ubuf), "\\U%08x", uc);
-            strbufferunsafeappendcstr_BM (sbuf, ubuf);
+            objstrbufferunsafeappendcstr_BM (obj, ubuf);
           }
           break;
         }
     }
-}                               /* end strbufferencodedutf8_BM */
+}                               /* end objstrbufferencodedutf8_BM */
 
 
 
 
 void
-strbufferencodedc_BM (struct strbuffer_stBM *sbuf, const char *str,
-                      ssize_t bytelen)
+objstrbufferencodedc_BM (objectval_tyBM * obj, const char *str,
+                         ssize_t bytelen)
 {
-  if (!isstrbuffer_BM ((const value_tyBM) sbuf))
-    return;
   if (!str)
+    return;
+  struct strbuffer_stBM *sbuf = objgetstrbufferpayload_BM (obj);
+  if (!sbuf)
     return;
   if (bytelen < 0)
     bytelen = strlen (str);
-  strbufferreserve_BM (sbuf, 9 * bytelen / 8 + 10);
+  objstrbufferreserve_BM (obj, 9 * bytelen / 8 + 10);
   const char *ends = str + bytelen;
   for (const char *pc = str; pc < ends; pc++)
     {
       switch (*pc)
         {
         case '\"':
-          strbufferunsafeappendcstr_BM (sbuf, "\\\"");
+          objstrbufferunsafeappendcstr_BM (obj, "\\\"");
           break;
         case '\'':
-          strbufferunsafeappendcstr_BM (sbuf, "\\\'");
+          objstrbufferunsafeappendcstr_BM (obj, "\\\'");
           break;
         case '\a':
-          strbufferunsafeappendcstr_BM (sbuf, "\\a");
+          objstrbufferunsafeappendcstr_BM (obj, "\\a");
           break;
         case '\b':
-          strbufferunsafeappendcstr_BM (sbuf, "\\b");
+          objstrbufferunsafeappendcstr_BM (obj, "\\b");
           break;
         case '\f':
-          strbufferunsafeappendcstr_BM (sbuf, "\\f");
+          objstrbufferunsafeappendcstr_BM (obj, "\\f");
           break;
         case '\n':
-          strbufferunsafeappendcstr_BM (sbuf, "\\n");
+          objstrbufferunsafeappendcstr_BM (obj, "\\n");
           break;
         case '\r':
-          strbufferunsafeappendcstr_BM (sbuf, "\\r");
+          objstrbufferunsafeappendcstr_BM (obj, "\\r");
           break;
         case '\t':
-          strbufferunsafeappendcstr_BM (sbuf, "\\t");
+          objstrbufferunsafeappendcstr_BM (obj, "\\t");
           break;
         case '\v':
-          strbufferunsafeappendcstr_BM (sbuf, "\\v");
+          objstrbufferunsafeappendcstr_BM (obj, "\\v");
           break;
         case '\033' /*ESCAPE*/:
-          strbufferunsafeappendcstr_BM (sbuf, "\\e");
+          objstrbufferunsafeappendcstr_BM (obj, "\\e");
           break;
         default:
           {
@@ -716,7 +747,7 @@ strbufferencodedc_BM (struct strbuffer_stBM *sbuf, const char *str,
               }
             else
               snprintf (ubuf, sizeof (ubuf), "\\x%02x", *pc);
-            strbufferunsafeappendcstr_BM (sbuf, ubuf);
+            objstrbufferunsafeappendcstr_BM (obj, ubuf);
           };
           break;
         }
@@ -726,11 +757,12 @@ strbufferencodedc_BM (struct strbuffer_stBM *sbuf, const char *str,
 
 
 void
-strbufferwritetofile_BM (struct strbuffer_stBM *sbuf, const char *filepath)
+objstrbufferwritetofile_BM (objectval_tyBM * obj, const char *filepath)
 {
-  if (!isstrbuffer_BM ((const value_tyBM) sbuf))
-    return;
   if (!filepath || !filepath[0])
+    return;
+  struct strbuffer_stBM *sbuf = objgetstrbufferpayload_BM (obj);
+  if (!sbuf)
     return;
   assert (sbuf->sbuf_dbuf);
   size_t siz = sbuf->sbuf_size;

@@ -278,39 +278,42 @@ extern void objectgckeep_BM (struct garbcoll_stBM *gc, objectval_tyBM * obj);
 
 
 ////////////////
-extern struct strbuffer_stBM *strbuffermake_BM (unsigned maxsize);
-static inline bool isstrbuffer_BM (const value_tyBM val);
-static inline struct strbuffer_stBM *strbuffercast_BM (value_tyBM val);
-extern void strbufferreserve_BM (struct strbuffer_stBM *sbuf, unsigned gap);
-static inline const char *strbufferbytes_BM (struct strbuffer_stBM *sbuf);
-static inline int strbufferindentation_BM (struct strbuffer_stBM *sbuf);
-extern void strbufferclearindent_BM (struct strbuffer_stBM *sbuf);
-extern void strbuffermoreindent_BM (struct strbuffer_stBM *sbuf);
-extern void strbufferlessindent_BM (struct strbuffer_stBM *sbuf);
-extern void strbufferappendcstr_BM (struct strbuffer_stBM *sbuf,
-                                    const char *cstr);
-extern void strbufferreset_BM (struct strbuffer_stBM *sbuf);
-extern unsigned strbufferlength_BM (const struct strbuffer_stBM *sbuf);
+extern bool objputstrbuffer_BM (objectval_tyBM * obj, unsigned maxsize);
+static inline bool objhasstrbuffer_BM (const objectval_tyBM * obj);
+static inline struct strbuffer_stBM *objgetstrbufferpayload_BM (objectval_tyBM
+                                                                * obj);
+extern void objstrbufferreserve_BM (objectval_tyBM * obj, unsigned gap);
+extern const char *objstrbufferbytes_BM (objectval_tyBM * obj);
+extern int objstrbufferindentation_BM (objectval_tyBM * obj);
+extern void objstrbufferclearindent_BM (objectval_tyBM * obj);
+extern void objstrbuffermoreindent_BM (objectval_tyBM * obj);
+extern void objstrbufferlessindent_BM (objectval_tyBM * obj);
+extern void objstrbufferappendcstr_BM (objectval_tyBM * obj,
+                                       const char *cstr);
+extern void objstrbufferreset_BM (objectval_tyBM * obj);
+extern unsigned objstrbufferlength_BM (const objectval_tyBM * obj);
 /// raw printf
-extern void strbufferrawprintf_BM (struct strbuffer_stBM *sbuf,
-                                   const char *fmt, ...)
+extern void objstrbufferrawprintf_BM (objectval_tyBM * obj,
+                                      const char *fmt, ...)
   __attribute__ ((format (printf, 2, 3)));
 /// cooked printf: the tabs become spaces or indented-newlines, the
 /// newlines become indented
-extern void strbufferprintf_BM (struct strbuffer_stBM *sbuf, const char *fmt,
-                                ...) __attribute__ ((format (printf, 2, 3)));
+extern void objstrbufferprintf_BM (objectval_tyBM * obj, const char *fmt,
+                                   ...)
+  __attribute__ ((format (printf, 2, 3)));
 /// indented newline
-extern void strbuffernewline_BM (struct strbuffer_stBM *sbuf);
+extern void objstrbuffernewline_BM (objectval_tyBM * obj);
 /// output UTF8 encoded à la JSON
-extern void strbufferencodedutf8_BM (struct strbuffer_stBM *sbuf,
-                                     const char *str, ssize_t bytelen);
+extern void objstrbufferencodedutf8_BM (objectval_tyBM * obj,
+                                        const char *str, ssize_t bytelen);
 /// output bytes encoded à la C
-extern void strbufferencodedc_BM (struct strbuffer_stBM *sbuf,
-                                  const char *str, ssize_t bytelen);
+extern void objstrbufferencodedc_BM (objectval_tyBM * obj,
+                                     const char *str, ssize_t bytelen);
 
 /// write the content to a file, if different
-extern void strbufferwritetofile_BM (struct strbuffer_stBM *sbuf,
-                                     const char *filepath);
+extern void objstrbufferwritetofile_BM (objectval_tyBM * obj,
+                                        const char *filepath);
+///////
 
 extern void strbuffergcmark_BM (struct garbcoll_stBM *gc,
                                 struct strbuffer_stBM *sbuf, int depth);
