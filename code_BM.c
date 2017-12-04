@@ -665,13 +665,13 @@ ROUTINEOBJNAME_BM (_91iTl2vqF09_72WJj4swbNi)    // put°hset_object
     return NULL;
   _.putseqv = arg2;
   unsigned lnseq = sequencesize_BM (_.putseqv);
-  struct hashsetobj_stBM *hset = hashsetobj_grow_BM (NULL, 9 * lnseq / 8 + 2);
+  struct hashsetobj_stBM *hset =
+    objputhashsetpayload_BM (_.recv, 9 * lnseq / 8 + 2);
   for (unsigned ix = 0; ix < lnseq; ix++)
     {
       _.curob = sequencenthcomp_BM (_.putseqv, ix);
       hset = hashsetobj_add_BM (hset, _.curob);
     };
-  objputpayload_BM (_.recv, hset);
   return _.recv;
 }                               /* end ROUTINE _91iTl2vqF09_72WJj4swbNi put°hset_object */
 

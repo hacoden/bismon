@@ -105,8 +105,10 @@ gcvaluemark_BM (struct garbcoll_stBM *gc, value_tyBM val, int depth)
       return;
     default:
       WEAKASSERTWARN_BM (ty < type_LASTREAL_BM);
-      fprintf (stderr, "gcvaluemark ty#%d unexpected for val@%p depth=%d",
+      fprintf (stderr, "gcvaluemark ty#%d unexpected for val@%p depth=%d\n",
                ty, val, depth);
+      fflush (NULL);
+      assert (ty <= typayl_LAST_BM);
       break;
     };
   /// obsolete

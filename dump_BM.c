@@ -129,43 +129,43 @@ struct dumpinfo_stBM
 dump_BM (const char *dirname, struct stackframe_stBM *stkf)
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 struct dumper_stBM *curdu; objectval_tyBM * duobj;
+                 objectval_tyBM * duobj;
                  const stringval_tyBM * dudirv;
     );
   if (!dirname || dirname[0] == (char) 0)
     dirname = ".";
+  struct dumper_stBM *duptr = NULL;
   fprintf (stderr, "start dumping into %s\n", dirname);
   if (g_mkdir_with_parents (dirname, 0750))
     FATAL_BM ("failed to mkdir with parents %s", dirname);
   _.dudirv = makestring_BM (dirname);
-  _.curdu = allocgcty_BM (typayl_dumper_BM, sizeof (struct dumper_stBM));
-  _.curdu->dump_state = dum_scan;
-  _.curdu->dump_dir = _.dudirv;
-  _.curdu->dump_hset = hashsetobj_grow_BM (NULL, 256);
-  _.curdu->dump_randomid = randomid_BM ();
-  _.curdu->dump_scanlist = makelist_BM ();
-  _.curdu->dump_todolist = makelist_BM ();
-  _.curdu->dump_startelapsedtime = elapsedtime_BM ();
-  _.curdu->dump_startcputime = cputime_BM ();
   _.duobj = makeobj_BM ();
-  objputpayload_BM (_.duobj, _.curdu);
-  _.curdu->dump_object = _.duobj;
-  dump_scan_pass_BM (_.curdu, (struct stackframe_stBM *) &_);
-  dump_run_todo_BM (_.curdu, (struct stackframe_stBM *) &_);
+  duptr = allocgcty_BM (typayl_dumper_BM, sizeof (struct dumper_stBM));
+  duptr->dump_state = dum_scan;
+  duptr->dump_dir = _.dudirv;
+  duptr->dump_hset = hashsetobj_grow_BM (NULL, 256);
+  duptr->dump_randomid = randomid_BM ();
+  duptr->dump_scanlist = makelist_BM ();
+  duptr->dump_todolist = makelist_BM ();
+  duptr->dump_startelapsedtime = elapsedtime_BM ();
+  duptr->dump_startcputime = cputime_BM ();
+  duptr->dump_object = _.duobj;
+  objputpayload_BM (_.duobj, duptr);
+  dump_scan_pass_BM (duptr, (struct stackframe_stBM *) &_);
+  dump_run_todo_BM (duptr, (struct stackframe_stBM *) &_);
   garbage_collect_if_wanted_BM ((struct stackframe_stBM *) &_);
-  dump_emit_pass_BM (_.curdu, (struct stackframe_stBM *) &_);
+  dump_emit_pass_BM (duptr, (struct stackframe_stBM *) &_);
   garbage_collect_if_wanted_BM ((struct stackframe_stBM *) &_);
-  dump_run_todo_BM (_.curdu, (struct stackframe_stBM *) &_);
+  dump_run_todo_BM (duptr, (struct stackframe_stBM *) &_);
   garbage_collect_if_wanted_BM ((struct stackframe_stBM *) &_);
   struct dumpinfo_stBM di;
   memset (&di, 0, sizeof (di));
-  di.dumpinfo_scanedobjectcount = _.curdu->dump_scanedobjectcount;
-  di.dumpinfo_emittedobjectcount = _.curdu->dump_emittedobjectcount;
-  di.dumpinfo_todocount = _.curdu->dump_todocount;
-  di.dumpinfo_wrotefilecount = _.curdu->dump_wrotefilecount;
-  di.dumpinfo_elapsedtime =
-    elapsedtime_BM () - _.curdu->dump_startelapsedtime;
-  di.dumpinfo_cputime = cputime_BM () - _.curdu->dump_startcputime;
+  di.dumpinfo_scanedobjectcount = duptr->dump_scanedobjectcount;
+  di.dumpinfo_emittedobjectcount = duptr->dump_emittedobjectcount;
+  di.dumpinfo_todocount = duptr->dump_todocount;
+  di.dumpinfo_wrotefilecount = duptr->dump_wrotefilecount;
+  di.dumpinfo_elapsedtime = elapsedtime_BM () - duptr->dump_startelapsedtime;
+  di.dumpinfo_cputime = cputime_BM () - duptr->dump_startcputime;
   return di;
 }                               /* end dump_BM */
 
@@ -174,11 +174,9 @@ void
 dump_run_todo_BM (struct dumper_stBM *du, struct stackframe_stBM *stkf)
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 struct dumper_stBM *curdu;
                  const closure_tyBM * curclo;
     );
   assert (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
-  _.curdu = du;
   while (listlength_BM (du->dump_todolist) > 0)
     {
       _.curclo = listfirst_BM (du->dump_todolist);
@@ -292,11 +290,9 @@ void
 dump_emit_pass_BM (struct dumper_stBM *du, struct stackframe_stBM *stkf)
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 struct dumper_stBM *curdu;     //
                  const objectval_tyBM * curobj; //
                  struct hashsetobj_stBM *hsetspace[LASTSPACE__BM];
     );
-  _.curdu = du;
   assert (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
   for (unsigned spix = PredefSp_BM; spix < LASTSPACE__BM; spix++)
     _.hsetspace[spix] = hashsetobj_grow_BM (NULL, 80);
@@ -353,7 +349,6 @@ dump_emit_space_BM (struct dumper_stBM *du, unsigned spix,
   assert (valtype_BM ((const value_tyBM) hspa) == typayl_hashsetobj_BM);
   assert (spix >= PredefSp_BM && spix < LASTSPACE__BM);
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 struct dumper_stBM *curdu;     //
                  struct hashsetobj_stBM *curhspa;
                  struct hashsetobj_stBM *modhset;
                  const setval_tyBM * setobjs;
@@ -365,7 +360,6 @@ dump_emit_space_BM (struct dumper_stBM *du, unsigned spix,
                  const setval_tyBM * setmodules;
     );
   FILE *spfil = NULL;
-  _.curdu = du;
   _.curhspa = hspa;
   _.setobjs = hashsetobj_to_set_BM (hspa);
   char randidbuf[32];

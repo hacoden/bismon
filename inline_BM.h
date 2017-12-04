@@ -782,6 +782,30 @@ hashsetobjcast_BM (const value_tyBM v)
   return (struct hashsetobj_stBM *) v;
 }                               /* end hashsetobjcast_BM */
 
+struct hashsetobj_stBM *
+objputhashsetpayload_BM (objectval_tyBM * obj, unsigned inisiz)
+{
+  if (!isobject_BM (obj))
+    return NULL;
+  assert (inisiz < MAXSIZE_BM);
+  struct hashsetobj_stBM *hset = hashsetobj_grow_BM (NULL, inisiz);
+  objputpayload_BM (obj, hset);
+  return hset;
+}                               /* end objputhashsetpayload_BM */
+
+
+struct hashsetobj_stBM *
+objhashsetpayload_BM (objectval_tyBM * obj)
+{
+  if (!isobject_BM (obj))
+    return NULL;
+  void *payl = objpayload_BM (obj);
+  if (valtype_BM (payl) == typayl_hashsetobj_BM)
+    return (struct hashsetobj_stBM *) payl;
+  return NULL;
+}                               /* end objhashsetpayload_BM */
+
+
 unsigned
 hashsetobj_cardinal_BM (struct hashsetobj_stBM *hset)
 {

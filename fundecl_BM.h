@@ -392,6 +392,12 @@ extern void datavectgcdestroy_BM (struct garbcoll_stBM *gc,
 extern void datavectgckeep_BM (struct garbcoll_stBM *gc,
                                struct datavectval_stBM *dvec);
 
+static inline struct hashsetobj_stBM *objputhashsetpayload_BM (objectval_tyBM
+                                                               * obj,
+                                                               unsigned
+                                                               inisiz);
+static inline struct hashsetobj_stBM *objhashsetpayload_BM (objectval_tyBM *
+                                                            obj);
 extern struct hashsetobj_stBM *hashsetobj_grow_BM (struct hashsetobj_stBM
                                                    *hset, unsigned gap);
 static inline struct hashsetobj_stBM *hashsetobjcast_BM (const value_tyBM v);
