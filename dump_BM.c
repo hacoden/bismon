@@ -283,19 +283,23 @@ dump_scan_pass_BM (struct dumper_stBM *du, struct stackframe_stBM *stkf)
 
 static void
 dump_emit_space_BM (struct dumper_stBM *du, unsigned spix,
-                    struct hashsetobj_stBM *hspa,
-                    struct stackframe_stBM *stkf);
+                    objectval_tyBM * hspaob, struct stackframe_stBM *stkf);
 
 void
 dump_emit_pass_BM (struct dumper_stBM *du, struct stackframe_stBM *stkf)
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * curobj; //
-                 struct hashsetobj_stBM *hsetspace[LASTSPACE__BM];
+                 objectval_tyBM * curhsetob;
+                 objectval_tyBM * hsetspacob[LASTSPACE__BM];
     );
   assert (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
   for (unsigned spix = PredefSp_BM; spix < LASTSPACE__BM; spix++)
-    _.hsetspace[spix] = hashsetobj_grow_BM (NULL, 80);
+    {
+      _.curhsetob = makeobj_BM ();
+      objputhashsetpayload_BM (_.curhsetob, 256);
+      _.hsetspacob[spix] = _.curhsetob;
+    };
   struct hashsetobj_stBM *dhset = du->dump_hset;
   assert (valtype_BM ((const value_tyBM) dhset) == typayl_hashsetobj_BM);
   {
@@ -308,12 +312,18 @@ dump_emit_pass_BM (struct dumper_stBM *du, struct stackframe_stBM *stkf)
         _.curobj = curduob;
         int cursp = objspacenum_BM (curduob);
         assert (cursp >= PredefSp_BM && cursp < LASTSPACE__BM);
-        _.hsetspace[cursp] = hashsetobj_add_BM (_.hsetspace[cursp], curduob);
+        struct hashsetobj_stBM *curhset =
+          objhashsetpayload_BM ((objectval_tyBM *) _.hsetspacob[cursp]);
+        assert (curhset != NULL);
+        curhset = hashsetobj_add_BM (curhset, curduob);
+        objputpayload_BM ((objectval_tyBM *) _.hsetspacob[cursp], curhset);
       }
   }
   for (unsigned spix = PredefSp_BM; spix < LASTSPACE__BM; spix++)
     {
-      unsigned spcard = hashsetobj_cardinal_BM (_.hsetspace[spix]);
+      struct hashsetobj_stBM *curhset =
+        objhashsetpayload_BM ((objectval_tyBM *) _.hsetspacob[spix]);
+      unsigned spcard = hashsetobj_cardinal_BM (curhset);
       if (spcard == 0)
         {
           char *oldpathbuf = NULL;
@@ -329,7 +339,7 @@ dump_emit_pass_BM (struct dumper_stBM *du, struct stackframe_stBM *stkf)
         }
       else
         {
-          dump_emit_space_BM (du, spix, _.hsetspace[spix],
+          dump_emit_space_BM (du, spix, _.hsetspacob[spix],
                               (struct stackframe_stBM *) &_);
         }
     }
@@ -342,15 +352,13 @@ dump_emit_object_BM (struct dumper_stBM *du, const objectval_tyBM * curobj,
 
 void
 dump_emit_space_BM (struct dumper_stBM *du, unsigned spix,
-                    struct hashsetobj_stBM *hspa,
-                    struct stackframe_stBM *stkf)
+                    objectval_tyBM * hspob, struct stackframe_stBM *stkf)
 {
   assert (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
-  assert (valtype_BM ((const value_tyBM) hspa) == typayl_hashsetobj_BM);
   assert (spix >= PredefSp_BM && spix < LASTSPACE__BM);
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 struct hashsetobj_stBM *curhspa;
-                 struct hashsetobj_stBM *modhset;
+                 objectval_tyBM * modhsetob;
+                 objectval_tyBM * hspob;
                  const setval_tyBM * setobjs;
                  const stringval_tyBM * pathv;
                  const stringval_tyBM * backupv;
@@ -360,7 +368,9 @@ dump_emit_space_BM (struct dumper_stBM *du, unsigned spix,
                  const setval_tyBM * setmodules;
     );
   FILE *spfil = NULL;
-  _.curhspa = hspa;
+  _.hspob = hspob;
+  struct hashsetobj_stBM *hspa = objhashsetpayload_BM (hspob);
+  assert (valtype_BM ((const value_tyBM) hspa) == typayl_hashsetobj_BM);
   _.setobjs = hashsetobj_to_set_BM (hspa);
   char randidbuf[32];
   memset (randidbuf, 0, sizeof (randidbuf));
@@ -378,7 +388,9 @@ dump_emit_space_BM (struct dumper_stBM *du, unsigned spix,
            basename (bytstring_BM (_.pathv)));
   unsigned nbobj = setcardinal_BM (_.setobjs);
   fprintf (spfil, "// for %u objects\n", nbobj);
-  _.modhset = hashsetobj_grow_BM (NULL, 2 + nbobj / 128);
+  _.modhsetob = makeobj_BM ();
+  struct hashsetobj_stBM *modhset =
+    objputhashsetpayload_BM (_.modhsetob, 2 + nbobj / 128);
   // compute the set of modules
   for (unsigned obix = 0; obix < nbobj; obix++)
     {
@@ -402,12 +414,15 @@ dump_emit_space_BM (struct dumper_stBM *du, unsigned spix,
                 {
                   _.modobj = findobjofid_BM (modid);
                   if (_.modobj)
-                    _.modhset = hashsetobj_add_BM (_.modhset, _.modobj);
+                    {
+                      modhset = hashsetobj_add_BM (modhset, _.modobj);
+                      objputpayload_BM (_.modhsetob, modhset);
+                    }
                 }
             }
         }
     }
-  _.setmodules = hashsetobj_to_set_BM (_.modhset);
+  _.setmodules = hashsetobj_to_set_BM (modhset);
   unsigned nbmodules = setcardinal_BM (_.setmodules);
   fprintf (spfil, "// with %d modules\n", nbmodules);
   for (unsigned mix = 0; mix < nbmodules; mix++)
