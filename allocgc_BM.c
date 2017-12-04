@@ -105,8 +105,9 @@ gcvaluemark_BM (struct garbcoll_stBM *gc, value_tyBM val, int depth)
       return;
     default:
       WEAKASSERTWARN_BM (ty < type_LASTREAL_BM);
-      fprintf (stderr, "gcvaluemark ty#%d unexpected for val@%p depth=%d\n",
-               ty, val, depth);
+      fprintf (stderr,
+               "%s:%d gcvaluemark ty#%d (%s) unexpected for val@%p depth=%d\n",
+               __FILE__, __LINE__, ty, typestring_BM (ty), val, depth);
       fflush (NULL);
       assert (ty <= typayl_LAST_BM);
       break;
@@ -294,6 +295,60 @@ valgcdestroy_BM (struct garbcoll_stBM *gc, value_tyBM val)
       FATAL_BM ("gcdestroy ty#%d unexpected for val@%p", ty, val);
     }
 }                               /* end valgcdestroy_BM */
+
+
+
+const char *
+typestring_BM (int ty)
+{
+  switch (ty)
+    {
+    case tyInt_BM:
+      return "Int";
+    case tyNone_BM:
+      return "None";
+    case tyString_BM:
+      return "String";
+    case tyObject_BM:
+      return "Object";
+    case tySet_BM:
+      return "Set";
+    case tyTuple_BM:
+      return "Tuple";
+    case tyNode_BM:
+      return "Node";
+    case tyClosure_BM:
+      return "Closure";
+    case typayl_assocpairs_BM:
+      return "payl_assocpairs";
+    case typayl_assocbucket_BM:
+      return "payl_assocbucket";
+    case typayl_hashsetobj_BM:
+      return "payl_hashsetobj";
+    case typayl_listtop_BM:
+      return "payl_listob";
+    case typayl_strbuffer_BM:
+      return "payl_strbuffer";
+    case typayl_loader_BM:
+      return "payl_loader";
+    case typayl_vectval_BM:
+      return "payl_vectval";
+    case typayl_classinfo_BM:
+      return "payl_classinfo";
+    case typayl_dict_BM:
+      return "payl_dict";
+    case typayl_parser_BM:
+      return "payl_parser";
+    case typayl_dumper_BM:
+      return "payl_dumper";
+    default:
+      {
+        static char buf[32];
+        snprintf (buf, sizeof (buf), "?ty#%d?", ty);
+        return buf;
+      }
+    }
+}                               /* end typestring_BM */
 
 void
 deleteobjectpayload_BM (objectval_tyBM * obj, extendedval_tyBM payl)
