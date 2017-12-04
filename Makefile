@@ -129,3 +129,4 @@ redump: bismon
 outdump: bismon
 	rm -rf /tmp/bd
 	time ./bismon --dump-after-load /tmp/bd --batch
+	for f in /tmp/bd/* ; do cmp $$f $$(basename $$f); done
