@@ -14,7 +14,7 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
 {
   assert (!clos || isclosure_BM ((const value_tyBM) clos));
   assert (istaggedint_BM (arg1));       // the integer to dump
-  assert (valtype_BM (arg2) == typayl_strbuffer_BM);
+  // arg2 is the bufob
   // arg3 is the obdumper
   assert (valtype_BM ((const value_tyBM) restargs) == typayl_quasinode_BM
           && treewidth_BM ((const value_tyBM) restargs) == 1);
@@ -50,7 +50,7 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
 {
   assert (!clos || isclosure_BM ((const value_tyBM) clos));
   assert (isset_BM (arg1));     // the set to dump
-  assert (valtype_BM (arg2) == typayl_strbuffer_BM);
+  // arg2 is the bufob
   // arg3 is the obdump
   assert (valtype_BM ((const value_tyBM) restargs) == typayl_quasinode_BM
           && treewidth_BM ((const value_tyBM) restargs) == 1);
@@ -102,7 +102,7 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
 {
   assert (!clos || isclosure_BM ((const value_tyBM) clos));
   assert (istuple_BM (arg1));   // the tuple to dump
-  assert (valtype_BM (arg2) == typayl_strbuffer_BM);
+  // arg2 is the bufob
   // arg3 is the obdump
   assert (valtype_BM ((const value_tyBM) restargs) == typayl_quasinode_BM
           && treewidth_BM ((const value_tyBM) restargs) == 1);
@@ -154,7 +154,7 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
 {
   assert (!clos || isclosure_BM ((const value_tyBM) clos));
   assert (isnode_BM (arg1));    // the node to dump
-  assert (valtype_BM (arg2) == typayl_strbuffer_BM);
+  // arg2 is the bufob
   // arg3 is the obdumper
   assert (valtype_BM ((const value_tyBM) restargs) == typayl_quasinode_BM
           && treewidth_BM ((const value_tyBM) restargs) == 1);
@@ -216,7 +216,7 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
 {
   assert (!clos || isclosure_BM ((const value_tyBM) clos));
   assert (isclosure_BM (arg1)); // the closure to dump
-  assert (valtype_BM (arg2) == typayl_strbuffer_BM);
+  // arg2 is the bufob
   assert (valtype_BM ((const value_tyBM) restargs) == typayl_quasinode_BM
           && treewidth_BM ((const value_tyBM) restargs) == 1);
   const value_tyBM arg4 = treenthson_BM ((const value_tyBM) restargs, 0);
@@ -280,7 +280,7 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
 {
   assert (!clos || isclosure_BM ((const value_tyBM) clos));
   assert (isstring_BM (arg1));  // the string to dump
-  assert (valtype_BM (arg2) == typayl_strbuffer_BM);
+  // arg2 is the bufob
   // arg3 is the dumpob
   assert (valtype_BM ((const value_tyBM) restargs) == typayl_quasinode_BM
           && treewidth_BM ((const value_tyBM) restargs) == 1);
@@ -531,8 +531,7 @@ ROUTINEOBJNAME_BM (_7GMLV81ntO3_4NHTv7fCL0A)    // dump_data°hset_object
   assert (!clos || isclosure_BM ((const value_tyBM) clos));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv;
-                 const closure_tyBM * clos;
-                 objectval_tyBM * dumpob;
+                 const closure_tyBM * clos; objectval_tyBM * dumpob;
                  objectval_tyBM * bufob; const setval_tyBM * setv;
                  value_tyBM dumpres;
     );
@@ -1077,8 +1076,7 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
 {
   assert (!clos || isclosure_BM ((const value_tyBM) clos));
   assert (isobject_BM (arg1));  // the object to dump
-  assert (valtype_BM (arg2) == typayl_strbuffer_BM);
-
+  // arg2 is the bufob
   assert (valtype_BM ((const value_tyBM) restargs) == typayl_quasinode_BM
           && treewidth_BM ((const value_tyBM) restargs) == 1);
   const value_tyBM arg4 = treenthson_BM ((const value_tyBM) restargs, 0);
@@ -1124,20 +1122,20 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   assert (!clos || isclosure_BM ((const value_tyBM) clos));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv;
-                 objectval_tyBM * dumpob; struct strbuffer_stBM *sbuf;
+                 objectval_tyBM * dumpob; objectval_tyBM * bufob;
                  value_tyBM closv;
     );
   assert (isobject_BM (arg1));
   _.recv = arg1;
   WEAKASSERT_BM (obdumpgetdumper_BM (arg2) != NULL);
   _.dumpob = arg2;
-  assert (valtype_BM (arg3) == typayl_strbuffer_BM);
+  WEAKASSERT_BM (objhasstrbuffer_BM (arg3));
+  _.bufob = arg3;
   assert (restargs == NULL);
-  _.sbuf = arg3;
   _.closv = objgetattr_BM (_.recv, BMP_dump_data);
   if (isclosure_BM (_.closv))
     return apply3_BM (_.closv, (struct stackframe_stBM *) &_,
-                      (const value_tyBM) _.recv, _.dumpob, _.sbuf);
+                      (const value_tyBM) _.recv, _.dumpob, _.bufob);
   return (value_tyBM) _.recv;
 }                               /* end ROUTINE _6PmxiZR9WBe_13DwWExCALl */
 
@@ -1378,8 +1376,7 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
   assert (!clos || isclosure_BM ((const value_tyBM) clos));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv;
-                 objectval_tyBM * dumpob;
-                 objectval_tyBM * bufob;
+                 objectval_tyBM * dumpob; objectval_tyBM * bufob;
                  objectval_tyBM * prsbufob; const stringval_tyBM * filnamv;
                  const setval_tyBM * prset; const objectval_tyBM * curpredef;
                  value_tyBM closv;
@@ -2300,8 +2297,7 @@ ROUTINEOBJNAME_BM (_5DyG7xVcxRI_1Ckpbj7b3QK)    //
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * clos;
-                 objectval_tyBM * obmod;
+                 const closure_tyBM * clos; objectval_tyBM * obmod;
                  objectval_tyBM * dumpob; objectval_tyBM * bufob;
                  value_tyBM res;
     );
