@@ -2456,8 +2456,9 @@ parsobjexp_guicmd_BM (struct parser_stBM *pars,
   const struct parserops_stBM *parsops = pars->pars_ops;
   bool nobuild = parsops && parsops->parsop_nobuild;
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 objectval_tyBM * obj; const stringval_tyBM * namev;
-                 value_tyBM val;);
+		  objectval_tyBM * obj; const stringval_tyBM * namev;
+		  objectval_tyBM* oldnamedob;
+		  value_tyBM val;);
   assert (isparser_BM (pars));
   parserskipspaces_BM (pars);
   unsigned oblineno = parserlineno_BM (pars);
@@ -2471,24 +2472,41 @@ parsobjexp_guicmd_BM (struct parser_stBM *pars,
     {
       bool isglobal = (tok.tok_delim == delim_exclamstar);
       tok = parsertokenget_BM (pars);
-      if (tok.tok_kind != plex_CNAME)
+      if (tok.tok_kind == plex_CNAME) {
+	_.namev = tok.tok_cname;
+      }
+      else if (tok.tok_kind == plex_NAMEDOBJ) {
+	_.oldnamedob = tok.tok_namedobj;
+      }
+      else
         parsererrorprintf_BM (pars, oblineno, obcolpos,
-                              "expecting fresh name after * or !* in $[...]");
-      _.namev = tok.tok_cname;
+                              "expecting name after * or !* in $[...]");
       gotobj = true;
       if (!nobuild)
         {
-          _.obj = makeobj_BM ();
-          objtouchnow_BM (_.obj);
-          objputspacenum_BM (_.obj, isglobal ? GlobalSp_BM : UserEsp_BM);
-          registername_BM (_.obj, bytstring_BM (_.namev));
-          log_begin_message_BM ();
-          log_puts_message_BM (isglobal
-                               ? "created global named object "
-                               : "created userE named object ");
-          log_object_message_BM (_.obj);
-          log_end_message_BM ();
-        }
+	  if (_.namev) {
+	    _.obj = makeobj_BM ();
+	    objtouchnow_BM (_.obj);
+	    objputspacenum_BM (_.obj, isglobal ? GlobalSp_BM : UserEsp_BM);
+	    registername_BM (_.obj, bytstring_BM (_.namev));
+	    log_begin_message_BM ();
+	    log_puts_message_BM (isglobal
+				 ? "created global named object "
+				 : "created userE named object ");
+	    log_object_message_BM (_.obj);
+	    log_end_message_BM ();
+	  }
+	  else if (_.oldnamedob) {
+	    _.obj = _.oldnamedob;
+	    log_begin_message_BM ();
+	    log_puts_message_BM ("reusing named object ");
+	    log_object_message_BM (_.obj);
+	    log_end_message_BM ();
+	  }
+	  else
+	    parsererrorprintf_BM (pars, oblineno, obcolpos,
+				  "expecting some name after * or !* in $[...]");
+	}	    
     }
   // : to create a new transient anonymous object
   else if (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_colon)
