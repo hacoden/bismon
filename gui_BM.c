@@ -2614,7 +2614,7 @@ parsobjexp_guicmd_BM (struct parser_stBM *pars,
 }                               /* end parsobjexp_guicmd_BM */
 
 
-
+////////////////
 void
 parsecommandbuf_BM (struct parser_stBM *pars, struct stackframe_stBM *stkf)
 {
@@ -2953,10 +2953,19 @@ parsecommandbuf_BM (struct parser_stBM *pars, struct stackframe_stBM *stkf)
               browserdepth_BM = newdepth;
             }
         }
-      //
-      // $( .... ) is displaying the named value $result
+      // various value-starting delimiters
       else if (tok.tok_kind == plex_DELIM
-               && tok.tok_delim == delim_dollarleftparen)
+               && (tok.tok_delim == delim_hashleftbrace
+                   || tok.tok_delim == delim_leftbracket
+                   || tok.tok_delim == delim_leftbrace
+                   || tok.tok_delim == delim_tildecolon
+                   || tok.tok_delim == delim_star
+                   || tok.tok_delim == delim_percent
+                   || tok.tok_delim == delim_caret
+                   || tok.tok_delim == delim_dollar
+                   || tok.tok_delim == delim_dollarcolon
+                   || tok.tok_delim == delim_dollarleftbracket
+                   || tok.tok_delim == delim_dollarleftparen))
         {
           bool gotval = false;
           if (!_.result)
