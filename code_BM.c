@@ -3752,9 +3752,8 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
   unsigned nodwidth = nodewidth_BM ((const value_tyBM) _.rnodv);
   _.resobj = NULL;
   _.pars = parsercast_BM (treenthson_BM ((const value_tyBM) restargs, 0));
-  DBGPRINTF_BM ("start readmacro cexpansion _42gEKfF4qca_6gGwxSFC1FO"
+  DBGPRINTF_BM ("start when readmacro cexpansion _42gEKfF4qca_6gGwxSFC1FO"
                 " lineno=%d colpos=%d nodwidth=%u", lineno, colpos, nodwidth);
-
   const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) clos);
   assert (closconn != NULL);
   const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
@@ -3803,6 +3802,9 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
       startix++;
     }
   _.testexpv = nodenthson_BM ((const value_tyBM) _.rnodv, startix);
+  DBGPRINTF_BM ("when readmacro cexpansion"
+                " lineno=%d colpos=%d nodwidth=%u startix=%d",
+                lineno, colpos, nodwidth, startix);
   for (unsigned ix = startix + 1; ix < nodwidth; ix++)
     {
       _.curobj = objectcast_BM (nodenthson_BM (_.rnodv, ix));
