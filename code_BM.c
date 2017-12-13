@@ -3742,8 +3742,8 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
                  const closure_tyBM * clos; const node_tyBM * rnodv;
                  objectval_tyBM * resobj; objectval_tyBM * curobj;
                  objectval_tyBM * resclass; const struct parser_stBM *pars;
-                 value_tyBM * testexpv; value_tyBM * inv;
-                 value_tyBM * curson;
+                 value_tyBM testexpv; value_tyBM * inv;
+                 value_tyBM curson, curarg;
     );
   _.clos = clos;
   _.rnodv = nodecast_BM (arg1);
@@ -3807,16 +3807,28 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
                 lineno, colpos, nodwidth, startix);
   for (unsigned ix = startix + 1; ix < nodwidth; ix++)
     {
-      _.curobj = objectcast_BM (nodenthson_BM (_.rnodv, ix));
-      if (!_.curobj || !objectisinstance_BM (_.curobj, k_basiclo_statement)
-          || !objectisinstance_BM (_.curobj, k_basiclo_block))
+      _.curarg = nodenthson_BM (_.rnodv, ix);
+      _.curobj = objectcast_BM (_.curarg);
+      DBGPRINTF_BM ("when readmacro cexpansion"
+                    " lineno=%d colpos=%d ix=%d\n... curarg=%s \n",
+                    lineno, colpos, ix,
+                    debug_outstr_value_BM (_.curarg,
+                                           (struct stackframe_stBM *) &_, 1));
+      if (!_.curobj
+          || (!objectisinstance_BM (_.curobj, k_basiclo_statement)
+              && !objectisinstance_BM (_.curobj, k_basiclo_block)))
         {
+          char curobid32[32];
+          memset (curobid32, 0, sizeof (curobid32));
+          idtocbuf32_BM (objid_BM (_.curobj), curobid32);
           if (_.pars)
             parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
                                   colpos,
-                                  "bad arg #%d in when readmacro", ix);
+                                  "bad arg #%d (%s) in when readmacro (not a basiclo_statement or basiclo_block)",
+                                  ix, curobid32);
           return NULL;
         };
+      _.curarg = NULL;
     }
   if (!_.resclass)
     _.resclass = (objectval_tyBM *) k_basiclo_when;
