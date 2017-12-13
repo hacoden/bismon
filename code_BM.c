@@ -29,7 +29,7 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   WEAKASSERT_BM (objhasstrbuffer_BM (arg2));
   _.bufob = objectcast_BM (arg2);
   _.dumpob = objectcast_BM (arg3);
-  WEAKASSERT_BM (obdumpgetdumper_BM (_.dumpob) != NULL);
+  WEAKASSERT_BM (!_.dumpob || obdumpgetdumper_BM (_.dumpob) != NULL);
   _.depthv = arg4;
   objstrbufferprintf_BM (_.bufob, " %lld", (long long) getint_BM (_.recv));
   return _.bufob;
@@ -65,7 +65,7 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   _.bufob = objectcast_BM (arg2);
   WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
   _.dumpob = objectcast_BM (arg3);
-  WEAKASSERT_BM (obdumpgetdumper_BM (_.dumpob) != NULL);
+  WEAKASSERT_BM (!_.dumpob || obdumpgetdumper_BM (_.dumpob) != NULL);
   _.depthv = arg4;
   objstrbufferprintf_BM (_.bufob, "\t{");
   objstrbuffermoreindent_BM (_.bufob);
@@ -74,7 +74,7 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   for (unsigned ix = 0; ix < card; ix++)
     {
       _.curobj = setelemnth_BM (_.recv, ix);
-      if (!obdumpobjisdumpable_BM (_.dumpob, _.curobj))
+      if (_.dumpob && !obdumpobjisdumpable_BM (_.dumpob, _.curobj))
         continue;
       char curidbuf[32];
       idtocbuf32_BM (objid_BM (_.curobj), curidbuf);
@@ -117,7 +117,7 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   _.bufob = objectcast_BM (arg2);
   WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
   _.dumpob = objectcast_BM (arg3);
-  WEAKASSERT_BM (obdumpgetdumper_BM (_.dumpob) != NULL);
+  WEAKASSERT_BM (!_.dumpob || obdumpgetdumper_BM (_.dumpob) != NULL);
   _.depthv = arg4;
   objstrbufferprintf_BM (_.bufob, "\t[");
   objstrbuffermoreindent_BM (_.bufob);
@@ -126,7 +126,7 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   for (unsigned ix = 0; ix < tsiz; ix++)
     {
       _.curobj = tuplecompnth_BM (_.recv, ix);
-      if (!obdumpobjisdumpable_BM (_.dumpob, _.curobj))
+      if (_.dumpob && !obdumpobjisdumpable_BM (_.dumpob, _.curobj))
         continue;
       char curidbuf[32];
       idtocbuf32_BM (objid_BM (_.curobj), curidbuf);
@@ -170,11 +170,11 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   _.bufob = objectcast_BM (arg2);
   _.dumpob = objectcast_BM (arg3);
   WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
-  WEAKASSERT_BM (obdumpgetdumper_BM (_.dumpob) != NULL);
+  WEAKASSERT_BM (!_.dumpob || obdumpgetdumper_BM (_.dumpob) != NULL);
   _.depthv = arg4;
   unsigned depth = getint_BM (_.depthv);
   _.connobj = nodeconn_BM ((const value_tyBM) _.recv);
-  if (!obdumpobjisdumpable_BM (_.dumpob, _.connobj))
+  if (_.dumpob && !obdumpobjisdumpable_BM (_.dumpob, _.connobj))
     {
       objstrbufferprintf_BM (_.bufob, " __");
       return _.bufob;
@@ -188,7 +188,7 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   for (unsigned six = 0; six < width; six++)
     {
       _.curson = nodenthson_BM ((const value_tyBM) _.recv, six);
-      if (!obdumpvalisdumpable_BM (_.dumpob, _.curson))
+      if (_.dumpob && !obdumpvalisdumpable_BM (_.dumpob, _.curson))
         continue;
       if (cnt > 0 && cnt % 5 == 0)
         objstrbuffernewline_BM (_.bufob);
@@ -230,12 +230,12 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   _.recv = (arg1);
   _.bufob = objectcast_BM (arg2);
   _.dumpob = objectcast_BM (arg3);
-  WEAKASSERT_BM (obdumpgetdumper_BM (_.dumpob) != NULL);
+  WEAKASSERT_BM (!_.dumpob || obdumpgetdumper_BM (_.dumpob) != NULL);
   WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
   _.depthv = arg4;
   unsigned depth = getint_BM (_.depthv);
   _.connobj = closureconn_BM ((const value_tyBM) _.recv);
-  if (!obdumpobjisdumpable_BM (_.dumpob, _.connobj))
+  if (_.dumpob && !obdumpobjisdumpable_BM (_.dumpob, _.connobj))
     {
       objstrbufferprintf_BM (_.bufob, " |transclos:| __");
       return _.bufob;
@@ -249,7 +249,7 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   for (unsigned six = 0; six < width; six++)
     {
       _.curson = closurenthson_BM ((const value_tyBM) _.recv, six);
-      if (!obdumpvalisdumpable_BM (_.dumpob, _.curson))
+      if (_.dumpob && !obdumpvalisdumpable_BM (_.dumpob, _.curson))
         {
           objstrbufferprintf_BM (_.bufob, "\t__");
           continue;
@@ -295,7 +295,7 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   _.recv = (arg1);
   _.bufob = objectcast_BM (arg2);
   _.dumpob = objectcast_BM (arg3);
-  WEAKASSERT_BM (obdumpgetdumper_BM (_.dumpob) != NULL);
+  WEAKASSERT_BM (!_.dumpob || obdumpgetdumper_BM (_.dumpob) != NULL);
   WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
   _.depthv = arg4;
   unsigned depth = getint_BM (_.depthv);
@@ -1089,10 +1089,10 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   _.recv = (arg1);
   _.bufob = objectcast_BM (arg2);
   WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
-  WEAKASSERT_BM (obdumpgetdumper_BM (arg3) != NULL);
-  _.dumpob = arg3;
+  _.dumpob = objectcast_BM (arg3);
+  WEAKASSERT_BM (!_.dumpob || obdumpgetdumper_BM (_.dumpob) != NULL);
   _.depthv = arg4;
-  if (!obdumpobjisdumpable_BM (_.dumpob, _.recv))
+  if (_.dumpob && !obdumpobjisdumpable_BM (_.dumpob, _.recv))
     objstrbufferprintf_BM (_.bufob, " __");
   else
     {
