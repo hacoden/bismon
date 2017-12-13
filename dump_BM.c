@@ -600,3 +600,25 @@ dump_emit_object_BM (struct dumper_stBM *du, const objectval_tyBM * curobj,
   objunlock_BM (_.curobj);
   du->dump_emittedobjectcount++;
 }                               /* end dump_emit_object_BM */
+
+
+const char *
+debug_outstr_value_BM (const value_tyBM val, struct stackframe_stBM *stkf,
+                       int curdepth)
+{
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 value_tyBM valv;
+                 objectval_tyBM * bufob;
+    );
+  _.valv = val;
+  if (!val)
+    return "__";
+  WEAKASSERT_BM (valtype_BM (val) <= type_LASTREAL_BM);
+  _.bufob = makeobj_BM ();
+  objputstrbuffer_BM (_.bufob, 256 * 1024);
+  if (!send3_BM (_.valv, BMP_dump_value,
+                 (struct stackframe_stBM *) &_,
+                 _.bufob, NULL, taggedint_BM (curdepth)))
+    return "??";
+  return objstrbufferbytes_BM (_.bufob);
+}                               /* end debug_outstr_value_BM */

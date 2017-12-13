@@ -573,6 +573,10 @@ extern value_tyBM apply9_BM (const closure_tyBM * clos,
                              const value_tyBM arg7, const value_tyBM arg8,
                              const value_tyBM arg9);
 
+extern const char *debug_outstr_value_BM (const value_tyBM val,
+                                          struct stackframe_stBM *stkf,
+                                          int curdepth);
+
 ////////////////
 extern void load_initial_BM (const char *dirname);
 extern void load_addtodo_BM (const closure_tyBM * clos);
