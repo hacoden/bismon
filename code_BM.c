@@ -3347,9 +3347,9 @@ ROUTINEOBJNAME_BM (_5788HpgOtVV_4zwZIr0jgmq)    //
       startix++;
     }
   DBGPRINTF_BM ("start readmacro:return "
-                " lineno=%d colpos=%d nodwidth=%u startix=%d", lineno, colpos,
-                nodwidth, startix);
-  if (startix + 1 > nodwidth)
+                " lineno=%d colpos=%d nodwidth=%u startix=%d",
+                lineno, colpos, nodwidth, startix);
+  if (startix + 1 < nodwidth)
     {
       if (_.pars)
         parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
