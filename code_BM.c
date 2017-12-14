@@ -3829,6 +3829,7 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
           return NULL;
         };
       _.curarg = NULL;
+      _.curobj = NULL;
     }
   if (!_.resclass)
     _.resclass = (objectval_tyBM *) k_basiclo_when;
