@@ -3605,7 +3605,7 @@ ROUTINEOBJNAME_BM (_42gEKfF4qca_6gGwxSFC1FO)    //
       startix++;
     }
   DBGPRINTF_BM
-    ("%s cexpansion  startix=%d nbresults=%d nbargs=%d nodwidth=%d",
+    ("%s cexpansion startix=%d nbresults=%d nbargs=%d nodwidth=%d",
      objectdbg_BM (clos_curcexp), startix, nbresults, nbargs, nodwidth);
   if (startix + nbresults + nbargs < nodwidth)
     {
@@ -3845,10 +3845,15 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
   for (unsigned ix = startix + 1; ix < nodwidth; ix++)
     {
       _.curobj = objectcast_BM (nodenthson_BM (_.rnodv, ix));
+      DBGPRINTF_BM ("when readmacro cexpansion ix=%d curobj=%s",
+                    ix, objectdbg_BM (_.curobj));
       objputcomp_BM (_.resobj, ix - startix - 1, _.curobj);
     };
   objputclass_BM (_.resobj, _.resclass);
   objtouchnow_BM (_.resobj);
+  DBGPRINTF_BM ("when readmacro cexpansion"
+                " lineno=%d colpos=%d gives %s",
+                lineno, colpos, objectdbg_BM (_.resobj));
   return _.resobj;
 }                               // end when:readmacro _6gwxdBT3Mhv_8Gtgu8feoy3
 
