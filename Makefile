@@ -115,7 +115,7 @@ modules: $(patsubst %.c,%.so,$(MODULES_SOURCES))
 bismon: $(OBJECTS)
 	@if [ -f $@ ]; then echo -n backup old executable: ' ' ; mv -v $@ $@~ ; fi
 	$(MAKE) __timestamp.c __timestamp.o
-	$(LINK.cc)  $(LINKFLAGS) -rdynamic $(OPTIMFLAGS) $(OBJECTS) $(LIBES) -o $@  __timestamp.o
+	$(LINK.cc)  $(LINKFLAGS) -rdynamic $(OPTIMFLAGS) $(OBJECTS) __timestamp.o $(LIBES) -o $@
 	$(RM) __timestamp.*
 
 doc: $(MARKDOWN_SOURCES)
