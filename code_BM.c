@@ -3717,6 +3717,8 @@ ROUTINEOBJNAME_BM (_42gEKfF4qca_6gGwxSFC1FO)    //
 }                               /* end routine readmacro cexpansion _42gEKfF4qca_6gGwxSFC1FO */
 
 
+
+
 ////////////////
 
 ///
@@ -3848,7 +3850,8 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
       _.curobj = objectcast_BM (nodenthson_BM (_.rnodv, ix));
       DBGPRINTF_BM ("when readmacro cexpansion ix=%d curobj=%s",
                     ix, objectdbg_BM (_.curobj));
-      objputcomp_BM (_.resobj, ix - startix - 1, _.curobj);
+      objappendcomp_BM (_.resobj, _.curobj);
+      _.curobj = NULL;
     };
   objputclass_BM (_.resobj, _.resclass);
   objtouchnow_BM (_.resobj);
