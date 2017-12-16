@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 221 objects
+// for 222 objects
 // with 0 modules
 
 
@@ -181,13 +181,14 @@
 !(_0eCRnBKQ0eQ_1atum3gUgEz |=basiclo_cond|
 !~ name (~ basiclo_cond
 ~)
-!@ 1511773625.16
+!@ 1513408001.20
 !$_0LK4TzFd6u1_0JFUsrQ4odG |=class|
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "class for cond statements"
 !: _4rz1Bi4weGz_8Y03gU81cRL |=see|
  { _0v2RuabJSIV_7SLFx4XAdpr _7KdDnQYcbeY_4LbTWNwFIFY }
-!~ class (~ |supercl basiclo_statement:| _4lKK08v9A0t_0GGsir35UxP
+!~ class (~ |supercl basiclo_statement:| _4lKK08v9A0t_0GGsir35UxP 
+~: _6DdZwyaWLyK_7tS2BmECOJ0 |=miniscan_stmt|  % _0zzJJsAL6Qm_2uw3eoWQHEq ()
 ~)
 
 !)_0eCRnBKQ0eQ_1atum3gUgEz
@@ -1807,6 +1808,16 @@ _7XasLoEUKwe_9upxyFeheD5
  _3XBrePAliOo_37VlAqBsb5C |=label| ) ~)
 
 !)_0kUyX0U19K2_5mcH4RCaBl9
+
+
+
+!(_0zzJJsAL6Qm_2uw3eoWQHEq
+!|*
+!@ 1513408055.84
+!$_2Ir1i8qnrA4_3jSkierlc5z |=basiclo_function|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "routine for miniscan_stmt\u00b0basiclo_cond"
+!)_0zzJJsAL6Qm_2uw3eoWQHEq
 
 
 

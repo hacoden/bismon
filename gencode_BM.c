@@ -756,3 +756,34 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
      objectdbg_BM (_.recv), objectdbg1_BM (_.routprep), depth);
   return _.routprep;
 }                               /* end collect_blocks°basiclo_block _0gkYrIdnOg2_0wLEAh1QuYu */
+
+
+
+// for the method miniscan_stmt°basiclo_cond 
+extern objrout_sigBM ROUTINEOBJNAME_BM (_0zzJJsAL6Qm_2uw3eoWQHEq);
+value_tyBM
+ROUTINEOBJNAME_BM (_0zzJJsAL6Qm_2uw3eoWQHEq)    //
+(const closure_tyBM * clos, struct stackframe_stBM * stkf,      //
+ const value_tyBM arg1,         // recieving cond
+ const value_tyBM arg2,         // routine preparation
+ const value_tyBM arg3,         // depth
+ const quasinode_tyBM * restargs)       // arg4 is the containing block
+{
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 const closure_tyBM * clos;
+                 objectval_tyBM * recv; objectval_tyBM * routprepob;
+                 objectval_tyBM * fromblockob;
+    );
+  int depth = 0;
+  _.clos = clos;
+  _.recv = objectcast_BM (arg1);
+  _.routprepob = objectcast_BM (arg2);
+  depth = getint_BM (arg3);
+  _.fromblockob = objectcast_BM (nodenthson_BM (restargs, 0));
+  DBGPRINTF_BM
+    ("miniscan_stmt°basiclo_cond start recv=%s routprepob=%s depth#%d fromblockob=%s unimplemented",
+     objectdbg_BM (_.recv), objectdbg1_BM (_.routprepob), depth,
+     objectdbg2_BM (_.fromblockob));
+#warning miniscan_stmt°basiclo_cond unimplemented
+  return NULL;
+}                               /* end routine miniscan_stmt°basiclo_cond _0zzJJsAL6Qm_2uw3eoWQHEq */
