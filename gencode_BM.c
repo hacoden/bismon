@@ -654,14 +654,14 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
       if (!_.curob)
         {
           fprintf (stderr,
-                   "collect_blocks°basiclo_block bad variable for varix#%d",
+                   "collect_blocks°basiclo_block bad variable for varix#%d\n",
                    varix);
           return NULL;
         }
       if (!assoc_getattr_BM (_.routassoc, _.curob))
         {
           fprintf (stderr,
-                   "collect_blocks°basiclo_block unknown variable %s for varix#%d",
+                   "collect_blocks°basiclo_block unknown variable %s for varix#%d\n",
                    objectdbg_BM (_.curob), varix);
           return NULL;
         }
@@ -673,7 +673,7 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
       if (!_.resv)
         {
           fprintf (stderr,
-                   "collect_blocks°basiclo_block miniscan_variable of variable %s for varix#%d failed",
+                   "collect_blocks°basiclo_block miniscan_variable of variable %s for varix#%d failed\n",
                    objectdbg_BM (_.curob), varix);
           return NULL;
         }
@@ -681,7 +681,10 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
   for (int argix = 0; argix < nbargs; argix++)
     {
       _.curexp = (objgetcomp_BM (_.recv, argix + nbvars));
-      DBGPRINTF_BM ("collect_blocks°basiclo_block argix#%d", argix);
+      DBGPRINTF_BM ("collect_blocks°basiclo_block argix#%d curexp %s",
+                    argix,
+                    debug_outstr_value_BM (_.curexp,
+                                           (struct stackframe_stBM *) &_, 0));
       /// should send k_miniscan_expr
       _.resv = send3_BM (_.curexp,
                          k_miniscan_expr,
@@ -690,7 +693,7 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
       if (!_.resv)
         {
           fprintf (stderr,
-                   "collect_blocks°basiclo_block miniscan_expr for expix#%d failed",
+                   "collect_blocks°basiclo_block miniscan_expr for expix#%d failed\n",
                    argix);
           return NULL;
         }
@@ -706,7 +709,7 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
       if (!_.curob)
         {
           fprintf (stderr,
-                   "collect_blocks°basiclo_block bad block for blockix#%d",
+                   "collect_blocks°basiclo_block bad block for blockix#%d\n",
                    blockix);
           return NULL;
         }
@@ -720,14 +723,14 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
           if (!_.resv)
             {
               fprintf (stderr,
-                       "collect_blocks°basiclo_block miniscan_block for %s blockix#%d failed",
+                       "collect_blocks°basiclo_block miniscan_block for %s blockix#%d failed\n",
                        objectdbg_BM (_.curob), blockix);
               return NULL;
             }
         }
       else if (objectisinstance_BM (_.curob, k_basiclo_statement))
         {
-          /// should send k_miniscan_block
+          /// should send k_miniscan_stmt
           _.resv = send3_BM (_.curob,
                              k_miniscan_stmt,
                              (struct stackframe_stBM *) &_,
@@ -735,7 +738,7 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
           if (!_.resv)
             {
               fprintf (stderr,
-                       "collect_blocks°basiclo_block miniscan_stmt for %s blockix#%d failed",
+                       "collect_blocks°basiclo_block miniscan_stmt for %s blockix#%d failed\n",
                        objectdbg_BM (_.curob), blockix);
               return NULL;
             }
@@ -743,7 +746,7 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
       else
         {
           fprintf (stderr,
-                   "collect_blocks°basiclo_block invalid block %s for blockix#%d",
+                   "collect_blocks°basiclo_block invalid block %s for blockix#%d\n",
                    objectdbg_BM (_.curob), blockix);
           return NULL;
         }
