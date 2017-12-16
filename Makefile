@@ -4,10 +4,12 @@ CXX= g++
 CCACHE= ccache
 MARKDOWN= markdown
 WARNFLAGS= -Wall -Wextra -Wmissing-prototypes -Wstack-usage=1500 -fdiagnostics-color=auto
+## -Wmissing-prototypes dont exist for g++
 SKIPCXXWARNFLAGS= -Wmissing-prototypes
 OPTIMFLAGS= -O1 -g3
 CFLAGS= -std=gnu11 $(WARNFLAGS) $(PREPROFLAGS) $(OPTIMFLAGS)
 CXXFLAGS= -std=gnu++14 $(filter-out $(SKIPCXXWARNFLAGS), $(WARNFLAGS)) $(PREPROFLAGS) $(OPTIMFLAGS)
+GCCPLUGINS_DIR:= $(shell $(CXX) -print-file-name=plugin)
 INDENT= indent
 ASTYLE= astyle
 MD5SUM= md5sum
@@ -32,7 +34,7 @@ MODULES_SOURCES= $(sort $(wildcard modules/modbm*.c))
 
 OBJECTS= $(patsubst %.c,%.o,$(BM_COLDSOURCES) $(GENERATED_CSOURCES)) $(patsubst %.cc,%.o,$(BM_CXXSOURCES))
 
-.PHONY: all clean indent count modules doc redump outdump
+.PHONY: all clean indent count modules measured doc redump outdump
 all: bismon doc
 clean:
 	$(RM) .*~ *~ *% *.o *.so */*.so *.log */*~ */*.orig *.i *.orig *.gch README.html
@@ -69,6 +71,8 @@ indent: .indent.pro
 	@for x in $(BM_CXXSOURCES); do \
 	  $(ASTYLE) $(ASTYLEFLAGS) $$x ; \
 	done
+	@printf "\n *** C++ plugin source *** \n"
+	@$(ASTYLE) $(ASTYLEFLAGS)  measure_plugcc.cc
 	@printf "\n"
 
 ## we could use git rev-parse HEAD for the lastgitcommit, but it does
@@ -117,6 +121,11 @@ bismon: $(OBJECTS)
 	$(MAKE) __timestamp.c __timestamp.o
 	$(LINK.cc)  $(LINKFLAGS) -rdynamic $(OPTIMFLAGS) $(OBJECTS) __timestamp.o $(LIBES) -o $@
 	$(RM) __timestamp.*
+
+measured: measure_plugcc.so
+
+measure_plugcc.so  : measure_plugcc.cc
+	$(CXX) -std=gnu++14  $(OPTIMFLAGS)  -I$(GCCPLUGINS_DIR)/include -fPIC -shared $< -o $@
 
 doc: $(MARKDOWN_SOURCES)
 	@for f in $^ ; do  $(MARKDOWN) $$f > $$(basename $$f .md).html ; done
