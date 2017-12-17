@@ -127,8 +127,8 @@ measured-bismon: measure_plugcc.so
 	$(RM) $(OBJECTS)
 	$(MAKE) bismon PLUGINFLAGS=-fplugin=./measure_plugcc.so
 
-measure_plugcc.so  : measure_plugcc.cc
-	$(CXX) -std=gnu++14  $(OPTIMFLAGS)  -I$(GCCPLUGINS_DIR)/include -fPIC -shared $< -o $@
+measure_plugcc.so: measure_plugcc.cc  Makefile
+	$(CXX) -std=gnu++14 -fno-rtti $(OPTIMFLAGS)  -I$(GCCPLUGINS_DIR)/include -fPIC -shared $< -o $@
 
 measure: measure_plugcc.so measured-bismon
 
