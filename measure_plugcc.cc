@@ -21,12 +21,17 @@ along with GCC; see the file COPYING3.  If not see
 #include <string>
 #include "gcc-plugin.h"
 #include "plugin-version.h"
+#include "diagnostic-core.h"
+#include "diagnostic.h"
+
+
 extern "C" int plugin_is_GPL_compatible;
 int plugin_is_GPL_compatible=1;
 
 static void
 start_unit_cb(void *gcc_data, void *)
 {
+  inform(input_location, "start of measure_plugcc");
 } // end start_unit_cb
 
 int
@@ -39,4 +44,4 @@ plugin_init (struct plugin_name_args *plugin_info,
     return 1;
   register_callback(plugin_info->base_name, PLUGIN_START_UNIT, start_unit_cb, nullptr);
   return  0;
-}
+} // end plugin_init
