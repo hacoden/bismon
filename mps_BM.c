@@ -7,3 +7,10 @@
 #undef FALSE
 
 #include "mps/code/mps.c"
+#include "mps/code/mpscamc.h"
+
+void
+mpsinit_BM (void)
+{
+#warning should code mpsinit_BM
+}                               /* end mpsinit_BM */

@@ -264,6 +264,7 @@ main (int argc, char **argv)
   memset ((char *) myhostname_BM, 0, sizeof (myhostname_BM));
   if (gethostname ((char *) myhostname_BM, sizeof (myhostname_BM) - 1))
     FATAL_BM ("gethostname failure %m");
+  mpsinit_BM ();
   initialize_garbage_collector_BM ();
   check_delims_BM ();
   initialize_globals_BM ();
