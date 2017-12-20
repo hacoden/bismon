@@ -319,6 +319,7 @@ struct stackframe_stBM
   objectval_tyBM *stkfram_descr;
   int stkfram_state;
   int stkfram_xtra;
+  value_tyBM stkfram_calledclos;
   value_tyBM stkfram_locals[];
 };
 

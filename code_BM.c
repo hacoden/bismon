@@ -32,6 +32,8 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   WEAKASSERT_BM (!_.dumpob || obdumpgetdumper_BM (_.dumpob) != NULL);
   _.depthv = arg4;
   objstrbufferprintf_BM (_.bufob, " %lld", (long long) getint_BM (_.recv));
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.bufob;
 }                               /* end ROUTINE _3kMqlEugRVW_7DgwjR4CBbP */
 
@@ -85,6 +87,8 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
     };
   objstrbufferlessindent_BM (_.bufob);
   objstrbufferprintf_BM (_.bufob, " }");
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.bufob;
 }                               /* end ROUTINE _3Tc3E4uo2p5_4EXWCPwCR5b */
 
@@ -137,6 +141,8 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
     };
   objstrbufferlessindent_BM (_.bufob);
   objstrbufferprintf_BM (_.bufob, " ]");
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.bufob;
 }                               /* end ROUTINE _5D9kkPHSPxq_8suDXpjlzjE */
 
@@ -177,6 +183,8 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   if (_.dumpob && !obdumpobjisdumpable_BM (_.dumpob, _.connobj))
     {
       objstrbufferprintf_BM (_.bufob, " __");
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return _.bufob;
     }
   char connidbuf[32];
@@ -200,6 +208,8 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
     }
   objstrbufferlessindent_BM (_.bufob);
   objstrbufferprintf_BM (_.bufob, ")");
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.bufob;
 }                               /* end ROUTINE _5v30KC0IMxx_53ZzXprJTM6 */
 
@@ -238,6 +248,8 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   if (_.dumpob && !obdumpobjisdumpable_BM (_.dumpob, _.connobj))
     {
       objstrbufferprintf_BM (_.bufob, " |transclos:| __");
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return _.bufob;
     }
   char connidbuf[32];
@@ -264,6 +276,8 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
     }
   objstrbufferlessindent_BM (_.bufob);
   objstrbufferprintf_BM (_.bufob, ")");
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.bufob;
 }                               /* end ROUTINE _6jvRZetUz36_978V6SKIWZC */
 
@@ -346,6 +360,8 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
         }
     }
   objstrbufferprintf_BM (_.bufob, "\"");
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.bufob;
 }                               /* end ROUTINE _7mvOlkB1tAJ_3psVFz4QEAn */
 
@@ -392,6 +408,8 @@ ROUTINEOBJNAME_BM (_4EBQMvthjcP_2OiZxZviSQc)    // dump_scan°class
       assert (isclosure_BM (_.curmeth));
       obdumpscanvalue_BM (_.dumpob, _.curmeth, 0);
     }
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return (value_tyBM) _.recv;
 }                               /* end ROUTINE _4EBQMvthjcP_2OiZxZviSQc dump_scan°class */
 
@@ -471,6 +489,8 @@ ROUTINEOBJNAME_BM (_67IapmpeTLU_8MQKtlK8iAD)    // dump_data°class
     }
   objstrbufferlessindent_BM (_.bufob);
   objstrbufferappendcstr_BM (_.bufob, "\n~)\n");
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return (value_tyBM) _.recv;
 }                               /* end ROUTINE _67IapmpeTLU_8MQKtlK8iAD */
 
@@ -503,6 +523,8 @@ ROUTINEOBJNAME_BM (_4DvEF1tVGFD_6VVLpFn6FPW)    //  dump_scan°hset_object
   assert (restargs == NULL);
   _.setv = hashsetobj_to_set_BM (payl);
   obdumpscanvalue_BM (_.dumpob, (value_tyBM) _.setv, 0);
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return (value_tyBM) _.recv;
 }                               /* end dump_scan°set_object ROUTINE _4DvEF1tVGFD_6VVLpFn6FPW */
 
@@ -574,6 +596,8 @@ ROUTINEOBJNAME_BM (_7GMLV81ntO3_4NHTv7fCL0A)    // dump_data°hset_object
                         _.bufob, _.dumpob, taggedint_BM (0));
   objstrbufferlessindent_BM (_.bufob);
   objstrbufferappendcstr_BM (_.bufob, "\n~)\n");
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return (value_tyBM) _.recv;
 }                               /* end dump_data hset_object ROUTINE _7GMLV81ntO3_4NHTv7fCL0A  */
 
@@ -608,6 +632,8 @@ ROUTINEOBJNAME_BM (_26FUvWKvkYr_5hyqhhV8NEh)    // get°hset_object
     {
       if (hashsetobj_contains_BM (hset, _.elem))
         return _.elem;
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return NULL;
     }
   else if (issequence_BM (_.elem))
@@ -629,13 +655,19 @@ ROUTINEOBJNAME_BM (_26FUvWKvkYr_5hyqhhV8NEh)    // get°hset_object
       _.setv = makeset_BM (arr, cnt);
       if (arr != tinyarr)
         free (arr);
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return (value_tyBM) _.setv;
     }
   else if (!_.elem)
     {
       _.setv = hashsetobj_to_set_BM (hset);
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return (value_tyBM) _.setv;
     }
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return NULL;
 }                               /* end ROUTINE _26FUvWKvkYr_5hyqhhV8NEh get°hset_object */
 
@@ -672,6 +704,8 @@ ROUTINEOBJNAME_BM (_91iTl2vqF09_72WJj4swbNi)    // put°hset_object
       _.curob = sequencenthcomp_BM (_.putseqv, ix);
       hset = hashsetobj_add_BM (hset, _.curob);
     };
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.recv;
 }                               /* end ROUTINE _91iTl2vqF09_72WJj4swbNi put°hset_object */
 
@@ -703,6 +737,8 @@ ROUTINEOBJNAME_BM (_2juH5YMCcog_8pQGCuE5mod)    // add°hset_object
     {
       hset = hashsetobj_add_BM (hset, (objectval_tyBM *) _.addend);
       objputpayload_BM (_.recv, hset);
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return _.recv;
     }
   else if (issequence_BM (_.addend))
@@ -715,6 +751,8 @@ ROUTINEOBJNAME_BM (_2juH5YMCcog_8pQGCuE5mod)    // add°hset_object
           hset = hashsetobj_add_BM (hset, _.curob);
         };
       objputpayload_BM (_.recv, hset);
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return _.recv;
     }
   return NULL;
@@ -739,10 +777,18 @@ ROUTINEOBJNAME_BM (_5hedSPIXD0o_5ef69rR2kzb)    // remove°hset_object
   struct hashsetobj_stBM *hset = NULL;
   _.clos = clos;
   if (!isobject_BM (arg1))
-    return NULL;
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
   _.recv = arg1;
   if (!objpayload_BM (_.recv))
-    return _.recv;
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return _.recv;
+    }
   hset = hashsetobjcast_BM (objpayload_BM (_.recv));
   if (!hset)
     return NULL;
@@ -751,6 +797,8 @@ ROUTINEOBJNAME_BM (_5hedSPIXD0o_5ef69rR2kzb)    // remove°hset_object
     {
       hset = hashsetobj_remove_BM (hset, _.removedv);
       objputpayload_BM (_.recv, hset);
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return _.recv;
     }
   else if (issequence_BM (_.removedv))
@@ -764,10 +812,16 @@ ROUTINEOBJNAME_BM (_5hedSPIXD0o_5ef69rR2kzb)    // remove°hset_object
       if (nbrem > TINYSIZE_BM)
         hset = hashsetobj_grow_BM (hset, 1);    /* could reorganize the hset */
       objputpayload_BM (_.recv, hset);
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return _.recv;
     }
   else
-    return NULL;
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
 }                               /* end ROUTINE _5hedSPIXD0o_5ef69rR2kzb  remove°hset_object */
 
 
@@ -785,11 +839,16 @@ value_tyBM ROUTINEOBJNAME_BM (_88cUYsDqSFO_0DKwKLSOmpm) (const closure_tyBM * cl
     );
   _.clos = clos;
   _.recv = arg1;
-  if (!isobject_BM (arg1))
-    return NULL;
-  if (valtype_BM (objpayload_BM (_.recv)) != typayl_hashsetobj_BM)
-    return NULL;
+  if (!isobject_BM (arg1)
+      || valtype_BM (objpayload_BM (_.recv)) != typayl_hashsetobj_BM)
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
   _.setv = hashsetobj_to_set_BM (objpayload_BM (_.recv));
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return (value_tyBM) _.setv;
 }                               /* end ROUTINE _88cUYsDqSFO_0DKwKLSOmpm set of hset_object */
 
@@ -822,7 +881,11 @@ ROUTINEOBJNAME_BM (_8MU0cEcpEYN_5SVe0jrv36o)    //  dump_scan°assoc_object
   WEAKASSERT_BM (isassoc_BM (objpayload_BM (_.recv)));
   anyassoc_tyBM *assoc = assoccast_BM (objpayload_BM (_.recv));
   if (!assoc)
-    return NULL;
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
   assert (arg3 == NULL);
   assert (restargs == NULL);
   _.setv = assoc_setattrs_BM (assoc);
@@ -836,6 +899,8 @@ ROUTINEOBJNAME_BM (_8MU0cEcpEYN_5SVe0jrv36o)    //  dump_scan°assoc_object
       _.curval = assoc_getattr_BM (assoc, _.curattrob);
       obdumpscanvalue_BM (_.dumpob, _.curval, 0);
     }
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return (value_tyBM) _.recv;
 }                               /* end dump_scan°assoc_object ROUTINE _8MU0cEcpEYN_5SVe0jrv36o */
 
@@ -898,7 +963,11 @@ ROUTINEOBJNAME_BM (_9EytjXNb76D_1ZP3iSk9cuu)    // dump_data°assoc_object
   WEAKASSERT_BM (isassoc_BM (objpayload_BM (_.recv)));
   anyassoc_tyBM *assoc = assoccast_BM (objpayload_BM (_.recv));
   if (!assoc)
-    return NULL;
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
   _.setv = assoc_setattrs_BM (assoc);
   unsigned nbattr = setcardinal_BM (_.setv);
   int cnt = 0;
@@ -929,6 +998,8 @@ ROUTINEOBJNAME_BM (_9EytjXNb76D_1ZP3iSk9cuu)    // dump_data°assoc_object
     };
   objstrbufferlessindent_BM (_.bufob);
   objstrbufferappendcstr_BM (_.bufob, "\n~)\n");
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return (value_tyBM) _.recv;
 }                               /* end ROUTINE _9EytjXNb76D_1ZP3iSk9cuu dump_data°assoc_object */
 
@@ -952,8 +1023,14 @@ ROUTINEOBJNAME_BM (_4zaM2Itdsuq_9qNJK0HbcQI)    //  set°assoc_object
   _.recv = arg1;
   anyassoc_tyBM *assoc = assoccast_BM (objpayload_BM (_.recv));
   if (!assoc)
-    return NULL;
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
   _.setv = assoc_setattrs_BM (assoc);
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return (value_tyBM) _.setv;
 }                               /* end ROUTINE _4zaM2Itdsuq_9qNJK0HbcQ   set°assoc_object */
 
@@ -977,11 +1054,16 @@ ROUTINEOBJNAME_BM (_4icYJnKsN0o_4xm5UbQOMTe)    //  get°assoc_object
   WEAKASSERT_BM (isobject_BM (arg1));
   _.recv = arg1;
   anyassoc_tyBM *assoc = assoccast_BM (objpayload_BM (_.recv));
-  if (!assoc)
-    return NULL;
-  if (!isobject_BM (arg2))
-    return NULL;
+  if (!assoc || !isobject_BM (arg2))
+    {
+      return NULL;
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
   _.obattr = objectcast_BM (arg2);
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return assoc_getattr_BM (assoc, _.obattr);
 }                               /* end ROUTINE _4icYJnKsN0o_4xm5UbQOMTe get°assoc_object */
 
@@ -1006,14 +1088,24 @@ ROUTINEOBJNAME_BM (_6eD9Y1qYcnj_8uVDhxjBpG8)    //  put°assoc_object
   WEAKASSERT_BM (isobject_BM (arg1));
   _.recv = arg1;
   if (!isobject_BM ((value_tyBM) _.recv))
-    return NULL;
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
   anyassoc_tyBM *assoc = assoccast_BM (objpayload_BM (_.recv));
   if (!isobject_BM (arg2))
-    return NULL;
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
   _.obattr = objectcast_BM (arg2);
   _.valattr = arg3;
   assoc = assoc_addattr_BM (assoc, _.obattr, _.valattr);
   objputpayload_BM (_.recv, assoc);
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.recv;
 }                               /* end ROUTINE _6eD9Y1qYcnj_8uVDhxjBpG8   put°assoc_object */
 
@@ -1037,15 +1129,25 @@ ROUTINEOBJNAME_BM (_0ekJdzLOqAI_8mejMqkwuKQ)    //  remove°assoc_object
   WEAKASSERT_BM (isobject_BM (arg1));
   _.recv = arg1;
   if (!isobject_BM ((value_tyBM) _.recv))
-    return NULL;
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
   anyassoc_tyBM *assoc = assoccast_BM (objpayload_BM (_.recv));
   if (!isobject_BM (arg2))
-    return NULL;
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
   _.attr = (arg2);
   if (isobject_BM (_.attr))
     {
       assoc = assoc_removeattr_BM (assoc, _.attr);
       objputpayload_BM (_.recv, assoc);
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return _.recv;
     }
   else if (issequence_BM (_.attr))
@@ -1057,8 +1159,12 @@ ROUTINEOBJNAME_BM (_0ekJdzLOqAI_8mejMqkwuKQ)    //  remove°assoc_object
           assoc = assoc_removeattr_BM (assoc, _.obattr);
         }
       objputpayload_BM (_.recv, assoc);
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return _.recv;
     }
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return NULL;
 }                               /* end ROUTINE _0ekJdzLOqAI_8mejMqkwuKQ remove°assoc_object */
 
@@ -1104,6 +1210,8 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
       else
         objstrbufferprintf_BM (_.bufob, "%s", objidbuf);
     };
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.bufob;
 }                               /* end ROUTINE _7fCcteNe7aR_3IKHeHjmzff */
 
@@ -1134,8 +1242,14 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   assert (restargs == NULL);
   _.closv = objgetattr_BM (_.recv, BMP_dump_data);
   if (isclosure_BM (_.closv))
-    return apply3_BM (_.closv, (struct stackframe_stBM *) &_,
-                      (const value_tyBM) _.recv, _.dumpob, _.bufob);
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return apply3_BM (_.closv, (struct stackframe_stBM *) &_,
+                        (const value_tyBM) _.recv, _.dumpob, _.bufob);
+    }
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return (value_tyBM) _.recv;
 }                               /* end ROUTINE _6PmxiZR9WBe_13DwWExCALl */
 
@@ -1176,8 +1290,12 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
       if (newbuflen == oldbuflen)
         objstrbufferprintf_BM (_.bufob, "\t |novalue| __");
       objstrbufferprintf_BM (_.bufob, " ~)\n");
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return (value_tyBM) _.recv;
     }
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return NULL;
 }                               /* end ROUTINE _7D36kHemyWQ_0YfwWnUhR9Y */
 
@@ -1209,8 +1327,12 @@ const value_tyBM arg2, const value_tyBM arg3, const quasinode_tyBM * restargs)
   if (tyval >= type_FIRST_BM && tyval <= type_LASTREAL_BM)
     {
       obdumpscanvalue_BM (_.dumpob, (const value_tyBM) _.obval, 0);
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return (value_tyBM) _.recv;
     }
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return NULL;
 }                               /* end ROUTINE _9UhDZeDdg2r_55lUqYDPUiF */
 
@@ -1249,30 +1371,48 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
   switch (nbargs)
     {
     case 0:
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return send0_BM (_.ldobj, _.obsel, (struct stackframe_stBM *) &_);
     case 1:
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return send1_BM (_.ldobj, _.obsel, (struct stackframe_stBM *) &_,
                        args[0]);
     case 2:
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return send2_BM (_.ldobj, _.obsel, (struct stackframe_stBM *) &_,
                        args[0], args[1]);
     case 3:
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return send3_BM (_.ldobj, _.obsel, (struct stackframe_stBM *) &_,
                        args[0], args[1], args[2]);
     case 4:
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return send4_BM (_.ldobj, _.obsel, (struct stackframe_stBM *) &_,
                        args[0], args[1], args[2], args[3]);
     case 5:
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return send5_BM (_.ldobj, _.obsel, (struct stackframe_stBM *) &_,
                        args[0], args[1], args[2], args[3], args[4]);
     case 6:
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return send6_BM (_.ldobj, _.obsel, (struct stackframe_stBM *) &_,
                        args[0], args[1], args[2], args[3], args[4], args[5]);
     case 7:
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return send7_BM (_.ldobj, _.obsel, (struct stackframe_stBM *) &_,
                        args[0], args[1], args[2], args[3], args[4], args[5],
                        args[6]);
     case 8:
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return send8_BM (_.ldobj, _.obsel, (struct stackframe_stBM *) &_,
                        args[0], args[1], args[2], args[3], args[4], args[5],
                        args[6], args[7]);
@@ -1318,26 +1458,42 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
   switch (nbargs)
     {
     case 0:
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return apply1_BM (_.closv, (struct stackframe_stBM *) &_, _.ldobj);
     case 1:
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return apply2_BM (_.closv, (struct stackframe_stBM *) &_, _.ldobj,
                         args[0]);
     case 2:
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return apply3_BM (_.closv, (struct stackframe_stBM *) &_, _.ldobj,
                         args[0], args[1]);
     case 3:
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return apply4_BM (_.closv, (struct stackframe_stBM *) &_, _.ldobj,
                         args[0], args[1], args[2]);
     case 4:
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return apply5_BM (_.closv, (struct stackframe_stBM *) &_, _.ldobj,
                         args[0], args[1], args[2], args[3]);
     case 5:
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return apply6_BM (_.closv, (struct stackframe_stBM *) &_, _.ldobj,
                         args[0], args[1], args[2], args[3], args[4]);
     case 6:
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return apply7_BM (_.closv, (struct stackframe_stBM *) &_, _.ldobj,
                         args[0], args[1], args[2], args[3], args[4], args[5]);
     case 7:
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return apply8_BM (_.closv, (struct stackframe_stBM *) &_, _.ldobj,
                         args[0], args[1], args[2], args[3], args[4], args[5],
                         args[6]);
@@ -1492,6 +1648,8 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
   printf ("wrote predefined file %s\n", filpath);
   duptr->dump_wrotefilecount++;
   free (filpath), filpath = NULL;
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.closv;
 }                               /* end ROUTINE _075tZNHCAMa_7XNNBaNM4qv dumping predefined */
 
@@ -1560,6 +1718,8 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
   printf ("wrote globals file %s\n", filpath);
   duptr->dump_wrotefilecount++;
   free (filpath), filpath = NULL;
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.closv;
 }                               /* end ROUTINE _4ENXjApm7Qb_3bXo8F6Jg9z dumping globals */
 
@@ -1715,6 +1875,8 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
   printf ("wrote types file %s\n", filpath);
   duptr->dump_wrotefilecount++;
   free (filpath), filpath = NULL;
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.closv;
 }                               /* end of routine _3yJPC4SxGtF_6ilaF37wdxG dumping of ctypes */
 
@@ -1740,23 +1902,42 @@ ROUTINEOBJNAME_BM (_9imDBaAxOpp_2HI9AuWrEKD)    //
                  const closure_tyBM * methclo;
     );
   if (!isobject_BM (arg1))
-    return NULL;
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
   _.recv = (objectval_tyBM *) arg1;
   if (!isobject_BM (arg2))
-    return NULL;
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
   _.obsel = (objectval_tyBM *) arg2;
   if (!isclosure_BM (arg3) && arg3)
-    return NULL;
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
   _.methclo = arg3;
   if (!objhasclassinfo_BM (_.recv))
-    return NULL;
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
   if (_.methclo)
     objclassinfoputmethod_BM (_.recv, _.obsel, _.methclo);
   else
     objclassinforemovemethod_BM (_.recv, _.obsel);
   objtouchnow_BM (_.recv);
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.recv;
 }                               /* end  ROUTINE _9imDBaAxOpp_2HI9AuWrEKD */
+
 
 //// for the method closure to init_class in object
 extern objrout_sigBM ROUTINEOBJNAME_BM (_2qppG2LJu79_9ljkbLS0eFQ);
@@ -1774,16 +1955,30 @@ ROUTINEOBJNAME_BM (_2qppG2LJu79_9ljkbLS0eFQ)    //
                  objectval_tyBM * recv; objectval_tyBM * obsuperclass;
     );
   if (!isobject_BM (arg1))
-    return NULL;
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
   _.recv = (objectval_tyBM *) arg1;
   if (!isobject_BM (arg2))
-    return NULL;
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
   _.obsuperclass = (objectval_tyBM *) arg2;
   if (objclass_BM (_.obsuperclass) != BMP_class)
-    return NULL;
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
   objputclass_BM (_.recv, BMP_class);
   objputclassinfo_BM (_.recv, _.obsuperclass);
   objtouchnow_BM (_.recv);
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.recv;
 }                               /* end ROUTINE _2qppG2LJu79_9ljkbLS0eFQ  */
 
@@ -1878,6 +2073,8 @@ ROUTINEOBJNAME_BM (_1gME6zn82Kf_8hzWibLFRfz)    //
     {
       DBGPRINTF_BM ("@@emit_module recv=%s prepare_module failed",
                     objectdbg_BM (_.recv));
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return NULL;
     }
   else
@@ -1891,11 +2088,15 @@ ROUTINEOBJNAME_BM (_1gME6zn82Kf_8hzWibLFRfz)    //
     {
       DBGPRINTF_BM ("@@emit_module recv=%s generate_module failed",
                     objectdbg_BM (_.recv));
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return NULL;
     }
   else
     DBGPRINTF_BM ("@@emit_module recv=%s generate_module done",
                   objectdbg_BM (_.recv));
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.recv;
 #warning emit_module of plain_module incomplete
 }                               /* end  ROUTINE _1gME6zn82Kf_8hzWibLFRfz */
@@ -1970,7 +2171,11 @@ ROUTINEOBJNAME_BM (_8zNBXSMY2Ts_1VI5dmY4umA)    //
           == 512189275          /* simple_module_generation |=_2HlKptD03wA_7JJCG7lN5nS| */
     );
   if (!objectisinstance_BM (_.modgen, k_simple_module_generation))
-    return NULL;
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
   objectval_tyBM *k_functions_set =
     objectcast_BM (nodenthson_BM
                    ((void *) _.constnodv, constix_functions_set));
@@ -2008,6 +2213,8 @@ ROUTINEOBJNAME_BM (_8zNBXSMY2Ts_1VI5dmY4umA)    //
               DBGPRINTF_BM
                 ("@@prepare_module°basiclo*module bad object curcomp %s",
                  objectdbg_BM ((objectval_tyBM *) _.curcomp));
+              if (stkf)
+                stkf->stkfram_calledclos = NULL;
               return NULL;
             }
         }
@@ -2032,6 +2239,8 @@ ROUTINEOBJNAME_BM (_8zNBXSMY2Ts_1VI5dmY4umA)    //
                   DBGPRINTF_BM
                     ("@@prepare_module°basiclo*module bad seq curcomp %s",
                      objectdbg_BM ((objectval_tyBM *) _.curcomp));
+                  if (stkf)
+                    stkf->stkfram_calledclos = NULL;
                   return NULL;
                 }
             }
@@ -2077,6 +2286,8 @@ ROUTINEOBJNAME_BM (_8zNBXSMY2Ts_1VI5dmY4umA)    //
                         ("@@prepare_module°basiclo*module ix=%u j=%u bad curcomp %s",
                          ix, j, objectdbg_BM ((objectval_tyBM *) _.curcomp));
 
+                      if (stkf)
+                        stkf->stkfram_calledclos = NULL;
                       return NULL;
                     }
                 }
@@ -2085,6 +2296,8 @@ ROUTINEOBJNAME_BM (_8zNBXSMY2Ts_1VI5dmY4umA)    //
             {
               DBGPRINTF_BM
                 ("@@prepare_module°basiclo*module ix=%u bad partres", ix);
+              if (stkf)
+                stkf->stkfram_calledclos = NULL;
               return NULL;
             }
         }
@@ -2092,13 +2305,19 @@ ROUTINEOBJNAME_BM (_8zNBXSMY2Ts_1VI5dmY4umA)    //
         {
           DBGPRINTF_BM ("@@prepare_module°basiclo*module ix=%u bad curcomp",
                         ix);
+          if (stkf)
+            stkf->stkfram_calledclos = NULL;
           return NULL;
         }
     }
   DBGPRINTF_BM ("@@prepare_module°basiclo*module hsetcard %u",
                 hashsetobj_cardinal_BM (_.hset));
   if (hashsetobj_cardinal_BM (_.hset) == 0)
-    return NULL;
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
   _.setfun = (setval_tyBM *) hashsetobj_to_set_BM (_.hset);
   objputattr_BM (_.modgen, k_functions_set, _.setfun);
   DBGPRINTF_BM
@@ -2115,11 +2334,15 @@ ROUTINEOBJNAME_BM (_8zNBXSMY2Ts_1VI5dmY4umA)    //
         ("@@prepare_module°basiclo*module done complete_module recv=%s modgen=%s setfuncard=%u",
          objectdbg_BM (_.recv), objectdbg1_BM (_.modgen),
          setcardinal_BM (_.setfun));
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return _.setfun;
     }
   DBGPRINTF_BM
     ("@@prepare_module°basiclo*module failed complete_module recv=%s modgen=%s",
      objectdbg_BM (_.recv), objectdbg1_BM (_.modgen));
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return NULL;
 }                               /* end ROUTINE _8zNBXSMY2Ts_1VI5dmY4umA prepare_module°basiclo*module */
 
@@ -2150,6 +2373,8 @@ ROUTINEOBJNAME_BM (_60NdV04Lel2_5FSZVWKbSL7)    //
   assert (!objectisinstance_BM (_.recv, BMP_class));
   objputpayload_BM (_.recv, _.nval);
   objtouchnow_BM (_.recv);
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.recv;
 }                               /* end ROUTINEOBJNAME_BM _60NdV04Lel2_5FSZVWKbSL7 */
 
@@ -2217,6 +2442,8 @@ ROUTINEOBJNAME_BM (_50d65bJypCN_6IJeVtssx9I)    //
   if (!isobject_BM (_.modgen))
     {
       DBGPRINTF_BM ("@@generate_module°basiclo*module bad modgen");
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return NULL;
     };
   DBGPRINTF_BM ("@@generate_module°basiclo*module modgen=%s is a %s\n",
@@ -2225,6 +2452,8 @@ ROUTINEOBJNAME_BM (_50d65bJypCN_6IJeVtssx9I)    //
   if (!isset_BM (_.prepval))
     {
       DBGPRINTF_BM ("@@generate_module°basiclo*module bad prepval");
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return NULL;
     }
   unsigned nbrout = setcardinal_BM ((const setval_tyBM *) _.prepval);
@@ -2245,6 +2474,8 @@ ROUTINEOBJNAME_BM (_50d65bJypCN_6IJeVtssx9I)    //
           DBGPRINTF_BM
             ("@@generate_module°basiclo*module prepare_routine of %s failed",
              objectdbg_BM (_.curout));
+          if (stkf)
+            stkf->stkfram_calledclos = NULL;
           return NULL;
         }
       _.vectprepr = datavect_append_BM (_.vectprepr, _.preproutval);
@@ -2258,6 +2489,8 @@ ROUTINEOBJNAME_BM (_50d65bJypCN_6IJeVtssx9I)    //
      objectdbg_BM (_.modgen));
   // we should now emit each routine...
 #warning generate_module°basiclo*module incomplete
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return NULL;
 }                               /* end ROUTINE _50d65bJypCN_6IJeVtssx9I */
 
@@ -2281,6 +2514,8 @@ ROUTINEOBJNAME_BM (_5DDSY1YgVZr_6dOU4tiBldk)    //
     );
   _.clos = clos;
   assert (isclosure_BM ((const value_tyBM) clos));
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return closurenthson_BM ((const value_tyBM) clos, 0);
 }                               /* end ROUTINE _5DDSY1YgVZr_6dOU4tiBldk const */
 
@@ -2320,6 +2555,8 @@ ROUTINEOBJNAME_BM (_5DyG7xVcxRI_1Ckpbj7b3QK)    //
       DBGPRINTF_BM ("@@dump_data°plain_dumpable_module emitted obmod=%s",
                     objectdbg_BM (_.obmod));
     }
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.res;
 
 }                               /* end ROUTINE _5DyG7xVcxRI_1Ckpbj7b3QK */
@@ -2396,6 +2633,8 @@ ROUTINEOBJNAME_BM (_0kUyX0U19K2_5mcH4RCaBl9)    //
             parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
                                   colpos,
                                   "non-object `in` for block readmacro");
+          if (stkf)
+            stkf->stkfram_calledclos = NULL;
           return NULL;
         }
       _.resobj = _.inv;
@@ -2454,6 +2693,8 @@ ROUTINEOBJNAME_BM (_0kUyX0U19K2_5mcH4RCaBl9)    //
     }
   objputclass_BM (_.resobj, _.resclass);
   objtouchnow_BM (_.resobj);
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.resobj;
 }                               /* end ROUTINE _0kUyX0U19K2_5mcH4RCaBl9 block:readmacro */
 
@@ -2497,7 +2738,11 @@ ROUTINEOBJNAME_BM (_1Geqz0vsOKB_2Dpdb1LDu23)    //
   assert (isobject_BM ((const value_tyBM) closconn));
   const value_tyBM constnodv = objpayload_BM (closconn);
   if (!isnode_BM (arg1))
-    return NULL;
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
   _.rnodv = arg1;
   /** constnodv is 
      * const (basiclo_assign)
@@ -2525,6 +2770,8 @@ ROUTINEOBJNAME_BM (_1Geqz0vsOKB_2Dpdb1LDu23)    //
             parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
                                   colpos,
                                   "non-object `in` for assign readmacro");
+          if (stkf)
+            stkf->stkfram_calledclos = NULL;
           return NULL;
         }
       _.resobj = _.inv;
@@ -2541,6 +2788,8 @@ ROUTINEOBJNAME_BM (_1Geqz0vsOKB_2Dpdb1LDu23)    //
       if (_.pars)
         parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
                               colpos, "assign readmacro wants two arguments");
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return NULL;
     }
   _.destv = nodenthson_BM ((const value_tyBM) _.rnodv, startix);
@@ -2550,6 +2799,8 @@ ROUTINEOBJNAME_BM (_1Geqz0vsOKB_2Dpdb1LDu23)    //
       if (_.pars)
         parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
                               colpos, "assign readmacro wants object as src");
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
       return NULL;
     }
   objresetcomps_BM (_.resobj, 2);
@@ -2560,6 +2811,8 @@ ROUTINEOBJNAME_BM (_1Geqz0vsOKB_2Dpdb1LDu23)    //
   objputclass_BM (_.resobj, (objectval_tyBM *) k_basiclo_assign);
   objtouchnow_BM (_.resobj);
   DBGPRINTF_BM ("end readmacro:assign resobj %s", objectdbg_BM (_.resobj));
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.resobj;
 }                               /* end ROUTINE _1Geqz0vsOKB_2Dpdb1LDu23 assign:readmacro */
 
@@ -2610,7 +2863,11 @@ ROUTINEOBJNAME_BM (_0XbMOJqLLPZ_1t2wg2TwPRA)    //
                 " lineno=%d colpos=%d nodwidth=%u", lineno, colpos, nodwidth);
   assert (isobject_BM (_.closconn));
   if (!isnode_BM (arg1))
-    return NULL;
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
   _.rnodv = arg1;
   _.constnodv = objpayload_BM (_.closconn);
   /** constnodv is 
@@ -2644,6 +2901,8 @@ ROUTINEOBJNAME_BM (_0XbMOJqLLPZ_1t2wg2TwPRA)    //
             parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
                                   colpos,
                                   "non-object `in` for cond readmacro");
+          if (stkf)
+            stkf->stkfram_calledclos = NULL;
           return NULL;
         }
       _.resobj = _.inv;
@@ -2681,6 +2940,8 @@ ROUTINEOBJNAME_BM (_0XbMOJqLLPZ_1t2wg2TwPRA)    //
                                     "non-consecutive when %s arg#%d for cond readmacro",
                                     objectdbg_BM ((objectval_tyBM *)
                                                   _.curson), ix);
+              if (stkf)
+                stkf->stkfram_calledclos = NULL;
               return NULL;
             };
           nbconds++;
@@ -2699,6 +2960,8 @@ ROUTINEOBJNAME_BM (_0XbMOJqLLPZ_1t2wg2TwPRA)    //
   objputattr_BM (_.resobj, k_nb_conds, taggedint_BM (nbconds));
   objtouchnow_BM (_.resobj);
   DBGPRINTF_BM ("end readmacro:cond resobj %s", objectdbg_BM (_.resobj));
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.resobj;
 }                               /* end ROUTINE _0XbMOJqLLPZ_1t2wg2TwPRA cond:readmacro */
 
@@ -2769,6 +3032,8 @@ ROUTINEOBJNAME_BM (_7ko2VZaPpqD_1eEmEcp0VV3)    //
             parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
                                   colpos,
                                   "non-object `in` for intswitch readmacro");
+          if (stkf)
+            stkf->stkfram_calledclos = NULL;
           return NULL;
         }
       _.resobj = _.inv;
@@ -2803,6 +3068,8 @@ ROUTINEOBJNAME_BM (_7ko2VZaPpqD_1eEmEcp0VV3)    //
   objputclass_BM (_.resobj, _.basiclo_intswitch);
   objtouchnow_BM (_.resobj);
   DBGPRINTF_BM ("end readmacro:intswitch resobj %s", objectdbg_BM (_.resobj));
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.resobj;
 }                               /* end ROUTINE  _7ko2VZaPpqD_1eEmEcp0VV3 intswitch:readmacro */
 
@@ -2839,7 +3106,11 @@ ROUTINEOBJNAME_BM (_8uFPIAUyvE6_36pUIgGwmbf)    //
   _.clos = clos;
   _.rnodv = arg1;
   if (!isnode_BM (arg1))
-    return NULL;
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
   int lineno = getint_BM (arg2);
   int colpos = getint_BM (arg3);
   _.closconn = closureconn_BM ((const value_tyBM) clos);
@@ -2872,6 +3143,8 @@ ROUTINEOBJNAME_BM (_8uFPIAUyvE6_36pUIgGwmbf)    //
             parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
                                   colpos,
                                   "non-object `in` for objswitch readmacro");
+          if (stkf)
+            stkf->stkfram_calledclos = NULL;
           return NULL;
         }
       _.resobj = _.inv;
@@ -2892,6 +3165,8 @@ ROUTINEOBJNAME_BM (_8uFPIAUyvE6_36pUIgGwmbf)    //
             parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
                                   colpos,
                                   "non-object arg#%d for cond readmacro", ix);
+          if (stkf)
+            stkf->stkfram_calledclos = NULL;
           return NULL;
         }
     }
@@ -2906,6 +3181,8 @@ ROUTINEOBJNAME_BM (_8uFPIAUyvE6_36pUIgGwmbf)    //
   objputclass_BM (_.resobj, _.basiclo_objswitch);
   objtouchnow_BM (_.resobj);
   DBGPRINTF_BM ("end readmacro:objswitch resobj %s", objectdbg_BM (_.resobj));
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.resobj;
 }                               /* end ROUTINE  _8uFPIAUyvE6_36pUIgGwmbf objswitch:readmacro */
 
@@ -2974,6 +3251,8 @@ ROUTINEOBJNAME_BM (_6SUnsQrN1BV_1WnLPm4QoOq)    //
             parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
                                   colpos,
                                   "non-object `in` for loop readmacro");
+          if (stkf)
+            stkf->stkfram_calledclos = NULL;
           return NULL;
         }
       _.resobj = _.inv;
@@ -2993,6 +3272,8 @@ ROUTINEOBJNAME_BM (_6SUnsQrN1BV_1WnLPm4QoOq)    //
             parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
                                   colpos,
                                   "non-object `label` for loop readmacro");
+          if (stkf)
+            stkf->stkfram_calledclos = NULL;
           return NULL;
         }
       _.curlab = _.inv;
@@ -3015,6 +3296,8 @@ ROUTINEOBJNAME_BM (_6SUnsQrN1BV_1WnLPm4QoOq)    //
                                   colpos,
                                   "non-object #%d comp for loop readmacro",
                                   ix);
+          if (stkf)
+            stkf->stkfram_calledclos = NULL;
           return NULL;
         }
     }
@@ -3031,6 +3314,8 @@ ROUTINEOBJNAME_BM (_6SUnsQrN1BV_1WnLPm4QoOq)    //
   objputclass_BM (_.resobj, _.resclass);
   objtouchnow_BM (_.resobj);
   DBGPRINTF_BM ("end readmacro:loop resobj %s", objectdbg_BM (_.resobj));
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.resobj;
 }                               /* end ROUTINE  _6SUnsQrN1BV_1WnLPm4QoOq loop:readmacro */
 
@@ -3301,7 +3586,11 @@ ROUTINEOBJNAME_BM (_5788HpgOtVV_4zwZIr0jgmq)    //
   _.clos = clos;
   _.rnodv = arg1;
   if (!isnode_BM (arg1))
-    return NULL;
+    {
+      if (stkf)
+        stkf->stkfram_calledclos = NULL;
+      return NULL;
+    }
   int lineno = getint_BM (arg2);
   int colpos = getint_BM (arg3);
   unsigned nodwidth = nodewidth_BM ((const value_tyBM) _.rnodv);
@@ -3339,6 +3628,8 @@ ROUTINEOBJNAME_BM (_5788HpgOtVV_4zwZIr0jgmq)    //
             parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
                                   colpos,
                                   "non-object `in` for return readmacro");
+          if (stkf)
+            stkf->stkfram_calledclos = NULL;
           return NULL;
         }
       _.resobj = _.inv;
@@ -3373,6 +3664,8 @@ ROUTINEOBJNAME_BM (_5788HpgOtVV_4zwZIr0jgmq)    //
   objputclass_BM (_.resobj, _.resclass);
   objtouchnow_BM (_.resobj);
   DBGPRINTF_BM ("end readmacro:return resobj %s", objectdbg_BM (_.resobj));
+  if (stkf)
+    stkf->stkfram_calledclos = NULL;
   return _.resobj;
 }                               /* end ROUTINE   _5788HpgOtVV_4zwZIr0jgmq return:readmacro */
 
