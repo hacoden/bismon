@@ -38,6 +38,11 @@ using std::atomic_store;
 #include <execinfo.h>
 
 
+#include "mps/code/mps.h"
+
+#define TRUE true
+#define FALSE false
+
 #include <gtk/gtk.h>
 
 #include "cmacros_BM.h"

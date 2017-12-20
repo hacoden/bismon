@@ -98,6 +98,9 @@ bismon.h.gch: bismon.h $(GENERATED_HEADERS) $(BM_HEADERS)
 
 $(OBJECTS): bismon.h.gch
 
+mps_BM.o: mps_BM.c bismon.h.gch $(wildcard mps/code/*.h) $(wildcard mps/code/*.c)
+	$(CCACHE) $(COMPILE.c)  -c $< -o $@
+
 %_BM.o: %_BM.c bismon.h.gch
 #	$(CCACHE) $(COMPILE.c)  -c $< -o $@
 	$(COMPILE.c) -c $< -o $@
