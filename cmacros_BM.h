@@ -9,6 +9,7 @@
 #define CLEARMGC_BM 0
 #define GCMAGIC_BM 24501383     /*0x175dc87 */
 
+#define VALALIGN_BM 2*sizeof(void*)
 #define HASHSETEMPTYSLOT_BM ((void*)(-1))
 
 #define STRBUFFERWANTEDWIDTH_BM 80

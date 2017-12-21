@@ -56,6 +56,7 @@ struct
 bool batch_bm;
 bool newgui_BM;
 char *parseval_bm;
+char *mpsarg_bm;
 
 static void add_new_predefined_bm (void);
 
@@ -161,6 +162,14 @@ const GOptionEntry optab[] = {
    .arg_description = "COMM"},
 
   //
+  {.long_name = "mps",.short_name = (char) 0,
+   .flags = G_OPTION_FLAG_NONE,
+   .arg = G_OPTION_ARG_STRING,
+   .arg_data = &mpsarg_bm,
+   .description = "set Memory Pool System argument to ARG",
+   .arg_description = "ARG"},
+
+  //
   {.long_name = "add-predef",.short_name = (char) 0,
    .flags = G_OPTION_FLAG_NONE,
    .arg = G_OPTION_ARG_CALLBACK,
@@ -264,8 +273,18 @@ main (int argc, char **argv)
   memset ((char *) myhostname_BM, 0, sizeof (myhostname_BM));
   if (gethostname ((char *) myhostname_BM, sizeof (myhostname_BM) - 1))
     FATAL_BM ("gethostname failure %m");
-  mpsinit_BM ();
-  initialize_garbage_collector_BM ();
+  char *mpsargs = NULL;
+  for (int ix = 1; ix < argc && !mpsargs; ix++)
+    {
+      const char *curarg = (const char *) (argv[ix]);
+      if (!strcmp (curarg, "--mps") && ix + 1 < argc)
+        mpsargs = argv[ix + 1];
+      else if (!strncmp (curarg, "--mps=", strlen ("--mps=")))
+        mpsargs = curarg + strlen ("--mps=");
+    }
+  if (!mpsargs)
+    mpsargs = getenv ("BM_MPS");
+  mpsinit_BM (mpsargs);
   check_delims_BM ();
   initialize_globals_BM ();
   initialize_predefined_objects_BM ();

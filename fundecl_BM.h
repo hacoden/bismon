@@ -7,7 +7,7 @@ extern void abort_BM (void) __attribute__ ((noreturn));
 extern int64_t prime_above_BM (int64_t n);
 extern int64_t prime_below_BM (int64_t n);
 
-extern void mpsinit_BM (void);
+extern void mpsinit_BM (const char *);
 
 static inline double clocktime_BM (clockid_t);
 static inline double cputime_BM (void);
