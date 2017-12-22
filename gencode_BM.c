@@ -94,7 +94,7 @@ ROUTINEOBJNAME_BM (_5mnsT1wsdWs_2Qnqsf3wqaP)    // prepare_routine:basiclo_funct
         }
     }
 #warning incomplete  prepare_routine:basiclo_function _5mnsT1wsdWs_2Qnqsf3wqaP
-  return NULL;
+  LOCALRETURN_BM (NULL);
 }                               /* end  prepare_routine:basiclo_function _5mnsT1wsdWs_2Qnqsf3wqaP */
 
 
@@ -139,7 +139,7 @@ ROUTINEOBJNAME_BM (_6gRlN8loM4E_4pSsNmiCeIa)    // emit_c_type:c_opaque
       objstrbufferprintf_BM (_.bufob, "\n// opaque anonymous type\n");
       objstrbufferprintf_BM (_.bufob, "typedef void* %s_TyBM;\n", idbuf);
     }
-  return _.recv;
+  LOCALRETURN_BM (_.recv);
 }                               /* end emit_c_type:c_opaque _6gRlN8loM4E_4pSsNmiCeIa */
 
 
@@ -205,7 +205,7 @@ ROUTINEOBJNAME_BM (_979hCujWp2g_9tjRbM8Ht1l)    // emit_c_type:c_enum
   _.extendingob = objectcast_BM (objgetattr_BM (_.recv, k_extending));
   _.ownenumtup = tuplecast_BM (objgetattr_BM (_.recv, k_own_enumeration));
 #warning emit_c_type:c_enum _979hCujWp2g_9tjRbM8Ht1l unimplemented
-  return NULL;
+  LOCALRETURN_BM (NULL);
 }                               /* end emit_c_type:c_enum _979hCujWp2g_9tjRbM8Ht1l  */
 
 
@@ -329,7 +329,7 @@ ROUTINEOBJNAME_BM (_07qYMXftJRR_9dde2ASz4e9)    //  prepare_routine°basiclo_min
   if (!isobject_BM (_.bodyv))
     {
       fprintf (stderr, "bad body minifunction %s\n", objectdbg1_BM (_.recv));
-      return NULL;
+      LOCALRETURN_BM (NULL);
     }
   _.routprep = makeobj_BM ();
   objputclass_BM (_.routprep,
@@ -356,7 +356,7 @@ ROUTINEOBJNAME_BM (_07qYMXftJRR_9dde2ASz4e9)    //  prepare_routine°basiclo_min
         {
           fprintf (stderr, "argument#%u %s is not fresh in minifunction %s\n",
                    argix, objectdbg_BM (_.curvar), objectdbg1_BM (_.recv));
-          return NULL;
+          LOCALRETURN_BM (NULL);
         }
       _.curol = makenodevar_BM (k_arguments, taggedint_BM (argix), NULL);
       _.routassoc = assoc_addattr_BM (_.routassoc, _.curvar, _.curol);
@@ -374,7 +374,7 @@ ROUTINEOBJNAME_BM (_07qYMXftJRR_9dde2ASz4e9)    //  prepare_routine°basiclo_min
         {
           fprintf (stderr, "closed#%u %s is not fresh in minifunction %s\n",
                    cloix, objectdbg_BM (_.curvar), objectdbg1_BM (_.recv));
-          return NULL;
+          LOCALRETURN_BM (NULL);
         }
       _.curol = makenodevar_BM (k_closed, taggedint_BM (cloix), NULL);
       _.routassoc = assoc_addattr_BM (_.routassoc, _.curvar, _.curol);
@@ -392,7 +392,7 @@ ROUTINEOBJNAME_BM (_07qYMXftJRR_9dde2ASz4e9)    //  prepare_routine°basiclo_min
         {
           fprintf (stderr, "local#%u %s is not fresh in minifunction %s\n",
                    locix, objectdbg_BM (_.curvar), objectdbg1_BM (_.recv));
-          return NULL;
+          LOCALRETURN_BM (NULL);
         }
       _.curol = makenodevar_BM (k_locals, taggedint_BM (locix), NULL);
       _.routassoc = assoc_addattr_BM (_.routassoc, _.curvar, _.curol);
@@ -410,7 +410,7 @@ ROUTINEOBJNAME_BM (_07qYMXftJRR_9dde2ASz4e9)    //  prepare_routine°basiclo_min
         {
           fprintf (stderr, "number#%u %s is not fresh in minifunction %s\n",
                    numix, objectdbg_BM (_.curvar), objectdbg1_BM (_.recv));
-          return NULL;
+          LOCALRETURN_BM (NULL);
         }
       _.curol = makenodevar_BM (k_numbers, taggedint_BM (numix), NULL);
       _.routassoc = assoc_addattr_BM (_.routassoc, _.curvar, _.curol);
@@ -428,7 +428,7 @@ ROUTINEOBJNAME_BM (_07qYMXftJRR_9dde2ASz4e9)    //  prepare_routine°basiclo_min
         {
           fprintf (stderr, "constant#%u %s is not fresh in minifunction %s\n",
                    constix, objectdbg_BM (_.curvar), objectdbg1_BM (_.recv));
-          return NULL;
+          LOCALRETURN_BM (NULL);
         }
       _.curol = makenodevar_BM (k_constants, taggedint_BM (constix), NULL);
       _.routassoc = assoc_addattr_BM (_.routassoc, _.curvar, _.curol);
@@ -456,12 +456,12 @@ ROUTINEOBJNAME_BM (_07qYMXftJRR_9dde2ASz4e9)    //  prepare_routine°basiclo_min
                "collect_blocks failed for block %s in minifunction %s with routprep %s\n",
                objectdbg_BM (_.bodyv), objectdbg1_BM (_.recv),
                objectdbg2_BM (_.routprep));
-      return NULL;
+      LOCALRETURN_BM (NULL);
     }
   DBGPRINTF_BM
     ("start prepare_routine°basiclo_minifunction after collect_blocks recv %s routprep %s",
      objectdbg_BM (_.recv), objectdbg1_BM (_.routprep));
-  return _.routprep;
+  LOCALRETURN_BM (_.routprep);
 }                               /* end prepare_routine°basiclo_minifunction  _07qYMXftJRR_9dde2ASz4e9  */
 
 
@@ -539,13 +539,13 @@ ROUTINEOBJNAME_BM (_10XOFm9ui6R_06F8qZQynnA)    //
       DBGPRINTF_BM
         ("complete_module°basiclo*module gives all %u tinyfuncs recv=%s modgen=%s",
          nbtinyfuns, objectdbg_BM (_.recv), objectdbg1_BM (_.modgen));
-      return _.funset;
+      LOCALRETURN_BM (_.funset);
     }
   DBGPRINTF_BM
     ("complete_module°basiclo*module nbtinyfuns=%u < nbfuns=%u incomplete",
      nbtinyfuns, nbfuns);
 #warning complete_module°basiclo*module unimplemented
-  return NULL;
+  LOCALRETURN_BM (NULL);
 }                               /* end complete_module°basiclo*module _10XOFm9ui6R_06F8qZQynnA  */
 
 
@@ -643,7 +643,7 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
     {
       fprintf (stderr, "collect_blocks°basiclo_block bad routprep %s\n",
                objectdbg_BM (_.routprep));
-      return NULL;
+      LOCALRETURN_BM (NULL);
     }
   for (int varix = 0; varix < nbvars; varix++)
     {
@@ -656,14 +656,14 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
           fprintf (stderr,
                    "collect_blocks°basiclo_block bad variable for varix#%d\n",
                    varix);
-          return NULL;
+          LOCALRETURN_BM (NULL);
         }
       if (!assoc_getattr_BM (_.routassoc, _.curob))
         {
           fprintf (stderr,
                    "collect_blocks°basiclo_block unknown variable %s for varix#%d\n",
                    objectdbg_BM (_.curob), varix);
-          return NULL;
+          LOCALRETURN_BM (NULL);
         }
       /// should send k_miniscan_var
       _.resv = send3_BM (_.curob,
@@ -675,7 +675,7 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
           fprintf (stderr,
                    "collect_blocks°basiclo_block miniscan_variable of variable %s for varix#%d failed\n",
                    objectdbg_BM (_.curob), varix);
-          return NULL;
+          LOCALRETURN_BM (NULL);
         }
     }
   for (int argix = 0; argix < nbargs; argix++)
@@ -695,7 +695,7 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
           fprintf (stderr,
                    "collect_blocks°basiclo_block miniscan_expr for expix#%d failed\n",
                    argix);
-          return NULL;
+          LOCALRETURN_BM (NULL);
         }
     }
   int off = nbvars + nbargs;
@@ -711,7 +711,7 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
           fprintf (stderr,
                    "collect_blocks°basiclo_block bad block for blockix#%d\n",
                    blockix);
-          return NULL;
+          LOCALRETURN_BM (NULL);
         }
       if (objectisinstance_BM (_.curob, k_basiclo_block))
         {
@@ -725,7 +725,7 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
               fprintf (stderr,
                        "collect_blocks°basiclo_block miniscan_block for %s blockix#%d failed\n",
                        objectdbg_BM (_.curob), blockix);
-              return NULL;
+              LOCALRETURN_BM (NULL);
             }
         }
       else if (objectisinstance_BM (_.curob, k_basiclo_statement))
@@ -740,7 +740,7 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
               fprintf (stderr,
                        "collect_blocks°basiclo_block miniscan_stmt for %s blockix#%d failed\n",
                        objectdbg_BM (_.curob), blockix);
-              return NULL;
+              LOCALRETURN_BM (NULL);
             }
         }
       else
@@ -748,13 +748,13 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
           fprintf (stderr,
                    "collect_blocks°basiclo_block invalid block %s for blockix#%d\n",
                    objectdbg_BM (_.curob), blockix);
-          return NULL;
+          LOCALRETURN_BM (NULL);
         }
     }
   DBGPRINTF_BM
     ("collect_blocks°basiclo_block _0gkYrIdnOg2_0wLEAh1QuYu done recv=%s routprep=%s depth %d",
      objectdbg_BM (_.recv), objectdbg1_BM (_.routprep), depth);
-  return _.routprep;
+  LOCALRETURN_BM (_.routprep);
 }                               /* end collect_blocks°basiclo_block _0gkYrIdnOg2_0wLEAh1QuYu */
 
 
@@ -785,5 +785,5 @@ ROUTINEOBJNAME_BM (_0zzJJsAL6Qm_2uw3eoWQHEq)    //
      objectdbg_BM (_.recv), objectdbg1_BM (_.routprepob), depth,
      objectdbg2_BM (_.fromblockob));
 #warning miniscan_stmt°basiclo_cond unimplemented
-  return NULL;
+  LOCALRETURN_BM (NULL);
 }                               /* end routine miniscan_stmt°basiclo_cond _0zzJJsAL6Qm_2uw3eoWQHEq */

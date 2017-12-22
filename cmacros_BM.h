@@ -69,6 +69,31 @@
                   .stkfram_state=0,                             \
                   .stkfram_xtra=0 } }
 
+#define LOCALRETURN_ATLIN_BIS_BM(Lin,Res) do {		\
+  struct stackframe_stBM*prevfram_##Lin			\
+    = _.__frame.stkfram_prev;				\
+  assert (prevfram_##Lin				\
+	  && ((typedhead_tyBM *)prevfram_##Lin)->htyp	\
+	  == typayl_StackFrame_BM);			\
+  prevfram_##Lin->stkfram_callclos = NULL;		\
+  return (Res);						\
+ } while(0)
+#define LOCALRETURN_ATLIN_BM(Lin,Res) LOCALRETURN_ATLIN_BIS_BM(Lin,Res)
+#define LOCALRETURN_BM(Res) LOCALRETURN_ATLIN_BM(__LINE__,(Res))
+
+#define LOCALJUSTRETURN_ATLIN_BIS_BM(Lin) do {		\
+  struct stackframe_stBM*prevfram_##Lin			\
+    = _.__frame.stkfram_prev;				\
+  assert (prevfram_##Lin				\
+	  && ((typedhead_tyBM *)prevfram_##Lin)->htyp	\
+	  == typayl_StackFrame_BM);			\
+  prevfram_##Lin->stkfram_callclos = NULL;		\
+  return;						\
+ } while(0)
+#define LOCALJUSTRETURN_ATLIN_BM(Lin) LOCALJUSTRETURN_ATLIN_BIS_BM(Lin)
+#define LOCALJUSTRETURN_BM() LOCALRETURN_ATLIN_BM(__LINE__)
+
+
 #define LOCALQNODESIZED_BM(Qnam,Conn,Siz) struct {			\
     struct nodetree_stBM __ntree; value_tyBM qsons[Siz]; } Qnam =	\
       { .__ntree = { .pA = { .pA					\
