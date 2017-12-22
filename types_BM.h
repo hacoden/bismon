@@ -286,11 +286,11 @@ typedef struct nodetree_stBM quasinode_tyBM;    /* for typayl_quasinode_BM */
 struct stackframe_stBM;
 
 // the x86-64 ABI passes six arguments thru registers
-typedef value_tyBM objrout_sigBM (const closure_tyBM * clos,
-                                  struct stackframe_stBM *stkf,
+typedef value_tyBM objrout_sigBM (struct stackframe_stBM *stkf,
                                   const value_tyBM arg1,
                                   const value_tyBM arg2,
                                   const value_tyBM arg3,
+                                  const value_tyBM arg4,
                                   const quasinode_tyBM * restargs);
 
 struct object_stBM              /*tyObject_BM */

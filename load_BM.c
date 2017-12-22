@@ -1042,35 +1042,37 @@ extern objrout_sigBM ROUTINEOBJNAME_BM (_7kMNgL8eJ09_6aEpofzWJDP);
 
 value_tyBM
 ROUTINEOBJNAME_BM (_7kMNgL8eJ09_6aEpofzWJDP)
-(const closure_tyBM * clos,
-struct stackframe_stBM * stkf,
+(struct stackframe_stBM * stkf,
 const value_tyBM arg1 __attribute__ ((unused)),
 const value_tyBM arg2 __attribute__ ((unused)),
 const value_tyBM arg3 __attribute__ ((unused)),
+const value_tyBM arg4 __attribute__ ((unused)),
 const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
-  assert (isclosure_BM ((const value_tyBM) clos));
   LOCALFRAME_BM (stkf, BMP_postpone_load_modification,  //
-                 objectval_tyBM * curldobj;
-                 value_tyBM data;
+                 objectval_tyBM * curldobj; value_tyBM data;
+                 closure_tyBM * cclos;
     );
-  assert (closurewidth_BM ((value_tyBM) clos) >= 5);
+  LOCALGETCLOS_BM (_.cclos);
+  assert (closurewidth_BM ((value_tyBM) _.cclos) >= 5);
   assert (firstloader_BM != NULL);
   // clos0 is ix
-  assert (istaggedint_BM (closurenthson_BM ((const value_tyBM) clos, 0)));
-  unsigned ix = getint_BM (closurenthson_BM ((const value_tyBM) clos, 0));
+  assert (istaggedint_BM (closurenthson_BM ((const value_tyBM) _.cclos, 0)));
+  unsigned ix = getint_BM (closurenthson_BM ((const value_tyBM) _.cclos, 0));
   assert (ix < firstloader_BM->ld_maxnum);
   // clos1 is lineno
-  assert (istaggedint_BM (closurenthson_BM ((const value_tyBM) clos, 1)));
-  unsigned lineno = getint_BM (closurenthson_BM ((const value_tyBM) clos, 1));
+  assert (istaggedint_BM (closurenthson_BM ((const value_tyBM) _.cclos, 1)));
+  unsigned lineno =
+    getint_BM (closurenthson_BM ((const value_tyBM) _.cclos, 1));
   // clos2 is colpos
-  assert (istaggedint_BM (closurenthson_BM ((const value_tyBM) clos, 2)));
-  unsigned colpos = getint_BM (closurenthson_BM ((const value_tyBM) clos, 2));
+  assert (istaggedint_BM (closurenthson_BM ((const value_tyBM) _.cclos, 2)));
+  unsigned colpos =
+    getint_BM (closurenthson_BM ((const value_tyBM) _.cclos, 2));
   // clos3 is curldobj
-  assert (isobject_BM (closurenthson_BM ((const value_tyBM) clos, 3)));
-  _.curldobj = closurenthson_BM ((const value_tyBM) clos, 3);
+  assert (isobject_BM (closurenthson_BM ((const value_tyBM) _.cclos, 3)));
+  _.curldobj = closurenthson_BM ((const value_tyBM) _.cclos, 3);
   // clos4 is data (cname or named object)
-  _.data = closurenthson_BM ((const value_tyBM) clos, 4);
+  _.data = closurenthson_BM ((const value_tyBM) _.cclos, 4);
   struct parser_stBM *ldpars = firstloader_BM->ld_parsarr[ix];
   assert (isparser_BM (ldpars));
   if (isobject_BM (_.data))

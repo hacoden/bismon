@@ -7,11 +7,9 @@ extern objrout_sigBM ROUTINEOBJNAME_BM (_5mnsT1wsdWs_2Qnqsf3wqaP);
 
 value_tyBM
 ROUTINEOBJNAME_BM (_5mnsT1wsdWs_2Qnqsf3wqaP)    // prepare_routine:basiclo_function
-(const closure_tyBM * clos,
- struct stackframe_stBM * stkf,
- const value_tyBM arg1,
- const value_tyBM arg2, const value_tyBM arg3,
- const quasinode_tyBM * restargs)
+(struct stackframe_stBM * stkf, const value_tyBM arg1, const value_tyBM arg2, const value_tyBM arg3,    //
+ const value_tyBM arg4_ __attribute__ ((unused)),
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   enum
   {
@@ -31,9 +29,8 @@ ROUTINEOBJNAME_BM (_5mnsT1wsdWs_2Qnqsf3wqaP)    // prepare_routine:basiclo_funct
                  objectval_tyBM * routprepob; value_tyBM prepvalset;
                  anyassoc_tyBM * assocbind;
     );
-  assert (isclosure_BM ((const value_tyBM) clos));
-  _.clos = clos;
-  const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) clos);
+  LOCALGETCLOS_BM (_.clos);
+  const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
   assert (closconn != NULL);
   const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
   /*** constnod is
@@ -104,18 +101,17 @@ extern objrout_sigBM ROUTINEOBJNAME_BM (_6gRlN8loM4E_4pSsNmiCeIa);
 
 value_tyBM
 ROUTINEOBJNAME_BM (_6gRlN8loM4E_4pSsNmiCeIa)    // emit_c_type:c_opaque
-(const closure_tyBM * clos,
- struct stackframe_stBM * stkf,
+(struct stackframe_stBM * stkf,
  const value_tyBM arg1,
- const value_tyBM arg2, const value_tyBM arg3,
- const quasinode_tyBM * restargs)
+ const value_tyBM arg2, const value_tyBM arg3_
+ __attribute__ ((unused)), const value_tyBM arg4,
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const closure_tyBM * clos; value_tyBM recv;
                  objectval_tyBM * bufob;
     );
-  assert (isclosure_BM ((const value_tyBM) clos));
-  _.clos = clos;
+  LOCALGETCLOS_BM (_.clos);
   // retrieve arguments
   _.recv = /*ctype */ (arg1);
   WEAKASSERT_BM (isobject_BM (_.recv));
@@ -150,10 +146,9 @@ extern objrout_sigBM ROUTINEOBJNAME_BM (_979hCujWp2g_9tjRbM8Ht1l);
 
 value_tyBM
 ROUTINEOBJNAME_BM (_979hCujWp2g_9tjRbM8Ht1l)    // emit_c_type:c_enum
-(const closure_tyBM * clos,
- struct stackframe_stBM * stkf,
+(struct stackframe_stBM * stkf,
  const value_tyBM arg1,
- const value_tyBM arg2, const value_tyBM arg3,
+ const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4,
  const quasinode_tyBM * restargs)
 {
   enum
@@ -170,8 +165,7 @@ ROUTINEOBJNAME_BM (_979hCujWp2g_9tjRbM8Ht1l)    // emit_c_type:c_enum
                  const objectval_tyBM * extendingob;
                  const tupleval_tyBM * ownenumtup;
     );
-  assert (isclosure_BM ((const value_tyBM) clos));
-  _.clos = clos;
+  LOCALGETCLOS_BM (_.clos);
   // retrieve arguments
   _.recv = /*ctype */ (arg1);
   WEAKASSERT_BM (isobject_BM (_.recv));
@@ -180,7 +174,7 @@ ROUTINEOBJNAME_BM (_979hCujWp2g_9tjRbM8Ht1l)    // emit_c_type:c_enum
   DBGPRINTF_BM
     ("start emit_c_type:c_enum _979hCujWp2g_9tjRbM8Ht1l recv=%s",
      objectdbg_BM (_.recv));
-  const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) clos);
+  const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
   assert (closconn != NULL);
   const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
   /*** constnod is
@@ -216,10 +210,9 @@ extern objrout_sigBM ROUTINEOBJNAME_BM (_07qYMXftJRR_9dde2ASz4e9);
 
 value_tyBM
 ROUTINEOBJNAME_BM (_07qYMXftJRR_9dde2ASz4e9)    //  prepare_routine°basiclo_minifunction
-(const closure_tyBM * clos,
- struct stackframe_stBM * stkf,
+(struct stackframe_stBM * stkf,
  const value_tyBM arg1,
- const value_tyBM arg2, const value_tyBM arg3,
+ const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4,
  const quasinode_tyBM * restargs)
 {
   enum
@@ -256,9 +249,8 @@ ROUTINEOBJNAME_BM (_07qYMXftJRR_9dde2ASz4e9)    //  prepare_routine°basiclo_min
                  value_tyBM bodyv;
                  value_tyBM collbl;
     );
-  assert (isclosure_BM ((const value_tyBM) clos));
-  _.clos = clos;
-  const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) clos);
+  LOCALGETCLOS_BM (_.clos);
+  const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
   assert (closconn != NULL);
   const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
   /*** constnod is
@@ -473,10 +465,11 @@ ROUTINEOBJNAME_BM (_07qYMXftJRR_9dde2ASz4e9)    //  prepare_routine°basiclo_min
 extern objrout_sigBM ROUTINEOBJNAME_BM (_10XOFm9ui6R_06F8qZQynnA);
 value_tyBM
 ROUTINEOBJNAME_BM (_10XOFm9ui6R_06F8qZQynnA)    //
-(const closure_tyBM * clos, struct stackframe_stBM * stkf,      //
+(struct stackframe_stBM * stkf, //
  const value_tyBM arg1,         // recieving module
  const value_tyBM arg2,         // module generator
  const value_tyBM arg3,         // preparation
+ const value_tyBM arg4 __attribute__ ((unused)),
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   enum
@@ -492,9 +485,8 @@ ROUTINEOBJNAME_BM (_10XOFm9ui6R_06F8qZQynnA)    //
                  value_tyBM funset; objectval_tyBM * plainmod;
                  objectval_tyBM * curfun;
     );
-  assert (isclosure_BM ((const value_tyBM) clos));
-  _.clos = clos;
-  const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) clos);
+  LOCALGETCLOS_BM (_.clos);
+  const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
   assert (closconn != NULL);
   // retrieve arguments
   _.recv = (arg1);
@@ -554,10 +546,11 @@ ROUTINEOBJNAME_BM (_10XOFm9ui6R_06F8qZQynnA)    //
 extern objrout_sigBM ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu);
 value_tyBM
 ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
-(const closure_tyBM * clos, struct stackframe_stBM * stkf,      //
+(struct stackframe_stBM * stkf, //
  const value_tyBM arg1,         // recieving block
  const value_tyBM arg2,         // routine preparation
  const value_tyBM arg3,         // depth
+ const value_tyBM arg4 __attribute__ ((unused)),
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   enum
@@ -582,9 +575,8 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
                  objectval_tyBM * curob; value_tyBM curexp; value_tyBM resv;
                  anyassoc_tyBM * routassoc;
     );
-  assert (isclosure_BM ((const value_tyBM) clos));
-  _.clos = clos;
-  const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) clos);
+  LOCALGETCLOS_BM (_.clos);
+  const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
   assert (closconn != NULL);
   const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
   /*** constnod is
@@ -621,16 +613,16 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
   int depth = getint_BM (arg3);
   int nbvars = 0, nbargs = 0;
   // retrieve closed integers
-  WEAKASSERT_BM (closurewidth_BM ((const value_tyBM) clos) >= closix__LAST);
+  WEAKASSERT_BM (closurewidth_BM ((const value_tyBM) _.clos) >= closix__LAST);
   {
     value_tyBM nbvarsv =
-      closurenthson_BM ((const value_tyBM) clos, closix_nbvars);
+      closurenthson_BM ((const value_tyBM) _.clos, closix_nbvars);
     WEAKASSERT_BM (istaggedint_BM (nbvarsv));
     nbvars = getint_BM (nbvarsv);
   }
   {
     value_tyBM nbargsv =
-      closurenthson_BM ((const value_tyBM) clos, closix_nbargs);
+      closurenthson_BM ((const value_tyBM) _.clos, closix_nbargs);
     WEAKASSERT_BM (istaggedint_BM (nbargsv));
     nbargs = getint_BM (nbargsv);
   }
@@ -763,23 +755,24 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
 extern objrout_sigBM ROUTINEOBJNAME_BM (_0zzJJsAL6Qm_2uw3eoWQHEq);
 value_tyBM
 ROUTINEOBJNAME_BM (_0zzJJsAL6Qm_2uw3eoWQHEq)    //
-(const closure_tyBM * clos, struct stackframe_stBM * stkf,      //
+(struct stackframe_stBM * stkf, //
  const value_tyBM arg1,         // recieving cond
  const value_tyBM arg2,         // routine preparation
  const value_tyBM arg3,         // depth
- const quasinode_tyBM * restargs)       // arg4 is the containing block
+ const value_tyBM arg4,         // containingblock
+ const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const closure_tyBM * clos;
                  objectval_tyBM * recv; objectval_tyBM * routprepob;
                  objectval_tyBM * fromblockob;
     );
+  LOCALGETCLOS_BM (_.clos);
   int depth = 0;
-  _.clos = clos;
   _.recv = objectcast_BM (arg1);
   _.routprepob = objectcast_BM (arg2);
   depth = getint_BM (arg3);
-  _.fromblockob = objectcast_BM (nodenthson_BM (restargs, 0));
+  _.fromblockob = objectcast_BM (arg4);
   DBGPRINTF_BM
     ("miniscan_stmt°basiclo_cond start recv=%s routprepob=%s depth#%d fromblockob=%s unimplemented",
      objectdbg_BM (_.recv), objectdbg1_BM (_.routprepob), depth,

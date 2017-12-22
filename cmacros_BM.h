@@ -69,6 +69,18 @@
                   .stkfram_state=0,                             \
                   .stkfram_xtra=0 } }
 
+#define LOCALGETCLOS_ATLIN_BIS_BM(Lin,Clos) do {			\
+  struct stackframe_stBM*prevfram_##Lin					\
+    = _.__frame.stkfram_prev;						\
+  assert (prevfram_##Lin						\
+	  && ((typedhead_tyBM *)prevfram_##Lin)->htyp			\
+	  == typayl_StackFrame_BM);					\
+  assert (isclosure_BM ((value_tyBM)prevfram_##Lin->stkfram_callclos));	\
+  Clos = (void*)prevfram_##Lin->stkfram_callclos;			\
+ } while(0)
+#define LOCALGETCLOS_ATLIN_BM(Lin,Clos) LOCALGETCLOS_ATLIN_BIS_BM(Lin,Clos)
+#define LOCALGETCLOS_BM(Clos) LOCALGETCLOS_ATLIN_BM(__LINE__,Clos)
+
 #define LOCALRETURN_ATLIN_BIS_BM(Lin,Res) do {		\
   struct stackframe_stBM*prevfram_##Lin			\
     = _.__frame.stkfram_prev;				\
@@ -76,7 +88,7 @@
 	  && ((typedhead_tyBM *)prevfram_##Lin)->htyp	\
 	  == typayl_StackFrame_BM);			\
   prevfram_##Lin->stkfram_callclos = NULL;		\
-  return (Res);						\
+  return (value_tyBM)(Res);				\
  } while(0)
 #define LOCALRETURN_ATLIN_BM(Lin,Res) LOCALRETURN_ATLIN_BIS_BM(Lin,Res)
 #define LOCALRETURN_BM(Res) LOCALRETURN_ATLIN_BM(__LINE__,(Res))

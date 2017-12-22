@@ -6,14 +6,13 @@
 extern objrout_sigBM ROUTINEOBJNAME_BM (_23ViGouPnAg_15P5mpG9x3d);
 value_tyBM
 ROUTINEOBJNAME_BM (_23ViGouPnAg_15P5mpG9x3d)    //
-(const closure_tyBM * clos, struct stackframe_stBM * stkf,      //
+(struct stackframe_stBM * stkf, //
  const value_tyBM arg1,         // the reciever
  const value_tyBM arg2,         // the depth
- const value_tyBM arg3
- __attribute__ ((unused)), const quasinode_tyBM * restargs
- __attribute__ ((unused)))
+ const value_tyBM arg3 __attribute__ ((unused)),        //
+ const value_tyBM arg4 __attribute__ ((unused)),        //
+ const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
-  assert (!clos || isclosure_BM ((const value_tyBM) clos));
   assert (isobject_BM (arg1));
   assert (istaggedint_BM (arg2));
   GtkTextBuffer *brobuf = gtk_text_iter_get_buffer (&browserit_BM);
@@ -191,13 +190,13 @@ ROUTINEOBJNAME_BM (_23ViGouPnAg_15P5mpG9x3d)    //
 extern objrout_sigBM ROUTINEOBJNAME_BM (_0BAnB0xjs23_0WEOCOi5Nbe);
 value_tyBM
 ROUTINEOBJNAME_BM (_0BAnB0xjs23_0WEOCOi5Nbe)    //
-(const closure_tyBM * clos, struct stackframe_stBM * stkf,      //
+(struct stackframe_stBM * stkf, //
  const value_tyBM arg1,         // the reciever
  const value_tyBM arg2,         // the browse maxdepth
  const value_tyBM arg3,         // the current depth
+ const value_tyBM arg4 __attribute__ ((unused)),
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
-  assert (!clos || isclosure_BM ((const value_tyBM) clos));
   if (!isobject_BM (arg1))
     FATAL_BM
       ("non-object for method to browse_value for object-s _0BAnB0xjs23_0WEOCOi5Nbe");
@@ -245,13 +244,13 @@ ROUTINEOBJNAME_BM (_0BAnB0xjs23_0WEOCOi5Nbe)    //
 extern objrout_sigBM ROUTINEOBJNAME_BM (_09DxyieS5Wz_7pkad4F88FA);
 value_tyBM
 ROUTINEOBJNAME_BM (_09DxyieS5Wz_7pkad4F88FA)    //
-(const closure_tyBM * clos, struct stackframe_stBM * stkf,      //
+(struct stackframe_stBM * stkf, //
  const value_tyBM arg1,         // the reciever
  const value_tyBM arg2,         // the browse maxdepth
- const value_tyBM arg3 __attribute__ ((unused)),
+ const value_tyBM arg3 __attribute__ ((unused)),        //
+ const value_tyBM arg4 __attribute__ ((unused)),        //
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
-  assert (!clos || isclosure_BM ((const value_tyBM) clos));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * objbrows; const setval_tyBM * setsel;   //
                  const objectval_tyBM * cursel;
@@ -333,13 +332,13 @@ ROUTINEOBJNAME_BM (_09DxyieS5Wz_7pkad4F88FA)    //
 extern objrout_sigBM ROUTINEOBJNAME_BM (_0B1PYH9bN34_3RZdP24AVyt);
 value_tyBM
 ROUTINEOBJNAME_BM (_0B1PYH9bN34_3RZdP24AVyt)    //
-(const closure_tyBM * clos, struct stackframe_stBM * stkf,      //
+(struct stackframe_stBM * stkf, //
  const value_tyBM arg1,         // the reciever
  const value_tyBM arg2,         // the browse maxdepth
  const value_tyBM arg3,         // the current depth
+ const value_tyBM arg4,         // the current depth
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
-  assert (!clos || isclosure_BM ((const value_tyBM) clos));
   if (!istuple_BM (arg1))
     FATAL_BM
       ("non-tuple for  method to browse_value for tuple-s _0BAnB0xjs23_0WEOCOi5Nb");
@@ -394,13 +393,13 @@ ROUTINEOBJNAME_BM (_0B1PYH9bN34_3RZdP24AVyt)    //
 extern objrout_sigBM ROUTINEOBJNAME_BM (_3rne4qbpnV9_0pywzeJp3Qr);
 value_tyBM
 ROUTINEOBJNAME_BM (_3rne4qbpnV9_0pywzeJp3Qr)    //
-(const closure_tyBM * clos, struct stackframe_stBM * stkf,      //
+(struct stackframe_stBM * stkf, //
  const value_tyBM arg1,         // the reciever
  const value_tyBM arg2,         // the browse maxdepth
  const value_tyBM arg3,         // the current depth
+ const value_tyBM arg4 __attribute__ ((unused)),        // 
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
-  assert (!clos || isclosure_BM ((const value_tyBM) clos));
   if (!isset_BM (arg1))
     FATAL_BM
       ("non-set for  method to browse_value for set-s _3rne4qbpnV9_0pywzeJp3Qr");
@@ -467,13 +466,13 @@ ROUTINEOBJNAME_BM (_3rne4qbpnV9_0pywzeJp3Qr)    //
 extern objrout_sigBM ROUTINEOBJNAME_BM (_0HBMCM5CeLn_7L5YEV2jO7Y);
 value_tyBM
 ROUTINEOBJNAME_BM (_0HBMCM5CeLn_7L5YEV2jO7Y)    //
-(const closure_tyBM * clos, struct stackframe_stBM * stkf,      //
+(struct stackframe_stBM * stkf, //
  const value_tyBM arg1,         // the reciever
  const value_tyBM arg2,         // the browse maxdepth
  const value_tyBM arg3,         // the current depth
+ const value_tyBM arg4 __attribute__ ((unused)),        //
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
-  assert (!clos || isclosure_BM ((const value_tyBM) clos));
   if (!istaggedint_BM (arg1))
     FATAL_BM
       ("non-int for method to browse_value for int-s _0HBMCM5CeLn_7L5YEV2jO7Y");
@@ -498,13 +497,13 @@ extern objrout_sigBM ROUTINEOBJNAME_BM (_63ZPkXUI2Uv_6Cp3qmh6Uud);
 #define WANTEDLINEWIDTH_BM 64
 value_tyBM
 ROUTINEOBJNAME_BM (_63ZPkXUI2Uv_6Cp3qmh6Uud)    //
-(const closure_tyBM * clos, struct stackframe_stBM * stkf,      //
+(struct stackframe_stBM * stkf, //
  const value_tyBM arg1,         // the reciever
  const value_tyBM arg2,         // the browse maxdepth
  const value_tyBM arg3,         // the current depth
+ const value_tyBM arg4 __attribute__ ((unused)),        //
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
-  assert (!clos || isclosure_BM ((const value_tyBM) clos));
   if (!isstring_BM (arg1))
     FATAL_BM
       ("non-string for method to browse_value for string-s _63ZPkXUI2Uv_6Cp3qmh6Uud");
@@ -633,13 +632,13 @@ ROUTINEOBJNAME_BM (_63ZPkXUI2Uv_6Cp3qmh6Uud)    //
 extern objrout_sigBM ROUTINEOBJNAME_BM (_7fJKfG4SN0U_1QTu5J832xg);
 value_tyBM
 ROUTINEOBJNAME_BM (_7fJKfG4SN0U_1QTu5J832xg)    //
-(const closure_tyBM * clos, struct stackframe_stBM * stkf,      //
+(struct stackframe_stBM * stkf, //
  const value_tyBM arg1,         // the reciever
  const value_tyBM arg2,         // the browse maxdepth
  const value_tyBM arg3,         // the current depth
+ const value_tyBM arg4 __attribute__ ((unused)),        // 
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
-  assert (!clos || isclosure_BM ((const value_tyBM) clos));
   if (!isnode_BM (arg1))
     FATAL_BM
       ("non-node for method to browse_value for node-s _7fJKfG4SN0U_1QTu5J832xg");
@@ -703,13 +702,13 @@ ROUTINEOBJNAME_BM (_7fJKfG4SN0U_1QTu5J832xg)    //
 extern objrout_sigBM ROUTINEOBJNAME_BM (_7CohjJ9tkfZ_4UMAIZCgwac);
 value_tyBM
 ROUTINEOBJNAME_BM (_7CohjJ9tkfZ_4UMAIZCgwac)    //
-(const closure_tyBM * clos, struct stackframe_stBM * stkf,      //
+(struct stackframe_stBM * stkf, //
  const value_tyBM arg1,         // the reciever
  const value_tyBM arg2,         // the browse maxdepth
  const value_tyBM arg3,         // the current depth
+ const value_tyBM arg4 __attribute__ ((unused)),        //
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
-  assert (!clos || isclosure_BM ((const value_tyBM) clos));
   if (!isclosure_BM (arg1))
     FATAL_BM
       ("non-closure for method to browse_value for closure-s _7CohjJ9tkfZ_4UMAIZCgwac");
@@ -771,13 +770,12 @@ ROUTINEOBJNAME_BM (_7CohjJ9tkfZ_4UMAIZCgwac)    //
 extern objrout_sigBM ROUTINEOBJNAME_BM (_9zpvXnTuDeB_2B7ZiBtN8fA);
 value_tyBM
 ROUTINEOBJNAME_BM (_9zpvXnTuDeB_2B7ZiBtN8fA)    //
-(const closure_tyBM * clos, struct stackframe_stBM * stkf,      //
+(struct stackframe_stBM * stkf, //
  const value_tyBM arg1,         // the reciever
  const value_tyBM arg2,         // the browse maxdepth
- const value_tyBM arg3 __attribute__ ((unused)),
+ const value_tyBM arg3 __attribute__ ((unused)), const value_tyBM arg4 __attribute__ ((unused)),        //
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
-  assert (!clos || isclosure_BM ((const value_tyBM) clos));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * objbrows;
                  value_tyBM curval;);
@@ -814,13 +812,13 @@ ROUTINEOBJNAME_BM (_9zpvXnTuDeB_2B7ZiBtN8fA)    //
 extern objrout_sigBM ROUTINEOBJNAME_BM (_4IshjBIv6ol_5korHKUIjeK);
 value_tyBM
 ROUTINEOBJNAME_BM (_4IshjBIv6ol_5korHKUIjeK)    //
-(const closure_tyBM * clos, struct stackframe_stBM * stkf,      //
+(struct stackframe_stBM * stkf, //
  const value_tyBM arg1,         // the reciever
  const value_tyBM arg2,         // the browse maxdepth
- const value_tyBM arg3 __attribute__ ((unused)),
+ const value_tyBM arg3 __attribute__ ((unused)),        //
+ const value_tyBM arg4 __attribute__ ((unused)),        //
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
-  assert (!clos || isclosure_BM ((const value_tyBM) clos));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * objbrows; value_tyBM curval;
                  const objectval_tyBM * curkeyob; value_tyBM curkeyval;
@@ -860,13 +858,13 @@ ROUTINEOBJNAME_BM (_4IshjBIv6ol_5korHKUIjeK)    //
 extern objrout_sigBM ROUTINEOBJNAME_BM (_5KWAjUEGiiq_2B6rbvkCcgc);
 value_tyBM
 ROUTINEOBJNAME_BM (_5KWAjUEGiiq_2B6rbvkCcgc)    //
-(const closure_tyBM * clos, struct stackframe_stBM * stkf,      //
+(struct stackframe_stBM * stkf, //
  const value_tyBM arg1,         // the reciever
- const value_tyBM arg2,         // the browse maxdepth
- const value_tyBM arg3 __attribute__ ((unused)),
+ const value_tyBM arg2,         // the browse maxdept
+ const value_tyBM arg3 __attribute__ ((unused)),        //
+ const value_tyBM arg4 __attribute__ ((unused)),
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
-  assert (!clos || isclosure_BM ((const value_tyBM) clos));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * objbrows; value_tyBM curval;
                  const objectval_tyBM * curkeyob; value_tyBM curkeyval;
