@@ -317,6 +317,7 @@ struct stackframe_stBM
   typedhead_tyBM stkfram_pA;    // rlen is the number of values
   struct stackframe_stBM *stkfram_prev;
   objectval_tyBM *stkfram_descr;
+  const closure_tyBM* stkfram_callclos;
   int stkfram_state;
   int stkfram_xtra;
   value_tyBM stkfram_locals[];

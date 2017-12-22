@@ -279,6 +279,7 @@ quasinodegcmark_BM (struct garbcoll_stBM *gc, quasinode_tyBM * qnod,
 value_tyBM
 apply0_BM (const closure_tyBM * clos, struct stackframe_stBM *stkf)
 {
+  assert (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
   if (!isclosure_BM ((const value_tyBM) clos))
     return NULL;
   const objectval_tyBM *connob = clos->nodt_conn;
@@ -287,6 +288,7 @@ apply0_BM (const closure_tyBM * clos, struct stackframe_stBM *stkf)
     (objrout_sigBM *) objroutaddr_BM (connob, BMP_function_sig);
   if (!rout)
     return NULL;
+  stkf->stkfram_callclos = clos;
   return (*rout) (clos, stkf, NULL, NULL, NULL, NULL);
 }                               /* end apply0_BM */
 
@@ -295,6 +297,7 @@ value_tyBM
 apply1_BM (const closure_tyBM * clos, struct stackframe_stBM * stkf,
            const value_tyBM arg1)
 {
+  assert (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
   if (!isclosure_BM ((const value_tyBM) clos))
     return NULL;
   const objectval_tyBM *connob = clos->nodt_conn;
@@ -303,6 +306,7 @@ apply1_BM (const closure_tyBM * clos, struct stackframe_stBM * stkf,
     (objrout_sigBM *) objroutaddr_BM (connob, BMP_function_sig);
   if (!rout)
     return NULL;
+  stkf->stkfram_callclos = clos;
   return (*rout) (clos, stkf, arg1, NULL, NULL, NULL);
 }                               /* end apply1_BM */
 
@@ -311,6 +315,7 @@ value_tyBM
 apply2_BM (const closure_tyBM * clos, struct stackframe_stBM * stkf,
            const value_tyBM arg1, const value_tyBM arg2)
 {
+  assert (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
   if (!isclosure_BM ((const value_tyBM) clos))
     return NULL;
   const objectval_tyBM *connob = clos->nodt_conn;
@@ -319,6 +324,7 @@ apply2_BM (const closure_tyBM * clos, struct stackframe_stBM * stkf,
     (objrout_sigBM *) objroutaddr_BM (connob, BMP_function_sig);
   if (!rout)
     return NULL;
+  stkf->stkfram_callclos = clos;
   return (*rout) (clos, stkf, arg1, arg2, NULL, NULL);
 }                               /* end apply2_BM */
 
@@ -328,6 +334,7 @@ apply3_BM (const closure_tyBM * clos, struct stackframe_stBM * stkf,
            const value_tyBM arg1, const value_tyBM arg2,
            const value_tyBM arg3)
 {
+  assert (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
   if (!isclosure_BM ((const value_tyBM) clos))
     return NULL;
   const objectval_tyBM *connob = clos->nodt_conn;
@@ -336,6 +343,7 @@ apply3_BM (const closure_tyBM * clos, struct stackframe_stBM * stkf,
     (objrout_sigBM *) objroutaddr_BM (connob, BMP_function_sig);
   if (!rout)
     return NULL;
+  stkf->stkfram_callclos = clos;
   return (*rout) (clos, stkf, arg1, arg2, arg3, NULL);
 }                               /* end apply3_BM */
 
@@ -345,6 +353,7 @@ apply4_BM (const closure_tyBM * clos, struct stackframe_stBM * stkf,
            const value_tyBM arg1, const value_tyBM arg2,
            const value_tyBM arg3, const value_tyBM arg4)
 {
+  assert (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
   if (!isclosure_BM ((const value_tyBM) clos))
     return NULL;
   const objectval_tyBM *connob = clos->nodt_conn;
@@ -355,6 +364,7 @@ apply4_BM (const closure_tyBM * clos, struct stackframe_stBM * stkf,
     return NULL;
   LOCALQNODESIZED_BM (qno, NULL, 1);
   qno.qsons[0] = arg4;
+  stkf->stkfram_callclos = clos;
   return (*rout) (clos, stkf, arg1, arg2, arg3,
                   (const quasinode_tyBM *) &qno);
 }                               /* end apply4_BM */
@@ -366,6 +376,7 @@ apply5_BM (const closure_tyBM * clos, struct stackframe_stBM *stkf,
            const value_tyBM arg3, const value_tyBM arg4,
            const value_tyBM arg5)
 {
+  assert (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
   if (!isclosure_BM ((const value_tyBM) clos))
     return NULL;
   const objectval_tyBM *connob = clos->nodt_conn;
@@ -377,6 +388,7 @@ apply5_BM (const closure_tyBM * clos, struct stackframe_stBM *stkf,
   LOCALQNODESIZED_BM (qno, NULL, 2);
   qno.qsons[0] = arg4;
   qno.qsons[1] = arg5;
+  stkf->stkfram_callclos = clos;
   return (*rout) (clos, stkf, arg1, arg2, arg3,
                   (const quasinode_tyBM *) &qno);
 }                               /* end apply5_BM */
@@ -388,6 +400,7 @@ apply6_BM (const closure_tyBM * clos, struct stackframe_stBM *stkf,
            const value_tyBM arg3, const value_tyBM arg4,
            const value_tyBM arg5, const value_tyBM arg6)
 {
+  assert (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
   if (!isclosure_BM ((const value_tyBM) clos))
     return NULL;
   const objectval_tyBM *connob = clos->nodt_conn;
@@ -400,6 +413,7 @@ apply6_BM (const closure_tyBM * clos, struct stackframe_stBM *stkf,
   qno.qsons[0] = arg4;
   qno.qsons[1] = arg5;
   qno.qsons[2] = arg6;
+  stkf->stkfram_callclos = clos;
   return (*rout) (clos, stkf, arg1, arg2, arg3,
                   (const quasinode_tyBM *) &qno);
 }                               /* end apply6_BM */
@@ -412,6 +426,7 @@ apply7_BM (const closure_tyBM * clos, struct stackframe_stBM *stkf,
            const value_tyBM arg5, const value_tyBM arg6,
            const value_tyBM arg7)
 {
+  assert (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
   if (!isclosure_BM ((const value_tyBM) clos))
     return NULL;
   const objectval_tyBM *connob = clos->nodt_conn;
@@ -425,6 +440,7 @@ apply7_BM (const closure_tyBM * clos, struct stackframe_stBM *stkf,
   qno.qsons[1] = arg5;
   qno.qsons[2] = arg6;
   qno.qsons[3] = arg7;
+  stkf->stkfram_callclos = clos;
   return (*rout) (clos, stkf, arg1, arg2, arg3,
                   (const quasinode_tyBM *) &qno);
 }                               /* end apply7_BM */
@@ -437,6 +453,7 @@ apply8_BM (const closure_tyBM * clos, struct stackframe_stBM *stkf,
            const value_tyBM arg5, const value_tyBM arg6,
            const value_tyBM arg7, const value_tyBM arg8)
 {
+  assert (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
   if (!isclosure_BM ((const value_tyBM) clos))
     return NULL;
   const objectval_tyBM *connob = clos->nodt_conn;
@@ -451,6 +468,7 @@ apply8_BM (const closure_tyBM * clos, struct stackframe_stBM *stkf,
   qno.qsons[2] = arg6;
   qno.qsons[3] = arg7;
   qno.qsons[4] = arg8;
+  stkf->stkfram_callclos = clos;
   return (*rout) (clos, stkf, arg1, arg2, arg3,
                   (const quasinode_tyBM *) &qno);
 }                               /* end apply8_BM */
@@ -464,6 +482,7 @@ apply9_BM (const closure_tyBM * clos, struct stackframe_stBM *stkf,
            const value_tyBM arg7, const value_tyBM arg8,
            const value_tyBM arg9)
 {
+  assert (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
   if (!isclosure_BM ((const value_tyBM) clos))
     return NULL;
   const objectval_tyBM *connob = clos->nodt_conn;
@@ -479,6 +498,7 @@ apply9_BM (const closure_tyBM * clos, struct stackframe_stBM *stkf,
   qno.qsons[3] = arg7;
   qno.qsons[4] = arg8;
   qno.qsons[5] = arg9;
+  stkf->stkfram_callclos = clos;
   return (*rout) (clos, stkf, arg1, arg2, arg3,
                   (const quasinode_tyBM *) &qno);
 }                               /* end apply9_BM */
