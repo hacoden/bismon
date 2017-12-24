@@ -37,9 +37,11 @@ OBJECTS= $(patsubst %.c,%.o,$(BM_COLDSOURCES) $(GENERATED_CSOURCES)) $(patsubst 
 
 .PHONY: all clean indent count modules measure measured-bismon doc redump outdump
 all: bismon doc
+
 clean:
 	$(RM) .*~ *~ *% *.o *.so */*.so *.log */*~ */*.orig *.i *.orig *.gch README.html
 	$(RM) core* *.i *.ii *prof.out gmon.out
+	$(RM) *_BM.const.h
 	$(RM) modules/*.so modules/*.i bismon
 	$(RM) $(patsubst %.md,%.html, $(MARKDOWN_SOURCES))
 
@@ -96,21 +98,24 @@ __timestamp.c: Makefile
 bismon.h.gch: bismon.h $(GENERATED_HEADERS) $(BM_HEADERS)
 	$(COMPILE.c)   $< -o $@
 
-$(OBJECTS): bismon.h.gch
 
-%_BM.o: %_BM.c bismon.h.gch
-#	$(CCACHE) $(COMPILE.c)  -c $< -o $@
-	$(COMPILE.c) -c $< -o $@
 
-%_BM.i: %_BM.c bismon.h  $(GENERATED_HEADERS) $(BM_HEADERS)
+%_BM.i: %_BM.c  %_BM.const.h bismon.h  $(GENERATED_HEADERS) $(BM_HEADERS)
 	$(CC) $(CFLAGS) -C -E $< | sed s:^#://#: | $(INDENT) -gnu > $@
 
 %_BM.ii: %_BM.cc  $(GENERATED_HEADERS) $(BM_HEADERS)
 	$(CCXX) $(CXXFLAGS) -C -E $< | sed s:^#://#: > $@
 
-%_BM.o: %_BM.cc bismon.h  $(GENERATED_HEADERS) $(BM_HEADERS)
+%_BM.o: %_BM.c bismon.h $(GENERATED_HEADERS) $(BM_HEADERS) %_BM.const.h bismon.h.gch
+	echo objcirc is $^ left $<
+	$(COMPILE.c) -DBMcomp -c $< -o $@
+
+%_BM.o: %_BM.cc bismon.h $(GENERATED_HEADERS) $(BM_HEADERS)
 #	$(CCACHE) $(COMPILE.cc)  $< -o $@
 	$(COMPILE.cc)  $< -o $@
+
+%_BM.const.h: %_BM.c BM_makeconst
+	./BM_makeconst -H $@ $<
 
 modules/modbm_%.so: modules/modbm_%.c bismon.h  $(GENERATED_HEADERS) $(BM_HEADERS)
 	$(CCACHE) $(LINK.c) -fPIC -DBISMON_MODID=$(patsubst modules/modbm_%.c,_%,$<) -shared $< -o $@
@@ -118,6 +123,7 @@ modules/modbm_%.so: modules/modbm_%.c bismon.h  $(GENERATED_HEADERS) $(BM_HEADER
 modules: $(patsubst %.c,%.so,$(MODULES_SOURCES))
 
 bismon: $(OBJECTS)
+	echo bismoncirc= $^
 	@if [ -f $@ ]; then echo -n backup old executable: ' ' ; mv -v $@ $@~ ; fi
 	$(MAKE) __timestamp.c __timestamp.o
 	$(LINK.cc)  $(LINKFLAGS) -rdynamic $(OPTIMFLAGS) $(OBJECTS) __timestamp.o $(LIBES) -o $@

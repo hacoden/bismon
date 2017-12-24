@@ -5,6 +5,7 @@
 __timestamp*
 *prog
 bismon
+BM_makeconst
 
 .ninja*
 *~
