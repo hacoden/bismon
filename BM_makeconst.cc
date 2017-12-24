@@ -39,7 +39,19 @@ int main(int argc, char**argv) {
   if (!strcmp(argv[1], "-H")) {
     auto hpath = argv[2];
     std::ofstream outh(hpath);
-    outh << "#warning " __FILE__ << " should generate " << hpath << std::endl;
+    outh << "#warning " __FILE__ << " should generate header " << hpath << std::endl;
+  }
+  else if (!strcmp(argv[1], "-C")) {
+    auto spath = argv[2];
+    std::ofstream outs(spath);
+    outs <<  "#warning " __FILE__ << " should generate code " << spath
+	 << " from:";
+    for (int ix=3; ix<argc; ix++) outs<< ' ' << argv[ix];
+    outs << std::endl;
+  }
+  else {
+    fprintf(stderr, "%s: expects -H <header> <C-source> or -C <code> <C-source-files>\n", argv[0]);
+    exit(EXIT_FAILURE);
   }
   return 0;
 }

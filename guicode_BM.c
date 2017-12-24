@@ -1,5 +1,6 @@
 // file guicode_BM.c
 #include "bismon.h"
+#include "guicode_BM.const.h"
 
 
 /// method to browse_in_object for object-s

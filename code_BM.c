@@ -1,6 +1,6 @@
 // file code_BM.c
 #include "bismon.h"
-
+#include "code_BM.const.h"
 
 //// for the method to dump_value a tagged integer
 extern objrout_sigBM ROUTINEOBJNAME_BM (_3kMqlEugRVW_7DgwjR4CBbP);

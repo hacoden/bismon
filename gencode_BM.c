@@ -1,6 +1,6 @@
 // file gencode_BM.c
 #include "bismon.h"
-
+#include "gencode_BM.const.h"
 
 //// for the method prepare_routine:basiclo_function
 extern objrout_sigBM ROUTINEOBJNAME_BM (_5mnsT1wsdWs_2Qnqsf3wqaP);

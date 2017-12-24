@@ -106,6 +106,11 @@ bismon.h.gch: bismon.h $(GENERATED_HEADERS) $(BM_HEADERS)
 %_BM.ii: %_BM.cc  $(GENERATED_HEADERS) $(BM_HEADERS)
 	$(CCXX) $(CXXFLAGS) -C -E $< | sed s:^#://#: > $@
 
+
+# cancel implicit rule for C files to force my explicit rules
+# https://stackoverflow.com/a/29227455/841108
+%.o: %.c
+
 %_BM.o: %_BM.c bismon.h $(GENERATED_HEADERS) $(BM_HEADERS) %_BM.const.h bismon.h.gch
 	echo objcirc is $^ left $<
 	$(COMPILE.c) -DBMcomp -c $< -o $@
@@ -117,12 +122,21 @@ bismon.h.gch: bismon.h $(GENERATED_HEADERS) $(BM_HEADERS)
 %_BM.const.h: %_BM.c BM_makeconst
 	./BM_makeconst -H $@ $<
 
+__timestamp.o: __timestamp.c
+	$(COMPILE.c)  -DBMtimestamp -c $< -o $@
+
+_bm_allconsts.o: _bm_allconsts.c
+	$(COMPILE.c)  -DBMallconsts -c $< -o $@
+
+_bm_allconsts.c: $(BM_COLDSOURCES)  BM_makeconst
+	./BM_makeconst -C $@ $(BM_COLDSOURCES)
+
 modules/modbm_%.so: modules/modbm_%.c bismon.h  $(GENERATED_HEADERS) $(BM_HEADERS)
 	$(CCACHE) $(LINK.c) -fPIC -DBISMON_MODID=$(patsubst modules/modbm_%.c,_%,$<) -shared $< -o $@
 
 modules: $(patsubst %.c,%.so,$(MODULES_SOURCES))
 
-bismon: $(OBJECTS)
+bismon: $(OBJECTS) _bm_allconsts.o
 	echo bismoncirc= $^
 	@if [ -f $@ ]; then echo -n backup old executable: ' ' ; mv -v $@ $@~ ; fi
 	$(MAKE) __timestamp.c __timestamp.o
