@@ -1,7 +1,9 @@
 // file BM_makeconst.cc
 
 /***
-    BM_makeconst: a program to scan Bm_Const macros
+    BM_makeconst: a program to scan and collect BMK_<digit> constant names
+    for example BMK_0eMGYofuNVh_8ZP2mXdhtHO is the 'in' predefined constant
+
     Copyright (C) 2017 Basile Starynkevitch
 
     This program is free software: you can redistribute it and/or modify
@@ -24,9 +26,11 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <cctype>
 #include <set>
 #include <string>
 #include <unistd.h>
+#include "cmacros_BM.h"
 
 void parse_cfile(const char*path, std::set<std::string>& bmconstset)
 {
@@ -37,15 +41,68 @@ void parse_cfile(const char*path, std::set<std::string>& bmconstset)
     };
   std::ifstream srcin(path);
   int linecnt = 0;
+  int nbocc = 0;
   do
     {
       std::string line;
       std::getline(srcin, line);
+      auto linesize = line.size();
+      ssize_t pos=0;
+      while (pos<(ssize_t)linesize)
+        {
+          pos=line.find("BMK_", pos);
+          if (pos<0)
+            break;
+          /// ignore BMK_ if following a letter, digit or undersocre
+          if (pos>0 && (isalnum(line[pos-1]) || line[pos-1]=='_')) continue;
+          size_t startpos = pos+4;
+          /// ignore BMK_ not followed by digit
+          if (startpos >= linesize || !isdigit(line[startpos])) continue;
+          int badpos = -1;
+          int ix = -1;
+          const char*badmsg = nullptr;
+          size_t endpos = 0;
+          for (ix=startpos;
+               badpos<0 && ix<(int)startpos+2*(SERIALDIGITS_BM);
+               ix++)
+            {
+              if (ix>=(int)linesize)
+                (badpos = ix), (badmsg="too short");
+              else if (ix == (int)startpos+SERIALDIGITS_BM)
+                {
+                  if (line[ix]!='_')
+                    (badpos=ix),(badmsg="no middle underscore");
+                }
+              else if (!isalnum(line[ix]))
+                (badpos = ix), (badmsg="alphanum expected");
+            };
+          if (startpos+2*(SERIALDIGITS_BM + 1)<linesize)
+            {
+              char nc = line[startpos +2*(SERIALDIGITS_BM + 1)];
+              if (isalnum(nc) || nc=='_')
+                (badpos=startpos +2*(SERIALDIGITS_BM + 1)),
+                (badmsg="too long id");
+            };
+          if (badpos>0)
+            {
+              fprintf(stderr, "%s:%d:%d: bad BMK_ constant, %s:: %s\n",
+                      path, linecnt+1, badpos+1, badmsg, line.c_str()+pos);
+              exit(EXIT_FAILURE);
+            };
+          endpos = startpos+2*(SERIALDIGITS_BM)+1;
+          std::string curid = line.substr(startpos, endpos-startpos);
+          pos = endpos;
+          bmconstset.insert(curid);
+          nbocc++;
+        };
       linecnt++;
     }
   while (srcin);
-  printf("processed %d lines from %s\n", linecnt, path);
+  printf("processed %d lines from %s with %d occurrences\n",
+         linecnt, path, nbocc);
 } // end parse_cfile
+
+
 
 int main(int argc, char**argv)
 {
@@ -64,20 +121,54 @@ int main(int argc, char**argv)
     {
       auto hpath = argv[2];
       std::set<std::string> bmconstset;
+      for (int ix=3; ix<argc; ix++)
+        parse_cfile(argv[ix], bmconstset);
       std::ofstream outh(hpath);
-      outh << "#warning " __FILE__ << " should generate header " << hpath << std::endl;
-      for (int ix=3; ix<argc; ix++) parse_cfile(argv[ix], bmconstset);
+      outh << "// generated header " << hpath << " for "
+           << bmconstset.size() << " constants. DONT EDIT" << std::endl;
+      for (auto id: bmconstset)
+        {
+          outh << "extern void*bmconst_" << id << ";" << std::endl;
+          outh << "#define BMK_" << id << " bmconst_" << id <<std::endl;
+        }
+      outh << "//- eof generated header " << hpath << std::endl;
     }
   else if (!strcmp(argv[1], "-C"))
     {
       auto spath = argv[2];
       std::set<std::string> bmconstset;
+      for (int ix=3; ix<argc; ix++)
+        parse_cfile(argv[ix], bmconstset);
       std::ofstream outs(spath);
-      outs <<  "#warning " __FILE__ << " should generate code " << spath
-           << " from:";
-      for (int ix=3; ix<argc; ix++) outs<< ' ' << argv[ix];
+      outs << "/** generated constant file " << spath << std::endl;
+      outs << "  from:";
+      for (int ix=3; ix<argc; ix++)
+        {
+          if ((ix - 3) % 4 == 0)
+            outs << std::endl << " ...";
+          outs<< ' ' << argv[ix];
+        }
+      outs << << std::endl " DONT EDIT**/" << std::endl;
+      outs << std::endl << std::endl;
+      for (auto id: bmconstset)
+        {
+          outs << "void*bmconst_" << id << ";" << std::endl;
+        };
       outs << std::endl;
-      for (int ix=3; ix<argc; ix++) parse_cfile(argv[ix], bmconstset);
+      outs << "const int bmnbconsts=" << bmconstset.size() << ";" << std::endl;
+      outs << "const void* const bmconstaddrs[] = {" << std::endl;
+      for (auto id: bmconstset)
+        {
+          outs << "  &bmconst_" << id << "," << std::endl;
+        }
+      outs << " (const void**)0 };" << std::endl;
+      outs << "const char* bmconstidstrings[] = {" << std::endl;
+      for (auto id: bmconstset)
+        {
+          outs << " \"_" << id << "\"," << std::endl;
+        }
+      outs << " (const char*)0 };" << std::endl;
+      outs << "//- eof generated constant file " << spath << std::endl;
     }
   else
     {

@@ -504,8 +504,8 @@ ROUTINEOBJNAME_BM (_7GMLV81ntO3_4NHTv7fCL0A)    // dump_data°hset_object
     constix_put,
     constix__LAST
   };
-  objectval_tyBM *k_dump_value = NULL;
-  objectval_tyBM *k_put = NULL;
+  objectval_tyBM *k_dump_value = NULL;  // BMK_1FEnnpEkGdI_5DAcVDL5XH
+  objectval_tyBM *k_put = NULL; // BMK_9pvzBeIKHXF_8YDPCrQ6OEK 
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv;
                  const closure_tyBM * clos; objectval_tyBM * dumpob;

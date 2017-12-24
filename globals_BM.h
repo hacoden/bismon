@@ -10,6 +10,11 @@ extern const char bismon_checksum[];
 extern const char bismon_directory[];
 extern const char bismon_makefile[];
 
+// from generated _bm_allconsts.c
+extern const int bmnbconsts;
+extern const void *const bmconstaddrs[];
+extern const char *bmconstidstrings[];
+
 extern const char myhostname_BM[];
 extern atomic_bool want_garbage_collection_BM;
 extern bool gui_is_running_BM;
