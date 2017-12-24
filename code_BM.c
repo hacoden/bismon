@@ -1744,8 +1744,7 @@ ROUTINEOBJNAME_BM (_1gME6zn82Kf_8hzWibLFRfz)    //
   };
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  objectval_tyBM * recv;
-                 const closure_tyBM * clos;
-                 objectval_tyBM * closconn;
+                 const closure_tyBM * clos; objectval_tyBM * closconn;
                  objectval_tyBM * modgenob; objectval_tyBM * generate_module;
                  value_tyBM resprep; value_tyBM resgen;
                  const node_tyBM * constnodv;
@@ -2524,8 +2523,7 @@ ROUTINEOBJNAME_BM (_7ko2VZaPpqD_1eEmEcp0VV3)    //
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const closure_tyBM * clos;
-                 const node_tyBM * rnodv;
-                 const struct parser_stBM *pars;
+                 const node_tyBM * rnodv; const struct parser_stBM *pars;
                  const node_tyBM * constnodv; objectval_tyBM * resobj;
                  objectval_tyBM * closconn; value_tyBM curson;
                  value_tyBM inv;
@@ -2613,8 +2611,7 @@ ROUTINEOBJNAME_BM (_8uFPIAUyvE6_36pUIgGwmbf)    //
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const closure_tyBM * clos;
-                 const node_tyBM * rnodv;
-                 const struct parser_stBM *pars;
+                 const node_tyBM * rnodv; const struct parser_stBM *pars;
                  const node_tyBM * constnodv; objectval_tyBM * resobj;
                  objectval_tyBM * closconn; value_tyBM curson;
                  value_tyBM inv;
@@ -2811,11 +2808,6 @@ ROUTINEOBJNAME_BM (_63Q0R4r8xa7_7XOAxxP5pi2)    //
  const value_tyBM arg4,         // parser
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
-  enum
-  {
-    constix_basiclo_exit, constix_exit,
-    constix__LAST
-  };
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const closure_tyBM * clos; const node_tyBM * rnodv;
                  objectval_tyBM * resobj; objectval_tyBM * resclass;
@@ -2827,17 +2819,8 @@ ROUTINEOBJNAME_BM (_63Q0R4r8xa7_7XOAxxP5pi2)    //
   const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
   assert (closconn != NULL);
   const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
-  /*** constnod is
-   * const (basiclo_exit exit)
-   ***/
-  assert (isnode_BM ((const value_tyBM) constnod)
-          && nodewidth_BM ((const value_tyBM) constnod) >= constix__LAST
-          && valhash_BM ((const value_tyBM) constnod) == 756562056);
-  const objectval_tyBM *k_basiclo_exit =
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_basiclo_exit));
-  const objectval_tyBM *k_exit =
-    objectcast_BM (nodenthson_BM ((const value_tyBM) constnod, constix_exit));
+  const objectval_tyBM *k_basiclo_exit = BMK_0Yis1n6EoBu_8nfbe8a8yKI;
+  const objectval_tyBM *k_exit = BMK_41gbFesxqzD_3l56OLiNdl2;
   LOCALGETCLOS_BM (_.clos);
   _.rnodv = arg1;
   if (!isnode_BM (arg1))
@@ -2906,11 +2889,6 @@ ROUTINEOBJNAME_BM (_1ufPZmTnWhp_7FX9NANZCAW)    //
  const value_tyBM arg4_ __attribute__ ((unused)),       //
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
-  enum
-  {
-    constix_basiclo_while, constix_while, constix_label,
-    constix__LAST
-  };
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const closure_tyBM * clos; const node_tyBM * rnodv;
                  objectval_tyBM * resobj; objectval_tyBM * resclass;
@@ -2930,21 +2908,9 @@ ROUTINEOBJNAME_BM (_1ufPZmTnWhp_7FX9NANZCAW)    //
   const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
   assert (closconn != NULL);
   const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
-  /*** constnod is
-   * const (basiclo_while while label)
-   ***/
-  assert (isnode_BM ((const value_tyBM) constnod)
-          && nodewidth_BM ((const value_tyBM) constnod) >= constix__LAST
-          && valhash_BM ((const value_tyBM) constnod) == 1165552647);
-  const objectval_tyBM *k_basiclo_while =
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_basiclo_while));
-  const objectval_tyBM *k_while =
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_while));
-  const objectval_tyBM *k_label =
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_label));
+  const objectval_tyBM *k_basiclo_while = BMK_4Af5NOOf7Qe_7KQdGPoNdJ0;
+  const objectval_tyBM *k_while = BMK_7GNnckYYtcH_7wtOnPP4eKU;
+  const objectval_tyBM *k_label = BMK_3XBrePAliOo_37VlAqBsb5C;
   DBGPRINTF_BM ("start readmacro:while  _1ufPZmTnWhp_7FX9NANZCAW"
                 " lineno=%d colpos=%d nodwidth=%u", lineno, colpos, nodwidth);
   unsigned startix = 0;
@@ -3229,16 +3195,6 @@ ROUTINEOBJNAME_BM (_42gEKfF4qca_6gGwxSFC1FO)    //
 {
   enum
   {
-    constix_basiclo_cexpansion,
-    constix_basiclo_cexpander,
-    constix_results,
-    constix_arguments,
-    constix_body,
-    constix_expander,
-    constix__LAST
-  };
-  enum
-  {
     closix_curcexp,
     closix__LAST
   };
@@ -3269,36 +3225,17 @@ ROUTINEOBJNAME_BM (_42gEKfF4qca_6gGwxSFC1FO)    //
   objectval_tyBM *clos_curcexp =        //
     objectcast_BM (closurenthson_BM ((const value_tyBM) _.clos,
                                      closix_curcexp));
-  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
-  /*** constnod is
-   * const (basiclo_cexpansion basiclo_cexpander results arguments body expander)
-   ***/
-  WEAKASSERT_BM (isnode_BM ((const value_tyBM) constnod)
-                 && nodewidth_BM ((const value_tyBM) constnod) >=
-                 constix__LAST
-                 && valhash_BM ((const value_tyBM) constnod) == 2502446012);
-  const objectval_tyBM *k_basiclo_cexpansion =
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_basiclo_cexpansion));
+  const objectval_tyBM *k_basiclo_cexpansion = BMK_4GJJnvyrLyW_5mhopCYvh8h;
   WEAKASSERT_BM (k_basiclo_cexpansion != NULL);
-  const objectval_tyBM *k_basiclo_cexpander =
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_basiclo_cexpander));
+  const objectval_tyBM *k_basiclo_cexpander = BMK_9pJUJ57N6RL_2nsXFzR6S3E;
   WEAKASSERT_BM (k_basiclo_cexpander != NULL);
-  const objectval_tyBM *k_results =
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_results));
+  const objectval_tyBM *k_results = BMK_5ve5gbSjN0r_1n61nNRPtnN;
   WEAKASSERT_BM (k_results != NULL);
-  const objectval_tyBM *k_arguments =
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_arguments));
+  const objectval_tyBM *k_arguments = BMK_0jFqaPPHgYH_5JpjOPxQ67p;
   WEAKASSERT_BM (k_arguments != NULL);
-  const objectval_tyBM *k_body =
-    objectcast_BM (nodenthson_BM ((const value_tyBM) constnod, constix_body));
+  const objectval_tyBM *k_body = BMK_7DQyvJFMOrC_9IfC3CtYknn;
   WEAKASSERT_BM (k_body != NULL);
-  const objectval_tyBM *k_expander =
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_expander));
+  const objectval_tyBM *k_expander = BMK_9OzBvYbDWm8_3XA4wkArOmo;
   WEAKASSERT_BM (k_expander != NULL);
   if (!isobject_BM (clos_curcexp)
       || !objectisinstance_BM (clos_curcexp, k_basiclo_cexpander))
@@ -3470,13 +3407,6 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
  const value_tyBM arg4,         // parser
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
-  enum
-  { constix_test,
-    constix_basiclo_when,
-    constix_basiclo_statement,
-    constix_basiclo_block,
-    constix__LAST
-  };
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const closure_tyBM * clos; const node_tyBM * rnodv;
                  objectval_tyBM * resobj; objectval_tyBM * curobj;
@@ -3495,30 +3425,15 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
                 " lineno=%d colpos=%d nodwidth=%u", lineno, colpos, nodwidth);
   const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
   assert (closconn != NULL);
-  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
-  /*** constnod is
-   * const (test basiclo_when basiclo_statement basiclo_block)
-   ***/
-  WEAKASSERT_BM (isnode_BM ((const value_tyBM) constnod)
-                 && nodewidth_BM ((const value_tyBM) constnod) ==
-                 constix__LAST
-                 && valhash_BM ((const value_tyBM) constnod) == 612193748);
-  const objectval_tyBM *k_test =
-    objectcast_BM (nodenthson_BM ((const value_tyBM) constnod, constix_test));
+  const objectval_tyBM *k_test = BMK_2j84OTHlFdJ_1pMyQfgsmAz;
   WEAKASSERT_BM (k_test != NULL);
-  const objectval_tyBM *k_basiclo_when =
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_basiclo_when));
+  const objectval_tyBM *k_basiclo_when = BMK_3fvdRZNCmJS_5bTAPr83mXg;
   WEAKASSERT_BM (k_basiclo_when != NULL);
   ///
-  const objectval_tyBM *k_basiclo_statement =
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_basiclo_statement));
+  const objectval_tyBM *k_basiclo_statement = BMK_4lKK08v9A0t_0GGsir35UxP;
   WEAKASSERT_BM (k_basiclo_statement != NULL);
   ///
-  const objectval_tyBM *k_basiclo_block =
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_basiclo_block));
+  const objectval_tyBM *k_basiclo_block = BMK_4bYUiDmxrKK_6nPPlEl8y8x;
   WEAKASSERT_BM (k_basiclo_block != NULL);
   unsigned startix = 0;
   if (nodwidth > 0
