@@ -566,6 +566,7 @@ fullgarbagecollection_BM (struct stackframe_stBM *stkfram)
   GCdata.gc_hset =              //
     hashsetobj_grow_BM (NULL, prime_above_BM (alcnt / 32 + 100));
   gcmarkpredefinedobjects_BM (&GCdata);
+  gcmarkconstants_BM (&GCdata);
   gcmarkglobals_BM (&GCdata);
   gcmarkgui_BM (&GCdata);
   gcframemark_BM (&GCdata, stkfram, 0);

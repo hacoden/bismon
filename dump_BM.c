@@ -268,6 +268,11 @@ dump_scan_pass_BM (struct dumper_stBM *du, struct stackframe_stBM *stkf)
   _.globalset = setglobalobjects_BM ();
   obdumpscanvalue_BM (_.obdump, (value_tyBM) _.predefset, 0);
   obdumpscanvalue_BM (_.obdump, (value_tyBM) _.globalset, 0);
+  for (int kix = 0; kix < bmnbconsts; kix++)
+    {
+      if (*(bmconstaddrs[kix]))
+        obdumpscanobj_BM (_.obdump, *(bmconstaddrs[kix]));
+    };
   while (listlength_BM (du->dump_scanlist) > 0)
     {
       _.curobj = listfirst_BM (du->dump_scanlist);

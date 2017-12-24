@@ -16,8 +16,6 @@ const quasinode_tyBM * restargs)
   // arg2 is the bufob
   // arg3 is the obdumper
   // arg4 is the depth
-  assert (valtype_BM ((const value_tyBM) restargs) == typayl_quasinode_BM
-          && treewidth_BM ((const value_tyBM) restargs) == 1);
   assert (istaggedint_BM (arg4));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  value_tyBM recv;
@@ -50,8 +48,6 @@ const quasinode_tyBM * restargs)
   assert (isset_BM (arg1));     // the set to dump
   // arg2 is the bufob
   // arg3 is the obdump
-  assert (valtype_BM ((const value_tyBM) restargs) == typayl_quasinode_BM
-          && treewidth_BM ((const value_tyBM) restargs) == 1);
   assert (istaggedint_BM (arg4));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const setval_tyBM * recv; objectval_tyBM * dumpob;
@@ -100,8 +96,6 @@ const quasinode_tyBM * restargs)
   assert (istuple_BM (arg1));   // the tuple to dump
   // arg2 is the bufob
   // arg3 is the obdump
-  assert (valtype_BM ((const value_tyBM) restargs) == typayl_quasinode_BM
-          && treewidth_BM ((const value_tyBM) restargs) == 1);
   assert (istaggedint_BM (arg4));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const tupleval_tyBM * recv; objectval_tyBM * bufob;

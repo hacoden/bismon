@@ -844,6 +844,16 @@ gcmarkpredefinedobjects_BM (struct garbcoll_stBM *gc)
   hashsetgcmark_BM (gc, hashset_predefined_objects_BM);
 }                               /* end gcmarkpredefinedobjects_BM */
 
+void
+gcmarkconstants_BM (struct garbcoll_stBM *gc)
+{
+  assert (gc && gc->gc_magic == GCMAGIC_BM);
+  for (int kix = 0; kix < bmnbconsts; kix++)
+    {
+      if (*(bmconstaddrs[kix]))
+        gcobjmark_BM (gc, *(bmconstaddrs[kix]));
+    }
+}                               // end gcmarkconstants_BM
 
 void
 objputspacenum_BM (objectval_tyBM * obj, unsigned spanum)
