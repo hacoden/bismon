@@ -25,8 +25,9 @@ ROUTINEOBJNAME_BM (_5mnsT1wsdWs_2Qnqsf3wqaP)    // prepare_routine:basiclo_funct
   const objectval_tyBM *k_block = BMK_2U8Sj78DMbl_5eerKpaJsNq;
   const objectval_tyBM *k_locals = BMK_24sSVIADeHm_0Sx34wQfG7W;
   const objectval_tyBM *k_constants = BMK_5l2zSKsFaVm_9zs6qDOP87i;
-  const objectval_tyBM *k_simple_routine_preparation = BMK_80060zKi6Un_3isCStegT8A;
-  const objectval_tyBM *k_body =   BMK_7DQyvJFMOrC_9IfC3CtYknn;
+  const objectval_tyBM *k_simple_routine_preparation =
+    BMK_80060zKi6Un_3isCStegT8A;
+  const objectval_tyBM *k_body = BMK_7DQyvJFMOrC_9IfC3CtYknn;
   const objectval_tyBM *k_bindings = BMK_1zpi50AYid5_0j6it2DwVqm;
   // retrieve arguments
   _.recv = /*function object */ (arg1);
@@ -138,7 +139,7 @@ ROUTINEOBJNAME_BM (_979hCujWp2g_9tjRbM8Ht1l)    // emit_c_type:c_enum
   const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
   assert (closconn != NULL);
   const objectval_tyBM *k_extending = BMK_2bqFfs5OYL2_0HRi4lcgFcu;
-  const objectval_tyBM *k_own_enumeration =  BMK_4ot0ZxxA31Y_8GVFlcbckIH ;
+  const objectval_tyBM *k_own_enumeration = BMK_4ot0ZxxA31Y_8GVFlcbckIH;
   const objectval_tyBM *k_enumeration = BMK_7BROpIWQHzA_8b1C6i49Pkz;
   //
   const char *nam = findobjectname_BM (_.recv);
@@ -190,7 +191,8 @@ ROUTINEOBJNAME_BM (_07qYMXftJRR_9dde2ASz4e9)    //  prepare_routine°basiclo_min
   const objectval_tyBM *k_locals = BMK_24sSVIADeHm_0Sx34wQfG7W;
   const objectval_tyBM *k_numbers = BMK_32eKNcTZ9HN_80t0nk47Mha;
   const objectval_tyBM *k_body = BMK_7DQyvJFMOrC_9IfC3CtYknn;
-  const objectval_tyBM *k_simple_routine_preparation = BMK_80060zKi6Un_3isCStegT8A;
+  const objectval_tyBM *k_simple_routine_preparation =
+    BMK_80060zKi6Un_3isCStegT8A;
   const objectval_tyBM *k_hset_object = BMK_8c9otZ4pwR6_55k81qyyYV2;
   const objectval_tyBM *k_blocks = BMK_2lCuMosXupr_5GAoqVgJ8PZ;
   const objectval_tyBM *k_prepare_routine = BMK_6qi1DW0Ygkl_4Aqdxq4n5IV;
@@ -305,20 +307,20 @@ ROUTINEOBJNAME_BM (_07qYMXftJRR_9dde2ASz4e9)    //  prepare_routine°basiclo_min
       _.curol = NULL;
     }
   // bind the constants
-  for (unsigned constix = 0; constix < nbconsts; constix++)
+  for (unsigned cstix = 0; cstix < nbconsts; cstix++)
     {
-      _.curvar = setelemnth_BM (_.setconsts, constix);
+      _.curvar = setelemnth_BM (_.setconsts, cstix);
       DBGPRINTF_BM
-        ("start prepare_routine°basiclo_minifunction constix=%u constant curvar=%s",
-         constix, objectdbg_BM (_.curvar));
+        ("start prepare_routine°basiclo_minifunction cstix=%u constant curvar=%s",
+         cstix, objectdbg_BM (_.curvar));
       _.oldrol = assoc_getattr_BM (_.routassoc, _.curvar);
       if (_.oldrol)
         {
           fprintf (stderr, "constant#%u %s is not fresh in minifunction %s\n",
-                   constix, objectdbg_BM (_.curvar), objectdbg1_BM (_.recv));
+                   cstix, objectdbg_BM (_.curvar), objectdbg1_BM (_.recv));
           LOCALRETURN_BM (NULL);
         }
-      _.curol = makenodevar_BM (k_constants, taggedint_BM (constix), NULL);
+      _.curol = makenodevar_BM (k_constants, taggedint_BM (cstix), NULL);
       _.routassoc = assoc_addattr_BM (_.routassoc, _.curvar, _.curol);
       _.curol = NULL;
     }
@@ -385,7 +387,7 @@ ROUTINEOBJNAME_BM (_10XOFm9ui6R_06F8qZQynnA)    //
   const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
   const objectval_tyBM *k_functions_set = BMK_9stpgEfdDDE_7LUgqylTeFI;
   const objectval_tyBM *k_plain_module = BMK_8g1WBJBhDT9_1QK8IcuWYx2;
-  const objectval_tyBM *k_basiclo_minifunction = BMK_2Z04aTH1OXJ_4ekKKdOCiOM ;
+  const objectval_tyBM *k_basiclo_minifunction = BMK_2Z04aTH1OXJ_4ekKKdOCiOM;
   DBGPRINTF_BM ("complete_module°basiclo*module start recv=%s modgen=%s",
                 objectdbg_BM (_.recv), objectdbg1_BM (_.modgen));
   _.funset = setcast_BM (objgetattr_BM (_.modgen, k_functions_set));
@@ -436,16 +438,6 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
     closix_nbargs,
     closix__LAST
   };
-  enum
-  {
-    constix_miniscan_var,
-    constix_miniscan_expr,
-    constix_miniscan_block,
-    constix_miniscan_stmt,
-    constix_basiclo_block,
-    constix_basiclo_statement,
-    constix__LAST
-  };
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const closure_tyBM * clos;
                  objectval_tyBM * recv; objectval_tyBM * routprep;
@@ -455,32 +447,12 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
   LOCALGETCLOS_BM (_.clos);
   const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
   assert (closconn != NULL);
-  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
-  /*** constnod is
-   * const (miniscan_var miniscan_expr miniscan_block
-            miniscan_stmt basiclo_block basiclo_statement)
-  ***/
-  WEAKASSERT_BM (isnode_BM ((value_tyBM) constnod)
-                 && valhash_BM ((value_tyBM) constnod) == 1795820440
-                 && nodewidth_BM ((value_tyBM) constnod) == constix__LAST);
-  const objectval_tyBM *k_miniscan_var =        //
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_miniscan_var));
-  const objectval_tyBM *k_miniscan_expr =       //
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_miniscan_expr));
-  const objectval_tyBM *k_miniscan_block =      //
-    objectcast_BM (nodenthson_BM ((const value_tyBM) constnod,
-                                  constix_miniscan_block));
-  const objectval_tyBM *k_miniscan_stmt =       //
-    objectcast_BM (nodenthson_BM ((const value_tyBM) constnod,
-                                  constix_miniscan_stmt));
-  const objectval_tyBM *k_basiclo_block =       //
-    objectcast_BM (nodenthson_BM ((const value_tyBM) constnod,
-                                  constix_basiclo_block));
-  const objectval_tyBM *k_basiclo_statement =   //
-    objectcast_BM (nodenthson_BM ((const value_tyBM) constnod,
-                                  constix_basiclo_statement));
+  const objectval_tyBM *k_miniscan_var = BMK_6jh60mO0Cgd_84B0HiNphqA;
+  const objectval_tyBM *k_miniscan_expr = BMK_7k3xb0vred0_9ZRHcZmhw77;
+  const objectval_tyBM *k_miniscan_block = BMK_2gthNYOWogO_4sVTU1JbmUH;
+  const objectval_tyBM *k_miniscan_stmt = BMK_6DdZwyaWLyK_7tS2BmECOJ0;
+  const objectval_tyBM *k_basiclo_block = BMK_4bYUiDmxrKK_6nPPlEl8y8x;
+  const objectval_tyBM *k_basiclo_statement = BMK_4lKK08v9A0t_0GGsir35UxP;
   // retrieve arguments
   _.recv = objectcast_BM (arg1);
   WEAKASSERT_BM (isobject_BM (_.recv));
