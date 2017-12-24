@@ -148,7 +148,7 @@ int main(int argc, char**argv)
             outs << std::endl << " ...";
           outs<< ' ' << argv[ix];
         }
-      outs << << std::endl " DONT EDIT**/" << std::endl;
+      outs << std::endl << " DONT EDIT**/" << std::endl;
       outs << std::endl << std::endl;
       for (auto id: bmconstset)
         {
@@ -156,12 +156,12 @@ int main(int argc, char**argv)
         };
       outs << std::endl;
       outs << "const int bmnbconsts=" << bmconstset.size() << ";" << std::endl;
-      outs << "const void* const bmconstaddrs[] = {" << std::endl;
+      outs << "void** const bmconstaddrs[] = {" << std::endl;
       for (auto id: bmconstset)
         {
           outs << "  &bmconst_" << id << "," << std::endl;
         }
-      outs << " (const void**)0 };" << std::endl;
+      outs << " (void**)0 };" << std::endl;
       outs << "const char* bmconstidstrings[] = {" << std::endl;
       for (auto id: bmconstset)
         {

@@ -998,6 +998,16 @@ doload_BM (struct stackframe_stBM *_parentframe, struct loader_stBM *ld)
       load_first_pass_BM (ld, ix);
   if (ld->ld_storepatharr[0])
     load_first_pass_BM (ld, 0);
+  /// set the constants
+  for (int kix = 0; kix < bmnbconsts; kix++) {
+    const char*kidstr = bmconstidstrings[kix];
+    assert (kidstr != NULL && kidstr[0] == '_');
+    rawid_tyBM kid = parse_rawid_BM(kidstr, NULL);
+    objectval_tyBM* kobj = findobjofid_BM(kid);
+    if (!kobj)
+      FATAL_BM("cannot find constant#%d %s in loaded dir %s", kix, kidstr, ld->ld_dir);
+    *(bmconstaddrs[kix]) = kobj;
+  }
   /// run the second pass to fill objects
   for (int ix = 1; ix <= (int) ld->ld_maxnum; ix++)
     if (ld->ld_storepatharr[ix])

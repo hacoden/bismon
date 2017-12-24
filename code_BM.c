@@ -498,14 +498,8 @@ ROUTINEOBJNAME_BM (_7GMLV81ntO3_4NHTv7fCL0A)    // dump_data°hset_object
  __attribute__ ((unused)), const quasinode_tyBM * restargs_
  __attribute__ ((unused)))
 {
-  enum constix_en
-  {
-    constix_dump_value,
-    constix_put,
-    constix__LAST
-  };
-  objectval_tyBM *k_dump_value = NULL;  // BMK_1FEnnpEkGdI_5DAcVDL5XH
-  objectval_tyBM *k_put = NULL; // BMK_9pvzBeIKHXF_8YDPCrQ6OEK 
+  objectval_tyBM *k_dump_value= BMK_1FEnnpEkGdI_5DAcVDL5XHG;
+  objectval_tyBM *k_put= BMK_9pvzBeIKHXF_8YDPCrQ6OEK;
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv;
                  const closure_tyBM * clos; objectval_tyBM * dumpob;
@@ -513,11 +507,9 @@ ROUTINEOBJNAME_BM (_7GMLV81ntO3_4NHTv7fCL0A)    // dump_data°hset_object
                  value_tyBM dumpres;
     );
   objectval_tyBM *closconn = NULL;
-  const node_tyBM *constnodv = NULL;
   LOCALGETCLOS_BM (_.clos);
   closconn = closureconn_BM ((const value_tyBM) _.clos);
   assert (isobject_BM (closconn));
-  constnodv = objpayload_BM (closconn);
   WEAKASSERT_BM (isobject_BM (arg1));
   _.recv = arg1;
   _.dumpob = objectcast_BM (arg2);
@@ -528,17 +520,6 @@ ROUTINEOBJNAME_BM (_7GMLV81ntO3_4NHTv7fCL0A)    // dump_data°hset_object
   WEAKASSERT_BM (valtype_BM (objpayload_BM (_.recv)) == typayl_hashsetobj_BM);
   assert (arg3 == NULL);
   assert (restargs_ == NULL);
-  /** constnodv is 
-     * const (dump_value put)
-  **/
-  WEAKASSERT_BM (isnode_BM ((const value_tyBM) constnodv)
-                 && valhash_BM ((const value_tyBM) constnodv) == 3410673963
-                 && nodewidth_BM ((const value_tyBM) constnodv) >=
-                 constix__LAST);
-  k_dump_value =
-    objectcast_BM (nodenthson_BM ((void *) constnodv, constix_dump_value));
-  WEAKASSERT_BM (k_dump_value == BMP_dump_value);
-  k_put = objectcast_BM (nodenthson_BM ((void *) constnodv, constix_put));
   _.setv = hashsetobj_to_set_BM (objpayload_BM (_.recv));
   objstrbufferprintf_BM (_.bufob, "!~ todo (~\t");
   objstrbuffermoreindent_BM (_.bufob);
