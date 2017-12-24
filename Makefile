@@ -77,6 +77,9 @@ indent: .indent.pro
 	@printf "\n *** C++ plugin source *** \n"
 	@$(ASTYLE) $(ASTYLEFLAGS)  measure_plugcc.cc
 	@printf "\n"
+	@printf "\n *** C++ tool source *** \n"
+	@$(ASTYLE) $(ASTYLEFLAGS)  BM_makeconst.cc
+	@printf "\n"
 
 ## we could use git rev-parse HEAD for the lastgitcommit, but it does
 ## not give any log comment... Notice that tr command is interpreting
