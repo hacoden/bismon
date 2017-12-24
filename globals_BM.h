@@ -12,7 +12,7 @@ extern const char bismon_makefile[];
 
 // from generated _bm_allconsts.c
 extern const int bmnbconsts;
-extern void ** const bmconstaddrs[];
+extern void **const bmconstaddrs[];
 extern const char *bmconstidstrings[];
 
 extern const char myhostname_BM[];

@@ -498,8 +498,8 @@ ROUTINEOBJNAME_BM (_7GMLV81ntO3_4NHTv7fCL0A)    // dump_data°hset_object
  __attribute__ ((unused)), const quasinode_tyBM * restargs_
  __attribute__ ((unused)))
 {
-  objectval_tyBM *k_dump_value= BMK_1FEnnpEkGdI_5DAcVDL5XHG;
-  objectval_tyBM *k_put= BMK_9pvzBeIKHXF_8YDPCrQ6OEK;
+  objectval_tyBM *k_dump_value = BMK_1FEnnpEkGdI_5DAcVDL5XHG;
+  objectval_tyBM *k_put = BMK_9pvzBeIKHXF_8YDPCrQ6OEK;
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv;
                  const closure_tyBM * clos; objectval_tyBM * dumpob;
