@@ -11,17 +11,6 @@ ROUTINEOBJNAME_BM (_5mnsT1wsdWs_2Qnqsf3wqaP)    // prepare_routine:basiclo_funct
  const value_tyBM arg4_ __attribute__ ((unused)),
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
-  enum
-  {
-    constix_arguments,
-    constix_block,
-    constix_locals,
-    constix_constants,
-    constix_simple_routine_preparation,
-    constix_body,
-    constix_bindings,
-    constix__LAST
-  };
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const closure_tyBM * clos; value_tyBM recv;
                  objectval_tyBM * modgenob;
@@ -32,34 +21,13 @@ ROUTINEOBJNAME_BM (_5mnsT1wsdWs_2Qnqsf3wqaP)    // prepare_routine:basiclo_funct
   LOCALGETCLOS_BM (_.clos);
   const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
   assert (closconn != NULL);
-  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
-  /*** constnod is
-      * const (arguments block locals constants simple_routine_preparation)
-   ***/
-  WEAKASSERT_BM (isnode_BM ((value_tyBM) constnod)
-                 && valhash_BM ((value_tyBM) constnod) == 286038615
-                 && nodewidth_BM ((value_tyBM) constnod) == constix__LAST);
-  const objectval_tyBM *k_arguments =   //
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_arguments));
-  const objectval_tyBM *k_block =       //
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_block));
-  const objectval_tyBM *k_locals =      //
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_locals));
-  const objectval_tyBM *k_constants =   //
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_constants));
-  const objectval_tyBM *k_simple_routine_preparation =  //
-    objectcast_BM (nodenthson_BM ((const value_tyBM) constnod,
-                                  constix_simple_routine_preparation));
-  const objectval_tyBM *k_body =        //
-    objectcast_BM (nodenthson_BM ((const value_tyBM) constnod,
-                                  constix_body));
-  const objectval_tyBM *k_bindings =    //
-    objectcast_BM (nodenthson_BM ((const value_tyBM) constnod,
-                                  constix_bindings));
+  const objectval_tyBM *k_arguments = BMK_0jFqaPPHgYH_5JpjOPxQ67p;
+  const objectval_tyBM *k_block = BMK_2U8Sj78DMbl_5eerKpaJsNq;
+  const objectval_tyBM *k_locals = BMK_24sSVIADeHm_0Sx34wQfG7W;
+  const objectval_tyBM *k_constants = BMK_5l2zSKsFaVm_9zs6qDOP87i;
+  const objectval_tyBM *k_simple_routine_preparation = BMK_80060zKi6Un_3isCStegT8A;
+  const objectval_tyBM *k_body =   BMK_7DQyvJFMOrC_9IfC3CtYknn;
+  const objectval_tyBM *k_bindings = BMK_1zpi50AYid5_0j6it2DwVqm;
   // retrieve arguments
   _.recv = /*function object */ (arg1);
   _.modgenob = /*module generation object */ objectcast_BM (arg2);
@@ -151,13 +119,6 @@ ROUTINEOBJNAME_BM (_979hCujWp2g_9tjRbM8Ht1l)    // emit_c_type:c_enum
  const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4,
  const quasinode_tyBM * restargs)
 {
-  enum
-  {
-    constix_extending,
-    constix_own_enumeration,
-    constix_enumeration,
-    constix__LAST
-  };
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const closure_tyBM * clos;
                  value_tyBM recv;
@@ -176,22 +137,9 @@ ROUTINEOBJNAME_BM (_979hCujWp2g_9tjRbM8Ht1l)    // emit_c_type:c_enum
      objectdbg_BM (_.recv));
   const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
   assert (closconn != NULL);
-  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
-  /*** constnod is
-      * const (extending own_enumeration enumeration)
-   ***/
-  WEAKASSERT_BM (isnode_BM ((value_tyBM) constnod)
-                 && valhash_BM ((value_tyBM) constnod) == 1519557249
-                 && nodewidth_BM ((value_tyBM) constnod) == constix__LAST);
-  const objectval_tyBM *k_extending =   //
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_extending));
-  const objectval_tyBM *k_own_enumeration =     //
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_own_enumeration));
-  const objectval_tyBM *k_enumeration = //
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_enumeration));
+  const objectval_tyBM *k_extending = BMK_2bqFfs5OYL2_0HRi4lcgFcu;
+  const objectval_tyBM *k_own_enumeration =  BMK_4ot0ZxxA31Y_8GVFlcbckIH ;
+  const objectval_tyBM *k_enumeration = BMK_7BROpIWQHzA_8b1C6i49Pkz;
   //
   const char *nam = findobjectname_BM (_.recv);
   char idbuf[32] = { };
@@ -215,23 +163,6 @@ ROUTINEOBJNAME_BM (_07qYMXftJRR_9dde2ASz4e9)    //  prepare_routine°basiclo_min
  const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4,
  const quasinode_tyBM * restargs)
 {
-  enum
-  {
-    constix_arguments,
-    constix_constants,
-    constix_result,
-    constix_closed,
-    constix_locals,
-    constix_numbers,
-    constix_body,
-    constix_simple_routine_preparation,
-    constix_hset_object,
-    constix_blocks,
-    constix_prepare_routine,
-    constix_in,
-    constix_collect_blocks,
-    constix__LAST
-  };
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const closure_tyBM * clos; objectval_tyBM * modgen;
                  setval_tyBM * prepvalset; objectval_tyBM * curprepob;
@@ -252,54 +183,19 @@ ROUTINEOBJNAME_BM (_07qYMXftJRR_9dde2ASz4e9)    //  prepare_routine°basiclo_min
   LOCALGETCLOS_BM (_.clos);
   const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
   assert (closconn != NULL);
-  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
-  /*** constnod is
-      * const (arguments result constants closed locals numbers 
-               body simple_routine_preparation
-	       hset_object blocks prepare_routine in
-	       collect_blocks)
-   ***/
-  WEAKASSERT_BM (isnode_BM ((value_tyBM) constnod)
-                 && valhash_BM ((value_tyBM) constnod) == 3438389410
-                 && nodewidth_BM ((value_tyBM) constnod) == constix__LAST);
-  const objectval_tyBM *k_arguments =   //
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_arguments));
-  const objectval_tyBM *k_constants =   //
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_constants));
-  const objectval_tyBM *k_result =      //
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_result));
-  const objectval_tyBM *k_closed =      //
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_closed));
-  const objectval_tyBM *k_locals =      //
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_locals));
-  const objectval_tyBM *k_numbers =     //
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_numbers));
-  const objectval_tyBM *k_body =        //
-    objectcast_BM (nodenthson_BM ((const value_tyBM) constnod, constix_body));
-  const objectval_tyBM *k_simple_routine_preparation =  //
-    objectcast_BM (nodenthson_BM ((const value_tyBM) constnod,
-                                  constix_simple_routine_preparation));
-  const objectval_tyBM *k_hset_object = //
-    objectcast_BM (nodenthson_BM ((const value_tyBM) constnod,
-                                  constix_hset_object));
-  const objectval_tyBM *k_blocks =      //
-    objectcast_BM (nodenthson_BM ((const value_tyBM) constnod,
-                                  constix_blocks));
-  const objectval_tyBM *k_prepare_routine =     //
-    objectcast_BM (nodenthson_BM ((const value_tyBM) constnod,
-                                  constix_prepare_routine));
-  const objectval_tyBM *k_in =  //
-    objectcast_BM (nodenthson_BM ((const value_tyBM) constnod,
-                                  constix_in));
-  const objectval_tyBM *k_collect_blocks =      //
-    objectcast_BM (nodenthson_BM ((const value_tyBM) constnod,
-                                  constix_collect_blocks));
+  const objectval_tyBM *k_arguments = BMK_0jFqaPPHgYH_5JpjOPxQ67p;
+  const objectval_tyBM *k_constants = BMK_5l2zSKsFaVm_9zs6qDOP87i;
+  const objectval_tyBM *k_result = BMK_7bD9VtDkGSn_7lxHeYuuFLR;
+  const objectval_tyBM *k_closed = BMK_2TwOyPJxIz8_1rIeqaN7oRz;
+  const objectval_tyBM *k_locals = BMK_24sSVIADeHm_0Sx34wQfG7W;
+  const objectval_tyBM *k_numbers = BMK_32eKNcTZ9HN_80t0nk47Mha;
+  const objectval_tyBM *k_body = BMK_7DQyvJFMOrC_9IfC3CtYknn;
+  const objectval_tyBM *k_simple_routine_preparation = BMK_80060zKi6Un_3isCStegT8A;
+  const objectval_tyBM *k_hset_object = BMK_8c9otZ4pwR6_55k81qyyYV2;
+  const objectval_tyBM *k_blocks = BMK_2lCuMosXupr_5GAoqVgJ8PZ;
+  const objectval_tyBM *k_prepare_routine = BMK_6qi1DW0Ygkl_4Aqdxq4n5IV;
+  const objectval_tyBM *k_in = BMK_0eMGYofuNVh_8ZP2mXdhtHO;
+  const objectval_tyBM *k_collect_blocks = BMK_99lWaExo3Bc_4J3HkjJOIJy;
   // retrieve arguments
   _.recv = (arg1);
   WEAKASSERT_BM (isobject_BM (_.recv));
@@ -472,13 +368,6 @@ ROUTINEOBJNAME_BM (_10XOFm9ui6R_06F8qZQynnA)    //
  const value_tyBM arg4 __attribute__ ((unused)),
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
-  enum
-  {
-    constix_functions_set,
-    constix_plain_module,
-    constix_basiclo_minifunction,
-    constix__LAST
-  };
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const closure_tyBM * clos; value_tyBM recv;
                  value_tyBM modgen;
@@ -494,21 +383,9 @@ ROUTINEOBJNAME_BM (_10XOFm9ui6R_06F8qZQynnA)    //
   _.modgen = (arg2);
   WEAKASSERT_BM (isobject_BM (_.modgen));
   const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
-  /*** constnod is
-      * const (functions_set plain_module basiclo_minifunction)
-   ***/
-  WEAKASSERT_BM (isnode_BM ((value_tyBM) constnod)
-                 && valhash_BM ((value_tyBM) constnod) == 2107755858
-                 && nodewidth_BM ((value_tyBM) constnod) == constix__LAST);
-  const objectval_tyBM *k_functions_set =       //
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_functions_set));
-  const objectval_tyBM *k_plain_module =        //
-    objectcast_BM (nodenthson_BM
-                   ((const value_tyBM) constnod, constix_plain_module));
-  const objectval_tyBM *k_basiclo_minifunction =        //
-    objectcast_BM (nodenthson_BM ((const value_tyBM) constnod,
-                                  constix_basiclo_minifunction));
+  const objectval_tyBM *k_functions_set = BMK_9stpgEfdDDE_7LUgqylTeFI;
+  const objectval_tyBM *k_plain_module = BMK_8g1WBJBhDT9_1QK8IcuWYx2;
+  const objectval_tyBM *k_basiclo_minifunction = BMK_2Z04aTH1OXJ_4ekKKdOCiOM ;
   DBGPRINTF_BM ("complete_module°basiclo*module start recv=%s modgen=%s",
                 objectdbg_BM (_.recv), objectdbg1_BM (_.modgen));
   _.funset = setcast_BM (objgetattr_BM (_.modgen, k_functions_set));
