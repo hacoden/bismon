@@ -1057,6 +1057,8 @@ valfindmethod_BM (const value_tyBM recv, const objectval_tyBM * obselector)
           assert (isclosure_BM ((const value_tyBM) mclos));
           return mclos;
         };
+      if (obclass == BMP_value)
+	break;
       obclass = objgetclassinfosuperclass_BM (obclass);
       loopcnt++;
     }
