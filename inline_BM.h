@@ -106,6 +106,9 @@ valclass_BM (const value_tyBM v)
           return BMP_unspecified;
         }
     }
+#ifndef NDEBUG
+  weakassertfailureat_BM ("valclass_BM with bad type", __FILE__, __LINE__);
+#endif // NDEBUG
   return NULL;
 }                               /* end valclass_BM */
 
