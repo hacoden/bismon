@@ -1791,6 +1791,10 @@ parseobjectcompl_guicmd_BM (struct parser_stBM *pars,
               log_printf_message_BM ("#warning unimplemented ");
               log_object_message_BM (_.targobj);
               log_printf_message_BM (" routine\n");
+              log_printf_message_BM
+                ("  WEAKASSERT_BM(false && \"unimplemented ");
+              log_object_message_BM (_.targobj);
+              log_printf_message_BM (" routine\");\n");
               log_printf_message_BM ("  LOCALRETURN_BM(_.resultv);\n");
               log_printf_message_BM ("} /* end routine ");
               log_object_message_BM (_.targobj);
