@@ -727,6 +727,9 @@ extern GtkWidget *initialize_log_scrollview_BM (void);
 // the periodic GC function
 extern gboolean guiperiodicgarbagecollection_BM (gpointer);
 
+////////////////////////////////////////////////////////////////
+
+/******** GUI functions ***********/
 // browse the object objbrows, using the selector objsel
 extern void browse_object_gui_BM (const objectval_tyBM * objbrows,
                                   const objectval_tyBM * objsel,
@@ -751,14 +754,11 @@ extern void browse_value_BM (const value_tyBM val,
                              int maxdepth, int curdepth);
 
 
-// the function to handle tabautocomplete in command
-void tabautocomplete_gui_cmd_BM (void);
-////////////////////////////////////////////////////////////////
-
-/******** GUI functions ***********/
 extern void browsespacefordepth_BM (int depth);
 extern void browsenewlinefordepth_BM (int depth);
 
+// the function to handle tabautocomplete in command
+void tabautocomplete_gui_cmd_BM (void);
 extern void gcmarkgui_BM (struct garbcoll_stBM *gc);
 extern void gui_gc_message_BM (const char *msg);
 extern void
@@ -857,5 +857,9 @@ extern parser_decorate_nesting_sigBM parsnesting_guicmd_BM;
 
 // decorate start/open/close with nesting_cmdtag & start/open/close tags
 extern parser_decorate_start_nesting_sigBM parsstartnesting_guicmd_BM;
+
+////////////////////////////////////////////////////////////////
+
+/******** agenda functions ***********/
 
 #endif /*FUNDECL_BM_INCLUDED */
