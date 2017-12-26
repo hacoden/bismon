@@ -456,9 +456,9 @@ value_tyBM
 ROUTINEOBJNAME_BM (_4DvEF1tVGFD_6VVLpFn6FPW)    //  dump_scan°hset_object
 (struct stackframe_stBM * stkf,
  const value_tyBM arg1,
- const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4_
- __attribute__ ((unused)), const quasinode_tyBM * restargs_
- __attribute__ ((unused)))
+ const value_tyBM arg2, const value_tyBM arg3,
+ const value_tyBM arg4_ __attribute__ ((unused)),//
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv;
@@ -488,9 +488,9 @@ value_tyBM
 ROUTINEOBJNAME_BM (_7GMLV81ntO3_4NHTv7fCL0A)    // dump_data°hset_object
 (struct stackframe_stBM * stkf,
  const value_tyBM arg1,
- const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4_
- __attribute__ ((unused)), const quasinode_tyBM * restargs_
- __attribute__ ((unused)))
+ const value_tyBM arg2, const value_tyBM arg3, //
+ const value_tyBM arg4_ __attribute__ ((unused)), //
+ const quasinode_tyBM * restargs_  __attribute__ ((unused)))
 {
   objectval_tyBM *k_dump_value = BMK_1FEnnpEkGdI_5DAcVDL5XHG;
   objectval_tyBM *k_put = BMK_9pvzBeIKHXF_8YDPCrQ6OEK;
@@ -752,6 +752,90 @@ ROUTINEOBJNAME_BM (_88cUYsDqSFO_0DKwKLSOmpm)    //
   _.setv = hashsetobj_to_set_BM (objpayload_BM (_.recv));
   LOCALRETURN_BM (_.setv);
 }                               /* end ROUTINE _88cUYsDqSFO_0DKwKLSOmpm set of hset_object */
+
+/****************************************************************/
+
+//// for the method to dump_scan°vector_object
+extern objrout_sigBM ROUTINEOBJNAME_BM (_99PsYq2Nw3w_9q4BJNeQ6Re);
+
+value_tyBM
+ROUTINEOBJNAME_BM (_99PsYq2Nw3w_9q4BJNeQ6Re)    //  dump_scan°vector_object
+(struct stackframe_stBM * stkf,
+ const value_tyBM arg1,
+ const value_tyBM arg2, const value_tyBM arg3,
+ const value_tyBM arg4_ __attribute__ ((unused)),//
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
+{
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 const objectval_tyBM * recv;
+                 objectval_tyBM * dumpob;
+		  value_tyBM compv;
+    );
+  WEAKASSERT_BM (isobject_BM (arg1));
+  _.recv = arg1;
+  _.dumpob = objectcast_BM (arg2);
+  WEAKASSERT_BM (obdumpgetdumper_BM (_.dumpob) != NULL);
+  WEAKASSERT_BM (valtype_BM (arg2) == typayl_dumper_BM);
+  extendedval_tyBM payl = objpayload_BM (_.recv);
+  WEAKASSERT_BM (valtype_BM (payl) == typayl_vectval_BM);
+  assert (arg3 == NULL);
+#warning incomplete  dump_scan°vector_object _99PsYq2Nw3w_9q4BJNeQ6Re
+  assert (restargs_ == NULL);
+  LOCALRETURN_BM ((value_tyBM) _.recv);
+}                               /* end dump_scan°vector_object ROUTINE _99PsYq2Nw3w_9q4BJNeQ6Re */
+
+
+//// for the method to dump_data°vector_object
+
+extern objrout_sigBM ROUTINEOBJNAME_BM (_0y90r6nyAYP_2MmfH2V00B1);
+
+value_tyBM
+ROUTINEOBJNAME_BM (_0y90r6nyAYP_2MmfH2V00B1)    // dump_data°vector_object
+(struct stackframe_stBM * stkf,
+ const value_tyBM arg1,
+ const value_tyBM arg2, const value_tyBM arg3, //
+ const value_tyBM arg4_ __attribute__ ((unused)), //
+ const quasinode_tyBM * restargs_  __attribute__ ((unused)))
+{
+  objectval_tyBM *k_dump_value = BMK_1FEnnpEkGdI_5DAcVDL5XHG;
+  objectval_tyBM *k_put = BMK_9pvzBeIKHXF_8YDPCrQ6OEK;
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 const objectval_tyBM * recv;
+                 const closure_tyBM * clos; objectval_tyBM * dumpob;
+                 objectval_tyBM * bufob;
+                 value_tyBM dumpres;
+    );
+  objectval_tyBM *closconn = NULL;
+  LOCALGETCLOS_BM (_.clos);
+  closconn = closureconn_BM ((const value_tyBM) _.clos);
+  assert (isobject_BM (closconn));
+  WEAKASSERT_BM (isobject_BM (arg1));
+  _.recv = arg1;
+  _.dumpob = objectcast_BM (arg2);
+  WEAKASSERT_BM (obdumpgetdumper_BM (_.dumpob));
+  _.bufob = objectcast_BM (arg3);
+  WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
+  WEAKASSERT_BM (restargs_ == NULL);
+  WEAKASSERT_BM (valtype_BM (objpayload_BM (_.recv)) == typayl_vectval_BM);
+  assert (arg3 == NULL);
+  assert (restargs_ == NULL);
+  /**
+  objstrbufferprintf_BM (_.bufob, "!~ todo (~\t");
+  objstrbuffermoreindent_BM (_.bufob);
+  _.dumpres = send3_BM (k_put, BMP_dump_value,
+                        (struct stackframe_stBM *) &_,
+                        _.bufob, _.dumpob, taggedint_BM (0));
+  objstrbufferprintf_BM (_.bufob, "\t");
+  _.dumpres = send3_BM ((value_tyBM) _.setv, BMP_dump_value,
+                        (struct stackframe_stBM *) &_,
+                        _.bufob, _.dumpob, taggedint_BM (0));
+  objstrbufferlessindent_BM (_.bufob);
+  objstrbufferappendcstr_BM (_.bufob, "\n~)\n");
+  **/
+#warning dump_data°vector_object unimplemented
+  LOCALRETURN_BM (_.recv);
+}                               /* end dump_data vector_object ROUTINE_0y90r6nyAYP_2MmfH2V00B1  */
+
 
 
 /****************************************************************/

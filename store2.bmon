@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 222 objects
+// for 224 objects
 // with 0 modules
 
 
@@ -1685,8 +1685,15 @@ _7XasLoEUKwe_9upxyFeheD5
 !(_0Ie11LN3K5q_0mcL2jRBwgk |=vector_object|
 !~ name (~ vector_object
 ~)
-!@ 1507896488.94
-!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!@ 1514270499.70
+!$_0LK4TzFd6u1_0JFUsrQ4odG |=class|
+!: _0pSnxYMjpqQ_3opFGfXeh5o |=dump_data|
+ % _0y90r6nyAYP_2MmfH2V00B1 ()
+!: _2oNMm2aR91J_4QthSpZxplW |=dump_scan|
+ % _99PsYq2Nw3w_9q4BJNeQ6Re ()
+!~ class (~ |supercl object:| _7T9OwSFlgov_0wVJaK1eZbn
+~)
+
 !)_0Ie11LN3K5q_0mcL2jRBwgk
 
 
@@ -1808,6 +1815,15 @@ _7XasLoEUKwe_9upxyFeheD5
  _3XBrePAliOo_37VlAqBsb5C |=label| ) ~)
 
 !)_0kUyX0U19K2_5mcH4RCaBl9
+
+
+
+!(_0y90r6nyAYP_2MmfH2V00B1
+!@ 1514270578.35
+!$_2Ir1i8qnrA4_3jSkierlc5z |=basiclo_function|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "routine dump_data\u00b0vector_object"
+!)_0y90r6nyAYP_2MmfH2V00B1
 
 
 
@@ -2592,6 +2608,16 @@ _36MhHxakHKT_1ZzV5Xoj5LX
 ) ~)
 
 !)_979hCujWp2g_9tjRbM8Ht1l
+
+
+
+!(_99PsYq2Nw3w_9q4BJNeQ6Re
+!|*
+!@ 1514270620.88
+!$_2Ir1i8qnrA4_3jSkierlc5z |=basiclo_function|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "routine dump_scan\u00b0vector_object"
+!)_99PsYq2Nw3w_9q4BJNeQ6Re
 
 
 
