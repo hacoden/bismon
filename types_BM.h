@@ -97,6 +97,13 @@ struct typedsize_stBM
 };
 typedef struct typedsize_stBM typedsize_tyBM;
 
+struct typedforward_stBM
+{
+  typedsize_tyBM pS;
+  void *forwardptr;
+};
+typedef struct typedforward_stBM typedforward_tyBM;
+
 typedef uint64_t serial63_tyBM;
 
 struct rawid_stBM
@@ -115,7 +122,7 @@ struct allalloc_stBM
 
 struct stringval_stBM           /* the size field is the length in bytes */
 {
-  typedsize_tyBM pA;
+  typedforward_tyBM pA;
   char strv_bytes[];
 };
 typedef struct stringval_stBM stringval_tyBM;   /*tyString_BM */
@@ -125,7 +132,7 @@ typedef struct object_stBM objectval_tyBM;      /*tyObject_BM */
 
 struct seqobval_stBM
 {
-  typedsize_tyBM pA;
+  typedforward_tyBM pA;
   const objectval_tyBM *seq_objs[];
 };
 
@@ -272,7 +279,7 @@ struct parenoffset_stBM
 
 struct nodetree_stBM
 {                               // for tyNode_BM && tyClosure_BM
-  typedsize_tyBM pA;            // size is the number of sons
+  typedforward_tyBM pA;         // size is the number of sons
   objectval_tyBM *nodt_conn;
   value_tyBM nodt_sons[];
 };

@@ -108,20 +108,20 @@
 
 #define LOCALQNODESIZED_BM(Qnam,Conn,Siz) struct {			\
     struct nodetree_stBM __ntree; value_tyBM qsons[Siz]; } Qnam =	\
-      { .__ntree = { .pA = { .pA					\
-			     = { .htyp= typayl_quasinode_BM,		\
-				 .hgc=0, .hash=0 }, .size = (Siz) },	\
+      { .__ntree = { .pA = { .pS =					\
+			     {.pA = { .htyp= typayl_quasinode_BM,	\
+				      .hgc=0, .hash=0 }, .size = (Siz) } }, \
 		     .nodt_conn= (Conn) }, .qsons= {} }
 
 #define LOCALQNODEFIELDED_BM(Qnam,Conn,...) struct {			\
   struct nodetree_stBM __ftree; __VA_ARGS__; } Qnam =			\
       { .__ftree = { .pA						\
-		     = { .pA						\
-			 = { .htyp= typayl_quasinode_BM,		\
+		     = { .pS = 						\
+			 {.pa = { .htyp= typayl_quasinode_BM,		\
 			     .hgc=0, .hash=0 },				\
 			 .size =					\
 			  ((sizeof(Qnam)-offsetof(tree_tyBM,nodt_sons)) \
-			   /sizeof(value_tyBM)) },			\
+			   /sizeof(value_tyBM)) } },			\
 		     .nodt_conn= (Conn) } }
 
 /// the routine inside object of id _60mLNh9vtVY_0pwkHRtJ44k would be
