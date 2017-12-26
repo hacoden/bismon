@@ -27,6 +27,19 @@ weakassertfailureat_BM (const char *condmsg, const char *fil, int lin)
   weakfailure_BM ();
 }                               /* end weakassertfailureat_BM */
 
+value_tyBM
+objrout_placeholder_BM (struct stackframe_stBM *stkf, const value_tyBM arg1 __attribute__ ((unused)),   //
+                        const value_tyBM arg2 __attribute__ ((unused)), //
+                        const value_tyBM arg3 __attribute__ ((unused)), //
+                        const value_tyBM arg4 __attribute__ ((unused)), //
+                        const quasinode_tyBM * restargs
+                        __attribute__ ((unused)))
+{
+  weakassertfailureat_BM ("objrout_placeholder_BM", __FILE__, __LINE__);
+  return NULL;
+}                               /* end objrout_placeholder_BM */
+
+
 void
 abort_BM (void)
 {

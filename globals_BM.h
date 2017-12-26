@@ -130,6 +130,7 @@ extern GtkTextTag *id_logtag_BM;
 extern GtkTextTag *name_logtag_BM;
 extern GtkTextTag *comment_logtag_BM;
 extern GtkTextTag *command_logtag_BM;
+extern GtkTextTag *code_logtag_BM;
 
 extern GtkTextTag *errored_cmdtag_BM;
 extern GtkTextTag *skipped_cmdtag_BM;

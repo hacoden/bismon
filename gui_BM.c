@@ -1,5 +1,6 @@
 // file gui_BM.c
 #include "bismon.h"
+#include "gui_BM.const.h"
 
 GtkWidget *mainwin_BM;
 GtkWidget *errormessagedialog_BM;
@@ -81,6 +82,7 @@ GtkTextTag *time_logtag_BM;
 GtkTextTag *id_logtag_BM;
 GtkTextTag *name_logtag_BM;
 GtkTextTag *comment_logtag_BM;
+GtkTextTag *code_logtag_BM;
 GtkTextTag *command_logtag_BM;
 
 
@@ -1481,7 +1483,7 @@ log_puts_message_BM (const char *msg)
   GtkTextIter it = EMPTY_TEXT_ITER_BM;
   gtk_text_buffer_get_end_iter (logbuf_BM, &it);
   gtk_text_buffer_insert (logbuf_BM, &it, msg, -1);
-}
+}                               /* end log_puts_message_BM */
 
 void
 log_printf_message_BM (const char *fmt, ...)
@@ -1747,6 +1749,7 @@ parseobjectcompl_guicmd_BM (struct parser_stBM *pars,
         parsererrorprintf_BM (pars, lineno, colpos, "missing class after !$");
       if (!nobuild)
         {
+          objectval_tyBM *k_basiclo_function = BMK_2Ir1i8qnrA4_3jSkierlc5z;
           objputclass_BM (_.targobj, _.obclass);
           log_begin_message_BM ();
           log_puts_message_BM ("put class ");
@@ -1755,6 +1758,62 @@ parseobjectcompl_guicmd_BM (struct parser_stBM *pars,
           log_object_message_BM (_.targobj);
           log_puts_message_BM (".");
           log_end_message_BM ();
+          if (_.obclass == k_basiclo_function)
+            {
+              log_begin_message_BM ();
+              log_puts_message_BM ("\n");
+              gint codestartoff = 0;
+              {
+                GtkTextIter it = EMPTY_TEXT_ITER_BM;
+                gtk_text_buffer_get_end_iter (logbuf_BM, &it);
+                codestartoff = gtk_text_iter_get_offset (&it);
+              }
+              log_puts_message_BM ("\n");
+              log_puts_message_BM ("// possible code for ");
+              log_object_message_BM (_.targobj);
+              log_printf_message_BM ("\n\n"
+                                     "extern objrout_sigBM ROUTINEOBJNAME_BM (");
+              log_object_message_BM (_.targobj);
+              log_printf_message_BM (");\n\n"
+                                     "value_tyBM\n" "ROUTINEOBJNAME_BM (");
+              log_object_message_BM (_.targobj);
+              log_printf_message_BM (")\n"
+                                     "(struct stackframe_stBM* stkf, //\n"
+                                     " const value_tyBM arg1, //\n"
+                                     " const value_tyBM arg2, //\n"
+                                     " const value_tyBM arg3, //\n"
+                                     " const value_tyBM arg4, //\n"
+                                     " const quasinode_tyBM* restargs __attribute__((unused)))\n"
+                                     "{\n" "  LOCALFRAME_BM (stkf, /*descr ");
+              log_object_message_BM (_.targobj);
+              log_printf_message_BM ("::*/ NULL,\n"
+                                     "   value_tyBM resultv;\n" "  );\n");
+              log_printf_message_BM ("#warning unimplemented ");
+              log_object_message_BM (_.targobj);
+              log_printf_message_BM (" routine\n");
+              log_printf_message_BM ("  LOCALRETURN_BM(_.resultv);\n");
+              log_printf_message_BM ("} /* end routine ");
+              log_object_message_BM (_.targobj);
+              log_printf_message_BM ("*/\n\n");
+              {
+                GtkTextIter begit = EMPTY_TEXT_ITER_BM;
+                GtkTextIter endit = EMPTY_TEXT_ITER_BM;
+                gtk_text_buffer_get_iter_at_offset (logbuf_BM, &begit,
+                                                    codestartoff);
+                gtk_text_buffer_get_end_iter (logbuf_BM, &endit);
+                gtk_text_buffer_apply_tag (logbuf_BM, code_logtag_BM, &begit,
+                                           &endit);
+              }
+              log_puts_message_BM ("\n");
+              if (!_.targobj->ob_rout && !_.targobj->ob_sig)
+                {
+                  _.targobj->ob_sig = BMP_function_sig;
+                  _.targobj->ob_rout = objrout_placeholder_BM;
+                  log_printf_message_BM ("** added placeholder for ");
+                  log_object_message_BM (_.targobj);
+                }
+              log_end_message_BM ();
+            }
           objtouchnow_BM (_.targobj);
         }
     }
@@ -4118,6 +4177,10 @@ initialize_gui_tags_BM (GtkBuilder * bld)
   if (!blink_cmdtag_BM)
     FATAL_BM ("cannot find blink_cmdtag");
   ////////////////
+  code_logtag_BM =              //
+    gtk_text_tag_table_lookup (logtagtable_BM, "code_logtag");
+  if (!code_logtag_BM)
+    FATAL_BM ("cannot find code_logtag");
   error_logtag_BM =             //
     gtk_text_tag_table_lookup (logtagtable_BM, "error_logtag");
   if (!error_logtag_BM)

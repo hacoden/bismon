@@ -454,10 +454,7 @@ extern objrout_sigBM ROUTINEOBJNAME_BM (_4DvEF1tVGFD_6VVLpFn6FPW);
 
 value_tyBM
 ROUTINEOBJNAME_BM (_4DvEF1tVGFD_6VVLpFn6FPW)    //  dump_scan°hset_object
-(struct stackframe_stBM * stkf,
- const value_tyBM arg1,
- const value_tyBM arg2, const value_tyBM arg3,
- const value_tyBM arg4_ __attribute__ ((unused)),//
+(struct stackframe_stBM * stkf, const value_tyBM arg1, const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4_ __attribute__ ((unused)),   //
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
@@ -486,11 +483,9 @@ extern objrout_sigBM ROUTINEOBJNAME_BM (_7GMLV81ntO3_4NHTv7fCL0A);
 
 value_tyBM
 ROUTINEOBJNAME_BM (_7GMLV81ntO3_4NHTv7fCL0A)    // dump_data°hset_object
-(struct stackframe_stBM * stkf,
- const value_tyBM arg1,
- const value_tyBM arg2, const value_tyBM arg3, //
- const value_tyBM arg4_ __attribute__ ((unused)), //
- const quasinode_tyBM * restargs_  __attribute__ ((unused)))
+(struct stackframe_stBM * stkf, const value_tyBM arg1, const value_tyBM arg2, const value_tyBM arg3,    //
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   objectval_tyBM *k_dump_value = BMK_1FEnnpEkGdI_5DAcVDL5XHG;
   objectval_tyBM *k_put = BMK_9pvzBeIKHXF_8YDPCrQ6OEK;
@@ -760,16 +755,12 @@ extern objrout_sigBM ROUTINEOBJNAME_BM (_99PsYq2Nw3w_9q4BJNeQ6Re);
 
 value_tyBM
 ROUTINEOBJNAME_BM (_99PsYq2Nw3w_9q4BJNeQ6Re)    //  dump_scan°vector_object
-(struct stackframe_stBM * stkf,
- const value_tyBM arg1,
- const value_tyBM arg2, const value_tyBM arg3,
- const value_tyBM arg4_ __attribute__ ((unused)),//
+(struct stackframe_stBM * stkf, const value_tyBM arg1, const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4_ __attribute__ ((unused)),   //
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const objectval_tyBM * recv;
-                 objectval_tyBM * dumpob;
-		  value_tyBM compv;
+                 const objectval_tyBM * recv; objectval_tyBM * dumpob;
+                 value_tyBM compv;
     );
   WEAKASSERT_BM (isobject_BM (arg1));
   _.recv = arg1;
@@ -791,18 +782,15 @@ extern objrout_sigBM ROUTINEOBJNAME_BM (_0y90r6nyAYP_2MmfH2V00B1);
 
 value_tyBM
 ROUTINEOBJNAME_BM (_0y90r6nyAYP_2MmfH2V00B1)    // dump_data°vector_object
-(struct stackframe_stBM * stkf,
- const value_tyBM arg1,
- const value_tyBM arg2, const value_tyBM arg3, //
- const value_tyBM arg4_ __attribute__ ((unused)), //
- const quasinode_tyBM * restargs_  __attribute__ ((unused)))
+(struct stackframe_stBM * stkf, const value_tyBM arg1, const value_tyBM arg2, const value_tyBM arg3,    //
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   objectval_tyBM *k_dump_value = BMK_1FEnnpEkGdI_5DAcVDL5XHG;
   objectval_tyBM *k_put = BMK_9pvzBeIKHXF_8YDPCrQ6OEK;
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const objectval_tyBM * recv;
-                 const closure_tyBM * clos; objectval_tyBM * dumpob;
-                 objectval_tyBM * bufob;
+                 const objectval_tyBM * recv; const closure_tyBM * clos;
+                 objectval_tyBM * dumpob; objectval_tyBM * bufob;
                  value_tyBM dumpres;
     );
   objectval_tyBM *closconn = NULL;

@@ -143,6 +143,8 @@ static inline double objmtime_BM (const objectval_tyBM * obj);
 static inline objectval_tyBM *objsignature_BM (const objectval_tyBM * obj);
 static inline void *objroutaddr_BM (const objectval_tyBM * obj,
                                     const objectval_tyBM * objsig);
+
+extern objrout_sigBM objrout_placeholder_BM;
 static inline void objtouchmtime_BM (objectval_tyBM * obj, double mtime);
 static inline void objtouchnow_BM (objectval_tyBM * obj);
 extern void objputspacenum_BM (objectval_tyBM * obj, unsigned spanum);

@@ -1058,7 +1058,7 @@ valfindmethod_BM (const value_tyBM recv, const objectval_tyBM * obselector)
           return mclos;
         };
       if (obclass == BMP_value)
-	break;
+        break;
       obclass = objgetclassinfosuperclass_BM (obclass);
       loopcnt++;
     }

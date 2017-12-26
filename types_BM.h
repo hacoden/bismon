@@ -293,6 +293,7 @@ typedef value_tyBM objrout_sigBM (struct stackframe_stBM *stkf,
                                   const value_tyBM arg4,
                                   const quasinode_tyBM * restargs);
 
+
 struct object_stBM              /*tyObject_BM */
 {
   typedhead_tyBM pA;
