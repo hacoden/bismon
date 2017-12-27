@@ -671,7 +671,7 @@ extern void gctokenmark_BM (struct garbcoll_stBM *gc,
                             struct parstoken_stBM *tok);
 
 /// the full garbage collector
-extern void fullgarbagecollection_BM (struct stackframe_stBM *stkfram);
+extern void full_garbage_collection_BM (struct stackframe_stBM *stkfram);
 static inline void garbage_collect_if_wanted_BM (struct stackframe_stBM
                                                  *stkfram);
 

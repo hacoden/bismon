@@ -1362,7 +1362,7 @@ garbcollgui_BM (void)
   log_begin_message_BM ();
   log_puts_message_BM ("forced garbage collection");
   log_end_message_BM ();
-  fullgarbagecollection_BM (NULL);
+  full_garbage_collection_BM (NULL);
 }                               /* end garbcollgui_BM */
 
 bool
@@ -4612,7 +4612,7 @@ guiperiodicgarbagecollection_BM (gpointer data __attribute__ ((unused)))
   assert (data == NULL);
   if (atomic_load (&want_garbage_collection_BM) && gtk_main_level () <= 1)
     {
-      fullgarbagecollection_BM (NULL);
+      full_garbage_collection_BM (NULL);
     }
   return TRUE;                  // repeat again later
 }                               /* end guiperiodicgarbagecollection_BM */

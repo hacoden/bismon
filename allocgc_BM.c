@@ -531,7 +531,7 @@ gcframemark_BM (struct garbcoll_stBM *gc, struct stackframe_stBM *stkfram,
 
 static unsigned long countgc_BM;
 void
-fullgarbagecollection_BM (struct stackframe_stBM *stkfram)
+full_garbage_collection_BM (struct stackframe_stBM *stkfram)
 {
   assert (pthread_self () == mainthreadid_BM);
   atomic_store (&want_garbage_collection_BM, false);
@@ -626,7 +626,7 @@ fullgarbagecollection_BM (struct stackframe_stBM *stkfram)
   size_t siz = 0;
   FILE *fil = gui_is_running_BM ? open_memstream (&buf, &siz) : stderr;
   if (!fil)
-    FATAL_BM ("bad fil in fullgarbagecollection_BM (%m)");
+    FATAL_BM ("bad fil in full_garbage_collection_BM (%m)");
   fprintf (fil,
            "@@garbage collection #%ld : %.4f elapsed, %.4f cpu seconds\n",
            countgc_BM, endelapsedtime - GCdata.gc_startelapsedtime,
@@ -718,4 +718,4 @@ fullgarbagecollection_BM (struct stackframe_stBM *stkfram)
       fclose (fil);
       free (buf), buf = NULL;
     };
-}                               /* end fullgarbagecollection_BM */
+}                               /* end full_garbage_collection_BM */

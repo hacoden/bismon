@@ -1027,7 +1027,7 @@ doload_BM (struct stackframe_stBM *_parentframe, struct loader_stBM *ld)
                  (struct stackframe_stBM *) &_);
       todocnt++;
       if (todocnt % 128 == 0)
-        fullgarbagecollection_BM ((struct stackframe_stBM *) &_);
+        full_garbage_collection_BM ((struct stackframe_stBM *) &_);
     }
   // close all files
   for (int ix = 0; ix <= (int) ld->ld_maxnum; ix++)
