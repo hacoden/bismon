@@ -32,7 +32,9 @@
 #include <unistd.h>
 #include "cmacros_BM.h"
 
-void parse_cfile(const char*path, std::set<std::string>& bmconstset)
+int totalnbocc;
+
+int parse_cfile(const char*path, std::set<std::string>& bmconstset, bool verbose=false)
 {
   if (access(path, R_OK))
     {
@@ -93,13 +95,16 @@ void parse_cfile(const char*path, std::set<std::string>& bmconstset)
           std::string curid = line.substr(startpos, endpos-startpos);
           pos = endpos;
           bmconstset.insert(curid);
+          totalnbocc++;
           nbocc++;
         };
       linecnt++;
     }
   while (srcin);
-  printf("processed %d lines from %s with %d occurrences\n",
-         linecnt, path, nbocc);
+  if (verbose)
+    printf("processed %d lines from %s with %d occurrences\n",
+           linecnt, path, nbocc);
+  return linecnt;
 } // end parse_cfile
 
 
@@ -122,7 +127,7 @@ int main(int argc, char**argv)
       auto hpath = argv[2];
       std::set<std::string> bmconstset;
       for (int ix=3; ix<argc; ix++)
-        parse_cfile(argv[ix], bmconstset);
+        parse_cfile(argv[ix], bmconstset, true);
       std::ofstream outh(hpath);
       outh << "// generated header " << hpath << " for "
            << bmconstset.size() << " constants. DONT EDIT" << std::endl;
@@ -137,8 +142,9 @@ int main(int argc, char**argv)
     {
       auto spath = argv[2];
       std::set<std::string> bmconstset;
+      int nblines = 0;
       for (int ix=3; ix<argc; ix++)
-        parse_cfile(argv[ix], bmconstset);
+        nblines += parse_cfile(argv[ix], bmconstset, false);
       std::ofstream outs(spath);
       outs << "/** generated constant file " << spath << std::endl;
       outs << "  from:";
@@ -169,6 +175,8 @@ int main(int argc, char**argv)
         }
       outs << " (const char*)0 };" << std::endl;
       outs << "//- eof generated constant file " << spath << std::endl;
+      printf("processed %d lines in %d files with %d occurrences of %d constants\n",
+             nblines, argc-3, totalnbocc, (int) bmconstset.size());
     }
   else
     {
