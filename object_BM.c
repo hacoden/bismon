@@ -458,11 +458,11 @@ objectinteriorgcmark_BM (struct garbcoll_stBM *gc, objectval_tyBM * obj)
   if (obj->ob_routaddr && obj->ob_sig)
     gcobjmark_BM (gc, obj->ob_sig);
   if (obj->ob_compvec)
-    datavectgcmark_BM (gc, obj->ob_compvec, 0);
+    obj->ob_compvec = datavectgcproc_BM (gc, obj->ob_compvec, 0);
   if (obj->ob_attrassoc)
-    assocgcmark_BM (gc, obj->ob_attrassoc, 0);
+    obj->ob_attrassoc = assocgcproc_BM (gc, obj->ob_attrassoc, 0);
   if (obj->ob_payl)
-    gcextendedmark_BM (gc, obj->ob_payl, 0);
+    obj->ob_payl = extendedgcproc_BM (gc, obj->ob_payl, 0);
 }                               /* end objectinteriorgcmark_BM */
 
 ////////////////////////////////////////////////////////////////
@@ -941,7 +941,7 @@ classinfogcmark_BM (struct garbcoll_stBM *gc, struct classinfo_stBM *clinf,
   if (clinf->clinf_superclass)
     gcobjmark_BM (gc, (objectval_tyBM *) clinf->clinf_superclass);
   if (clinf->clinf_dictmeth)
-    assocgcmark_BM (gc, clinf->clinf_dictmeth, depth);
+    clinf->clinf_dictmeth = assocgcproc_BM (gc, clinf->clinf_dictmeth, depth);
 }                               /* end classinfogcmark_BM */
 
 void

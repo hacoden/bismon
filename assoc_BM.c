@@ -562,14 +562,14 @@ assoc_removeattr_BM (anyassoc_tyBM * assoc, const objectval_tyBM * obattr)
   return assoc;                 // key not found
 }                               /* end assoc_removeattr_BM */
 
-void
-assocgcmark_BM (struct garbcoll_stBM *gc, anyassoc_tyBM * assoc, int depth)
+void *
+assocgcproc_BM (struct garbcoll_stBM *gc, anyassoc_tyBM * assoc, int depth)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
   assert (isassoc_BM (assoc));
   uint8_t oldmark = ((typedhead_tyBM *) assoc)->hgc;
   if (oldmark)
-    return;
+    return assoc;
   ((typedhead_tyBM *) assoc)->hgc = MARKGC_BM;
   gc->gc_nbmarks++;
   if (valtype_BM ((const value_tyBM) assoc) == typayl_assocbucket_BM)
@@ -598,15 +598,17 @@ assocgcmark_BM (struct garbcoll_stBM *gc, anyassoc_tyBM * assoc, int depth)
                   if (curkeyob && curval)
                     {
                       gcobjmark_BM (gc, (objectval_tyBM *) curkeyob);
-                      gcvaluemark_BM (gc, curval, depth + 1);
+                      VALUEGCPROC_BM (gc, curval, depth + 1);
+                      curbuckpair->apairs_ent[pix].asso_val = curval;
                     }
                 }
             }
         }
+      return assoc;
     }
   else if (valtype_BM ((const value_tyBM) assoc) == typayl_assocpairs_BM)
     {
-      const struct assocpairs_stBM *curpairs = assoc;
+      struct assocpairs_stBM *curpairs = assoc;
       unsigned bucklen = ((typedhead_tyBM *) curpairs)->rlen;
       for (unsigned pix = 0; pix < bucklen; pix++)
         {
@@ -616,10 +618,12 @@ assocgcmark_BM (struct garbcoll_stBM *gc, anyassoc_tyBM * assoc, int depth)
           if (curkeyob && curval)
             {
               gcobjmark_BM (gc, (objectval_tyBM *) curkeyob);
-              gcvaluemark_BM (gc, curval, depth + 1);
+              VALUEGCPROC_BM (gc, curval, depth + 1);
+              curpairs->apairs_ent[pix].asso_val = curval;
             }
         }
+      return assoc;
     }
   else
     FATAL_BM ("unexpected assoc @%p", assoc);
-}                               /* end assocgcmark_BM */
+}                               /* end assocgcproc_BM */

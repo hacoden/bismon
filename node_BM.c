@@ -112,21 +112,23 @@ closuregckeep_BM (struct garbcoll_stBM *gc, closure_tyBM * clos)
 }                               /* end closuregckeep_BM */
 
 
-void
-closuregcmark_BM (struct garbcoll_stBM *gc, closure_tyBM * clos, int depth)
+void *
+closuregcproc_BM (struct garbcoll_stBM *gc, closure_tyBM * clos, int depth)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
   assert (valtype_BM ((const value_tyBM) clos) == tyClosure_BM);
+#warning closuregcproc_BM should forward when needed
   uint8_t oldmark = ((typedhead_tyBM *) clos)->hgc;
   if (oldmark)
-    return;
+    return clos;
   ((typedhead_tyBM *) clos)->hgc = MARKGC_BM;
   gc->gc_nbmarks++;
   gcobjmark_BM (gc, clos->nodt_conn);
   unsigned size = ((typedsize_tyBM *) clos)->size;
   for (unsigned ix = 0; ix < size; ix++)
-    gcvaluemark_BM (gc, clos->nodt_sons[ix], depth + 1);
-}                               /* end nodegcmark_BM */
+    VALUEGCPROC_BM (gc, clos->nodt_sons[ix], depth + 1);
+  return clos;
+}                               /* end nodegcproc_BM */
 
 
 
@@ -246,24 +248,26 @@ nodegckeep_BM (struct garbcoll_stBM *gc, node_tyBM * nod)
 
 
 
-void
-nodegcmark_BM (struct garbcoll_stBM *gc, node_tyBM * nod, int depth)
+void *
+nodegcproc_BM (struct garbcoll_stBM *gc, node_tyBM * nod, int depth)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
   assert (valtype_BM ((const value_tyBM) nod) == tyNode_BM);
+#warning nodegcproc_BM should forward when needed
   uint8_t oldmark = ((typedhead_tyBM *) nod)->hgc;
   if (oldmark)
-    return;
+    return nod;
   ((typedhead_tyBM *) nod)->hgc = MARKGC_BM;
   gc->gc_nbmarks++;
   gcobjmark_BM (gc, nod->nodt_conn);
   unsigned size = ((typedsize_tyBM *) nod)->size;
   for (unsigned ix = 0; ix < size; ix++)
-    gcvaluemark_BM (gc, nod->nodt_sons[ix], depth + 1);
+    VALUEGCPROC_BM (gc, nod->nodt_sons[ix], depth + 1);
+  return nod;
 }                               /* end nodegcmark_BM */
 
-void
-quasinodegcmark_BM (struct garbcoll_stBM *gc, quasinode_tyBM * qnod,
+void *
+quasinodegcproc_BM (struct garbcoll_stBM *gc, quasinode_tyBM * qnod,
                     int depth)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
@@ -272,12 +276,13 @@ quasinodegcmark_BM (struct garbcoll_stBM *gc, quasinode_tyBM * qnod,
   gcobjmark_BM (gc, qnod->nodt_conn);
   unsigned size = ((typedsize_tyBM *) qnod)->size;
   for (unsigned ix = 0; ix < size; ix++)
-    gcvaluemark_BM (gc, qnod->nodt_sons[ix], depth + 1);
-}                               /* end quasinodegcmark_BM */
+    VALUEGCPROC_BM (gc, qnod->nodt_sons[ix], depth + 1);
+  return qnod;
+}                               /* end quasinodegcproc_BM */
 
 
 value_tyBM
-apply0_BM (const closure_tyBM * clos, struct stackframe_stBM *stkf)
+apply0_BM (const closure_tyBM * clos, struct stackframe_stBM * stkf)
 {
   assert (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
   if (!isclosure_BM ((const value_tyBM) clos))

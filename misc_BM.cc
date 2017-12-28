@@ -26,7 +26,7 @@ struct StrcmpLess_BM
 //// order with
 struct ValStringLess_BM
 {
-  inline bool operator() (const stringval_tyBM*vs1, const stringval_tyBM*vs2) const
+  inline bool operator() ( stringval_tyBM*vs1,  stringval_tyBM*vs2) const
   {
     assert (valtype_BM((const value_tyBM)vs1) == tyString_BM);
     assert (valtype_BM((const value_tyBM)vs2) == tyString_BM);
@@ -341,7 +341,7 @@ gcmarkglobals_BM(struct garbcoll_stBM*gc)
 {
   for (auto it: mapglobals_BM)
     if (it.second && *it.second)
-      gcvaluemark_BM(gc, *it.second, 0);
+      gcobjmark_BM(gc, *it.second);
 } // end gcmarkglobals_BM
 
 
@@ -468,7 +468,7 @@ openmoduleforloader_BM(const rawid_tyBM modid,struct loader_stBM*ld, struct  sta
 
 ////////////////////////////////////////////////////////////////
 
-typedef std::map<const stringval_tyBM*,const value_tyBM,ValStringLess_BM> dictmap_claBM;
+typedef std::map<stringval_tyBM*,value_tyBM,ValStringLess_BM> dictmap_claBM;
 
 struct dict_stBM*
 dictmake_BM(void)
@@ -493,10 +493,10 @@ dictgcmark_BM(struct garbcoll_stBM *gc, struct dict_stBM*dict,
     return;
   ((typedhead_tyBM *)dict)->hgc = MARKGC_BM;
   auto& dicm = *(dictmap_claBM*)dict->dict_data;
-  for (auto it : dicm)
+  for (auto& it : dicm)
     {
-      gcvaluemark_BM(gc, (const value_tyBM)it.first, depth+1);
-      gcvaluemark_BM(gc, (const value_tyBM)it.second, depth+1);
+      VALUEGCPROC_BM(gc, *(void**) &it.first, depth+1);
+      VALUEGCPROC_BM(gc, *(void**) &it.second, depth+1);
     }
 } // end dictgcmark_BM
 
@@ -533,7 +533,7 @@ dictget_BM(const struct dict_stBM* dict, const stringval_tyBM*str)
   if (!isstring_BM((const value_tyBM)str))
     return nullptr;
   auto& dicm = *(dictmap_claBM*)dict->dict_data;
-  auto it = dicm.find(str);
+  auto it = dicm.find(const_cast<stringval_tyBM*>(str));
   if (it == dicm.end()) return nullptr;
   return it->second;
 } // end dictget_BM
@@ -558,8 +558,8 @@ void dictput_BM(struct dict_stBM* dict, const stringval_tyBM*str, const value_ty
   auto& dicm = *(dictmap_claBM*)dict->dict_data;
   if (dicm.size() > MAXSIZE_BM)
     FATAL_BM("too big dict %lu", (long) dicm.size());
-  if (val) dicm.insert({str,val});
-  else dicm.erase(str);
+  if (val) dicm.insert({const_cast<stringval_tyBM*>(str),(void*)val});
+  else dicm.erase(const_cast<stringval_tyBM*>(str));
 } // end dictput_BM
 
 
@@ -570,7 +570,7 @@ void dictremove_BM(struct dict_stBM* dict, const stringval_tyBM*str)
   if (!isstring_BM((const value_tyBM)str))
     return;
   auto& dicm = *(dictmap_claBM*)dict->dict_data;
-  dicm.erase(str);
+  dicm.erase(const_cast<stringval_tyBM*>(str));
 } // end dictremove_BM
 
 
@@ -587,7 +587,7 @@ dictkeyafter_BM(struct dict_stBM* dict, const stringval_tyBM*str)
       auto firstn = dicm.begin();
       return firstn->first;
     }
-  auto itn = dicm.upper_bound(str);
+  auto itn = dicm.upper_bound(const_cast<stringval_tyBM*>(str));
   if (itn != dicm.end())
     return itn->first;
   return nullptr;
@@ -607,7 +607,7 @@ dictkeysameorafter_BM(struct dict_stBM* dict, const stringval_tyBM*str)
       auto firstn = dicm.begin();
       return firstn->first;
     }
-  auto itn = dicm.lower_bound(str);
+  auto itn = dicm.lower_bound(const_cast<stringval_tyBM*>(str));
   if (itn != dicm.end())
     return itn->first;
   return nullptr;
@@ -628,7 +628,7 @@ dictkeybefore_BM(struct dict_stBM* dict, const stringval_tyBM*str)
       lastn--;
       return lastn->first;
     }
-  auto itn = dicm.lower_bound(str);
+  auto itn = dicm.lower_bound(const_cast<stringval_tyBM*>(str));
   if (itn != dicm.begin())
     itn--;
   else

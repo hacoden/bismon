@@ -9,6 +9,13 @@
 #define CLEARMGC_BM 0
 #define GCMAGIC_BM 24501383     /*0x175dc87 */
 
+#define VALUEGCPROC_BM(Gc,Val,Depth)				\
+  do { if ((Val)!=NULL)						\
+      Val = valuegcproc_BM((Gc),(void*)(Val),(Depth)); } while(0)
+
+#define EXTENDEDGCPROC_BM(Gc,Xval,Depth) \
+  do { Xval = extendedgcproc_BM((Gc),(Xval),(Depth)); } while(0)
+
 #define HASHSETEMPTYSLOT_BM ((void*)(-1))
 
 #define STRBUFFERWANTEDWIDTH_BM 80

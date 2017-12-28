@@ -9,9 +9,9 @@ loadergcmark_BM (struct garbcoll_stBM *gc, struct loader_stBM *ld)
   assert (gc && gc->gc_magic == GCMAGIC_BM);
   assert (valtype_BM ((const value_tyBM) ld) == typayl_loader_BM);
   assert (ld->ld_magic == LOADERMAGIC_BM);
-  gcextendedmark_BM (gc, ld->ld_objhset, 0);
-  gcextendedmark_BM (gc, ld->ld_modhset, 0);
-  gcextendedmark_BM (gc, ld->ld_todolist, 0);
+  EXTENDEDGCPROC_BM (gc, ld->ld_objhset, 0);
+  EXTENDEDGCPROC_BM (gc, ld->ld_modhset, 0);
+  EXTENDEDGCPROC_BM (gc, ld->ld_todolist, 0);
 }                               /* end loadergcmark_BM */
 
 void

@@ -162,6 +162,16 @@ makestringlen_BM (const char *cstr, long len)
   return strv;
 }                               /* end makestringlen_BM */
 
+void *
+stringgcproc_BM (struct garbcoll_stBM *gc, stringval_tyBM * str)
+{
+  assert (gc && gc->gc_magic == GCMAGIC_BM);
+  assert (((typedhead_tyBM *) str)->htyp == tyString_BM);
+  ((typedhead_tyBM *) str)->hgc = MARKGC_BM;
+#warning stringgcproc_BM should forward when needed
+  gc->gc_nbmarks++;
+  return str;
+}                               /* end stringgcproc_BM */
 
 void
 stringgcdestroy_BM (struct garbcoll_stBM *gc, stringval_tyBM * str)

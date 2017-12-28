@@ -105,19 +105,21 @@ tuplecompnth_BM (const tupleval_tyBM * tup, int rk)
   return (objectval_tyBM *) tup->seq_objs[rk];
 }                               /* end tuplecompnth_BM */
 
-void
-tuplegcmark_BM (struct garbcoll_stBM *gc, tupleval_tyBM * tup)
+void *
+tuplegcproc_BM (struct garbcoll_stBM *gc, tupleval_tyBM * tup)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
   assert (valtype_BM ((const value_tyBM) tup) == tyTuple_BM);
+#warning tuplegcproc_BM should forward
   uint8_t oldmark = ((typedhead_tyBM *) tup)->hgc;
   if (oldmark)
-    return;
+    return tup;
   ((typedhead_tyBM *) tup)->hgc = MARKGC_BM;
   gc->gc_nbmarks++;
   unsigned siz = ((typedsize_tyBM *) tup)->size;
   for (unsigned ix = 0; ix < siz; ix++)
     gcobjmark_BM (gc, (objectval_tyBM *) tup->seq_objs[ix]);
+  return tup;
 }                               /* end tuplegcmark_BM */
 
 ////////////////////////////////////////////////////////////////
@@ -320,19 +322,21 @@ sequencenthcomp_BM (const seqobval_tyBM * sq, int rk)
   return NULL;
 }                               /* end sequencenthcomp_BM */
 
-void
-setgcmark_BM (struct garbcoll_stBM *gc, setval_tyBM * set)
+void *
+setgcproc_BM (struct garbcoll_stBM *gc, setval_tyBM * set)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
   assert (valtype_BM ((const value_tyBM) set) == tySet_BM);
+#warning setgcproc_BM should sometimes forward
   uint8_t oldmark = ((typedhead_tyBM *) set)->hgc;
   if (oldmark)
-    return;
+    return set;
   ((typedhead_tyBM *) set)->hgc = MARKGC_BM;
   gc->gc_nbmarks++;
   unsigned siz = ((typedsize_tyBM *) set)->size;
   for (unsigned ix = 0; ix < siz; ix++)
     gcobjmark_BM (gc, (objectval_tyBM *) set->seq_objs[ix]);
+  return set;
 }                               /* end setgcmark_BM */
 
 
@@ -581,20 +585,21 @@ datavect_to_node_BM (struct datavectval_stBM *dvec,
 }                               /* end datavect_to_node_BM */
 
 
-void
-datavectgcmark_BM (struct garbcoll_stBM *gc,
-                   const struct datavectval_stBM *dvec, int depth)
+void *
+datavectgcproc_BM (struct garbcoll_stBM *gc,
+                   struct datavectval_stBM *dvec, int depth)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
   assert (valtype_BM ((const value_tyBM) dvec) == typayl_vectval_BM);
   uint8_t oldmark = ((typedhead_tyBM *) dvec)->hgc;
   if (oldmark)
-    return;
+    return dvec;
   ((typedhead_tyBM *) dvec)->hgc = MARKGC_BM;
   gc->gc_nbmarks++;
   unsigned dlen = ((typedhead_tyBM *) dvec)->rlen;
   unsigned dcnt = ((typedsize_tyBM *) dvec)->size;
   assert (dcnt <= dlen);
   for (unsigned ix = 0; ix < dcnt; ix++)
-    gcvaluemark_BM (gc, dvec->vec_data[ix], depth + 1);
-}                               /* end datavectgcmark_BM  */
+    VALUEGCPROC_BM (gc, dvec->vec_data[ix], depth + 1);
+  return dvec;
+}                               /* end datavectgcproc_BM  */

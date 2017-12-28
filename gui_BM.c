@@ -223,20 +223,20 @@ gcmarkgui_BM (struct garbcoll_stBM *gc)
     {
       for (unsigned ix = 0; ix < browserobulen_BM; ix++)
         {
-          gcvaluemark_BM (gc, (value_tyBM) browsedobj_BM[ix].brow_obj, 0);
-          gcvaluemark_BM (gc, (value_tyBM) browsedobj_BM[ix].brow_objsel, 0);
+          gcobjmark_BM (gc, browsedobj_BM[ix].brow_obj);
+          gcobjmark_BM (gc, browsedobj_BM[ix].brow_objsel);
         }
     };
   if (browsedval_BM)
     {
       for (unsigned ix = 0; ix < browsednvulen_BM; ix++)
         {
-          gcvaluemark_BM (gc, browsedval_BM[ix].brow_val, 0);
-          gcvaluemark_BM (gc, (value_tyBM) browsedval_BM[ix].brow_name, 0);
+          VALUEGCPROC_BM (gc, browsedval_BM[ix].brow_val, 0);
+          VALUEGCPROC_BM (gc, browsedval_BM[ix].brow_name, 0);
         }
     }
   if (complsetcmd_BM)
-    gcvaluemark_BM (gc, (value_tyBM) complsetcmd_BM, 0);
+    VALUEGCPROC_BM (gc, complsetcmd_BM, 0);
 }                               /* end gcmarkgui_BM */
 
 

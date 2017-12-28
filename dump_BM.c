@@ -6,11 +6,11 @@ dumpgcmark_BM (struct garbcoll_stBM *gc, struct dumper_stBM *du)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
   assert (((typedhead_tyBM *) du)->htyp == typayl_dumper_BM);
-  gcvaluemark_BM (gc, (value_tyBM) du->dump_object, 0);
-  gcvaluemark_BM (gc, (value_tyBM) du->dump_dir, 0);
-  gcextendedmark_BM (gc, (value_tyBM) du->dump_hset, 0);
-  gcextendedmark_BM (gc, (value_tyBM) du->dump_scanlist, 0);
-  gcextendedmark_BM (gc, (value_tyBM) du->dump_todolist, 0);
+  gcobjmark_BM (gc, (value_tyBM) du->dump_object);
+  VALUEGCPROC_BM (gc, du->dump_dir, 0);
+  EXTENDEDGCPROC_BM (gc, du->dump_hset, 0);
+  EXTENDEDGCPROC_BM (gc, du->dump_scanlist, 0);
+  EXTENDEDGCPROC_BM (gc, du->dump_todolist, 0);
 }                               /* end dumpgcmark_BM */
 
 void

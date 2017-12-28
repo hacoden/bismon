@@ -381,8 +381,7 @@ listgcmark_BM (struct garbcoll_stBM *gc, struct listtop_stBM *lis, int depth)
     {
       for (unsigned ix = 0; ix < LINKSIZE_BM; ix++)
         {
-          const value_tyBM val = link->link_mems[ix];
-          gcvaluemark_BM (gc, val, depth + 1);
+          VALUEGCPROC_BM (gc, link->link_mems[ix], depth + 1);
           cnt++;
           if (cnt > MAXSIZE_BM)
             FATAL_BM ("huge or circular list %u with %d links", cnt, nblinks);

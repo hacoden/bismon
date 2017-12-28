@@ -66,166 +66,108 @@ allocgcty_BM (unsigned type, size_t sz)
 
 
 
-void
-gcvaluemark_BM (struct garbcoll_stBM *gc, value_tyBM val, int depth)
+void *
+valuegcproc_BM (struct garbcoll_stBM *gc, value_tyBM val, int depth)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
   if (!val)
-    return;
+    return NULL;
   if (depth >= MAXDEPTHGC_BM)
-    FATAL_BM ("too deep %u gcvaluemark", depth);
+    FATAL_BM ("too deep %u valuegcproc_BM", depth);
   int ty = valtype_BM (val);
   if (!ty || ty == tyInt_BM)
-    return;
+    return val;
   uint8_t oldmark = ((typedhead_tyBM *) val)->hgc;
   if (oldmark)
-    return;
+    return val;
   switch (ty)
     {
     case tyString_BM:
-      ((typedhead_tyBM *) val)->hgc = MARKGC_BM;
-      gc->gc_nbmarks++;
-      return;
+      return stringgcproc_BM (gc, (stringval_tyBM *) val);
     case tyObject_BM:
       gcobjmark_BM (gc, val);
-      return;
+      return val;
     case tySet_BM:
-      setgcmark_BM (gc, (setval_tyBM *) val);
-      return;
+      return setgcproc_BM (gc, (setval_tyBM *) val);
     case tyTuple_BM:
-      tuplegcmark_BM (gc, (tupleval_tyBM *) val);
-      return;
+      return tuplegcproc_BM (gc, (tupleval_tyBM *) val);
     case tyNode_BM:
-      nodegcmark_BM (gc, (node_tyBM *) val, depth);
-      return;
+      return nodegcproc_BM (gc, (node_tyBM *) val, depth);
     case tyClosure_BM:
-      closuregcmark_BM (gc, (closure_tyBM *) val, depth);
-      return;
+      return closuregcproc_BM (gc, (closure_tyBM *) val, depth);
     case tyUnspecified_BM:
-      return;
+      return val;
     default:
-      WEAKASSERTWARN_BM (ty < type_LASTREAL_BM);
-      fprintf (stderr,
-               "%s:%d gcvaluemark ty#%d (%s) unexpected for val@%p depth=%d\n",
-               __FILE__, __LINE__, ty, typestring_BM (ty), val, depth);
-      fflush (NULL);
-      assert (ty <= typayl_LAST_BM);
-      break;
+      FATAL_BM ("valuegcproc_BM ty#%d (%s) unexpected for val@%p depth=%d\n",
+                ty, typestring_BM (ty), val, depth);
     };
-  /// obsolete
-  switch (ty)
-    {
-#warning extended values should be forbidden in gcvaluemark_BM
-    case typayl_assocpairs_BM:
-    case typayl_assocbucket_BM:
-      assocgcmark_BM (gc, (anyassoc_tyBM *) val, depth);
-      return;
-    case typayl_hashsetobj_BM:
-      hashsetgcmark_BM (gc, (struct hashsetobj_stBM *) val);
-      return;
-    case typayl_listtop_BM:
-      listgcmark_BM (gc, (struct listtop_stBM *) val, depth);
-      return;
-    case typayl_strbuffer_BM:
-      strbuffergcmark_BM (gc, (struct strbuffer_stBM *) val, depth);
-      return;
-    case typayl_loader_BM:
-      loadergcmark_BM (gc, (struct loader_stBM *) val);
-      return;
-    case typayl_dumper_BM:
-      dumpgcmark_BM (gc, (struct dumper_stBM *) val);
-      return;
-    case typayl_quasinode_BM:
-      quasinodegcmark_BM (gc, (quasinode_tyBM *) val, depth);
-      return;
-    case typayl_vectval_BM:
-      datavectgcmark_BM (gc, (struct datavectval_stBM *) val, depth);
-      return;
-    case typayl_classinfo_BM:
-      classinfogcmark_BM (gc, (struct classinfo_stBM *) val, depth);
-      return;
-    case typayl_dict_BM:
-      dictgcmark_BM (gc, (struct dict_stBM *) val, depth);
-      return;
-    default:
-      FATAL_BM ("gcvaluemark ty#%d unexpected for val@%p depth=%d",
-                ty, val, depth);
-    }
-}                               /* end gcvaluemark_BM */
+}                               /* end valuegcproc_BM */
 
-void
-gcextendedmark_BM (struct garbcoll_stBM *gc, extendedval_tyBM xval, int depth)
+void *
+extendedgcproc_BM (struct garbcoll_stBM *gc, extendedval_tyBM xval, int depth)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
   if (!xval)
-    return;
+    return NULL;
   if (depth >= MAXDEPTHGC_BM)
     FATAL_BM ("too deep %u gcextendedmark", depth);
   int ty = valtype_BM (xval);
   if (!ty || ty == tyInt_BM)
-    return;
+    return xval;
   uint8_t oldmark = ((typedhead_tyBM *) xval)->hgc;
   if (oldmark)
-    return;
+    return xval;
   switch (ty)
     {
     case tyString_BM:
-      ((typedhead_tyBM *) xval)->hgc = MARKGC_BM;
-      gc->gc_nbmarks++;
-      return;
+      return stringgcproc_BM (gc, (stringval_tyBM *) xval);
     case tyUnspecified_BM:
-      return;
+      return xval;
     case tyObject_BM:
       gcobjmark_BM (gc, xval);
-      return;
+      return xval;
     case tySet_BM:
-      setgcmark_BM (gc, (setval_tyBM *) xval);
-      return;
+      return setgcproc_BM (gc, (setval_tyBM *) xval);
     case tyTuple_BM:
-      tuplegcmark_BM (gc, (tupleval_tyBM *) xval);
-      return;
+      return tuplegcproc_BM (gc, (tupleval_tyBM *) xval);
     case tyNode_BM:
-      nodegcmark_BM (gc, (node_tyBM *) xval, depth);
-      return;
+      return nodegcproc_BM (gc, (node_tyBM *) xval, depth);
     case tyClosure_BM:
-      closuregcmark_BM (gc, (closure_tyBM *) xval, depth);
-      return;
+      return closuregcproc_BM (gc, (closure_tyBM *) xval, depth);
+      ///
     case typayl_assocpairs_BM:
     case typayl_assocbucket_BM:
-      assocgcmark_BM (gc, (anyassoc_tyBM *) xval, depth);
-      return;
+      return assocgcproc_BM (gc, (anyassoc_tyBM *) xval, depth);
     case typayl_hashsetobj_BM:
       hashsetgcmark_BM (gc, (struct hashsetobj_stBM *) xval);
-      return;
+      return xval;
     case typayl_listtop_BM:
       listgcmark_BM (gc, (struct listtop_stBM *) xval, depth);
-      return;
+      return xval;
     case typayl_strbuffer_BM:
       strbuffergcmark_BM (gc, (struct strbuffer_stBM *) xval, depth);
-      return;
+      return xval;
     case typayl_loader_BM:
       loadergcmark_BM (gc, (struct loader_stBM *) xval);
-      return;
+      return xval;
     case typayl_dumper_BM:
       dumpgcmark_BM (gc, (struct dumper_stBM *) xval);
-      return;
+      return xval;
     case typayl_quasinode_BM:
-      quasinodegcmark_BM (gc, (quasinode_tyBM *) xval, depth);
-      return;
+      return quasinodegcproc_BM (gc, (quasinode_tyBM *) xval, depth);
     case typayl_vectval_BM:
-      datavectgcmark_BM (gc, (struct datavectval_stBM *) xval, depth);
-      return;
+      return datavectgcproc_BM (gc, (struct datavectval_stBM *) xval, depth);
     case typayl_classinfo_BM:
       classinfogcmark_BM (gc, (struct classinfo_stBM *) xval, depth);
-      return;
+      return xval;
     case typayl_dict_BM:
       dictgcmark_BM (gc, (struct dict_stBM *) xval, depth);
-      return;
+      return xval;
     default:
-      FATAL_BM ("gcextendedmark ty#%d unexpected for xval@%p depth=%d",
+      FATAL_BM ("extendedgcproc_BM ty#%d unexpected for xval@%p depth=%d",
                 ty, xval, depth);
     }
-}                               /* end gcextendedmark_BM */
+}                               /* end extendedgcproc_BM */
 
 
 void
@@ -507,10 +449,9 @@ gcframemark_BM (struct garbcoll_stBM *gc, struct stackframe_stBM *stkfram,
             FATAL_BM ("too big framesize %u, curfram=%p, framcnt#%d",
                       framsize, stkfram, framcnt);
           if (stkfram->stkfram_callclos)
-            gcvaluemark_BM (gc, (value_tyBM) (stkfram->stkfram_callclos),
-                            depth + 1);
+            VALUEGCPROC_BM (gc, (stkfram->stkfram_callclos), depth + 1);
           for (unsigned ix = 0; ix < framsize; ix++)
-            gcvaluemark_BM (gc, stkfram->stkfram_locals[ix], depth + 1);
+            VALUEGCPROC_BM (gc, stkfram->stkfram_locals[ix], depth + 1);
         }
       else if (((typedhead_tyBM *) stkfram)->htyp == typayl_SpecialFrame_BM)
         {
