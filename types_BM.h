@@ -69,7 +69,7 @@ enum gctyenum_BM
   typayl__SpareY_BM,
   typayl__SpareZ_BM,
   ///
-  typayl_quasinode_BM,          // stack allocated!
+  typayl_quasinode_BM = 0xee00, // 60928, stack allocated!
   //
   //
   typayl_SpecialFrame_BM = 0xfffe,

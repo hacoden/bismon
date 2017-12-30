@@ -1,10 +1,17 @@
 // file main_BM.c
 #include "bismon.h"
+#include <gtk/gtk.h>
+#include <glib.h>
+#include <glib/giochannel.h>
 
 struct timespec startrealtimespec_BM;
 void *dlprog_BM;
 bool gui_is_running_BM;
 const char myhostname_BM[80];
+
+GIOChannel *defer_gtk_readpipechan_BM;
+int defer_gtk_readpipefd_BM = -1;
+int defer_gtk_writepipefd_BM = -1;
 
 extern void weakfailure_BM (void);
 
@@ -28,7 +35,8 @@ weakassertfailureat_BM (const char *condmsg, const char *fil, int lin)
 }                               /* end weakassertfailureat_BM */
 
 value_tyBM
-objrout_placeholder_BM (struct stackframe_stBM *stkf, const value_tyBM arg1 __attribute__ ((unused)),   //
+objrout_placeholder_BM (struct stackframe_stBM *stkf __attribute__ ((unused)),  //
+                        const value_tyBM arg1 __attribute__ ((unused)), //
                         const value_tyBM arg2 __attribute__ ((unused)), //
                         const value_tyBM arg3 __attribute__ ((unused)), //
                         const value_tyBM arg4 __attribute__ ((unused)), //
@@ -260,6 +268,9 @@ idqcmp_BM (const void *p1, const void *p2)
 
 
 static void rungui_BM (bool newgui);
+
+
+
 //// see also https://github.com/dtrebbien/GNOME.supp and
 //// https://stackoverflow.com/q/16659781/841108 to use valgrind with
 //// GTK appplications
@@ -388,9 +399,91 @@ main (int argc, char **argv)
   fflush (NULL);
 }                               /* end main */
 
+extern bool did_deferredgtk_BM (void);
+
+static gboolean
+deferpipereadhandler_BM (GIOChannel * source,
+                         GIOCondition condition __attribute__ ((unused)),
+                         gpointer data __attribute__ ((unused)))
+{
+  if (!source)
+    return false;
+  gchar buf[32] = "";
+  for (;;)
+    {
+      memset (buf, 0, sizeof (buf));
+      gsize nbrd = 0;
+      GIOStatus st =
+        g_io_channel_read_chars (source, buf, sizeof (buf) - 1, &nbrd, NULL);
+      if (st == G_IO_STATUS_EOF)
+        return false;
+      if (!did_deferredgtk_BM ())
+        return TRUE;
+      if (st == G_IO_STATUS_NORMAL && nbrd > 0)
+        return TRUE;
+    }
+  return TRUE;                  // to keep watching
+}                               /* end deferpipereadhandler_BM */
+
+
+extern void do_internal_deferred_apply3_gtk_BM (const closure_tyBM * clos,
+                                                value_tyBM arg1,
+                                                value_tyBM arg2,
+                                                value_tyBM arg3);
+extern void do_internal_deferred_send3_gtk_BM (value_tyBM recv,
+                                               objectval_tyBM * obsel,
+                                               value_tyBM arg1,
+                                               value_tyBM arg2,
+                                               value_tyBM arg3);
+
+// called from did_deferredgtk_BM
+void
+do_internal_deferred_apply3_gtk_BM (const closure_tyBM * clos,
+                                    value_tyBM arg1, value_tyBM arg2,
+                                    value_tyBM arg3)
+{
+  LOCALFRAME_BM ( /*prev stackf: */ NULL, /*descr: */ NULL,
+                 const closure_tyBM * dclosv; value_tyBM arg1v, arg2v, arg3v;
+    );
+  _.dclosv = clos;
+  _.arg1v = arg1;
+  _.arg2v = arg2;
+  _.arg3v = arg3;
+  (void) apply3_BM (clos, (struct stackframe_stBM *) &_, arg1, arg2, arg3);
+}                               /* end do_internal_defer_apply3_BM */
+
+// called from did_deferredgtk_BM
+void
+do_internal_deferred_send3_gtk_BM (value_tyBM recv, objectval_tyBM * obsel,
+                                   value_tyBM arg1, value_tyBM arg2,
+                                   value_tyBM arg3)
+{
+  LOCALFRAME_BM ( /*prev stackf: */ NULL, /*descr: */ NULL,
+                 objectval_tyBM * obsel;
+                 value_tyBM recva, arg1v, arg2v, arg3v;
+    );
+  _.recva = recv;
+  _.obsel = obsel;
+  _.arg1v = arg1;
+  _.arg2v = arg2;
+  _.arg3v = arg3;
+  (void) send3_BM (recv, obsel, (struct stackframe_stBM *) &_, arg1, arg2,
+                   arg3);
+}                               /* end do_internal_defer_send3_BM */
+
+
+
 void
 rungui_BM (bool newgui)
 {
+  int deferpipes[2] = { -1, -1 };
+  if (pipe (deferpipes) < 0)
+    FATAL_BM ("failed to pipe GTK deferpipe");
+  defer_gtk_readpipefd_BM = deferpipes[0];
+  defer_gtk_writepipefd_BM = deferpipes[1];
+  defer_gtk_readpipechan_BM = g_io_channel_unix_new (defer_gtk_readpipefd_BM);
+  g_io_add_watch (defer_gtk_readpipechan_BM, G_IO_IN, deferpipereadhandler_BM,
+                  NULL);
   gui_is_running_BM = true;
   if (!gui_log_name_bm || !gui_log_name_bm[0])
     {
@@ -452,6 +545,11 @@ rungui_BM (bool newgui)
       fflush (gui_command_log_file_BM);
     }
   gtk_main ();
+  g_io_channel_shutdown (defer_gtk_readpipechan_BM, false, NULL);
+  g_io_channel_unref (defer_gtk_readpipechan_BM), defer_gtk_readpipechan_BM =
+    NULL;
+  close (defer_gtk_readpipefd_BM), defer_gtk_readpipefd_BM = -1;
+  close (defer_gtk_writepipefd_BM), defer_gtk_writepipefd_BM = -1;
   gui_is_running_BM = false;
   if (gui_command_log_file_BM)
     {

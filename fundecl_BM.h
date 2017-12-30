@@ -512,7 +512,7 @@ extern struct dict_stBM *dictmake_BM (void);
 static inline bool isdict_BM (const value_tyBM v);
 extern unsigned dictsize_BM (const struct dict_stBM *dict);
 extern void dictgcmark_BM (struct garbcoll_stBM *gc, struct dict_stBM *dict,
-                           int depth) __attribute__ ((warn_unused_result));
+                           int depth);
 extern void dictgcdestroy_BM (struct garbcoll_stBM *gc,
                               struct dict_stBM *dict);
 extern void dictgckeep_BM (struct garbcoll_stBM *gc, struct dict_stBM *dict);
@@ -714,6 +714,7 @@ extern const node_tyBM *nodeglobalnames_BM (const objectval_tyBM * conn);
 extern const setval_tyBM *setglobalobjects_BM (void);
 
 extern void gcmarkglobals_BM (struct garbcoll_stBM *gc);
+extern void gcmarkdefergtk_BM (struct garbcoll_stBM *gc);
 extern void gcmarkconstants_BM (struct garbcoll_stBM *gc);
 
 /// open a module, returns true if ok
@@ -752,6 +753,17 @@ extern void browse_object_gui_BM (const objectval_tyBM * objbrows,
                                   struct stackframe_stBM *stkf);
 extern void hide_object_gui_BM (const objectval_tyBM * objbrows,
                                 struct stackframe_stBM *stkf);
+
+
+// defer an application, running in the (GTK) main thread
+void
+gtk_defer_apply3_BM (value_tyBM closv, value_tyBM arg1, value_tyBM arg2,
+                     value_tyBM arg3);
+
+// defer a message send, running in the (GTK) main thread
+void
+gtk_defer_send3_BM (value_tyBM recv, objectval_tyBM * obsel, value_tyBM arg1,
+                    value_tyBM arg2, value_tyBM arg3);
 
 // browse the named value
 extern void browse_named_value_gui_BM (const stringval_tyBM * namev,

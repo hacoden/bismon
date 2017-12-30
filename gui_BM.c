@@ -237,6 +237,7 @@ gcmarkgui_BM (struct garbcoll_stBM *gc)
     }
   if (complsetcmd_BM)
     VALUEGCPROC_BM (gc, complsetcmd_BM, 0);
+  gcmarkdefergtk_BM (gc);
 }                               /* end gcmarkgui_BM */
 
 
@@ -4606,10 +4607,12 @@ marksetbrows_BM (GtkTextBuffer * txbuf, GtkTextIter * txit,
 }                               /* end marksetbrows_BM */
 
 
+extern bool did_deferredgtk_BM (void);
 gboolean
 guiperiodicgarbagecollection_BM (gpointer data __attribute__ ((unused)))
 {
   assert (data == NULL);
+  did_deferredgtk_BM ();
   if (atomic_load (&want_garbage_collection_BM) && gtk_main_level () <= 1)
     {
       full_garbage_collection_BM (NULL);

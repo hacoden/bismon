@@ -5,10 +5,14 @@
 #include <new>
 #include <set>
 #include <vector>
+#include <deque>
+#include <mutex>
 #include <unordered_map>
 #include <string>
 #include <atomic>
 extern "C" {
+#include <gtk/gtk.h>
+#include <glib.h>
 #include "bismon.h"
 };
 
@@ -339,6 +343,7 @@ void initialize_globals_BM(void)
 void
 gcmarkglobals_BM(struct garbcoll_stBM*gc)
 {
+  assert (gc && gc->gc_magic == GCMAGIC_BM);
   for (auto it: mapglobals_BM)
     if (it.second && *it.second)
       gcobjmark_BM(gc, *it.second);
@@ -658,6 +663,10 @@ dictnodeofkeys_BM(struct dict_stBM* dict, const objectval_tyBM*obj)
   return nodv;
 } // end dictnodeofkeys_BM
 
+
+////////////////////////////////////////////////////////////////
+/****** support for command window and paren blinking ******/
+
 static std::map<int,parenoffset_stBM> cmd_openmap_BM;
 static std::map<int,parenoffset_stBM> cmd_closemap_BM;
 
@@ -711,3 +720,150 @@ cmd_find_enclosing_parens_BM(int off)
   while (it != cmd_closemap_BM.begin());
   return nullptr;
 } // end cmd_find_enclosing_parens_BM
+
+
+////////////////////////////////////////////////////////////////
+
+struct deferdoappl_stBM
+{
+  union
+  {
+    const closure_tyBM *defer_clos;
+    objectval_tyBM* defer_obsel;
+  };
+  value_tyBM defer_recv;
+  value_tyBM defer_arg1;
+  value_tyBM defer_arg2;
+  value_tyBM defer_arg3;
+};
+static std::deque<deferdoappl_stBM> deferdeque_BM;
+static std::mutex deferqmtx_BM;
+
+void
+gcmarkdefergtk_BM(struct garbcoll_stBM*gc)
+{
+  assert (gc && gc->gc_magic == GCMAGIC_BM);
+  std::lock_guard<std::mutex> _g(deferqmtx_BM);
+  for (auto itd : deferdeque_BM)
+    {
+      if (itd.defer_recv)
+        {
+          VALUEGCPROC_BM (gc, itd.defer_clos, 0);
+          gcobjmark_BM(gc, itd.defer_obsel);
+        }
+      else
+        VALUEGCPROC_BM (gc, itd.defer_clos, 0);
+      if (itd.defer_arg1)
+        VALUEGCPROC_BM (gc, itd.defer_arg1, 0);
+      if (itd.defer_arg2)
+        VALUEGCPROC_BM (gc, itd.defer_arg2, 0);
+      if (itd.defer_arg3)
+        VALUEGCPROC_BM (gc, itd.defer_arg3, 0);
+    }
+} // end gcmarkdefergtk_BM
+
+extern "C" void
+do_internal_deferred_send3_gtk_BM(value_tyBM recv, objectval_tyBM*obsel, value_tyBM arg1, value_tyBM arg2, value_tyBM arg3);
+
+extern "C" void
+do_internal_deferred_apply3_gtk_BM(const closure_tyBM*clos, value_tyBM arg1, value_tyBM arg2, value_tyBM arg3);
+
+extern "C" bool did_deferredgtk_BM (void);
+
+bool
+did_deferredgtk_BM (void)
+{
+  const closure_tyBM *dclosv = nullptr;
+  objectval_tyBM* dobsel = nullptr;
+  value_tyBM darg1v = nullptr;
+  value_tyBM darg2v = nullptr;
+  value_tyBM darg3v = nullptr;
+  value_tyBM drecv = nullptr;
+  {
+    std::lock_guard<std::mutex> _g(deferqmtx_BM);
+    if (deferdeque_BM.empty()) return false;
+    auto f = deferdeque_BM.front();
+    if (f.defer_recv)
+      {
+        drecv = f.defer_recv;
+        dobsel = f.defer_obsel;
+      }
+    else
+      {
+        dclosv = f.defer_clos;
+        drecv = nullptr;
+      };
+    darg1v = f.defer_arg1;
+    darg2v = f.defer_arg2;
+    darg3v = f.defer_arg3;
+    deferdeque_BM.pop_front();
+  }
+  if (drecv)
+    do_internal_deferred_send3_gtk_BM(drecv, dobsel, darg1v, darg2v, darg3v);
+  else
+    do_internal_deferred_apply3_gtk_BM(dclosv, darg1v, darg2v, darg3v);
+  return true;
+} // end did_deferredgtk_BM
+
+
+
+
+extern "C" int defer_gtk_writepipefd_BM;
+void
+gtk_defer_apply3_BM (value_tyBM closv, value_tyBM arg1, value_tyBM arg2, value_tyBM arg3)
+{
+  if (!isclosure_BM(closv)) return;
+  if (defer_gtk_writepipefd_BM<0)
+    FATAL_BM("gtk_defer_apply3_BM without writepipe");
+  char ch = "0123456789abcdefghijklmnopqrstuvwxyz" [valhash_BM (closv) % 36];
+  {
+    std::lock_guard<std::mutex> _g(deferqmtx_BM);
+    struct deferdoappl_stBM dap = {};
+    dap.defer_clos = closurecast_BM(closv);
+    dap.defer_recv = nullptr;
+    dap.defer_arg1 = arg1;
+    dap.defer_arg2 = arg2;
+    dap.defer_arg3 = arg3;
+    deferdeque_BM.emplace_back(dap);
+  }
+  int nbtry = 0;
+  int wrcnt = 0;
+  for(;;)   // most of the time, this loop runs once
+    {
+      wrcnt = write(defer_gtk_writepipefd_BM, &ch, 1);
+      if (wrcnt>0) return;
+      usleep(1000);
+      nbtry++;
+      if (nbtry > 256) FATAL_BM("gtk_defer_apply3_BM failed to write to pipe");
+    }
+} // end gtk_defer_apply3_BM
+
+void
+gtk_defer_send3_BM(value_tyBM recv, objectval_tyBM*obsel,  value_tyBM arg1, value_tyBM arg2, value_tyBM arg3)
+{
+  if (!recv) return;
+  if (!isobject_BM(obsel)) return;
+  if (defer_gtk_writepipefd_BM<0)
+    FATAL_BM("gtk_defer_send3_BM without writepipe");
+  char ch = "0123456789abcdefghijklmnopqrstuvwxyz" [valhash_BM (obsel) % 36];
+  {
+    std::lock_guard<std::mutex> _g(deferqmtx_BM);
+    struct deferdoappl_stBM dap = {};
+    dap.defer_obsel = obsel;
+    dap.defer_recv = recv;
+    dap.defer_arg1 = arg1;
+    dap.defer_arg2 = arg2;
+    dap.defer_arg3 = arg3;
+    deferdeque_BM.emplace_back(dap);
+  }
+  int nbtry = 0;
+  int wrcnt = 0;
+  for(;;)   // most of the time, this loop runs once
+    {
+      wrcnt = write(defer_gtk_writepipefd_BM, &ch, 1);
+      if (wrcnt>0) return;
+      usleep(1000);
+      nbtry++;
+      if (nbtry > 256) FATAL_BM("gtk_defer_send3_BM failed to write to pipe");
+    }
+} // end of gtk_defer_send3_BM
