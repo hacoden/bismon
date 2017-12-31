@@ -7,6 +7,7 @@
 struct timespec startrealtimespec_BM;
 void *dlprog_BM;
 bool gui_is_running_BM;
+int nbworkjobs_BM;
 const char myhostname_BM[80];
 
 GIOChannel *defer_gtk_readpipechan_BM;
@@ -113,6 +114,7 @@ add_predef_bm (const gchar * optname __attribute__ ((unused)),
   return true;
 }                               /* end run_command_bm */
 
+
 const GOptionEntry optab[] = {
   //
   {.long_name = "load",.short_name = 'l',
@@ -165,6 +167,13 @@ const GOptionEntry optab[] = {
    .arg_data = &count_emit_has_predef_bm,
    .description = "emit NB 'HAS_PREDEF_BM'",
    .arg_description = "NB"},
+  //
+  {.long_name = "job",.short_name = (char) 'j',
+   .flags = G_OPTION_FLAG_NONE,
+   .arg = G_OPTION_ARG_INT,
+   .arg_data = &nbworkjobs_BM,
+   .description = "number of worker threads NBJOBS (>=2, <16)",
+   .arg_description = "NBJOBS"},
   //
   {.long_name = "run-command",.short_name = (char) 0,
    .flags = G_OPTION_FLAG_NONE,
@@ -298,6 +307,10 @@ main (int argc, char **argv)
   GError *err = NULL;
   bool guiok = gtk_init_with_args (&argc, &argv, " - The bismon program",
                                    optab, NULL, &err);
+  if (nbworkjobs_BM < 2)
+    nbworkjobs_BM = 2;
+  else if (nbworkjobs_BM > 15)
+    nbworkjobs_BM = 15;
   if (count_emit_has_predef_bm > 0)
     {
       rawid_tyBM *idarr =
@@ -472,7 +485,11 @@ do_internal_deferred_send3_gtk_BM (value_tyBM recv, objectval_tyBM * obsel,
 }                               /* end do_internal_defer_send3_BM */
 
 
+static void startguilog_BM (bool newgui);
+static void endguilog_BM (void);
 
+
+////////////////////////////////////////////////////////////////
 void
 rungui_BM (bool newgui)
 {
@@ -485,6 +502,22 @@ rungui_BM (bool newgui)
   g_io_add_watch (defer_gtk_readpipechan_BM, G_IO_IN, deferpipereadhandler_BM,
                   NULL);
   gui_is_running_BM = true;
+  startguilog_BM (newgui);
+  gtk_main ();
+  g_io_channel_shutdown (defer_gtk_readpipechan_BM, false, NULL);
+  g_io_channel_unref (defer_gtk_readpipechan_BM), defer_gtk_readpipechan_BM =
+    NULL;
+  close (defer_gtk_readpipefd_BM), defer_gtk_readpipefd_BM = -1;
+  close (defer_gtk_writepipefd_BM), defer_gtk_writepipefd_BM = -1;
+  gui_is_running_BM = false;
+  if (gui_command_log_file_BM)
+    endguilog_BM ();
+}                               /* end rungui_BM */
+
+
+void
+startguilog_BM (bool newgui)
+{
   if (!gui_log_name_bm || !gui_log_name_bm[0])
     {
       gui_command_log_file_BM = NULL;
@@ -544,28 +577,22 @@ rungui_BM (bool newgui)
       }
       fflush (gui_command_log_file_BM);
     }
-  gtk_main ();
-  g_io_channel_shutdown (defer_gtk_readpipechan_BM, false, NULL);
-  g_io_channel_unref (defer_gtk_readpipechan_BM), defer_gtk_readpipechan_BM =
-    NULL;
-  close (defer_gtk_readpipefd_BM), defer_gtk_readpipefd_BM = -1;
-  close (defer_gtk_writepipefd_BM), defer_gtk_writepipefd_BM = -1;
-  gui_is_running_BM = false;
-  if (gui_command_log_file_BM)
-    {
-      time_t nowtim = time (NULL);
-      struct tm nowtm = { };
-      localtime_r (&nowtim, &nowtm);
-      char nowbuf[64];
-      memset (nowbuf, 0, sizeof (nowbuf));
-      strftime (nowbuf, sizeof (nowbuf), "%c", &nowtm);
-      fprintf (gui_command_log_file_BM,
-               "\n\f/// end of bismon GUI command log file %s at %s\n",
-               gui_log_name_bm, nowbuf);
-      if (gui_command_log_file_BM != stdout
-          && gui_command_log_file_BM != stderr)
-        fclose (gui_command_log_file_BM);
-      gui_command_log_file_BM = NULL;
-      fflush (NULL);
-    }
-}                               /* end rungui_BM */
+}                               /* end startguilog_BM */
+
+void
+endguilog_BM (void)
+{
+  time_t nowtim = time (NULL);
+  struct tm nowtm = { };
+  localtime_r (&nowtim, &nowtm);
+  char nowbuf[64];
+  memset (nowbuf, 0, sizeof (nowbuf));
+  strftime (nowbuf, sizeof (nowbuf), "%c", &nowtm);
+  fprintf (gui_command_log_file_BM,
+           "\n\f/// end of bismon GUI command log file %s at %s\n",
+           gui_log_name_bm, nowbuf);
+  if (gui_command_log_file_BM != stdout && gui_command_log_file_BM != stderr)
+    fclose (gui_command_log_file_BM);
+  gui_command_log_file_BM = NULL;
+  fflush (NULL);
+}                               /* end endguilog_BM */
