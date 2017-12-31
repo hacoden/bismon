@@ -238,6 +238,7 @@ gcmarkgui_BM (struct garbcoll_stBM *gc)
   if (complsetcmd_BM)
     VALUEGCPROC_BM (gc, complsetcmd_BM, 0);
   gcmarkdefergtk_BM (gc);
+  gcmarkagenda_BM (gc);
 }                               /* end gcmarkgui_BM */
 
 

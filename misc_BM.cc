@@ -7,10 +7,13 @@
 #include <vector>
 #include <deque>
 #include <mutex>
+#include <condition_variable>
 #include <unordered_map>
 #include <string>
 #include <atomic>
 #include <thread>
+#include <ratio>
+#include <chrono>
 extern "C" {
 #include <gtk/gtk.h>
 #include <glib.h>
@@ -890,23 +893,104 @@ struct threadinfo_stBM
   std::thread ti_thread;
   std::atomic<threadidle_sigtBM*> ti_idlerout;
   static threadinfo_stBM ti_array[MAXNBWORKJOBS_BM+2];
+  static std::mutex ti_agendamtx;
+  static std::condition_variable  ti_agendacondv;
+  static std::deque<objectval_tyBM*> ti_taskque_veryhigh;
+  static std::deque<objectval_tyBM*> ti_taskque_high;
+  static std::deque<objectval_tyBM*> ti_taskque_low;
+  static std::deque<objectval_tyBM*> ti_taskque_verylow;
+  static std::unordered_map<objectval_tyBM*,std::deque<objectval_tyBM*>*,ObjectHash_BM> ti_task_hmap;
   static void thread_run(int ix);
   friend void start_agenda_work_threads_BM(void);
+  friend void gcmarkagenda_BM (struct garbcoll_stBM *gc);
 };
 
-threadinfo_stBM threadinfo_stBM::ti_array[MAXNBWORKJOBS_BM+2];
 
-void start_agenda_work_threads_BM (void)
+threadinfo_stBM threadinfo_stBM::ti_array[MAXNBWORKJOBS_BM+2];
+std::mutex threadinfo_stBM::ti_agendamtx;
+std::condition_variable threadinfo_stBM::ti_agendacondv;
+std::deque<objectval_tyBM*> threadinfo_stBM::ti_taskque_veryhigh;
+std::deque<objectval_tyBM*> threadinfo_stBM::ti_taskque_high;
+std::deque<objectval_tyBM*> threadinfo_stBM::ti_taskque_low;
+std::deque<objectval_tyBM*> threadinfo_stBM::ti_taskque_verylow;
+std::unordered_map<objectval_tyBM*,std::deque<objectval_tyBM*>*,ObjectHash_BM> threadinfo_stBM::ti_task_hmap;
+
+void
+start_agenda_work_threads_BM (void)
 {
   assert (pthread_self() == mainthreadid_BM);
   assert (nbworkjobs_BM >= MINNBWORKJOBS_BM && nbworkjobs_BM <= MAXNBWORKJOBS_BM);
   for (int tix=1; tix<nbworkjobs_BM; tix++)
-    threadinfo_stBM::ti_array[tix].ti_thread = std::thread(threadinfo_stBM::thread_run,tix);
+    {
+      threadinfo_stBM::ti_array[tix].ti_thread  = std::thread(threadinfo_stBM::thread_run,tix);
+    }
+  usleep (100);
+  for (int tix=1; tix<nbworkjobs_BM; tix++)
+    {
+      threadinfo_stBM::ti_array[tix].ti_thread.detach();
+    }
 } // end start_agenda_work_threads_BM
 
 
-void threadinfo_stBM::thread_run(int tix)
+void
+threadinfo_stBM::thread_run(int tix)
 {
   curthreadinfo_BM = ti_array+tix;
-#warning threadinfo_stBM::thread_run incomplete
+  usleep(1000);
+  for (;;)
+    {
+      objectval_tyBM*taskob = nullptr;
+      gint rdi = g_random_int ();
+      {
+        std::lock_guard<std::mutex> _gu(ti_agendamtx);
+        std::deque<objectval_tyBM*> *taqu = nullptr;
+        if (!ti_taskque_veryhigh.empty())
+          taqu = &ti_taskque_veryhigh;
+        if ((!taqu || ((rdi % 16 == 0), (rdi = rdi/16), true)) && !ti_taskque_high.empty())
+          taqu = &ti_taskque_high;
+        if (!taqu)
+          {
+            if (!ti_taskque_low.empty())
+              taqu = &ti_taskque_low;
+            if ((!taqu || ((rdi % 16 == 0), (rdi = rdi/16), true)) && !ti_taskque_verylow.empty())
+              taqu = &ti_taskque_verylow;
+          };
+        if (taqu)
+          {
+            assert (!taqu->empty());
+            taskob = taqu->front();
+            taqu->pop_front();
+            ti_task_hmap.erase(taskob);
+          }
+      }
+      if (taskob)
+        {
+          FATAL_BM(" threadinfo_stBM::thread_run should run taskob");
+#warning threadinfo_stBM::thread_run should run taskob
+        }
+      else   // no task to run
+        {
+          std::unique_lock<std::mutex> lk_(ti_agendamtx);
+          int delayms = 15 + g_random_int () % 512;
+          ti_agendacondv.wait_for(lk_,std::chrono::milliseconds{delayms});
+        }
+    } // end forever
+#warning threadinfo_stBM::thread_run incomplete, should run GC when needed, etc...
 } // end thread_run
+
+
+
+void
+gcmarkagenda_BM (struct garbcoll_stBM *gc)
+{
+  assert (gc && gc->gc_magic == GCMAGIC_BM);
+  std::lock_guard<std::mutex> _gu(threadinfo_stBM::ti_agendamtx);
+  for (objectval_tyBM*tkob : threadinfo_stBM::ti_taskque_veryhigh)
+    gcobjmark_BM (gc, tkob);
+  for (objectval_tyBM*tkob : threadinfo_stBM::ti_taskque_high)
+    gcobjmark_BM (gc, tkob);
+  for (objectval_tyBM*tkob : threadinfo_stBM::ti_taskque_low)
+    gcobjmark_BM (gc, tkob);
+  for (objectval_tyBM*tkob : threadinfo_stBM::ti_taskque_verylow)
+    gcobjmark_BM (gc, tkob);
+} // end gcmarkagenda_BM

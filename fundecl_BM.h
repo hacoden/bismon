@@ -888,6 +888,7 @@ extern parser_decorate_start_nesting_sigBM parsstartnesting_guicmd_BM;
 ////////////////////////////////////////////////////////////////
 
 /******** agenda functions ***********/
-void start_agenda_work_threads_BM (void);
+extern void gcmarkagenda_BM (struct garbcoll_stBM *gc);
+extern void start_agenda_work_threads_BM (void);
 
 #endif /*FUNDECL_BM_INCLUDED */
