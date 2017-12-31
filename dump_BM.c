@@ -401,6 +401,7 @@ dump_emit_space_BM (struct dumper_stBM *du, unsigned spix,
     {
       _.curobj = setelemnth_BM (_.setobjs, obix);
       assert (_.curobj != NULL);
+      objlock_BM (_.curobj);
       if (_.curobj->ob_rout)
         {
           Dl_info di = { };
@@ -426,6 +427,7 @@ dump_emit_space_BM (struct dumper_stBM *du, unsigned spix,
                 }
             }
         }
+      objunlock_BM (_.curobj);
     }
   _.setmodules = hashsetobj_to_set_BM (modhset);
   unsigned nbmodules = setcardinal_BM (_.setmodules);
