@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include <string>
 #include <atomic>
+#include <thread>
 extern "C" {
 #include <gtk/gtk.h>
 #include <glib.h>
@@ -61,6 +62,9 @@ struct IdLess_BM
     return cmpid_BM (id1, id2) < 0;
   };
 };				// end IdLess_BM
+
+
+struct threadinfo_stBM;
 
 // keys are strdup-ed strings, values are objectval_tyBM*
 static std::map<const char*,objectval_tyBM*,StrcmpLess_BM> namemap_BM;
@@ -834,9 +838,11 @@ gtk_defer_apply3_BM (value_tyBM closv, value_tyBM arg1, value_tyBM arg2, value_t
       if (wrcnt>0) return;
       usleep(1000);
       nbtry++;
-      if (nbtry > 256) FATAL_BM("gtk_defer_apply3_BM failed to write to pipe");
+      if (nbtry > 256)
+        FATAL_BM("gtk_defer_apply3_BM failed to write to pipe");
     }
 } // end gtk_defer_apply3_BM
+
 
 void
 gtk_defer_send3_BM(value_tyBM recv, objectval_tyBM*obsel,  value_tyBM arg1, value_tyBM arg2, value_tyBM arg3)
@@ -864,6 +870,43 @@ gtk_defer_send3_BM(value_tyBM recv, objectval_tyBM*obsel,  value_tyBM arg1, valu
       if (wrcnt>0) return;
       usleep(1000);
       nbtry++;
-      if (nbtry > 256) FATAL_BM("gtk_defer_send3_BM failed to write to pipe");
+      if (nbtry > 256)
+        FATAL_BM("gtk_defer_send3_BM failed to write to pipe");
     }
 } // end of gtk_defer_send3_BM
+
+
+
+////////////////////////////////////////////////////////////////
+/********** agenda support **********/
+
+typedef void threadidle_sigtBM (int thrank);
+
+struct threadinfo_stBM
+{
+  unsigned ti_magic;
+  short ti_rank;
+  bool ti_stop;
+  std::thread ti_thread;
+  std::atomic<threadidle_sigtBM*> ti_idlerout;
+  static threadinfo_stBM ti_array[MAXNBWORKJOBS_BM+2];
+  static void thread_run(int ix);
+  friend void start_agenda_work_threads_BM(void);
+};
+
+threadinfo_stBM threadinfo_stBM::ti_array[MAXNBWORKJOBS_BM+2];
+
+void start_agenda_work_threads_BM (void)
+{
+  assert (pthread_self() == mainthreadid_BM);
+  assert (nbworkjobs_BM >= MINNBWORKJOBS_BM && nbworkjobs_BM <= MAXNBWORKJOBS_BM);
+  for (int tix=1; tix<nbworkjobs_BM; tix++)
+    threadinfo_stBM::ti_array[tix].ti_thread = std::thread(threadinfo_stBM::thread_run,tix);
+} // end start_agenda_work_threads_BM
+
+
+void threadinfo_stBM::thread_run(int tix)
+{
+  curthreadinfo_BM = ti_array+tix;
+#warning threadinfo_stBM::thread_run incomplete
+} // end thread_run

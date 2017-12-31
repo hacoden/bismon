@@ -30,8 +30,10 @@ extern void *dlprog_BM;         // dlopen of entire program
 extern struct timespec startrealtimespec_BM;
 
 // the loader, which is non-null only while loading
-
 extern struct loader_stBM *firstloader_BM;
+
+extern thread_local struct threadinfo_stBM *curthreadinfo_BM;
+
 
 extern struct allalloc_stBM *allocationvec_vBM /*¤ allocgc_BM.c */ ;
 extern pthread_mutex_t allocationmutex_BM;

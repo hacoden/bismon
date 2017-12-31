@@ -16,6 +16,8 @@ using std::atomic_store;
 #else
 // notice that <stdatomic.h> is not C++11 compatible
 #include <stdatomic.h>
+/// Glibc dont have yet threads.h
+#define thread_local _Thread_local
 #endif
 
 

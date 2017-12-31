@@ -2,6 +2,7 @@
 #ifndef CMACROS_BM_INCLUDED
 #define CMACROS_BM_INCLUDED
 
+
 #define MAXDEPTHGC_BM 256
 #define MAXDEPTHPARSE_BM 96
 #define MAXDEPTHMETHOD_BM 96
@@ -188,4 +189,7 @@ extern void weakassertfailureat_BM (const char *condmsg, const char *fil,
 #define BOXNOEXPAND_BM FALSE
 #define BOXFILL_BM TRUE
 #define BOXNOFILL_BM FALSE
+// agenda support
+#define MAXNBWORKJOBS_BM 16
+#define MINNBWORKJOBS_BM 2
 #endif /*CMACROS_BM_INCLUDED */

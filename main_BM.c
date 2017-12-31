@@ -9,7 +9,7 @@ void *dlprog_BM;
 bool gui_is_running_BM;
 int nbworkjobs_BM;
 const char myhostname_BM[80];
-
+thread_local struct threadinfo_stBM *curthreadinfo_BM;
 GIOChannel *defer_gtk_readpipechan_BM;
 int defer_gtk_readpipefd_BM = -1;
 int defer_gtk_writepipefd_BM = -1;
@@ -307,10 +307,10 @@ main (int argc, char **argv)
   GError *err = NULL;
   bool guiok = gtk_init_with_args (&argc, &argv, " - The bismon program",
                                    optab, NULL, &err);
-  if (nbworkjobs_BM < 2)
-    nbworkjobs_BM = 2;
-  else if (nbworkjobs_BM > 15)
-    nbworkjobs_BM = 15;
+  if (nbworkjobs_BM < MINNBWORKJOBS_BM)
+    nbworkjobs_BM = MINNBWORKJOBS_BM;
+  else if (nbworkjobs_BM > MAXNBWORKJOBS_BM)
+    nbworkjobs_BM = MAXNBWORKJOBS_BM;
   if (count_emit_has_predef_bm > 0)
     {
       rawid_tyBM *idarr =
@@ -405,6 +405,7 @@ main (int argc, char **argv)
     }
   if (batch_bm)
     {
+      nbworkjobs_BM = 0;
       printf ("no GUI in batch mode\n");
     }
   else
