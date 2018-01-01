@@ -1362,6 +1362,7 @@ garbcollgui_BM (void)
 {
   assert (mainthreadid_BM == pthread_self ());
   log_begin_message_BM ();
+  atomic_store (&want_garbage_collection_BM, true);
   log_puts_message_BM ("forced garbage collection");
   log_end_message_BM ();
   full_garbage_collection_BM (NULL);

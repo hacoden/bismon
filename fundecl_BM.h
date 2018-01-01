@@ -888,7 +888,11 @@ extern parser_decorate_start_nesting_sigBM parsstartnesting_guicmd_BM;
 ////////////////////////////////////////////////////////////////
 
 /******** agenda functions ***********/
+extern int agenda_nb_work_jobs_BM (void);
 extern void gcmarkagenda_BM (struct garbcoll_stBM *gc);
-extern void start_agenda_work_threads_BM (void);
+extern void start_agenda_work_threads_BM (int nbjobs);
+extern void stop_agenda_work_threads_BM (void);
+// inside the GC, wait for all work thread to idle for garbage collection
+extern void wait_agenda_all_gc_BM (void);
 
 #endif /*FUNDECL_BM_INCLUDED */

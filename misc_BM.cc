@@ -885,29 +885,43 @@ gtk_defer_send3_BM(value_tyBM recv, objectval_tyBM*obsel,  value_tyBM arg1, valu
 
 typedef void threadidle_sigtBM (int thrank);
 
+#define TI_MAGICNUM_BM 0x67d1
 struct threadinfo_stBM
 {
-  unsigned ti_magic;
+  const unsigned ti_magic;
   short ti_rank;
-  bool ti_stop;
+  std::atomic_bool ti_stop;
+  std::atomic_bool ti_gc;
   std::thread ti_thread;
   std::atomic<threadidle_sigtBM*> ti_idlerout;
   static threadinfo_stBM ti_array[MAXNBWORKJOBS_BM+2];
   static std::mutex ti_agendamtx;
   static std::condition_variable  ti_agendacondv;
+  static std::atomic_int ti_nbworkthreads;
+  static std::atomic_int ti_countendedthreads;
   static std::deque<objectval_tyBM*> ti_taskque_veryhigh;
   static std::deque<objectval_tyBM*> ti_taskque_high;
   static std::deque<objectval_tyBM*> ti_taskque_low;
   static std::deque<objectval_tyBM*> ti_taskque_verylow;
   static std::unordered_map<objectval_tyBM*,std::deque<objectval_tyBM*>*,ObjectHash_BM> ti_task_hmap;
   static void thread_run(int ix);
-  friend void start_agenda_work_threads_BM(void);
+  friend void start_agenda_work_threads_BM(int nbjobs);
+  friend void stop_agenda_work_threads_BM(void);
   friend void gcmarkagenda_BM (struct garbcoll_stBM *gc);
+  threadinfo_stBM() : ti_magic(TI_MAGICNUM_BM)
+  {
+    ti_rank = 0;
+    atomic_init(&ti_stop, false);
+    atomic_init(&ti_gc, false);
+    atomic_init(&ti_idlerout,(threadidle_sigtBM*) nullptr);
+  }
 };
 
 
 threadinfo_stBM threadinfo_stBM::ti_array[MAXNBWORKJOBS_BM+2];
 std::mutex threadinfo_stBM::ti_agendamtx;
+std::atomic_int threadinfo_stBM::ti_nbworkthreads;
+std::atomic_int threadinfo_stBM::ti_countendedthreads;
 std::condition_variable threadinfo_stBM::ti_agendacondv;
 std::deque<objectval_tyBM*> threadinfo_stBM::ti_taskque_veryhigh;
 std::deque<objectval_tyBM*> threadinfo_stBM::ti_taskque_high;
@@ -916,20 +930,45 @@ std::deque<objectval_tyBM*> threadinfo_stBM::ti_taskque_verylow;
 std::unordered_map<objectval_tyBM*,std::deque<objectval_tyBM*>*,ObjectHash_BM> threadinfo_stBM::ti_task_hmap;
 
 void
-start_agenda_work_threads_BM (void)
+start_agenda_work_threads_BM (int nbjobs)
 {
+  atomic_init(&threadinfo_stBM::ti_countendedthreads, 0);
+  atomic_init(&threadinfo_stBM::ti_nbworkthreads, 0);
   assert (pthread_self() == mainthreadid_BM);
-  assert (nbworkjobs_BM >= MINNBWORKJOBS_BM && nbworkjobs_BM <= MAXNBWORKJOBS_BM);
-  for (int tix=1; tix<nbworkjobs_BM; tix++)
+  assert (nbjobs >= MINNBWORKJOBS_BM && nbjobs <= MAXNBWORKJOBS_BM);
+  atomic_store(&threadinfo_stBM::ti_nbworkthreads, nbjobs);
+  for (int tix=1; tix<nbjobs; tix++)
     {
-      threadinfo_stBM::ti_array[tix].ti_thread  = std::thread(threadinfo_stBM::thread_run,tix);
+      auto& curth = threadinfo_stBM::ti_array[tix];
+      curth.ti_thread  = std::thread(threadinfo_stBM::thread_run,tix);
     }
   usleep (100);
-  for (int tix=1; tix<nbworkjobs_BM; tix++)
+  for (int tix=1; tix<nbjobs; tix++)
     {
       threadinfo_stBM::ti_array[tix].ti_thread.detach();
     }
 } // end start_agenda_work_threads_BM
+
+void
+stop_agenda_work_threads_BM(void)
+{
+  int nbwth = atomic_load(&threadinfo_stBM::ti_nbworkthreads);
+  {
+    std::lock_guard<std::mutex> _gu(threadinfo_stBM::ti_agendamtx);
+    for (int tix=1; tix<nbwth; tix++)
+      {
+        auto& curth = threadinfo_stBM::ti_array[tix];
+        atomic_store(&curth.ti_stop, true);
+      }
+  }
+  usleep (1000);
+  do
+    {
+      std::unique_lock<std::mutex> lk_(threadinfo_stBM::ti_agendamtx);
+      threadinfo_stBM::ti_agendacondv.wait_for(lk_,std::chrono::milliseconds{50});
+    }
+  while (atomic_load(&threadinfo_stBM::ti_countendedthreads) < nbwth);
+} // end stop_agenda_work_threads_BM
 
 
 void
@@ -940,6 +979,19 @@ threadinfo_stBM::thread_run(int tix)
   for (;;)
     {
       objectval_tyBM*taskob = nullptr;
+      if (atomic_load(&curthreadinfo_BM->ti_stop))
+        break;
+      if (atomic_load (&want_garbage_collection_BM))
+        {
+          atomic_store(&curthreadinfo_BM->ti_gc, true);
+          do
+            {
+              ti_agendacondv.notify_all();
+              std::unique_lock<std::mutex> lk_(ti_agendamtx);
+              ti_agendacondv.wait_for(lk_,std::chrono::milliseconds{50});
+            }
+          while(atomic_load(&curthreadinfo_BM->ti_gc));
+        }
       gint rdi = g_random_int ();
       {
         std::lock_guard<std::mutex> _gu(ti_agendamtx);
@@ -971,13 +1023,22 @@ threadinfo_stBM::thread_run(int tix)
       else   // no task to run
         {
           std::unique_lock<std::mutex> lk_(ti_agendamtx);
-          int delayms = 15 + g_random_int () % 512;
+          int delayms = 25 +
+                        (atomic_load (&want_garbage_collection_BM)?0:(g_random_int () % 256));
           ti_agendacondv.wait_for(lk_,std::chrono::milliseconds{delayms});
         }
     } // end forever
-#warning threadinfo_stBM::thread_run incomplete, should run GC when needed, etc...
+  curthreadinfo_BM = nullptr;
+  ti_agendacondv.notify_all();
+  ti_countendedthreads.fetch_add(1);
 } // end thread_run
 
+
+int
+agenda_nb_work_jobs_BM (void)
+{
+  return atomic_load(&threadinfo_stBM::ti_nbworkthreads);
+} // end agenda_nb_work_jobs_BM
 
 
 void

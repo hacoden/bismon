@@ -25,7 +25,6 @@ extern GtkTextIter browserit_BM;
 
 extern pthread_t mainthreadid_BM;
 
-extern int nbworkjobs_BM;
 extern void *dlprog_BM;         // dlopen of entire program
 extern struct timespec startrealtimespec_BM;
 

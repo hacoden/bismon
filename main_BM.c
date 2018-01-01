@@ -7,7 +7,7 @@
 struct timespec startrealtimespec_BM;
 void *dlprog_BM;
 bool gui_is_running_BM;
-int nbworkjobs_BM;
+static int nbworkjobs_BM;
 const char myhostname_BM[80];
 thread_local struct threadinfo_stBM *curthreadinfo_BM;
 GIOChannel *defer_gtk_readpipechan_BM;
@@ -276,7 +276,7 @@ idqcmp_BM (const void *p1, const void *p2)
 }                               /* end idqcmp_BM */
 
 
-static void rungui_BM (bool newgui);
+static void rungui_BM (bool newgui, int nbjobs);
 
 
 
@@ -409,7 +409,7 @@ main (int argc, char **argv)
       printf ("no GUI in batch mode\n");
     }
   else
-    rungui_BM (newgui_BM);
+    rungui_BM (newgui_BM, nbworkjobs_BM);
   fflush (NULL);
 }                               /* end main */
 
@@ -492,7 +492,7 @@ static void endguilog_BM (void);
 
 ////////////////////////////////////////////////////////////////
 void
-rungui_BM (bool newgui)
+rungui_BM (bool newgui, int nbjobs)
 {
   int deferpipes[2] = { -1, -1 };
   if (pipe (deferpipes) < 0)
@@ -504,7 +504,9 @@ rungui_BM (bool newgui)
                   NULL);
   gui_is_running_BM = true;
   startguilog_BM (newgui);
+  start_agenda_work_threads_BM (nbjobs);
   gtk_main ();
+  stop_agenda_work_threads_BM ();
   g_io_channel_shutdown (defer_gtk_readpipechan_BM, false, NULL);
   g_io_channel_unref (defer_gtk_readpipechan_BM), defer_gtk_readpipechan_BM =
     NULL;
