@@ -911,6 +911,15 @@ struct threadinfo_stBM
   friend void agenda_suspend_for_gc_BM (void);
   friend void agenda_continue_after_gc_BM(void);
   friend void gcmarkagenda_BM (struct garbcoll_stBM *gc);
+  friend void agenda_add_very_high_priority_tasklet_front_BM (objectval_tyBM * obtk);
+  friend void agenda_add_very_high_priority_tasklet_back_BM (objectval_tyBM * obtk);
+  friend void agenda_add_high_priority_tasklet_front_BM (objectval_tyBM * obtk);
+  friend void agenda_add_high_priority_tasklet_back_BM (objectval_tyBM * obtk);
+  friend void agenda_add_very_low_priority_tasklet_front_BM (objectval_tyBM *obtk);
+  friend void agenda_add_very_low_priority_tasklet_back_BM (objectval_tyBM * obtk);
+  friend void agenda_add_low_priority_tasklet_front_BM (objectval_tyBM * obtk);
+  friend void agenda_add_low_priority_tasklet_back_BM (objectval_tyBM * obtk);
+  friend bool agenda_remove_tasklet_BM (objectval_tyBM * obtk);
   threadinfo_stBM() : ti_magic(TI_MAGICNUM_BM)
   {
     ti_rank = 0;
@@ -918,6 +927,19 @@ struct threadinfo_stBM
     atomic_init(&ti_gc, false);
     atomic_init(&ti_idlerout,(threadidle_sigtBM*) nullptr);
   }
+private:
+  static bool remove_from_taskque(objectval_tyBM*tob, std::deque<objectval_tyBM*>& taskque)
+  {
+    for (auto it = taskque.begin(); it != taskque.end(); it++)
+      {
+        if (*it == tob)
+          {
+            taskque.erase(it);
+            return true;
+          }
+      }
+    return false;
+  }; // end remove_from_taskque
 };
 
 
@@ -1103,3 +1125,161 @@ gcmarkagenda_BM (struct garbcoll_stBM *gc)
   for (objectval_tyBM*tkob : threadinfo_stBM::ti_taskque_verylow)
     gcobjmark_BM (gc, tkob);
 } // end gcmarkagenda_BM
+
+
+
+void
+agenda_add_very_high_priority_tasklet_front_BM (objectval_tyBM * obtk)
+{
+  if (!isobject_BM(obtk)) return;
+  std::lock_guard<std::mutex> _gu(threadinfo_stBM::ti_agendamtx);
+  auto it = threadinfo_stBM::ti_task_hmap.find(obtk);
+  if (it != threadinfo_stBM::ti_task_hmap.end())
+    {
+      std::deque<objectval_tyBM*>* tq = it->second;
+      bool r = threadinfo_stBM::remove_from_taskque(obtk, *tq);
+      assert (r);
+    }
+  threadinfo_stBM::ti_taskque_veryhigh.push_front(obtk);
+  threadinfo_stBM::ti_task_hmap.insert({obtk, & threadinfo_stBM::ti_taskque_veryhigh});
+} // end  agenda_add_very_high_priority_tasklet_front_BM
+
+
+void
+agenda_add_very_high_priority_tasklet_back_BM (objectval_tyBM *obtk)
+{
+  if (!isobject_BM(obtk)) return;
+  std::lock_guard<std::mutex> _gu(threadinfo_stBM::ti_agendamtx);
+  auto it = threadinfo_stBM::ti_task_hmap.find(obtk);
+  if (it != threadinfo_stBM::ti_task_hmap.end())
+    {
+      std::deque<objectval_tyBM*>* tq = it->second;
+      bool r = threadinfo_stBM::remove_from_taskque(obtk, *tq);
+      assert (r);
+    }
+  threadinfo_stBM::ti_taskque_veryhigh.push_back(obtk);
+  threadinfo_stBM::ti_task_hmap.insert({obtk, & threadinfo_stBM::ti_taskque_veryhigh});
+} // end  agenda_add_very_high_priority_tasklet_back_BM
+
+
+
+
+void
+agenda_add_high_priority_tasklet_front_BM (objectval_tyBM * obtk)
+{
+  if (!isobject_BM(obtk)) return;
+  std::lock_guard<std::mutex> _gu(threadinfo_stBM::ti_agendamtx);
+  auto it = threadinfo_stBM::ti_task_hmap.find(obtk);
+  if (it != threadinfo_stBM::ti_task_hmap.end())
+    {
+      std::deque<objectval_tyBM*>* tq = it->second;
+      bool r = threadinfo_stBM::remove_from_taskque(obtk, *tq);
+      assert (r);
+    }
+  threadinfo_stBM::ti_taskque_high.push_front(obtk);
+  threadinfo_stBM::ti_task_hmap.insert({obtk, & threadinfo_stBM::ti_taskque_high});
+} // end  agenda_add_high_priority_tasklet_front_BM
+
+
+void
+agenda_add_high_priority_tasklet_back_BM (objectval_tyBM *obtk)
+{
+  if (!isobject_BM(obtk)) return;
+  std::lock_guard<std::mutex> _gu(threadinfo_stBM::ti_agendamtx);
+  auto it = threadinfo_stBM::ti_task_hmap.find(obtk);
+  if (it != threadinfo_stBM::ti_task_hmap.end())
+    {
+      std::deque<objectval_tyBM*>* tq = it->second;
+      bool r = threadinfo_stBM::remove_from_taskque(obtk, *tq);
+      assert (r);
+    }
+  threadinfo_stBM::ti_taskque_high.push_back(obtk);
+  threadinfo_stBM::ti_task_hmap.insert({obtk, & threadinfo_stBM::ti_taskque_high});
+} // end  agenda_add_high_priority_tasklet_back_BM
+
+
+
+void
+agenda_add_low_priority_tasklet_front_BM (objectval_tyBM * obtk)
+{
+  if (!isobject_BM(obtk)) return;
+  std::lock_guard<std::mutex> _gu(threadinfo_stBM::ti_agendamtx);
+  auto it = threadinfo_stBM::ti_task_hmap.find(obtk);
+  if (it != threadinfo_stBM::ti_task_hmap.end())
+    {
+      std::deque<objectval_tyBM*>* tq = it->second;
+      bool r = threadinfo_stBM::remove_from_taskque(obtk, *tq);
+      assert (r);
+    }
+  threadinfo_stBM::ti_taskque_low.push_front(obtk);
+  threadinfo_stBM::ti_task_hmap.insert({obtk, & threadinfo_stBM::ti_taskque_low});
+} // end  agenda_add_low_priority_tasklet_front_BM
+
+
+void
+agenda_add_low_priority_tasklet_back_BM (objectval_tyBM *obtk)
+{
+  if (!isobject_BM(obtk)) return;
+  std::lock_guard<std::mutex> _gu(threadinfo_stBM::ti_agendamtx);
+  auto it = threadinfo_stBM::ti_task_hmap.find(obtk);
+  if (it != threadinfo_stBM::ti_task_hmap.end())
+    {
+      std::deque<objectval_tyBM*>* tq = it->second;
+      bool r = threadinfo_stBM::remove_from_taskque(obtk, *tq);
+      assert (r);
+    }
+  threadinfo_stBM::ti_taskque_low.push_back(obtk);
+  threadinfo_stBM::ti_task_hmap.insert({obtk, & threadinfo_stBM::ti_taskque_low});
+} // end  agenda_add_low_priority_tasklet_back_BM
+
+
+
+void
+agenda_add_very_low_priority_tasklet_front_BM (objectval_tyBM * obtk)
+{
+  if (!isobject_BM(obtk)) return;
+  std::lock_guard<std::mutex> _gu(threadinfo_stBM::ti_agendamtx);
+  auto it = threadinfo_stBM::ti_task_hmap.find(obtk);
+  if (it != threadinfo_stBM::ti_task_hmap.end())
+    {
+      std::deque<objectval_tyBM*>* tq = it->second;
+      bool r = threadinfo_stBM::remove_from_taskque(obtk, *tq);
+      assert (r);
+    }
+  threadinfo_stBM::ti_taskque_verylow.push_front(obtk);
+  threadinfo_stBM::ti_task_hmap.insert({obtk, & threadinfo_stBM::ti_taskque_verylow});
+} // end  agenda_add_very_low_priority_tasklet_front_BM
+
+
+void
+agenda_add_very_low_priority_tasklet_back_BM (objectval_tyBM *obtk)
+{
+  if (!isobject_BM(obtk)) return;
+  std::lock_guard<std::mutex> _gu(threadinfo_stBM::ti_agendamtx);
+  auto it = threadinfo_stBM::ti_task_hmap.find(obtk);
+  if (it != threadinfo_stBM::ti_task_hmap.end())
+    {
+      std::deque<objectval_tyBM*>* tq = it->second;
+      bool r = threadinfo_stBM::remove_from_taskque(obtk, *tq);
+      assert (r);
+    }
+  threadinfo_stBM::ti_taskque_verylow.push_back(obtk);
+  threadinfo_stBM::ti_task_hmap.insert({obtk, & threadinfo_stBM::ti_taskque_verylow});
+} // end  agenda_add_very_low_priority_tasklet_back_BM
+
+
+bool
+agenda_remove_tasklet_BM (objectval_tyBM *obtk)
+{
+  if (!isobject_BM(obtk)) return;
+  std::lock_guard<std::mutex> _gu(threadinfo_stBM::ti_agendamtx);
+  auto it = threadinfo_stBM::ti_task_hmap.find(obtk);
+  if (it != threadinfo_stBM::ti_task_hmap.end())
+    {
+      std::deque<objectval_tyBM*>* tq = it->second;
+      bool r = threadinfo_stBM::remove_from_taskque(obtk, *tq);
+      assert (r);
+      return true;
+    }
+  return false;
+} // end agenda_remove_tasklet_BM
