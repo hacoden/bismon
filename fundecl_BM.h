@@ -904,4 +904,5 @@ extern void agenda_add_low_priority_tasklet_back_BM (objectval_tyBM *);
 extern void agenda_add_very_low_priority_tasklet_front_BM (objectval_tyBM *);
 extern void agenda_add_very_low_priority_tasklet_back_BM (objectval_tyBM *);
 extern bool agenda_remove_tasklet_BM (objectval_tyBM *);
+extern bool agenda_has_tasklet_BM (objectval_tyBM *);
 #endif /*FUNDECL_BM_INCLUDED */

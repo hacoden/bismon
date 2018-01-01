@@ -1271,7 +1271,8 @@ agenda_add_very_low_priority_tasklet_back_BM (objectval_tyBM *obtk)
 bool
 agenda_remove_tasklet_BM (objectval_tyBM *obtk)
 {
-  if (!isobject_BM(obtk)) return;
+  if (!isobject_BM(obtk))
+    return false;
   std::lock_guard<std::mutex> _gu(threadinfo_stBM::ti_agendamtx);
   auto it = threadinfo_stBM::ti_task_hmap.find(obtk);
   if (it != threadinfo_stBM::ti_task_hmap.end())
@@ -1283,3 +1284,15 @@ agenda_remove_tasklet_BM (objectval_tyBM *obtk)
     }
   return false;
 } // end agenda_remove_tasklet_BM
+
+bool
+agenda_has_tasklet_BM (objectval_tyBM *obtk)
+{
+  if (!isobject_BM(obtk))
+    return false;
+  std::lock_guard<std::mutex> _gu(threadinfo_stBM::ti_agendamtx);
+  auto it = threadinfo_stBM::ti_task_hmap.find(obtk);
+  if (it != threadinfo_stBM::ti_task_hmap.end())
+    return true;
+  return false;
+} // end agenda_has_tasklet_BM
