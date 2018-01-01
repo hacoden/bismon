@@ -475,6 +475,10 @@ void
 full_garbage_collection_BM (struct stackframe_stBM *stkfram)
 {
   assert (pthread_self () == mainthreadid_BM);
+  if (agenda_nb_work_jobs_BM () > 0)
+    {
+      agenda_suspend_for_gc_BM ();
+    };
   atomic_store (&want_garbage_collection_BM, false);
   struct garbcoll_stBM GCdata = { };
   memset (&GCdata, 0, sizeof (GCdata));
@@ -658,5 +662,9 @@ full_garbage_collection_BM (struct stackframe_stBM *stkfram)
       gui_gc_message_BM (buf);
       fclose (fil);
       free (buf), buf = NULL;
+    };
+  if (agenda_nb_work_jobs_BM () > 0)
+    {
+      agenda_continue_after_gc_BM ();
     };
 }                               /* end full_garbage_collection_BM */
