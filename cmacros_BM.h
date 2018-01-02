@@ -175,8 +175,12 @@
      .failh_reason = NULL,						\
      .failh_jmpbuf = {}};						\
   curfailurehandle_BM = &fh_##Lin;					\
-  (FcodVar = setjmp(fh_##Lin.failh_jmpbuf)),				\
-    (void)0
+  volatile int failcod_##Lin =  setjmp(fh_##Lin.failh_jmpbuf);		\
+  FcodVar = failcod_##Lin;						\
+  if (failcod_##Lin) {							\
+    ReasonVar = fh_##Lin.failh_reason;					\
+  };									\
+  (void)0
 
 #define LOCAL_FAILURE_HANDLE_AT_BM(Fil,Lin,FcodVar,ReasonVar) \
   LOCAL_FAILURE_HANDLE_ATBIS_BM(Fil,Lin,FcodVar,ReasonVar)

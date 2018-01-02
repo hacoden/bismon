@@ -316,16 +316,27 @@ objlock_BM (objectval_tyBM * obj)
     return false;
   if (pthread_mutex_lock (&obj->ob_mutex))
     return false;
+  if (curfailurehandle_BM)
+    {
+      assert (curfailurehandle_BM->failh_magic == FAILUREHANDLEMAGIC_BM);
+      register_failock_BM (curfailurehandle_BM->failh_lockset, obj);
+    }
   return true;
 }                               /* end objlock_BM */
 
 bool
 objunlock_BM (objectval_tyBM * obj)
 {
+
   if (valtype_BM (obj) != tyObject_BM)
     return false;
   if (pthread_mutex_unlock (&obj->ob_mutex))
     return false;
+  if (curfailurehandle_BM)
+    {
+      assert (curfailurehandle_BM->failh_magic == FAILUREHANDLEMAGIC_BM);
+      unregister_failock_BM (curfailurehandle_BM->failh_lockset, obj);
+    }
   return true;
 }                               /* end objunlock_BM */
 
@@ -336,6 +347,11 @@ objtrylock_BM (objectval_tyBM * obj)
     return false;
   if (pthread_mutex_trylock (&obj->ob_mutex))
     return false;
+  if (curfailurehandle_BM)
+    {
+      assert (curfailurehandle_BM->failh_magic == FAILUREHANDLEMAGIC_BM);
+      register_failock_BM (curfailurehandle_BM->failh_lockset, obj);
+    };
   return true;
 }                               /* end objtrylock_BM */
 

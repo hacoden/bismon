@@ -213,7 +213,10 @@ extern void failure_at_BM (int failcode, const char *fil, int lineno,
                            struct stackframe_stBM *stkf)
   __attribute__ ((noreturn));
 
-
+extern void register_failock_BM (struct failurelockset_stBM *,
+                                 objectval_tyBM *);
+extern void unregister_failock_BM (struct failurelockset_stBM *,
+                                   objectval_tyBM *);
 /// message sending
 
 extern value_tyBM send0_BM (const value_tyBM recv,
@@ -916,4 +919,5 @@ extern void agenda_add_very_low_priority_tasklet_front_BM (objectval_tyBM *);
 extern void agenda_add_very_low_priority_tasklet_back_BM (objectval_tyBM *);
 extern bool agenda_remove_tasklet_BM (objectval_tyBM *);
 extern bool agenda_has_tasklet_BM (objectval_tyBM *);
+extern void run_agenda_tasklet_BM (objectval_tyBM *);
 #endif /*FUNDECL_BM_INCLUDED */

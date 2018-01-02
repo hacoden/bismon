@@ -1205,3 +1205,15 @@ send8_BM (const value_tyBM recv, const objectval_tyBM * obselector,
   return apply9_BM (mclos, stkf, recv, arg1, arg2, arg3, arg4, arg5, arg6,
                     arg7, arg8);
 }                               /* end send8_BM */
+
+
+void
+run_agenda_tasklet_BM (objectval_tyBM * obtk)
+{
+  if (!isobject_BM (obtk))      // should never happen
+    FATAL_BM ("bad tasklet object @%p", obtk);
+  LOCALFRAME_BM ( /*prev: */ NULL, /*descr: */ NULL,
+                 objectval_tyBM * obtk;
+                 value_tyBM failres;);
+  _.obtk = obtk;
+}                               /* end run_agenda_tasklet_BM */

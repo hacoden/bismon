@@ -348,11 +348,13 @@ struct specialframe_stBM        // for typayl_SpecialFrame_BM
   void *specfram_cdata[];
 };
 
+struct failurelockset_stBM;     // an opaque type
 struct failurehandler_stBM      // for typayl_FailureHandler_BM,
                                   // should be on stack
 {
   typedhead_tyBM pA;            // rlen is unused
   unsigned failh_magic;         // always FAILUREHANDLEMAGIC_BM
+  struct failurelockset_stBM *failh_lockset;
   value_tyBM failh_reason;
   jmp_buf failh_jmpbuf;
 };                              /* end of failurehandler_stBM */

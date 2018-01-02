@@ -1087,8 +1087,7 @@ threadinfo_stBM::thread_run(int tix)
       }
       if (taskob)
         {
-          FATAL_BM(" threadinfo_stBM::thread_run should run taskob");
-#warning threadinfo_stBM::thread_run should run taskob
+          run_agenda_tasklet_BM (taskob);
         }
       else   // no task to run
         {
@@ -1296,3 +1295,14 @@ agenda_has_tasklet_BM (objectval_tyBM *obtk)
     return true;
   return false;
 } // end agenda_has_tasklet_BM
+
+void
+register_failock_BM(struct failurelockset_stBM*flh, objectval_tyBM*ob)
+{
+#warning register_failock_BM unimplemented
+} // end register_failock_BM
+
+void unregister_failock_BM(struct failurelockset_stBM*flh, objectval_tyBM* ob)
+{
+#warning unregister_failock_BM unimplemented
+} // end unregister_failock_BM
