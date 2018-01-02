@@ -76,6 +76,24 @@ static std::map<const char*,objectval_tyBM*,StrcmpLess_BM> namemap_BM;
 // keys are objectval_tyBM*, values are strdup-ed strings
 static std::unordered_map<objectval_tyBM*,const char*,ObjectHash_BM> objhashtable_BM;
 
+struct failurelockset_stBM
+{
+  friend void register_failock_BM (struct failurelockset_stBM *,
+                                   objectval_tyBM *);
+  friend void unregister_failock_BM (struct failurelockset_stBM *,
+                                     objectval_tyBM *);
+  std::multiset<objectval_tyBM*,ObjectLess_BM> flhobjset;
+  failurelockset_stBM () {};
+  ~failurelockset_stBM ()
+  {
+    for (objectval_tyBM* ob : flhobjset)
+      {
+        assert (valtype_BM(ob) == tyObject_BM);
+        pthread_mutex_unlock(&ob->ob_mutex);
+      }
+  }
+};
+
 struct ModuleData_BM
 {
   rawid_tyBM mod_id;
@@ -1087,7 +1105,8 @@ threadinfo_stBM::thread_run(int tix)
       }
       if (taskob)
         {
-          run_agenda_tasklet_BM (taskob);
+          failurelockset_stBM fls;
+          run_agenda_tasklet_BM (taskob, &fls);
         }
       else   // no task to run
         {
@@ -1299,10 +1318,15 @@ agenda_has_tasklet_BM (objectval_tyBM *obtk)
 void
 register_failock_BM(struct failurelockset_stBM*flh, objectval_tyBM*ob)
 {
-#warning register_failock_BM unimplemented
+  assert (flh != nullptr);
+  assert (isobject_BM(ob));
+  flh->flhobjset.insert(ob);
 } // end register_failock_BM
 
-void unregister_failock_BM(struct failurelockset_stBM*flh, objectval_tyBM* ob)
+void
+unregister_failock_BM(struct failurelockset_stBM*flh, objectval_tyBM* ob)
 {
-#warning unregister_failock_BM unimplemented
+  assert (flh != nullptr);
+  assert (isobject_BM(ob));
+  flh->flhobjset.erase(ob);
 } // end unregister_failock_BM

@@ -172,6 +172,7 @@
    = {									\
      .pa = {.htyp = typayl_FailureHandler_BM},				\
      .failh_magic = FAILUREHANDLEMAGIC_BM,				\
+     .failh_lockset = NULL,						\
      .failh_reason = NULL,						\
      .failh_jmpbuf = {}};						\
   curfailurehandle_BM = &fh_##Lin;					\

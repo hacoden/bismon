@@ -1208,12 +1208,45 @@ send8_BM (const value_tyBM recv, const objectval_tyBM * obselector,
 
 
 void
-run_agenda_tasklet_BM (objectval_tyBM * obtk)
+run_agenda_tasklet_BM (objectval_tyBM * obtk, struct failurelockset_stBM *flh)
 {
   if (!isobject_BM (obtk))      // should never happen
     FATAL_BM ("bad tasklet object @%p", obtk);
+  assert (flh != NULL);
   LOCALFRAME_BM ( /*prev: */ NULL, /*descr: */ NULL,
-                 objectval_tyBM * obtk;
+                 objectval_tyBM * obtk; closure_tyBM * closv;
                  value_tyBM failres;);
   _.obtk = obtk;
+  if (isclosure_BM (obtk->ob_payl))
+    {
+      _.closv = obtk->ob_payl;
+      volatile int failcod = 0;
+      struct failurehandler_stBM fh = {
+        .pA = {.htyp = typayl_FailureHandler_BM},
+        .failh_magic = FAILUREHANDLEMAGIC_BM,
+        .failh_lockset = NULL,
+        .failh_reason = NULL,
+        .failh_jmpbuf = {}
+      };
+      fh.failh_lockset = flh;
+      curfailurehandle_BM = &fh;
+      failcod = setjmp (fh.failh_jmpbuf);
+      if (!failcod)
+        {
+          (void) apply1_BM (_.closv, &_, _.obtk);
+        }
+      else
+        {
+          char curidbuf[32];
+          memset (curidbuf, 0, sizeof (curidbuf));
+          idtocbuf32_BM (objid_BM (_.obtk), curidbuf);
+          _.failres = fh.failh_reason;
+          char *failmsg =
+            debug_outstr_value_BM (_.failres, (struct stackframe_stBM *) &_,
+                                   0);
+          fprintf (stderr, "tasklet %s failed code#%d reason %s\n", curidbuf,
+                   failcod, failmsg);
+        };
+    }
+  curfailurehandle_BM = NULL;
 }                               /* end run_agenda_tasklet_BM */
