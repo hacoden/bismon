@@ -97,6 +97,14 @@ valuegcproc_BM (struct garbcoll_stBM *gc, value_tyBM val, int depth)
       return closuregcproc_BM (gc, (closure_tyBM *) val, depth);
     case tyUnspecified_BM:
       return val;
+    case typayl_FailureHandler_BM:
+      {
+        struct failurehandler_stBM *fh = (struct failurehandler_stBM *) val;
+        if (fh->failh_magic != FAILUREHANDLEMAGIC_BM)
+          FATAL_BM ("valuegcproc_BM corrupted failurehandler @%p", val);
+        fh->failh_reason = valuegcproc_BM (gc, fh->failh_reason, depth + 1);
+        return val;
+      }
     default:
       FATAL_BM ("valuegcproc_BM ty#%d (%s) unexpected for val@%p depth=%d\n",
                 ty, typestring_BM (ty), val, depth);
@@ -163,6 +171,14 @@ extendedgcproc_BM (struct garbcoll_stBM *gc, extendedval_tyBM xval, int depth)
     case typayl_dict_BM:
       dictgcmark_BM (gc, (struct dict_stBM *) xval, depth);
       return xval;
+    case typayl_FailureHandler_BM:
+      {
+        struct failurehandler_stBM *fh = (struct failurehandler_stBM *) xval;
+        if (fh->failh_magic != FAILUREHANDLEMAGIC_BM)
+          FATAL_BM ("extendedgcproc_BM corrupted failurehandler @%p", xval);
+        fh->failh_reason = valuegcproc_BM (gc, fh->failh_reason, depth + 1);
+        return xval;
+      }
     default:
       FATAL_BM ("extendedgcproc_BM ty#%d unexpected for xval@%p depth=%d",
                 ty, xval, depth);
@@ -233,6 +249,8 @@ valgcdestroy_BM (struct garbcoll_stBM *gc, value_tyBM val)
     case typayl_dumper_BM:
       dumpgcdestroy_BM (gc, (struct dumper_stBM *) val);
       return;
+    case typayl_FailureHandler_BM:
+      return;
     default:
       FATAL_BM ("gcdestroy ty#%d unexpected for val@%p", ty, val);
     }
@@ -283,6 +301,12 @@ typestring_BM (int ty)
       return "payl_parser";
     case typayl_dumper_BM:
       return "payl_dumper";
+    case typayl_FailureHandler_BM:
+      return "payl_FailureHandler";
+    case typayl_SpecialFrame_BM:
+      return "payl_SpecialFrame";
+    case typayl_StackFrame_BM:
+      return "payl_StackFrame";
     default:
       {
         static char buf[32];

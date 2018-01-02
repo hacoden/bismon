@@ -10,6 +10,8 @@
 #define CLEARMGC_BM 0
 #define GCMAGIC_BM 24501383     /*0x175dc87 */
 
+#define FAILUREHANDLEMAGIC_BM    853401645      /*Ox32dde02d */
+
 #define VALUEGCPROC_BM(Gc,Val,Depth)		\
   do { if ((Val)!=NULL)				\
       Val = (typeof(Val))(valuegcproc_BM ((Gc),	\
@@ -156,6 +158,33 @@
 
 #define NONPRINTF_BM(Fmt,...) do { if (false) \
       DBGPRINTF_BM(Fmt,##__VA_ARGS__); } while(0)
+
+#define FAILURE_AT_BIS_BM(Fcod,Fil,Lin,Reason,Stack) \
+  do {failure_at_BM((Fcod),(Fil),(Lin),(Reason),(Stack));} while(0)
+
+#define FAILURE_AT_BM(Fcod,Fil,Lin,Reason,Stack) \
+       FAILURE_AT_BIS_BM(Fcod,Fil,Lin,Reason,Stack)
+#define FAILURE_BM(FailCod,Reason,Stack) FAILURE_AT_BM((FailCod),__FILE__,__LINE__,(Reason),(Stack))
+
+
+#define LOCAL_FAILURE_HANDLE_ATBIS_BM(Fil,Lin,FcodVar,ReasonVar)	\
+  struct failurehandler_stBM fh_##Lin					\
+   = {									\
+     .pa = {.htyp = typayl_FailureHandler_BM},				\
+     .failh_magic = FAILUREHANDLEMAGIC_BM,				\
+     .failh_reason = NULL,						\
+     .failh_jmpbuf = {}};						\
+  curfailurehandle_BM = &fh_##Lin;					\
+  (FcodVar = setjmp(fh_##Lin.failh_jmpbuf)),				\
+    (void)0
+
+#define LOCAL_FAILURE_HANDLE_AT_BM(Fil,Lin,FcodVar,ReasonVar) \
+  LOCAL_FAILURE_HANDLE_ATBIS_BM(Fil,Lin,FcodVar,ReasonVar)
+
+/// code using LOCAL_FAILURE_HANDLE_BM should probably backup and
+/// restore the curfailurehandle_BM
+#define LOCAL_FAILURE_HANDLE_BM(FcodVar,ReasonVar) \
+  LOCAL_FAILURE_HANDLE_AT_BM(__FILE__,__LINE__,FcodVar,ReasonVar)
 
 // weak assert dont abort
 #ifndef NDEBUG

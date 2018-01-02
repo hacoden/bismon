@@ -72,6 +72,7 @@ enum gctyenum_BM
   typayl_quasinode_BM = 0xee00, // 60928, stack allocated!
   //
   //
+  typayl_FailureHandler_BM = 0xfffd,
   typayl_SpecialFrame_BM = 0xfffe,
   typayl_StackFrame_BM = 0xffff
 };
@@ -346,6 +347,15 @@ struct specialframe_stBM        // for typayl_SpecialFrame_BM
   intptr_t specfram_intp;
   void *specfram_cdata[];
 };
+
+struct failurehandler_stBM      // for typayl_FailureHandler_BM,
+                                  // should be on stack
+{
+  typedhead_tyBM pA;            // rlen is unused
+  unsigned failh_magic;         // always FAILUREHANDLEMAGIC_BM
+  value_tyBM failh_reason;
+  jmp_buf failh_jmpbuf;
+};                              /* end of failurehandler_stBM */
 
 struct loader_stBM              // malloc-ed then free-d at load time
 {                               // for typayl_loader_BM

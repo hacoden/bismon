@@ -10,6 +10,8 @@ bool gui_is_running_BM;
 static int nbworkjobs_BM;
 const char myhostname_BM[80];
 thread_local struct threadinfo_stBM *curthreadinfo_BM;
+thread_local volatile struct failurehandler_stBM *curfailurehandle_BM;
+
 GIOChannel *defer_gtk_readpipechan_BM;
 int defer_gtk_readpipefd_BM = -1;
 int defer_gtk_writepipefd_BM = -1;
@@ -79,6 +81,35 @@ bool batch_bm;
 bool newgui_BM;
 char *parseval_bm;
 
+
+void
+failure_at_BM (int failcode, const char *fil, int lineno,
+               const value_tyBM reasonv, struct stackframe_stBM *stkf)
+{
+  if (curfailurehandle_BM)
+    {
+      if (curfailurehandle_BM->failh_magic != FAILUREHANDLEMAGIC_BM)
+        FATAL_AT_BM (fil, lineno,
+                     "corrupted curfailurehandle_BM@%p for failcode %d",
+                     curfailurehandle_BM, failcode);
+      curfailurehandle_BM->failh_reason = reasonv;
+      longjmp (failcode, curfailurehandle_BM->failh_jmpbuf);
+    }
+  else
+    {
+      FATAL_AT_BM (fil, lineno,
+                   "unhandled failure code#%d reason %s",
+                   failcode, debug_outstr_value_BM (reasonv, stkf, 0));
+    }
+}                               /* end failure_at_BM */
+
+void
+failure_BM (int failcode, const value_tyBM reasonv,
+            struct stackframe_stBM *stkf)
+{
+  failure_at_BM (failcode, "??", 0, reasonv, stkf);
+}                               /* end failure_BM */
+
 static void add_new_predefined_bm (void);
 
 static bool
@@ -112,7 +143,7 @@ add_predef_bm (const gchar * optname __attribute__ ((unused)),
   nb_added_predef_bm++;
   comment_bm = NULL;
   return true;
-}                               /* end run_command_bm */
+}                               /* end add_predef_bm */
 
 
 const GOptionEntry optab[] = {

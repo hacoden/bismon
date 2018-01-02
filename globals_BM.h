@@ -32,6 +32,7 @@ extern struct timespec startrealtimespec_BM;
 extern struct loader_stBM *firstloader_BM;
 
 extern thread_local struct threadinfo_stBM *curthreadinfo_BM;
+extern thread_local volatile struct failurehandler_stBM *curfailurehandle_BM;
 
 
 extern struct allalloc_stBM *allocationvec_vBM /*¤ allocgc_BM.c */ ;

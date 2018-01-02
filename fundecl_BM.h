@@ -203,6 +203,17 @@ static inline bool
 objectisinstance_BM (const objectval_tyBM * obj,
                      const objectval_tyBM * obclass);
 
+
+/// raise a failure; see also macro FAILURE_BM
+extern void failure_BM (int failcode, const value_tyBM reasonv,
+                        struct stackframe_stBM *stkf)
+  __attribute__ ((noreturn));
+extern void failure_at_BM (int failcode, const char *fil, int lineno,
+                           const value_tyBM reasonv,
+                           struct stackframe_stBM *stkf)
+  __attribute__ ((noreturn));
+
+
 /// message sending
 
 extern value_tyBM send0_BM (const value_tyBM recv,
