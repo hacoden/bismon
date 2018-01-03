@@ -938,6 +938,9 @@ struct threadinfo_stBM
   friend void agenda_add_low_priority_tasklet_front_BM (objectval_tyBM * obtk);
   friend void agenda_add_low_priority_tasklet_back_BM (objectval_tyBM * obtk);
   friend bool agenda_remove_tasklet_BM (objectval_tyBM * obtk);
+  friend long agenda_get_counts_BM(long*pveryhigh, long*phigh, long*plow, long*pverylow);
+  friend long agenda_get_tuples_BM(value_tyBM*pveryhightup, value_tyBM*phightup,  value_tyBM*plowtup, value_tyBM*pverylowtup);
+  ////
   threadinfo_stBM() : ti_magic(TI_MAGICNUM_BM)
   {
     ti_rank = 0;
@@ -945,6 +948,7 @@ struct threadinfo_stBM
     atomic_init(&ti_gc, false);
     atomic_init(&ti_idlerout,(threadidle_sigtBM*) nullptr);
   }
+  ///
 private:
   static bool remove_from_taskque(objectval_tyBM*tob, std::deque<objectval_tyBM*>& taskque)
   {
@@ -958,7 +962,8 @@ private:
       }
     return false;
   }; // end remove_from_taskque
-};
+  static const tupleval_tyBM*tuple_from_taskque(std::deque<objectval_tyBM*>& taskque);
+};				// end threadinfo_stBM
 
 
 threadinfo_stBM threadinfo_stBM::ti_array[MAXNBWORKJOBS_BM+2];
@@ -1315,6 +1320,94 @@ agenda_has_tasklet_BM (objectval_tyBM *obtk)
   return false;
 } // end agenda_has_tasklet_BM
 
+
+const tupleval_tyBM*
+threadinfo_stBM::tuple_from_taskque(std::deque<objectval_tyBM*>& taskque)
+{
+  const tupleval_tyBM* res = nullptr;
+  long nbtasks = taskque.size();
+  objectval_tyBM*tinyarr[TINYSIZE_BM] = {};
+  objectval_tyBM**arr = (nbtasks<TINYSIZE_BM)?tinyarr:(objectval_tyBM**)calloc(nbtasks,sizeof(objectval_tyBM*));
+  if (!arr)
+    FATAL_BM("tuple_from_taskque failed for nbtasks %ld", nbtasks);
+  long count=0;
+  for (objectval_tyBM*tob : taskque)
+    {
+      assert (count<nbtasks);
+      arr[count++] = tob;
+    };
+  res = maketuple_BM(arr, nbtasks);
+  if (arr != tinyarr)
+    free (arr);
+  return res;
+} // end threadinfo_stBM::tuple_from_taskque
+
+long
+agenda_get_counts_BM(long*pveryhigh, long*phigh, long*plow, long*pverylow)
+{
+  std::lock_guard<std::mutex> _gu(threadinfo_stBM::ti_agendamtx);
+  long nbveryhigh = threadinfo_stBM::ti_taskque_veryhigh.size();
+  long nbhigh = threadinfo_stBM::ti_taskque_high.size();
+  long nblow = threadinfo_stBM::ti_taskque_low.size();
+  long nbverylow = threadinfo_stBM::ti_taskque_verylow.size();
+  if (pveryhigh)
+    *pveryhigh = nbveryhigh;
+  if (phigh)
+    *phigh = nbhigh;
+  if (plow)
+    *plow = nblow;
+  if (pverylow)
+    *pverylow = nbverylow;
+  return nbveryhigh+nbhigh+nblow+nbverylow;
+} // end agenda_get_counts_BM
+
+
+
+long
+agenda_get_tuples_BM(value_tyBM*pveryhightup, value_tyBM*phightup,  value_tyBM*plowtup, value_tyBM*pverylowtup)
+{
+  std::lock_guard<std::mutex> _gu(threadinfo_stBM::ti_agendamtx);
+  long nbveryhigh = 0;
+  long nbhigh = 0;
+  long nblow = 0;
+  long nbverylow = 0;
+  if (pveryhightup)
+    {
+      auto tup = threadinfo_stBM::tuple_from_taskque(threadinfo_stBM::ti_taskque_veryhigh);
+      nbveryhigh = tuplesize_BM(tup);
+      *pveryhightup = (value_tyBM)tup;
+    }
+  else
+    nbveryhigh =  threadinfo_stBM::ti_taskque_veryhigh.size();
+  if (phightup)
+    {
+      auto tup = threadinfo_stBM::tuple_from_taskque(threadinfo_stBM::ti_taskque_high);
+      nbhigh = tuplesize_BM(tup);
+      *phightup = (value_tyBM)tup;
+    }
+  else
+    nbhigh =  threadinfo_stBM::ti_taskque_high.size();
+  if (plowtup)
+    {
+      auto tup = threadinfo_stBM::tuple_from_taskque(threadinfo_stBM::ti_taskque_low);
+      nblow = tuplesize_BM(tup);
+      *plowtup = (value_tyBM)tup;
+    }
+  else
+    nblow =  threadinfo_stBM::ti_taskque_low.size();
+  if (pverylowtup)
+    {
+      auto tup = threadinfo_stBM::tuple_from_taskque(threadinfo_stBM::ti_taskque_verylow);
+      nbverylow = tuplesize_BM(tup);
+      *pverylowtup = (value_tyBM)tup;
+    }
+  else
+    nbverylow =  threadinfo_stBM::ti_taskque_verylow.size();
+  return nbveryhigh+nbhigh+nblow+nbverylow;
+} // end agenda_get_tuples_BM
+
+
+////////////////
 void
 register_failock_BM(struct failurelockset_stBM*flh, objectval_tyBM*ob)
 {

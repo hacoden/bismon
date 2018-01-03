@@ -921,4 +921,10 @@ extern bool agenda_remove_tasklet_BM (objectval_tyBM *);
 extern bool agenda_has_tasklet_BM (objectval_tyBM *);
 extern void run_agenda_tasklet_BM (objectval_tyBM *,
                                    struct failurelockset_stBM *);
+// return total number of tasklets
+extern long agenda_get_counts_BM (long *pveryhigh, long *phigh, long *plow,
+                                  long *pverylow);
+extern long agenda_get_tuples_BM (value_tyBM * pveryhightup,
+                                  value_tyBM * phightup, value_tyBM * plowtup,
+                                  value_tyBM * pverylowtup);
 #endif /*FUNDECL_BM_INCLUDED */
