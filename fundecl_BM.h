@@ -3,6 +3,7 @@
 #define FUNDECL_BM_INCLUDED
 
 extern void abort_BM (void) __attribute__ ((noreturn));
+static inline pid_t gettid_BM (void);
 
 extern int64_t prime_above_BM (int64_t n);
 extern int64_t prime_below_BM (int64_t n);

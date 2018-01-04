@@ -2,6 +2,13 @@
 #ifndef INLINE_BM_INCLUDED
 #define INLINE_BM_INCLUDED
 
+pid_t
+gettid_BM (void)
+{
+  return syscall (SYS_gettid, 0L);
+}                               /* end gettid_BM */
+
+
 double
 clocktime_BM (clockid_t clid)
 {
