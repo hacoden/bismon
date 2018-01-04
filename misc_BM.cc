@@ -987,7 +987,7 @@ start_agenda_work_threads_BM (int nbjobs)
   assert (pthread_self() == mainthreadid_BM);
   assert (nbjobs >= MINNBWORKJOBS_BM && nbjobs <= MAXNBWORKJOBS_BM);
   atomic_store(&threadinfo_stBM::ti_nbworkthreads, nbjobs);
-  for (int tix=1; tix<nbjobs; tix++)
+  for (int tix=1; tix<=nbjobs; tix++)
     {
       DBGPRINTF_BM("start_agenda_work_threads tix=%d", tix);
       auto& curth = threadinfo_stBM::ti_array[tix];
@@ -996,7 +996,7 @@ start_agenda_work_threads_BM (int nbjobs)
       usleep (1000+tix%32);
     }
   usleep (200);
-  for (int tix=1; tix<nbjobs; tix++)
+  for (int tix=1; tix<=nbjobs; tix++)
     {
       threadinfo_stBM::ti_array[tix].ti_thread.detach();
       usleep (100+tix%32);
@@ -1081,13 +1081,14 @@ void
 threadinfo_stBM::thread_run(const int tix)
 {
   curthreadinfo_BM = ti_array+tix;
-  DBGPRINTF_BM("thread_run tix%d start", tix);
+  DBGPRINTF_BM("thread_run tix%d start tid#%ld", tix, (long) gettid_BM());
   usleep(2000+500*tix);
   long loopcnt=0;
   for (;;)
     {
       loopcnt++;
-      DBGPRINTF_BM("thread_run tix%d loop#%ld begin", tix, loopcnt);
+      DBGPRINTF_BM("thread_run tix%d loop#%ld begin tid#%ld",
+                   tix, loopcnt, (long) gettid_BM());
       objectval_tyBM*taskob = nullptr;
       if (atomic_load(&curthreadinfo_BM->ti_stop))
         break;
@@ -1096,9 +1097,10 @@ threadinfo_stBM::thread_run(const int tix)
           atomic_store(&curthreadinfo_BM->ti_gc, true);
           do
             {
+              DBGPRINTF_BM("thread_run tix%d needgc", tix);
               ti_agendacondv.notify_all();
               std::unique_lock<std::mutex> lk_(ti_agendamtx);
-              ti_agendacondv.wait_for(lk_,std::chrono::milliseconds{500});
+              ti_agendacondv.wait_for(lk_,std::chrono::milliseconds{900});
             }
           while(atomic_load(&curthreadinfo_BM->ti_gc));
         }
@@ -1125,6 +1127,13 @@ threadinfo_stBM::thread_run(const int tix)
             ti_task_hmap.erase(taskob);
           }
       }
+      char idbuf[32];
+      memset (idbuf, 0, sizeof(idbuf));
+      DBGPRINTF_BM("thread_run tix%d taskob %s tid#%ld", tix,
+                   taskob
+                   ?(idtocbuf32_BM (objid_BM (taskob), idbuf),idbuf)
+                   :"*none*",
+                   (long) gettid_BM());
       if (taskob)
         {
           failurelockset_stBM fls;
@@ -1133,7 +1142,7 @@ threadinfo_stBM::thread_run(const int tix)
       else   // no task to run
         {
           std::unique_lock<std::mutex> lk_(ti_agendamtx);
-          int delayms = 250 +
+          int delayms = 3750 +
                         (atomic_load (&want_garbage_collection_BM)?0:(g_random_int () % 256));
           ti_agendacondv.wait_for(lk_,std::chrono::milliseconds{delayms});
         }

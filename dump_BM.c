@@ -134,6 +134,8 @@ dump_BM (const char *dirname, struct stackframe_stBM *stkf)
     );
   if (!dirname || dirname[0] == (char) 0)
     dirname = ".";
+  DBGPRINTF_BM ("dump_BM dirname %s start tid#%ld",
+                dirname, (long) gettid_BM ());
   struct dumper_stBM *duptr = NULL;
   fprintf (stderr, "start dumping into %s\n", dirname);
   if (g_mkdir_with_parents (dirname, 0750))
@@ -166,6 +168,8 @@ dump_BM (const char *dirname, struct stackframe_stBM *stkf)
   di.dumpinfo_wrotefilecount = duptr->dump_wrotefilecount;
   di.dumpinfo_elapsedtime = elapsedtime_BM () - duptr->dump_startelapsedtime;
   di.dumpinfo_cputime = cputime_BM () - duptr->dump_startcputime;
+  DBGPRINTF_BM ("dump_BM dirname %s end tid#%ld\n",
+                dirname, (long) gettid_BM ());
   return di;
 }                               /* end dump_BM */
 

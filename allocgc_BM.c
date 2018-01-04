@@ -498,8 +498,8 @@ static unsigned long countgc_BM;
 void
 full_garbage_collection_BM (struct stackframe_stBM *stkfram)
 {
-  DBGPRINTF_BM ("start full_garbage_collection_BM stkfram@%p",
-                (void *) stkfram);
+  DBGPRINTF_BM ("start full_garbage_collection_BM stkfram@%p tid#%ld",
+                (void *) stkfram, (long) gettid_BM ());
   assert (pthread_self () == mainthreadid_BM);
   int nbj = agenda_nb_work_jobs_BM ();
   DBGPRINTF_BM ("full_garbage_collection_BM nbj=%d", nbj);
@@ -692,8 +692,12 @@ full_garbage_collection_BM (struct stackframe_stBM *stkfram)
       fclose (fil);
       free (buf), buf = NULL;
     };
-  if (agenda_nb_work_jobs_BM () > 0)
+  if (nbj > 0)
     {
+      DBGPRINTF_BM
+        ("full_garbage_collection_BM before continue_after_gc nbj=%d", nbj);
       agenda_continue_after_gc_BM ();
     };
+  DBGPRINTF_BM ("full_garbage_collection_BM end tid#%ld\n\n",
+                (long) gettid_BM ());
 }                               /* end full_garbage_collection_BM */
