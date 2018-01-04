@@ -1269,12 +1269,15 @@ void
 quitgui_BM (void)
 {
   //  printf ("quitgui_BM\n");
+  DBGPRINTF_BM ("quitgui start tid#%ld", (long) gettid_BM ());
   GtkWidget *quitdialog =       //
     gtk_message_dialog_new_with_markup  //
     (GTK_WINDOW (mainwin_BM),
      GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION,
      GTK_BUTTONS_OK_CANCEL, "Quit without dumping?");
   int resp = gtk_dialog_run (GTK_DIALOG (quitdialog));
+  DBGPRINTF_BM ("quitgui  tid#%ld resp=%d %s", (long) gettid_BM (),
+                resp, (resp == GTK_RESPONSE_OK) ? "ok" : "...");
   if (resp == GTK_RESPONSE_OK)
     {
       gtk_main_quit ();
@@ -1291,11 +1294,13 @@ quitgui_BM (void)
         }
     }
   gtk_widget_destroy (quitdialog);
+  DBGPRINTF_BM ("quitgui end tid#%ld", (long) gettid_BM ());
 }                               /* end quitgui_BM */
 
 void
 exitgui_BM (void)
 {
+  DBGPRINTF_BM ("exitgui start tid#%ld", (long) gettid_BM ());
   extern char *dump_dir_bm;
   struct dumpinfo_stBM di = dump_BM (dump_dir_bm, NULL);
   gtk_main_quit ();
@@ -1313,12 +1318,14 @@ exitgui_BM (void)
                dump_dir_bm, nowbuf);
       fflush (gui_command_log_file_BM);
     }
+  DBGPRINTF_BM ("exitgui end tid#%ld", (long) gettid_BM ());
 }                               /* end exitgui_BM */
 
 
 void
 dumpgui_BM (void)
 {
+  DBGPRINTF_BM ("dumpgui start tid#%ld", (long) gettid_BM ());
   extern char *dump_dir_bm;
   assert (dump_dir_bm != NULL);
   log_begin_message_BM ();
@@ -1355,17 +1362,20 @@ dumpgui_BM (void)
                dump_dir_bm, nowbuf);
       fflush (gui_command_log_file_BM);
     }
+  DBGPRINTF_BM ("dumpgui end tid#%ld", (long) gettid_BM ());
 }                               /* end dumpgui_BM */
 
 void
 garbcollgui_BM (void)
 {
+  DBGPRINTF_BM ("garbcollgui start tid#%ld", (long) gettid_BM ());
   assert (mainthreadid_BM == pthread_self ());
   log_begin_message_BM ();
   atomic_store (&want_garbage_collection_BM, true);
   log_puts_message_BM ("forced garbage collection");
   log_end_message_BM ();
   full_garbage_collection_BM (NULL);
+  DBGPRINTF_BM ("garbcollgui end tid#%ld", (long) gettid_BM ());
 }                               /* end garbcollgui_BM */
 
 bool
@@ -1375,6 +1385,7 @@ deletemainwin_BM (GtkWidget * widget
                   __attribute__ ((unused)))
 {
   // printf ("deletemainwin_BM\n");
+  DBGPRINTF_BM ("deletemainwin_BM tid#%ld", (long) gettid_BM ());
   GtkWidget *quitdialog =       //
     gtk_message_dialog_new_with_markup  //
     (GTK_WINDOW (mainwin_BM),

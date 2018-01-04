@@ -525,6 +525,8 @@ static void endguilog_BM (void);
 void
 rungui_BM (bool newgui, int nbjobs)
 {
+  DBGPRINTF_BM ("rungui %s nbjobs %d start tid#%ld", newgui ? "new" : "old",
+                nbjobs, (long) gettid_BM ());
   int deferpipes[2] = { -1, -1 };
   if (pipe (deferpipes) < 0)
     FATAL_BM ("failed to pipe GTK deferpipe");
@@ -536,8 +538,14 @@ rungui_BM (bool newgui, int nbjobs)
   gui_is_running_BM = true;
   startguilog_BM (newgui);
   start_agenda_work_threads_BM (nbjobs);
+  DBGPRINTF_BM ("rungui %s nbjobs %d before gtkmain", newgui ? "new" : "old",
+                nbjobs);
   gtk_main ();
+  DBGPRINTF_BM ("rungui %s nbjobs %d before stopagendawork tid#%ld",
+                newgui ? "new" : "old", nbjobs, (long) gettid_BM ());
   stop_agenda_work_threads_BM ();
+  DBGPRINTF_BM ("rungui %s nbjobs %d after stopagendawork",
+                newgui ? "new" : "old", nbjobs);
   g_io_channel_shutdown (defer_gtk_readpipechan_BM, false, NULL);
   g_io_channel_unref (defer_gtk_readpipechan_BM), defer_gtk_readpipechan_BM =
     NULL;
@@ -546,6 +554,8 @@ rungui_BM (bool newgui, int nbjobs)
   gui_is_running_BM = false;
   if (gui_command_log_file_BM)
     endguilog_BM ();
+  DBGPRINTF_BM ("rungui %s nbjobs %d ending tid#%ld",
+                newgui ? "new" : "old", nbjobs, (long) gettid_BM ());
 }                               /* end rungui_BM */
 
 

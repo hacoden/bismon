@@ -1011,7 +1011,7 @@ stop_agenda_work_threads_BM(void)
   int nbwth = atomic_load(&threadinfo_stBM::ti_nbworkthreads);
   {
     std::lock_guard<std::mutex> _gu(threadinfo_stBM::ti_agendamtx);
-    for (int tix=1; tix<nbwth; tix++)
+    for (int tix=1; tix<=nbwth; tix++)
       {
         auto& curth = threadinfo_stBM::ti_array[tix];
         atomic_store(&curth.ti_stop, true);
