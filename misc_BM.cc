@@ -1009,7 +1009,7 @@ void
 stop_agenda_work_threads_BM(void)
 {
   int nbwth = atomic_load(&threadinfo_stBM::ti_nbworkthreads);
-  DBGPRINTF_BM("stop_agenda_work_threads start  nbwth=%d tid#%ld elapsed %.3f s",
+  DBGPRINTF_BM("stop_agenda_work_threads start nbwth=%d tid#%ld elapsed %.3f s",
                nbwth, (long)gettid_BM(), elapsedtime_BM());
   {
     std::lock_guard<std::mutex> _gu(threadinfo_stBM::ti_agendamtx);
@@ -1019,7 +1019,10 @@ stop_agenda_work_threads_BM(void)
         atomic_store(&curth.ti_stop, true);
       }
   }
+  threadinfo_stBM::ti_agendacondv.notify_all();
   usleep (1000);
+  DBGPRINTF_BM("stop_agenda_work_threads notified nbwth=%d tid#%ld elapsed %.3f s",
+               nbwth, (long)gettid_BM(), elapsedtime_BM());
   do
     {
       std::unique_lock<std::mutex> lk_(threadinfo_stBM::ti_agendamtx);
@@ -1109,7 +1112,7 @@ threadinfo_stBM::thread_run(const int tix)
           atomic_store(&curthreadinfo_BM->ti_gc, true);
           do
             {
-              DBGPRINTF_BM("thread_run tix%d needgc", tix);
+              DBGPRINTF_BM("thread_run tix%d needgc tid#%ld elapsed %.3f s", tix, (long) gettid_BM(), elapsedtime_BM());
               ti_agendacondv.notify_all();
               std::unique_lock<std::mutex> lk_(ti_agendamtx);
               ti_agendacondv.wait_for(lk_,std::chrono::milliseconds{900});
@@ -1149,6 +1152,8 @@ threadinfo_stBM::thread_run(const int tix)
       if (taskob)
         {
           failurelockset_stBM fls;
+          DBGPRINTF_BM("thread_run tix%d shouldrun tid#%ld elapsed %.3f s",
+                       tix,  (long) gettid_BM(), elapsedtime_BM());
           run_agenda_tasklet_BM (taskob, &fls);
           DBGPRINTF_BM("thread_run tix%d didrun tid#%ld elapsed %.3f s",
                        tix,  (long) gettid_BM(), elapsedtime_BM());
