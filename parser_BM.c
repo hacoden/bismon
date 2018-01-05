@@ -445,7 +445,7 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
                 (pars,
                  pars->pars_lineno,
                  pars->pars_colpos + g_utf8_strlen (restlin, pc - restlin),
-                 g_utf8_strlen (startplain, pc - startplain));
+                 g_utf8_strlen (startplain, pc - startplain - 1));
             }
           const char *oldpc = pc;
           char nc = pc[1];
@@ -1026,6 +1026,7 @@ again:
   .tok_kind = plex_DELIM,.tok_line = curlin,.tok_col = curcol,.tok_delim =
       curdelim};
 }                               /* end parsertokenget_BM */
+
 
 
 objectval_tyBM *

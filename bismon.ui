@@ -302,6 +302,30 @@
 	      <property name='font'>Space Mono Bold</property>
             </object>
         </child>
+      <!-- number_cmdtag for numbers -->
+        <child type="tag">
+            <object class='GtkTextTag'>
+              <property name="name">number_cmdtag</property>
+	      <property name='foreground'>CadetBlue</property>
+	      <property name='font'>Space Mono Bold</property>
+            </object>
+        </child>
+      <!-- stringsign_cmdtag for string signs, e.g. external quotes -->
+        <child type="tag">
+            <object class='GtkTextTag'>
+              <property name="name">stringsign_cmdtag</property>
+	      <property name='foreground'>DarkOrchid</property>
+	      <property name='font'>Space Mono Bold</property>
+            </object>
+        </child>
+      <!-- stringinside_cmdtag for string internal chjaracters -->
+        <child type="tag">
+            <object class='GtkTextTag'>
+              <property name="name">stringinside_cmdtag</property>
+	      <property name='foreground'>DeepSkyBlue4</property>
+	      <property name='font'>Space Mono Oblique</property>
+            </object>
+        </child>
       <!-- nesting_cmdtag for open/close parenthesis -->
         <child type="tag">
             <object class='GtkTextTag'>

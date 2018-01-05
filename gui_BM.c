@@ -95,6 +95,9 @@ GtkTextTag *delim_cmdtag_BM;
 GtkTextTag *knowname_cmdtag_BM;
 GtkTextTag *newname_cmdtag_BM;
 GtkTextTag *id_cmdtag_BM;
+GtkTextTag *number_cmdtag_BM;
+GtkTextTag *stringsign_cmdtag_BM;
+GtkTextTag *stringinside_cmdtag_BM;
 GtkTextTag *dollar_cmdtag_BM;
 GtkTextTag *nesting_cmdtag_BM;
 GtkTextTag *blink_cmdtag_BM;
@@ -156,6 +159,9 @@ const struct parserops_stBM parsop_command_build_BM = {
   .parsop_decorate_id_rout = parsid_guicmd_BM,
   .parsop_decorate_known_name_rout = parsknowname_guicmd_BM,
   .parsop_decorate_new_name_rout = parsnewname_guicmd_BM,
+  .parsop_decorate_number_rout = parsnumber_guicmd_BM,
+  .parsop_decorate_string_sign_rout = parsstringsign_guicmd_BM,
+  .parsop_decorate_string_inside_rout = parsstringinside_guicmd_BM,
   .parsop_decorate_nesting_rout = parsnesting_guicmd_BM,
   .parsop_decorate_start_nesting_rout = parsstartnesting_guicmd_BM,
 };
@@ -176,6 +182,9 @@ const struct parserops_stBM parsop_command_nobuild_BM = {
   .parsop_decorate_id_rout = parsid_guicmd_BM,
   .parsop_decorate_known_name_rout = parsknowname_guicmd_BM,
   .parsop_decorate_new_name_rout = parsnewname_guicmd_BM,
+  .parsop_decorate_number_rout = parsnumber_guicmd_BM,
+  .parsop_decorate_string_sign_rout = parsstringsign_guicmd_BM,
+  .parsop_decorate_string_inside_rout = parsstringinside_guicmd_BM,
   .parsop_decorate_nesting_rout = parsnesting_guicmd_BM,
   .parsop_decorate_start_nesting_rout = parsstartnesting_guicmd_BM,
 };
@@ -3185,6 +3194,62 @@ parsnewname_guicmd_BM (struct parser_stBM *pars, unsigned lineno,
   gtk_text_buffer_apply_tag (commandbuf_BM, newname_cmdtag_BM, &it, &endit);
 }                               /* end parsnewname_guicmd_BM */
 
+// decorate numbers
+void
+parsnumber_guicmd_BM (struct parser_stBM *pars, unsigned lineno,
+                      unsigned colpos, unsigned numlen)
+{
+  assert (isparser_BM (pars));
+  DBGPRINTF_BM ("parsnumbergui L%uC%u w%u", lineno, colpos, numlen);
+  const struct parserops_stBM *parsops = pars->pars_ops;
+  assert (parsops && parsops->parsop_magic == PARSOPMAGIC_BM);
+  GtkTextIter it = EMPTY_TEXT_ITER_BM;
+  gtk_text_buffer_get_iter_at_line (commandbuf_BM, &it, lineno - 1);
+  gtk_text_iter_forward_chars (&it, colpos);
+  GtkTextIter endit = it;
+  gtk_text_iter_forward_chars (&endit, numlen);
+  gtk_text_buffer_apply_tag (commandbuf_BM, number_cmdtag_BM, &it, &endit);
+}                               /* end parsnumber_guicmd_BM  */
+
+
+// decorate string signs, notably outside quotes
+void
+parsstringsign_guicmd_BM (struct parser_stBM *pars, unsigned lineno,
+                          unsigned colpos, unsigned signlen)
+{
+  assert (isparser_BM (pars));
+  DBGPRINTF_BM ("parsstringsign L%uC%u w%u", lineno, colpos, signlen);
+  const struct parserops_stBM *parsops = pars->pars_ops;
+  assert (parsops && parsops->parsop_magic == PARSOPMAGIC_BM);
+  GtkTextIter it = EMPTY_TEXT_ITER_BM;
+  gtk_text_buffer_get_iter_at_line (commandbuf_BM, &it, lineno - 1);
+  gtk_text_iter_forward_chars (&it, colpos);
+  GtkTextIter endit = it;
+  gtk_text_iter_forward_chars (&endit, signlen);
+  gtk_text_buffer_apply_tag (commandbuf_BM, stringsign_cmdtag_BM, &it,
+                             &endit);
+}                               /* end parsstringsign_guicmd_BM */
+
+
+// decorate string inside characters
+void
+  parsstringinside_guicmd_BM
+  (struct parser_stBM *pars, unsigned lineno, unsigned colpos,
+   unsigned signlen)
+{
+  assert (isparser_BM (pars));
+  DBGPRINTF_BM ("parsstringinside L%uC%u w%u", lineno, colpos, signlen);
+  const struct parserops_stBM *parsops = pars->pars_ops;
+  assert (parsops && parsops->parsop_magic == PARSOPMAGIC_BM);
+  GtkTextIter it = EMPTY_TEXT_ITER_BM;
+  gtk_text_buffer_get_iter_at_line (commandbuf_BM, &it, lineno - 1);
+  gtk_text_iter_forward_chars (&it, colpos);
+  GtkTextIter endit = it;
+  gtk_text_iter_forward_chars (&endit, signlen);
+  gtk_text_buffer_apply_tag (commandbuf_BM, stringinside_cmdtag_BM, &it,
+                             &endit);
+}                               /* end parsstringinside_guicmd_BM */
+
 
 void
 parsid_guicmd_BM (struct parser_stBM *pars, unsigned lineno, unsigned colpos,
@@ -4180,10 +4245,27 @@ initialize_gui_tags_BM (GtkBuilder * bld)
     gtk_text_tag_table_lookup (commandtagtable_BM, "newname_cmdtag");
   if (!newname_cmdtag_BM)
     FATAL_BM ("cannot find newname_cmdtag");
+  //
   id_cmdtag_BM =                //
     gtk_text_tag_table_lookup (commandtagtable_BM, "id_cmdtag");
   if (!id_cmdtag_BM)
     FATAL_BM ("cannot find id_cmdtag");
+  //
+  number_cmdtag_BM =            //
+    gtk_text_tag_table_lookup (commandtagtable_BM, "number_cmdtag");
+  if (!number_cmdtag_BM)
+    FATAL_BM ("cannot find number_cmdtag");
+  //
+  stringsign_cmdtag_BM =        //
+    gtk_text_tag_table_lookup (commandtagtable_BM, "stringsign_cmdtag");
+  if (!stringsign_cmdtag_BM)
+    FATAL_BM ("cannot find stringsign_cmdtag");
+  //
+  stringinside_cmdtag_BM =      //
+    gtk_text_tag_table_lookup (commandtagtable_BM, "stringinside_cmdtag");
+  if (!stringinside_cmdtag_BM)
+    FATAL_BM ("cannot find stringinside_cmdtag");
+  //
   dollar_cmdtag_BM =            //
     gtk_text_tag_table_lookup (commandtagtable_BM, "dollar_cmdtag");
   if (!dollar_cmdtag_BM)

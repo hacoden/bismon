@@ -900,6 +900,12 @@ extern parser_decorate_nesting_sigBM parsnesting_guicmd_BM;
 // decorate start/open/close with nesting_cmdtag & start/open/close tags
 extern parser_decorate_start_nesting_sigBM parsstartnesting_guicmd_BM;
 
+// decorate numbers
+extern parser_decorate_number_sigBM parsnumber_guicmd_BM;
+
+// decorate strings
+extern parser_decorate_string_sign_sigBM parsstringsign_guicmd_BM;
+extern parser_decorate_string_inside_sigBM parsstringinside_guicmd_BM;
 ////////////////////////////////////////////////////////////////
 
 /******** agenda functions ***********/

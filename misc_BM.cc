@@ -1161,7 +1161,7 @@ threadinfo_stBM::thread_run(const int tix)
       else   // no task to run
         {
           std::unique_lock<std::mutex> lk_(ti_agendamtx);
-          int delayms = 700 + 5*tix +
+          int delayms = 1300 + 9*tix +
                         (atomic_load (&want_garbage_collection_BM)?0:3*(g_random_int () % 256));
           ti_agendacondv.wait_for(lk_,std::chrono::milliseconds{delayms});
           DBGPRINTF_BM("thread_run tix%d waited notask tid#%ld elapsed %.3f s",

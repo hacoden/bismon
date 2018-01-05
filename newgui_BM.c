@@ -37,6 +37,9 @@ const struct parserops_stBM parsop_command_build_newgui_BM = {
   .parsop_decorate_id_rout = parsid_guicmd_BM,
   .parsop_decorate_known_name_rout = parsknowname_guicmd_BM,
   .parsop_decorate_new_name_rout = parsnewname_guicmd_BM,
+  .parsop_decorate_number_rout = parsnumber_guicmd_BM,
+  .parsop_decorate_string_sign_rout = parsstringsign_guicmd_BM,
+  .parsop_decorate_string_inside_rout = parsstringinside_guicmd_BM,
   .parsop_decorate_nesting_rout = parsnesting_guicmd_BM,
   .parsop_decorate_start_nesting_rout = parsstartnesting_guicmd_BM,
 };
@@ -57,6 +60,9 @@ const struct parserops_stBM parsop_command_nobuild_newgui_BM = {
   .parsop_decorate_id_rout = parsid_guicmd_BM,
   .parsop_decorate_known_name_rout = parsknowname_guicmd_BM,
   .parsop_decorate_new_name_rout = parsnewname_guicmd_BM,
+  .parsop_decorate_number_rout = parsnumber_guicmd_BM,
+  .parsop_decorate_string_sign_rout = parsstringsign_guicmd_BM,
+  .parsop_decorate_string_inside_rout = parsstringinside_guicmd_BM,
   .parsop_decorate_nesting_rout = parsnesting_guicmd_BM,
   .parsop_decorate_start_nesting_rout = parsstartnesting_guicmd_BM,
 };
