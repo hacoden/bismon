@@ -1300,7 +1300,8 @@ quitgui_BM (void)
 void
 exitgui_BM (void)
 {
-  DBGPRINTF_BM ("exitgui start tid#%ld", (long) gettid_BM ());
+  DBGPRINTF_BM ("exitgui start tid#%ld elapsed %.3f s",
+                (long) gettid_BM (), elapsedtime_BM ());
   extern char *dump_dir_bm;
   struct dumpinfo_stBM di = dump_BM (dump_dir_bm, NULL);
   gtk_main_quit ();
@@ -1318,7 +1319,8 @@ exitgui_BM (void)
                dump_dir_bm, nowbuf);
       fflush (gui_command_log_file_BM);
     }
-  DBGPRINTF_BM ("exitgui end tid#%ld", (long) gettid_BM ());
+  DBGPRINTF_BM ("exitgui end tid#%ld elapsed %.3f s",
+                (long) gettid_BM (), elapsedtime_BM ());
 }                               /* end exitgui_BM */
 
 

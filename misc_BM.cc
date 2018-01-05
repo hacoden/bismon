@@ -1009,6 +1009,8 @@ void
 stop_agenda_work_threads_BM(void)
 {
   int nbwth = atomic_load(&threadinfo_stBM::ti_nbworkthreads);
+  DBGPRINTF_BM("stop_agenda_work_threads start  nbwth=%d tid#%ld elapsed %.3f s",
+               nbwth, (long)gettid_BM(), elapsedtime_BM());
   {
     std::lock_guard<std::mutex> _gu(threadinfo_stBM::ti_agendamtx);
     for (int tix=1; tix<=nbwth; tix++)
@@ -1024,7 +1026,17 @@ stop_agenda_work_threads_BM(void)
       threadinfo_stBM::ti_agendacondv.wait_for(lk_,std::chrono::milliseconds{150});
     }
   while (atomic_load(&threadinfo_stBM::ti_countendedthreads) < nbwth);
+  DBGPRINTF_BM("stop_agenda_work_threads end nbwth=%d tid#%ld elapsed %.3f s",
+               nbwth, (long)gettid_BM(), elapsedtime_BM());
 } // end stop_agenda_work_threads_BM
+
+// not sure if this is needed...
+void
+agenda_notify_BM(void)
+{
+  threadinfo_stBM::ti_agendacondv.notify_all();
+} // end agenda_notify_BM
+
 
 
 void
@@ -1087,8 +1099,8 @@ threadinfo_stBM::thread_run(const int tix)
   for (;;)
     {
       loopcnt++;
-      DBGPRINTF_BM("thread_run tix%d loop#%ld begin tid#%ld",
-                   tix, loopcnt, (long) gettid_BM());
+      DBGPRINTF_BM("thread_run tix%d loop#%ld begin tid#%ld elapsed %.3f s",
+                   tix, loopcnt, (long) gettid_BM(), elapsedtime_BM());
       objectval_tyBM*taskob = nullptr;
       if (atomic_load(&curthreadinfo_BM->ti_stop))
         break;
@@ -1138,19 +1150,24 @@ threadinfo_stBM::thread_run(const int tix)
         {
           failurelockset_stBM fls;
           run_agenda_tasklet_BM (taskob, &fls);
+          DBGPRINTF_BM("thread_run tix%d didrun tid#%ld elapsed %.3f s",
+                       tix,  (long) gettid_BM(), elapsedtime_BM());
         }
       else   // no task to run
         {
           std::unique_lock<std::mutex> lk_(ti_agendamtx);
-          int delayms = 3750 +
+          int delayms = 1750 +
                         (atomic_load (&want_garbage_collection_BM)?0:(g_random_int () % 256));
           ti_agendacondv.wait_for(lk_,std::chrono::milliseconds{delayms});
+          DBGPRINTF_BM("thread_run tix%d waited notask tid#%ld elapsed %.3f s",
+                       tix, (long) gettid_BM(), elapsedtime_BM());
         }
     } // end forever
   curthreadinfo_BM = nullptr;
-  DBGPRINTF_BM("thread_run tix%d end", tix);
   ti_agendacondv.notify_all();
-  ti_countendedthreads.fetch_add(1);
+  int endcnt = ti_countendedthreads.fetch_add(1);
+  DBGPRINTF_BM("thread_run end endcnt=%d tix%d tid#%ld elapsed %.3f s",
+               endcnt, tix, (long) gettid_BM(), elapsedtime_BM());
 } // end thread_run
 
 
