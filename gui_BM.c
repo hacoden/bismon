@@ -3167,6 +3167,7 @@ void
 parsknowname_guicmd_BM (struct parser_stBM *pars, unsigned lineno,
                         unsigned colpos, unsigned namlen)
 {
+  char *buf = NULL;
   assert (isparser_BM (pars));
   const struct parserops_stBM *parsops = pars->pars_ops;
   assert (parsops && parsops->parsop_magic == PARSOPMAGIC_BM);
@@ -3175,6 +3176,11 @@ parsknowname_guicmd_BM (struct parser_stBM *pars, unsigned lineno,
   gtk_text_iter_forward_chars (&it, colpos);
   GtkTextIter endit = it;
   gtk_text_iter_forward_chars (&endit, namlen);
+  DBGPRINTF_BM ("parsknownname L%uC%u w%u: '%s'", lineno, colpos, namlen,
+                (buf =
+                 gtk_text_buffer_get_text (commandbuf_BM, &it, &endit,
+                                           false)));
+  free (buf);
   gtk_text_buffer_apply_tag (commandbuf_BM, knowname_cmdtag_BM, &it, &endit);
 }                               /* end parsknowname_guicmd_BM */
 
@@ -3200,7 +3206,7 @@ parsnumber_guicmd_BM (struct parser_stBM *pars, unsigned lineno,
                       unsigned colpos, unsigned numlen)
 {
   assert (isparser_BM (pars));
-  DBGPRINTF_BM ("parsnumbergui L%uC%u w%u", lineno, colpos, numlen);
+  char *buf = NULL;
   const struct parserops_stBM *parsops = pars->pars_ops;
   assert (parsops && parsops->parsop_magic == PARSOPMAGIC_BM);
   GtkTextIter it = EMPTY_TEXT_ITER_BM;
@@ -3208,6 +3214,11 @@ parsnumber_guicmd_BM (struct parser_stBM *pars, unsigned lineno,
   gtk_text_iter_forward_chars (&it, colpos);
   GtkTextIter endit = it;
   gtk_text_iter_forward_chars (&endit, numlen);
+  DBGPRINTF_BM ("parsnumbergui L%uC%u w%u: '%s'", lineno, colpos, numlen,
+                (buf =
+                 gtk_text_buffer_get_text (commandbuf_BM, &it, &endit,
+                                           false)));
+  free (buf);
   gtk_text_buffer_apply_tag (commandbuf_BM, number_cmdtag_BM, &it, &endit);
 }                               /* end parsnumber_guicmd_BM  */
 
@@ -3218,7 +3229,7 @@ parsstringsign_guicmd_BM (struct parser_stBM *pars, unsigned lineno,
                           unsigned colpos, unsigned signlen)
 {
   assert (isparser_BM (pars));
-  DBGPRINTF_BM ("parsstringsign L%uC%u w%u", lineno, colpos, signlen);
+  char *buf = NULL;
   const struct parserops_stBM *parsops = pars->pars_ops;
   assert (parsops && parsops->parsop_magic == PARSOPMAGIC_BM);
   GtkTextIter it = EMPTY_TEXT_ITER_BM;
@@ -3226,6 +3237,11 @@ parsstringsign_guicmd_BM (struct parser_stBM *pars, unsigned lineno,
   gtk_text_iter_forward_chars (&it, colpos);
   GtkTextIter endit = it;
   gtk_text_iter_forward_chars (&endit, signlen);
+  DBGPRINTF_BM ("parsstringsign L%uC%u w%u: '%s'", lineno, colpos, signlen,
+                (buf =
+                 gtk_text_buffer_get_text (commandbuf_BM, &it, &endit,
+                                           false)));
+  free (buf);
   gtk_text_buffer_apply_tag (commandbuf_BM, stringsign_cmdtag_BM, &it,
                              &endit);
 }                               /* end parsstringsign_guicmd_BM */
@@ -3238,7 +3254,7 @@ void
    unsigned signlen)
 {
   assert (isparser_BM (pars));
-  DBGPRINTF_BM ("parsstringinside L%uC%u w%u", lineno, colpos, signlen);
+  char *buf = NULL;
   const struct parserops_stBM *parsops = pars->pars_ops;
   assert (parsops && parsops->parsop_magic == PARSOPMAGIC_BM);
   GtkTextIter it = EMPTY_TEXT_ITER_BM;
@@ -3246,6 +3262,11 @@ void
   gtk_text_iter_forward_chars (&it, colpos);
   GtkTextIter endit = it;
   gtk_text_iter_forward_chars (&endit, signlen);
+  DBGPRINTF_BM ("parsstringinside L%uC%u w%u: '%s'", lineno, colpos, signlen,
+                (buf =
+                 gtk_text_buffer_get_text (commandbuf_BM, &it, &endit,
+                                           false)));
+  free (buf);
   gtk_text_buffer_apply_tag (commandbuf_BM, stringinside_cmdtag_BM, &it,
                              &endit);
 }                               /* end parsstringinside_guicmd_BM */
@@ -3869,6 +3890,8 @@ runcommand_BM (bool erase)
 {
   GtkTextIter startit = EMPTY_TEXT_ITER_BM;
   GtkTextIter endit = EMPTY_TEXT_ITER_BM;
+  DBGPRINTF_BM ("runcommand %s start elapsed %.3f s",
+                erase ? "erase" : "keep", elapsedtime_BM ());
   cmd_clear_parens_BM ();
   if (errormessagedialog_BM)
     {
@@ -3950,6 +3973,7 @@ runcommand_BM (bool erase)
     }
   else                          /* error */
     {
+      DBGPRINTF_BM ("runcommand errored elapsed %.3f s", elapsedtime_BM ());
       // the errormessagedialog_BM was created in parserror_guicmd_BM
       if (errormessagedialog_BM)
         {
@@ -3963,6 +3987,8 @@ runcommand_BM (bool erase)
   free (cmdstr);
   if (erase)
     gtk_text_buffer_set_text (commandbuf_BM, "", 0);
+  DBGPRINTF_BM ("runcommand %s end elapsed %.3f s", erase ? "erase" : "keep",
+                elapsedtime_BM ());
 }                               /* end runcommand_BM */
 
 

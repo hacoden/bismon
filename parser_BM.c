@@ -423,6 +423,7 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
   const struct parserops_stBM *parsop = pars->pars_ops;
   const char *restlin = parserrestline_BM (pars);
   assert (restlin && *restlin == '"');
+  DBGPRINTF_BM ("parseplaincord start restlin@%p:%s", restlin, restlin);
   assert (!parsop || parsop->parsop_magic == PARSOPMAGIC_BM);
   if (parsop && parsop->parsop_decorate_string_sign_rout)
     parsop->parsop_decorate_string_sign_rout (pars, pars->pars_lineno,
@@ -432,6 +433,7 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
   unsigned nbc = 0;
   while (*pc)
     {
+      DBGPRINTF_BM ("parseplaincord pc@%p:%s", pc, pc);
       if (*pc == '"')
         break;
       else if (*pc == '\n')
@@ -441,6 +443,11 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
           if (parsop && parsop->parsop_decorate_string_inside_rout
               && startplain < pc)
             {
+              DBGPRINTF_BM ("parseplaincord stringinside L%dC%d w%d",
+                            pars->pars_lineno,
+                            pars->pars_colpos + g_utf8_strlen (restlin,
+                                                               pc - restlin),
+                            g_utf8_strlen (startplain, pc - startplain - 1));
               parsop->parsop_decorate_string_inside_rout        //
                 (pars,
                  pars->pars_lineno,
@@ -590,6 +597,11 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
               startplain = pc;
               break;
             }                   /* end switch nc */
+          DBGPRINTF_BM ("parseplaincord stringsign L%dC%d w%d",
+                        pars->pars_lineno,
+                        pars->pars_colpos + g_utf8_strlen (restlin,
+                                                           oldpc - restlin),
+                        g_utf8_strlen (oldpc, pc - oldpc));
           if (b && parsop && parsop->parsop_decorate_string_sign_rout)
             parsop->parsop_decorate_string_sign_rout    //
               (pars,
@@ -615,6 +627,10 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
     };
   if (*pc == '"')
     {
+      DBGPRINTF_BM ("parseplaincord stringinside endquot L%dC%d w%d",
+                    pars->pars_lineno,
+                    pars->pars_colpos + g_utf8_strlen (restlin, pc - restlin),
+                    g_utf8_strlen (startplain, pc - startplain));
       if (parsop && parsop->parsop_decorate_string_inside_rout
           && startplain < pc)
         {
@@ -624,6 +640,10 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
              pars->pars_colpos + g_utf8_strlen (restlin, pc - restlin),
              g_utf8_strlen (startplain, pc - startplain));
         }
+      DBGPRINTF_BM ("parseplaincord stringsign endquot L%dC%d w%d",
+                    pars->pars_lineno,
+                    pars->pars_colpos + g_utf8_strlen (restlin, pc - restlin),
+                    1);
       if (parsop && parsop->parsop_decorate_string_sign_rout)
         parsop->parsop_decorate_string_sign_rout
           (pars,
@@ -636,6 +656,8 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
                           "bad plain cord ending %s", pc);
   pars->pars_colpos += g_utf8_strlen (restlin, pc - restlin);
   pars->pars_curbyte = pc;
+  DBGPRINTF_BM ("parsepaincord final L%dC%d", pars->pars_lineno,
+                pars->pars_colpos);
   return nbc;
 }                               /* end parse_plain_cord_BM */
 
