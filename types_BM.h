@@ -549,6 +549,7 @@ struct parser_stBM              /* for typayl_parser_BM */
   typedhead_tyBM pa;            // rlen is unused
   const struct parserops_stBM *pars_ops;
   FILE *pars_file;
+  bool pars_debug;
   const char *pars_path;
   value_tyBM pars_cvalue;       /* client value */
   const char *pars_filemem;     /* when using fmemopen */

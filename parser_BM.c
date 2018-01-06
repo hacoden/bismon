@@ -48,6 +48,7 @@ makeparser_of_file_BM (FILE * f)
   struct parser_stBM *pars =    //
     allocgcty_BM (typayl_parser_BM, sizeof (struct parser_stBM));
   pars->pars_file = f;
+  pars->pars_debug = false;
   pars->pars_filemem = NULL;
   pars->pars_filesize = 0;
   pars->pars_path = "";
@@ -78,7 +79,7 @@ makeparser_of_file_BM (FILE * f)
   pars->pars_memolsize = inimemosiz;
   pars->pars_memolcount = 0;
   return pars;
-}                               /* end makeparser_BM */
+}                               /* end makeparser_of_file_BM */
 
 struct parser_stBM *
 makeparser_memopen_BM (const char *filemem, long size)
@@ -423,7 +424,8 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
   const struct parserops_stBM *parsop = pars->pars_ops;
   const char *restlin = parserrestline_BM (pars);
   assert (restlin && *restlin == '"');
-  DBGPRINTF_BM ("parseplaincord start restlin@%p:%s", restlin, restlin);
+  if (pars->pars_debug)
+    DBGPRINTF_BM ("parseplaincord start restlin@%p:%s", restlin, restlin);
   assert (!parsop || parsop->parsop_magic == PARSOPMAGIC_BM);
   if (parsop && parsop->parsop_decorate_string_sign_rout)
     parsop->parsop_decorate_string_sign_rout (pars, pars->pars_lineno,
@@ -433,7 +435,8 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
   unsigned nbc = 0;
   while (*pc)
     {
-      DBGPRINTF_BM ("parseplaincord pc@%p:%s", pc, pc);
+      if (pars->pars_debug)
+        DBGPRINTF_BM ("parseplaincord pc@%p:%s", pc, pc);
       if (*pc == '"')
         break;
       else if (*pc == '\n')
@@ -443,11 +446,14 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
           if (parsop && parsop->parsop_decorate_string_inside_rout
               && startplain < pc)
             {
-              DBGPRINTF_BM ("parseplaincord stringinside L%dC%d w%d",
-                            pars->pars_lineno,
-                            pars->pars_colpos + g_utf8_strlen (restlin,
-                                                               pc - restlin),
-                            g_utf8_strlen (startplain, pc - startplain - 1));
+              if (pars->pars_debug)
+                DBGPRINTF_BM ("parseplaincord stringinside L%dC%d w%d",
+                              pars->pars_lineno,
+                              pars->pars_colpos + g_utf8_strlen (restlin,
+                                                                 pc -
+                                                                 restlin),
+                              g_utf8_strlen (startplain,
+                                             pc - startplain - 1));
               parsop->parsop_decorate_string_inside_rout        //
                 (pars,
                  pars->pars_lineno,
@@ -597,11 +603,12 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
               startplain = pc;
               break;
             }                   /* end switch nc */
-          DBGPRINTF_BM ("parseplaincord stringsign L%dC%d w%d",
-                        pars->pars_lineno,
-                        pars->pars_colpos + g_utf8_strlen (restlin,
-                                                           oldpc - restlin),
-                        g_utf8_strlen (oldpc, pc - oldpc));
+          if (pars->pars_debug)
+            DBGPRINTF_BM ("parseplaincord stringsign L%dC%d w%d",
+                          pars->pars_lineno,
+                          pars->pars_colpos + g_utf8_strlen (restlin,
+                                                             oldpc - restlin),
+                          g_utf8_strlen (oldpc, pc - oldpc));
           if (b && parsop && parsop->parsop_decorate_string_sign_rout)
             parsop->parsop_decorate_string_sign_rout    //
               (pars,
@@ -627,10 +634,12 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
     };
   if (*pc == '"')
     {
-      DBGPRINTF_BM ("parseplaincord stringinside endquot L%dC%d w%d",
-                    pars->pars_lineno,
-                    pars->pars_colpos + g_utf8_strlen (restlin, pc - restlin),
-                    g_utf8_strlen (startplain, pc - startplain));
+      if (pars->pars_debug)
+        DBGPRINTF_BM ("parseplaincord stringinside endquot L%dC%d w%d",
+                      pars->pars_lineno,
+                      pars->pars_colpos + g_utf8_strlen (restlin,
+                                                         pc - restlin),
+                      g_utf8_strlen (startplain, pc - startplain));
       if (parsop && parsop->parsop_decorate_string_inside_rout
           && startplain < pc)
         {
@@ -640,10 +649,11 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
              pars->pars_colpos + g_utf8_strlen (restlin, pc - restlin),
              g_utf8_strlen (startplain, pc - startplain));
         }
-      DBGPRINTF_BM ("parseplaincord stringsign endquot L%dC%d w%d",
-                    pars->pars_lineno,
-                    pars->pars_colpos + g_utf8_strlen (restlin, pc - restlin),
-                    1);
+      if (pars->pars_debug)
+        DBGPRINTF_BM ("parseplaincord stringsign endquot L%dC%d w%d",
+                      pars->pars_lineno,
+                      pars->pars_colpos + g_utf8_strlen (restlin,
+                                                         pc - restlin), 1);
       if (parsop && parsop->parsop_decorate_string_sign_rout)
         parsop->parsop_decorate_string_sign_rout
           (pars,
@@ -656,8 +666,9 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
                           "bad plain cord ending %s", pc);
   pars->pars_colpos += g_utf8_strlen (restlin, pc - restlin);
   pars->pars_curbyte = pc;
-  DBGPRINTF_BM ("parsepaincord final L%dC%d", pars->pars_lineno,
-                pars->pars_colpos);
+  if (pars->pars_debug)
+    DBGPRINTF_BM ("parsepaincord final L%dC%d", pars->pars_lineno,
+                  pars->pars_colpos);
   return nbc;
 }                               /* end parse_plain_cord_BM */
 
@@ -1722,9 +1733,10 @@ value_tyBM
       unsigned curlineno = parserlineno_BM (pars);
       unsigned curcolpos = parsercolpos_BM (pars);
       char *curpc = (char *) parserrestline_BM (pars);
-      DBGPRINTF_BM ("parsergetchunk_BM L%dC%d loop#%d curpc(l%d):%s",
-                    curlineno, curcolpos, loopcnt,
-                    curpc ? ((int) strlen (curpc)) : -1, curpc);
+      if (pars->pars_debug)
+        DBGPRINTF_BM ("parsergetchunk_BM L%dC%d loop#%d curpc(l%d):%s",
+                      curlineno, curcolpos, loopcnt,
+                      curpc ? ((int) strlen (curpc)) : -1, curpc);
       if (loopcnt++ > MAXSIZE_BM / 8)
         parsererrorprintf_BM (pars, curlineno, curcolpos,
                               "too many loops %d in chunk (started line %d, col %d) : %s",
@@ -2014,8 +2026,9 @@ value_tyBM
         }
     }
   while (!gotend);
-  DBGPRINTF_BM ("parsergetchunk_BM gotend %s veclen %u",
-                gotend ? "true" : "false", datavectlen_BM (_.chunkvec));
+  if (pars->pars_debug)
+    DBGPRINTF_BM ("parsergetchunk_BM gotend %s veclen %u",
+                  gotend ? "true" : "false", datavectlen_BM (_.chunkvec));
   if (gotend)
     {
       _.resval = nobuild ? NULL //

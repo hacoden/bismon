@@ -3176,10 +3176,11 @@ parsknowname_guicmd_BM (struct parser_stBM *pars, unsigned lineno,
   gtk_text_iter_forward_chars (&it, colpos);
   GtkTextIter endit = it;
   gtk_text_iter_forward_chars (&endit, namlen);
-  DBGPRINTF_BM ("parsknownname L%uC%u w%u: '%s'", lineno, colpos, namlen,
-                (buf =
-                 gtk_text_buffer_get_text (commandbuf_BM, &it, &endit,
-                                           false)));
+  if (pars->pars_debug)
+    DBGPRINTF_BM ("parsknownname L%uC%u w%u: '%s'", lineno, colpos, namlen,
+                  (buf =
+                   gtk_text_buffer_get_text (commandbuf_BM, &it, &endit,
+                                             false)));
   free (buf);
   gtk_text_buffer_apply_tag (commandbuf_BM, knowname_cmdtag_BM, &it, &endit);
 }                               /* end parsknowname_guicmd_BM */
@@ -3214,10 +3215,11 @@ parsnumber_guicmd_BM (struct parser_stBM *pars, unsigned lineno,
   gtk_text_iter_forward_chars (&it, colpos);
   GtkTextIter endit = it;
   gtk_text_iter_forward_chars (&endit, numlen);
-  DBGPRINTF_BM ("parsnumbergui L%uC%u w%u: '%s'", lineno, colpos, numlen,
-                (buf =
-                 gtk_text_buffer_get_text (commandbuf_BM, &it, &endit,
-                                           false)));
+  if (pars->pars_debug)
+    DBGPRINTF_BM ("parsnumbergui L%uC%u w%u: '%s'", lineno, colpos, numlen,
+                  (buf =
+                   gtk_text_buffer_get_text (commandbuf_BM, &it, &endit,
+                                             false)));
   free (buf);
   gtk_text_buffer_apply_tag (commandbuf_BM, number_cmdtag_BM, &it, &endit);
 }                               /* end parsnumber_guicmd_BM  */
@@ -3237,10 +3239,11 @@ parsstringsign_guicmd_BM (struct parser_stBM *pars, unsigned lineno,
   gtk_text_iter_forward_chars (&it, colpos);
   GtkTextIter endit = it;
   gtk_text_iter_forward_chars (&endit, signlen);
-  DBGPRINTF_BM ("parsstringsign L%uC%u w%u: '%s'", lineno, colpos, signlen,
-                (buf =
-                 gtk_text_buffer_get_text (commandbuf_BM, &it, &endit,
-                                           false)));
+  if (pars->pars_debug)
+    DBGPRINTF_BM ("parsstringsign L%uC%u w%u: '%s'", lineno, colpos, signlen,
+                  (buf =
+                   gtk_text_buffer_get_text (commandbuf_BM, &it, &endit,
+                                             false)));
   free (buf);
   gtk_text_buffer_apply_tag (commandbuf_BM, stringsign_cmdtag_BM, &it,
                              &endit);
@@ -3262,10 +3265,11 @@ void
   gtk_text_iter_forward_chars (&it, colpos);
   GtkTextIter endit = it;
   gtk_text_iter_forward_chars (&endit, signlen);
-  DBGPRINTF_BM ("parsstringinside L%uC%u w%u: '%s'", lineno, colpos, signlen,
-                (buf =
-                 gtk_text_buffer_get_text (commandbuf_BM, &it, &endit,
-                                           false)));
+  if (pars->pars_debug)
+    DBGPRINTF_BM ("parsstringinside L%uC%u w%u: '%s'", lineno, colpos,
+                  signlen, (buf =
+                            gtk_text_buffer_get_text (commandbuf_BM, &it,
+                                                      &endit, false)));
   free (buf);
   gtk_text_buffer_apply_tag (commandbuf_BM, stringinside_cmdtag_BM, &it,
                              &endit);
@@ -3921,6 +3925,7 @@ runcommand_BM (bool erase)
       gtk_text_buffer_set_text (commandbuf_BM, cmdstr, -1);
     }
   struct parser_stBM *cmdpars = makeparser_memopen_BM (cmdstr, -1);
+  cmdpars->pars_debug = true;
   int cmdlen = strlen (cmdstr);
   cmdpars->pars_ops = &parsop_command_build_BM;
   LOCALFRAME_BM ( /*prev: */ NULL, /*descr: */ NULL,
