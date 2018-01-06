@@ -3927,6 +3927,9 @@ runcommand_BM (bool erase)
   struct parser_stBM *cmdpars = makeparser_memopen_BM (cmdstr, -1);
   cmdpars->pars_debug = true;
   int cmdlen = strlen (cmdstr);
+  DBGPRINTF_BM
+    ("runcommand %s start elapsed %.3f s, cmdlen %d cmdstr@%p:\n%s\n***\n",
+     erase ? "erase" : "keep", elapsedtime_BM (), cmdlen, cmdstr, cmdstr);
   cmdpars->pars_ops = &parsop_command_build_BM;
   LOCALFRAME_BM ( /*prev: */ NULL, /*descr: */ NULL,
                  struct parser_stBM *cmdpars;);
@@ -3937,6 +3940,9 @@ runcommand_BM (bool erase)
       // should parse the command buffer, this could longjmp to jmperrorcmd_BM
       parsecommandbuf_BM (cmdpars, (struct stackframe_stBM *) &_);
       commandnumber_BM++;
+      DBGPRINTF_BM ("runcommand %s *** parsed command#%d elapsed %.3f s\n",
+                    erase ? "erase" : "keep", commandnumber_BM,
+                    elapsedtime_BM ());
       serial63_tyBM sercmd = randomserial63_BM ();
       char serbuf[16];
       memset (serbuf, 0, sizeof (serbuf));

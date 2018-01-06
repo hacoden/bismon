@@ -425,7 +425,8 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
   const char *restlin = parserrestline_BM (pars);
   assert (restlin && *restlin == '"');
   if (pars->pars_debug)
-    DBGPRINTF_BM ("parseplaincord start restlin@%p:%s", restlin, restlin);
+    DBGPRINTF_BM ("parseplaincord start L%dC%d restlin@%p:%s",
+                  pars->pars_lineno, pars->pars_colpos, restlin, restlin);
   assert (!parsop || parsop->parsop_magic == PARSOPMAGIC_BM);
   if (parsop && parsop->parsop_decorate_string_sign_rout)
     parsop->parsop_decorate_string_sign_rout (pars, pars->pars_lineno,
@@ -436,7 +437,8 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
   while (*pc)
     {
       if (pars->pars_debug)
-        DBGPRINTF_BM ("parseplaincord pc@%p:%s", pc, pc);
+        DBGPRINTF_BM ("parseplaincord pc@%p+%d:%s", pc,
+                      (int) (pc - startplain), pc);
       if (*pc == '"')
         break;
       else if (*pc == '\n')
@@ -447,13 +449,12 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
               && startplain < pc)
             {
               if (pars->pars_debug)
-                DBGPRINTF_BM ("parseplaincord stringinside L%dC%d w%d",
-                              pars->pars_lineno,
-                              pars->pars_colpos + g_utf8_strlen (restlin,
-                                                                 pc -
-                                                                 restlin),
-                              g_utf8_strlen (startplain,
-                                             pc - startplain - 1));
+                DBGPRINTF_BM
+                  ("parseplaincord stringinside pc@%p_%d+%d L%dC%d w%d", pc,
+                   (int) (pc - restlin), (int) (pc - startplain),
+                   pars->pars_lineno,
+                   pars->pars_colpos + g_utf8_strlen (restlin, pc - restlin),
+                   g_utf8_strlen (startplain, pc - startplain - 1));
               parsop->parsop_decorate_string_inside_rout        //
                 (pars,
                  pars->pars_lineno,
@@ -474,7 +475,7 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
               nbc++;
               pc += 2;
               startplain = pc;
-              continue;
+              break;
             case 'a':
               b = '\a';
               fputc (b, memfil);
@@ -604,11 +605,11 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
               break;
             }                   /* end switch nc */
           if (pars->pars_debug)
-            DBGPRINTF_BM ("parseplaincord stringsign L%dC%d w%d",
-                          pars->pars_lineno,
-                          pars->pars_colpos + g_utf8_strlen (restlin,
-                                                             oldpc - restlin),
-                          g_utf8_strlen (oldpc, pc - oldpc));
+            DBGPRINTF_BM
+              ("parseplaincord stringsign pc@%p startplain@%p L%dC%d w%d", pc,
+               startplain, pars->pars_lineno,
+               pars->pars_colpos + g_utf8_strlen (restlin, oldpc - restlin),
+               g_utf8_strlen (oldpc, pc - oldpc));
           if (b && parsop && parsop->parsop_decorate_string_sign_rout)
             parsop->parsop_decorate_string_sign_rout    //
               (pars,
@@ -621,7 +622,6 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
           fputc (*pc, memfil);
           nbc++;
           pc++;
-          continue;
         }
       else
         {                       // probably some multibyte UTF8 char
@@ -629,9 +629,11 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
           fwrite (pc, npc - pc, 1, memfil);
           nbc++;
           pc = npc;
-          continue;
         }
     };
+  if (pars->pars_debug)
+    DBGPRINTF_BM ("parseplaincord endloop pc@%p startplain@%p", pc,
+                  startplain);
   if (*pc == '"')
     {
       if (pars->pars_debug)
