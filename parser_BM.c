@@ -448,17 +448,22 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
           if (parsop && parsop->parsop_decorate_string_inside_rout
               && startplain < pc)
             {
+#warning probably wrong, and need more comments
               if (pars->pars_debug)
                 DBGPRINTF_BM
-                  ("parseplaincord stringinside pc@%p_%d+%d L%dC%d w%d", pc,
-                   (int) (pc - restlin), (int) (pc - startplain),
+                  ("parseplaincord beforebackslash stringinside L%dC%d w%d\n"
+                   "..pc@%p:%s\n"
+                   "..startplain:%s\n",
                    pars->pars_lineno,
-                   pars->pars_colpos + g_utf8_strlen (restlin, pc - restlin),
-                   g_utf8_strlen (startplain, pc - startplain - 1));
+                   pars->pars_colpos
+                   + g_utf8_strlen (restlin, startplain - restlin),
+                   g_utf8_strlen (startplain, pc - startplain - 1),
+                   pc, pc, startplain, startplain);
               parsop->parsop_decorate_string_inside_rout        //
                 (pars,
                  pars->pars_lineno,
-                 pars->pars_colpos + g_utf8_strlen (restlin, pc - restlin),
+                 pars->pars_colpos + g_utf8_strlen (restlin,
+                                                    startplain - restlin),
                  g_utf8_strlen (startplain, pc - startplain - 1));
             }
           const char *oldpc = pc;
@@ -606,8 +611,8 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
             }                   /* end switch nc */
           if (pars->pars_debug)
             DBGPRINTF_BM
-              ("parseplaincord stringsign pc@%p startplain@%p L%dC%d w%d", pc,
-               startplain, pars->pars_lineno,
+              ("parseplaincord backslash stringsign pc@%p startplain@%p L%dC%d w%d",
+               pc, startplain, pars->pars_lineno,
                pars->pars_colpos + g_utf8_strlen (restlin, oldpc - restlin),
                g_utf8_strlen (oldpc, pc - oldpc));
           if (b && parsop && parsop->parsop_decorate_string_sign_rout)
@@ -637,11 +642,12 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
   if (*pc == '"')
     {
       if (pars->pars_debug)
-        DBGPRINTF_BM ("parseplaincord stringinside endquot L%dC%d w%d",
-                      pars->pars_lineno,
-                      pars->pars_colpos + g_utf8_strlen (restlin,
-                                                         pc - restlin),
-                      g_utf8_strlen (startplain, pc - startplain));
+        DBGPRINTF_BM
+          ("parseplaincord endquot stringinside endquot L%dC%d w%d",
+           pars->pars_lineno, pars->pars_colpos + g_utf8_strlen (restlin,
+                                                                 pc -
+                                                                 restlin),
+           g_utf8_strlen (startplain, pc - startplain));
       if (parsop && parsop->parsop_decorate_string_inside_rout
           && startplain < pc)
         {
@@ -669,7 +675,7 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
   pars->pars_colpos += g_utf8_strlen (restlin, pc - restlin);
   pars->pars_curbyte = pc;
   if (pars->pars_debug)
-    DBGPRINTF_BM ("parsepaincord final L%dC%d", pars->pars_lineno,
+    DBGPRINTF_BM ("parsepaincord final L%dC%d\n", pars->pars_lineno,
                   pars->pars_colpos);
   return nbc;
 }                               /* end parse_plain_cord_BM */
