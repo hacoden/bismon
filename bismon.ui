@@ -315,6 +315,7 @@
             <object class='GtkTextTag'>
               <property name="name">stringsign_cmdtag</property>
 	      <property name='foreground'>DarkOrchid</property>
+	      <property name='background'>MistyRose</property>
 	      <property name='font'>Space Mono Bold</property>
             </object>
         </child>
@@ -323,6 +324,7 @@
             <object class='GtkTextTag'>
               <property name="name">stringinside_cmdtag</property>
 	      <property name='foreground'>DeepSkyBlue4</property>
+	      <property name='background'>DarkSeaGreen1</property>
 	      <property name='font'>Space Mono Oblique</property>
             </object>
         </child>
