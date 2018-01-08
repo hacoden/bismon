@@ -646,23 +646,23 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
   if (*pc == '"')               /// ending quote
     {
       int endbyt = pc - restlin;
-      int endcol = g_utf8_strlen (restlin, endbyt);
+      int endcol = pars->pars_colpos + g_utf8_strlen (restlin, endbyt);
       int startbyt = startplain - restlin;
-      int startcol = g_utf8_strlen (restlin, startbyt);
+      int startcol = pars->pars_colpos + g_utf8_strlen (restlin, startbyt);
       if (pars->pars_debug)
         DBGPRINTF_BM
-          ("parseplaincord endquot stringinside endquot L%dC%d",
-           pars->pars_lineno, endcol);
+          ("parseplaincord endquot stringinside endquot L%dC%d startcol%d",
+           pars->pars_lineno, endcol, startcol);
       // decorate as stringinside from startplain to pc-1
       if (parsop && parsop->parsop_decorate_string_inside_rout
-          && startplain < pc - 1)
+          && startplain < pc)
         {
           int plainbyt = pc - 1 - startplain;
           int plainwid = g_utf8_strlen (startplain, plainbyt);
           if (pars->pars_debug)
             DBGPRINTF_BM
-              ("parseplaincord endquot inside L%dC%d w%d",
-               pars->pars_lineno, startcol, plainwid);
+              ("parseplaincord endquot inside L%dC%d w%d b%d",
+               pars->pars_lineno, startcol, plainwid, plainbyt);
           parsop->parsop_decorate_string_inside_rout    //
             (pars, pars->pars_lineno, startcol, plainwid);
         }
