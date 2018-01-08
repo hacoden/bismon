@@ -452,13 +452,16 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
             {
               int bytwid = pc - 1 - startplain;
               int colwid = g_utf8_strlen (startplain, bytwid);
-              int startcol = g_utf8_strlen (restlin, startplain - restlin);
+              int startcol = pars->pars_colpos + g_utf8_strlen (restlin,
+                                                                startplain -
+                                                                restlin);
               if (pars->pars_debug)
                 DBGPRINTF_BM
-                  ("parseplaincord beforebackslash stringinside L%dC%d w%d, startplain:%*s\n",
-                   pars->pars_lineno, startcol, colwid, bytwid, startplain);
+                  ("parseplaincord beforebackslash stringinside L%dC%d w%d b%d, startplain@%p:%*s\n",
+                   pars->pars_lineno, startcol, colwid, bytwid, startplain,
+                   bytwid, startplain);
               parsop->parsop_decorate_string_inside_rout        //
-                (pars, pars->pars_lineno, colwid, startcol);
+                (pars, pars->pars_lineno, startcol, colwid);
             }
           const char *oldpc = pc;
           char nc = pc[1];
@@ -526,7 +529,10 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
               break;
             case 'e':
               b = '\033' /*ESCAPE*/;
-              fputc (b, memfil);;
+              fputc (b, memfil);
+              nbc++;
+              pc += 2;
+              startplain = pc;
               break;
             case 'x':
               if (sscanf (pc + 1, "%02x%n", &b, &pos) > 0 && pos == 2
@@ -605,8 +611,11 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
             }                   /* end switch nc */
           if (pars->pars_debug)
             DBGPRINTF_BM
-              ("parseplaincord backslash stringsign pc@%p startplain@%p L%dC%d w%d",
-               pc, startplain, pars->pars_lineno,
+              ("parseplaincord backslash stringsign pc@%p:%s\n"
+               ".. startplain@%p:%s\n"
+               ".. L%dC%d w%d\n",
+               pc, pc, startplain, startplain,
+               pars->pars_lineno,
                (int) (pars->pars_colpos +
                       g_utf8_strlen (restlin, oldpc - restlin)),
                (int) g_utf8_strlen (oldpc, pc - oldpc));
@@ -634,37 +643,35 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
   if (pars->pars_debug)
     DBGPRINTF_BM ("parseplaincord endloop pc@%p startplain@%p", pc,
                   startplain);
-  if (*pc == '"')
+  if (*pc == '"')               /// ending quote
     {
-#warning should be improved and commented
       int endbyt = pc - restlin;
       int endcol = g_utf8_strlen (restlin, endbyt);
+      int startbyt = startplain - restlin;
+      int startcol = g_utf8_strlen (restlin, startbyt);
       if (pars->pars_debug)
         DBGPRINTF_BM
-          ("parseplaincord endquot stringinside endquot L%dC%d w%d",
-           pars->pars_lineno,
-           (int) (pars->pars_colpos
-                  + g_utf8_strlen (restlin, pc - restlin)),
-           (int) g_utf8_strlen (startplain, pc - startplain));
+          ("parseplaincord endquot stringinside endquot L%dC%d",
+           pars->pars_lineno, endcol);
+      // decorate as stringinside from startplain to pc-1
       if (parsop && parsop->parsop_decorate_string_inside_rout
-          && startplain < pc)
+          && startplain < pc - 1)
         {
+          int plainbyt = pc - 1 - startplain;
+          int plainwid = g_utf8_strlen (startplain, plainbyt);
+          if (pars->pars_debug)
+            DBGPRINTF_BM
+              ("parseplaincord endquot inside L%dC%d w%d",
+               pars->pars_lineno, startcol, plainwid);
           parsop->parsop_decorate_string_inside_rout    //
-            (pars,
-             pars->pars_lineno,
-             pars->pars_colpos + g_utf8_strlen (restlin, pc - restlin),
-             g_utf8_strlen (startplain, pc - startplain));
+            (pars, pars->pars_lineno, startcol, plainwid);
         }
       if (pars->pars_debug)
-        DBGPRINTF_BM ("parseplaincord stringsign endquot L%dC%d w%d",
-                      pars->pars_lineno,
-                      pars->pars_colpos + g_utf8_strlen (restlin,
-                                                         pc - restlin), 1);
+        DBGPRINTF_BM ("parseplaincord stringsign endquot L%dC%d w:one",
+                      pars->pars_lineno, endcol);
       if (parsop && parsop->parsop_decorate_string_sign_rout)
         parsop->parsop_decorate_string_sign_rout
-          (pars,
-           pars->pars_lineno,
-           pars->pars_colpos + g_utf8_strlen (restlin, pc - restlin), 1);
+          (pars, pars->pars_lineno, endcol, 1);
       pc++;
     }
   else
