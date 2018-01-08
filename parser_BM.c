@@ -450,7 +450,7 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
           if (parsop && parsop->parsop_decorate_string_inside_rout
               && startplain < pc - 1)
             {
-              int bytwid = pc - 1 - startplain;
+              int bytwid = pc - startplain;
               int colwid = g_utf8_strlen (startplain, bytwid);
               int startcol = pars->pars_colpos + g_utf8_strlen (restlin,
                                                                 startplain -
@@ -641,8 +641,8 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
         }
     };
   if (pars->pars_debug)
-    DBGPRINTF_BM ("parseplaincord endloop pc@%p startplain@%p", pc,
-                  startplain);
+    DBGPRINTF_BM ("parseplaincord endloop pc@%p:%s\n...startplain@%p:%s\n",
+                  pc, pc, startplain, startplain);
   if (*pc == '"')               /// ending quote
     {
       int endbyt = pc - restlin;
@@ -651,13 +651,16 @@ parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil)
       int startcol = pars->pars_colpos + g_utf8_strlen (restlin, startbyt);
       if (pars->pars_debug)
         DBGPRINTF_BM
-          ("parseplaincord endquot stringinside endquot L%dC%d startcol%d",
-           pars->pars_lineno, endcol, startcol);
-      // decorate as stringinside from startplain to pc-1
+          ("parseplaincord endquot stringinside endquot L%dC%d startcol%d\n"
+           "..pc@%p:%s\n"
+           "..startplain@%p:%s\n",
+           pars->pars_lineno, endcol, startcol, pc, pc,
+           startplain, startplain);
+      // decorate as stringinside from startplain to pc
       if (parsop && parsop->parsop_decorate_string_inside_rout
           && startplain < pc)
         {
-          int plainbyt = pc - 1 - startplain;
+          int plainbyt = pc - startplain;
           int plainwid = g_utf8_strlen (startplain, plainbyt);
           if (pars->pars_debug)
             DBGPRINTF_BM
