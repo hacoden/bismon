@@ -652,10 +652,18 @@ extern void parsergcdestroy_BM (struct garbcoll_stBM *gc,
 extern void parsergckeep_BM (struct garbcoll_stBM *gc,
                              struct parser_stBM *pars);
 extern bool parsernextline_BM (struct parser_stBM *pars);       // return false on EOF
+/// test if a token can start an object
+extern bool parsertokenstartobject_BM (struct parser_stBM *pars,
+                                       parstoken_tyBM tok);
+// get the parsed object
 extern objectval_tyBM *parsergetobject_BM
   (struct parser_stBM *pars,
    struct stackframe_stBM *stkf, int depth, bool * pgotobj);
-///
+
+/// test if a token can start a value
+extern bool parsertokenstartvalue_BM (struct parser_stBM *pars,
+                                      parstoken_tyBM tok);
+/// get the parsed value
 extern value_tyBM parsergetvalue_BM
   (struct parser_stBM *pars,
    struct stackframe_stBM *stkf, int depth, bool * pgotval);

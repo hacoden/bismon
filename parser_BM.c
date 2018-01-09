@@ -1077,6 +1077,25 @@ again:
 }                               /* end parsertokenget_BM */
 
 
+bool
+parsertokenstartobject_BM (struct parser_stBM * pars, parstoken_tyBM tok)
+{
+  if (!isparser_BM ((const value_tyBM) pars))
+    return false;
+  const struct parserops_stBM *parsops = pars->pars_ops;
+  if (tok.tok_kind == plex__NONE)
+    return false;
+  if (tok.tok_kind == plex_NAMEDOBJ
+      || tok.tok_kind == plex_ID
+      || (tok.tok_kind == plex_DELIM
+          && tok.tok_delim == delim_dollarleftbracket
+          && parsops && parsops->parsop_expand_objexp_rout)
+      || (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_dollarcolon
+          && parsops && parsops->parsop_expand_dollarobj_rout))
+    return true;
+  return false;
+}                               /* end parsertokenstartobject_BM */
+
 
 objectval_tyBM *
 parsergetobject_BM (struct parser_stBM * pars,
@@ -1194,6 +1213,33 @@ failure:
 
 
 ////////////////
+bool
+parsertokenstartvalue_BM (struct parser_stBM * pars, parstoken_tyBM tok)
+{
+  if (!isparser_BM ((const value_tyBM) pars))
+    return false;
+  if (tok.tok_kind == plex__NONE)
+    return false;
+  const struct parserops_stBM *parsops = pars->pars_ops;
+  if (parsertokenstartobject_BM (pars, tok))
+    return true;
+  if (tok.tok_kind == plex_LLONG || tok.tok_kind == plex_STRING ///
+      || (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_hashleftbrace)   // code chunks 
+      || (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_leftbracket)     // tuples
+      || (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_leftbrace)       // sets
+      || (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_tildecolon)      // named object sets
+      || (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_star)    // nodes
+      || (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_percent) // closures
+      || (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_caret && parsops && parsops->parsop_expand_readmacro_rout)       // read-macro expansion
+      || (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_dollar && parsops && parsops->parsop_expand_dollarval_rout)      // $var value
+      || (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_dollarleftparen && parsops && parsops->parsop_expand_valexp_rout)        // $( ... )
+    )
+    return true;
+  return false;
+}                               /* end parsertokenstartvalue_BM */
+
+
+
 value_tyBM
 parsergetvalue_BM (struct parser_stBM * pars,
                    struct stackframe_stBM * prevstkf, int depth,
