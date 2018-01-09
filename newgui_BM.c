@@ -22,45 +22,20 @@ static void parsecommandbuf_newgui_BM (struct parser_stBM *pars,
                                        struct stackframe_stBM *stkf);
 
 // for $:<var>, show in  dollar_cmdtag.
-static const objectval_tyBM *parsdollarobj_newguicmd_BM (struct parser_stBM
-                                                         *pars,
-                                                         unsigned lineno,
-                                                         unsigned colpos,
-                                                         const value_tyBM
-                                                         varname,
-                                                         struct
-                                                         stackframe_stBM
-                                                         *stkf);
+static parser_expand_dollarobj_sigBM parsdollarobj_newguicmd_BM;
 
 // for $<var>, use show in dollar_cmdtag.
-static value_tyBM
-parsdollarval_newguicmd_BM (struct parser_stBM *pars,
-                            unsigned lineno,
-                            unsigned colpos,
-                            const value_tyBM varname,
-                            struct stackframe_stBM *stkf);
-
+static parser_expand_dollarval_sigBM parsdollarval_newguicmd_BM;
 
 // parse inside $(....)
-static value_tyBM
-parsvalexp_newguicmd_BM (struct parser_stBM *pars, unsigned lineno,
-                         unsigned colpos, int depth,
-                         struct stackframe_stBM *stkf);
-
+static parser_expand_valexp_sigBM parsvalexp_newguicmd_BM;
 
 // parse inside $[...]
-static const objectval_tyBM *parsobjexp_newguicmd_BM (struct parser_stBM
-                                                      *pars, unsigned lineno,
-                                                      unsigned colpos,
-                                                      int depth,
-                                                      struct stackframe_stBM
-                                                      *stkf);
+static parser_expand_objexp_sigBM parsobjexp_newguicmd_BM;
 
 
 // expand readmacro-s
-value_tyBM parsreadmacroexp_newguicmd_BM
-  (struct parser_stBM *pars, unsigned lineno, unsigned colpos, int depth,
-   const node_tyBM * nod, struct stackframe_stBM *stkf);
+static parser_expand_readmacro_sigBM parsreadmacroexp_newguicmd_BM;
 
 static value_tyBM
 find_named_value_newgui_BM (const char *vstr, struct stackframe_stBM *stkf);
