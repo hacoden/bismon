@@ -21,16 +21,62 @@ static void markset_newgui_cmd_BM (GtkTextBuffer *, GtkTextIter *,
 static void parsecommandbuf_newgui_BM (struct parser_stBM *pars,
                                        struct stackframe_stBM *stkf);
 
+// for $:<var>, show in  dollar_cmdtag.
+static const objectval_tyBM *parsdollarobj_newguicmd_BM (struct parser_stBM
+                                                         *pars,
+                                                         unsigned lineno,
+                                                         unsigned colpos,
+                                                         const value_tyBM
+                                                         varname,
+                                                         struct
+                                                         stackframe_stBM
+                                                         *stkf);
+
+// for $<var>, use show in dollar_cmdtag.
+static value_tyBM
+parsdollarval_newguicmd_BM (struct parser_stBM *pars,
+                            unsigned lineno,
+                            unsigned colpos,
+                            const value_tyBM varname,
+                            struct stackframe_stBM *stkf);
+
+
+// parse inside $(....)
+static value_tyBM
+parsvalexp_newguicmd_BM (struct parser_stBM *pars, unsigned lineno,
+                         unsigned colpos, int depth,
+                         struct stackframe_stBM *stkf);
+
+
+// parse inside $[...]
+static const objectval_tyBM *parsobjexp_newguicmd_BM (struct parser_stBM
+                                                      *pars, unsigned lineno,
+                                                      unsigned colpos,
+                                                      int depth,
+                                                      struct stackframe_stBM
+                                                      *stkf);
+
+
+// expand readmacro-s
+value_tyBM parsreadmacroexp_newguicmd_BM
+  (struct parser_stBM *pars, unsigned lineno, unsigned colpos, int depth,
+   const node_tyBM * nod, struct stackframe_stBM *stkf);
+
+static value_tyBM
+find_named_value_newgui_BM (const char *vstr, struct stackframe_stBM *stkf);
+
 const struct parserops_stBM parsop_command_build_newgui_BM = {
   .parsop_magic = PARSOPMAGIC_BM,
   .parsop_serial = 3,
   .parsop_nobuild = false,
   .parsop_error_rout = parserror_guicmd_BM,
-  .parsop_expand_dollarobj_rout = parsdollarobj_guicmd_BM,
-  .parsop_expand_dollarval_rout = parsdollarval_guicmd_BM,
-  .parsop_expand_valexp_rout = parsvalexp_guicmd_BM,
-  .parsop_expand_objexp_rout = parsobjexp_guicmd_BM,
-  .parsop_expand_readmacro_rout = parsreadmacroexp_guicmd_BM,
+  ///
+  .parsop_expand_dollarobj_rout = parsdollarobj_newguicmd_BM,
+  .parsop_expand_dollarval_rout = parsdollarval_newguicmd_BM,
+  .parsop_expand_valexp_rout = parsvalexp_newguicmd_BM,
+  .parsop_expand_objexp_rout = parsobjexp_newguicmd_BM,
+  .parsop_expand_readmacro_rout = parsreadmacroexp_newguicmd_BM,
+  ///
   .parsop_decorate_comment_sign_rout = parscommentsign_guicmd_BM,
   .parsop_decorate_comment_inside_rout = parscommentinside_guicmd_BM,
   .parsop_decorate_delimiter_rout = parsdelim_guicmd_BM,
@@ -49,11 +95,13 @@ const struct parserops_stBM parsop_command_nobuild_newgui_BM = {
   .parsop_serial = 4,
   .parsop_nobuild = true,
   .parsop_error_rout = parserror_guicmd_BM,
-  .parsop_expand_dollarobj_rout = parsdollarobj_guicmd_BM,
-  .parsop_expand_dollarval_rout = parsdollarval_guicmd_BM,
-  .parsop_expand_valexp_rout = parsvalexp_guicmd_BM,
-  .parsop_expand_objexp_rout = parsobjexp_guicmd_BM,
-  .parsop_expand_readmacro_rout = parsreadmacroexp_guicmd_BM,
+  ///
+  .parsop_expand_dollarobj_rout = parsdollarobj_newguicmd_BM,
+  .parsop_expand_dollarval_rout = parsdollarval_newguicmd_BM,
+  .parsop_expand_valexp_rout = parsvalexp_newguicmd_BM,
+  .parsop_expand_objexp_rout = parsobjexp_newguicmd_BM,
+  .parsop_expand_readmacro_rout = parsreadmacroexp_newguicmd_BM,
+  ///
   .parsop_decorate_comment_sign_rout = parscommentsign_guicmd_BM,
   .parsop_decorate_comment_inside_rout = parscommentinside_guicmd_BM,
   .parsop_decorate_delimiter_rout = parsdelim_guicmd_BM,
@@ -107,6 +155,16 @@ initialize_newgui_command_scrollview_BM (void)
                                   GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
   return commandscrolw;
 }                               /* end initialize_newgui_command_scrollview_BM */
+
+void
+gcmarknewgui_BM (struct garbcoll_stBM *gc)
+{
+  assert (gc && gc->gc_magic == GCMAGIC_BM);
+  assert (browsedobj_BM == NULL && browsedval_BM == NULL);
+  // use gcobjmark_BM & VALUEGCPROC_BM
+  if (complsetcmd_BM)
+    VALUEGCPROC_BM (gc, complsetcmd_BM, 0);
+}                               /* end gcmarknewgui_BM */
 
 
 // for "key-press-event" signal to commandview_BM
@@ -428,7 +486,7 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
     return;
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  struct parser_stBM * pars;
-                 value_tyBM comp; objectval_tyBM * obj;
+                 value_tyBM val; objectval_tyBM * obj;
                  objectval_tyBM * oldfocusobj; const stringval_tyBM * name;
                  const stringval_tyBM * result;
     );
@@ -450,5 +508,194 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
       DBGPRINTF_BM ("parsecommandbuf_newgui_BM nbloop#%d tok~%s L%dC%d",
                     nbloop, lexkindname_BM (tok.tok_kind),
                     curlineno, curcolpos);
+      //start of object?
+      if (parsertokenstartobject_BM (pars, tok))
+        {
+          parserseek_BM (pars, curlineno, curcolpos);
+          bool gotobj = false;
+          _.obj =
+            parsergetobject_BM (pars, (struct stackframe_stBM *) &_, 0,
+                                &gotobj);
+#warning should show the _.obj
+        }
+      // start of value?
+      else if (parsertokenstartvalue_BM (pars, tok))
+        {
+          parserseek_BM (pars, curlineno, curcolpos);
+          bool gotval = false;
+          _.val =
+            parsergetvalue_BM (pars, (struct stackframe_stBM *) &_, 0,
+                               &gotval);
+        }
+
     }
 }                               /* end parsecommandbuf_newgui_BM */
+
+
+
+// for $:<var>
+const objectval_tyBM *
+parsdollarobj_newguicmd_BM (struct parser_stBM *pars,
+                            unsigned lineno, unsigned colpos,
+                            const value_tyBM varname,
+                            struct stackframe_stBM *stkf)
+{
+
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 value_tyBM val;);
+  const struct parserops_stBM *parsops = pars->pars_ops;
+  bool nobuild = parsops && parsops->parsop_nobuild;
+  const char *varstr = NULL;
+  if (isstring_BM (varname))
+    varstr = bytstring_BM (varname);
+  else if (isobject_BM (varname))
+    varstr = findobjectname_BM (varname);
+  if (!varstr)
+    parsererrorprintf_BM (pars, lineno, colpos, "invalid $:<var>");
+  _.val = find_named_value_newgui_BM (varstr, (struct stackframe_stBM *) &_);
+  if (!_.val && !nobuild)
+    parsererrorprintf_BM (pars, lineno, colpos, "not found $:%s", varstr);
+  if (!isobject_BM (_.val) && !nobuild)
+    parsererrorprintf_BM (pars, lineno, colpos, "non-object $:%s", varstr);
+  GtkTextIter it = EMPTY_TEXT_ITER_BM, endit = EMPTY_TEXT_ITER_BM;
+  gtk_text_buffer_get_iter_at_line (commandbuf_BM, &it, lineno - 1);
+  gtk_text_iter_forward_chars (&it, colpos);
+  endit = it;
+  gtk_text_iter_forward_chars (&endit, 2 + strlen (varstr));
+  gtk_text_buffer_apply_tag (commandbuf_BM, dollar_cmdtag_BM, &it, &endit);
+  return (const objectval_tyBM *) _.val;
+}                               /* end parsdollarobj_newguicmd_BM */
+
+// for $<var>
+value_tyBM
+parsdollarval_newguicmd_BM (struct parser_stBM *pars,
+                            unsigned lineno,
+                            unsigned colpos,
+                            const value_tyBM varname,
+                            struct stackframe_stBM *stkf)
+{
+  const char *varstr = NULL;
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 value_tyBM val;);
+  assert (isparser_BM (pars));
+  const struct parserops_stBM *parsops = pars->pars_ops;
+  bool nobuild = parsops && parsops->parsop_nobuild;
+  if (isstring_BM (varname))
+    varstr = bytstring_BM (varname);
+  else if (isobject_BM (varname))
+    varstr = findobjectname_BM (varname);
+  if (!varstr)
+    parsererrorprintf_BM (pars, lineno, colpos, "invalid $<var>");
+  _.val = find_named_value_newgui_BM (varstr, (struct stackframe_stBM *) &_);
+  if (!_.val && !nobuild)
+    parsererrorprintf_BM (pars, lineno, colpos, "not found $%s", varstr);
+  GtkTextIter it = EMPTY_TEXT_ITER_BM, endit = EMPTY_TEXT_ITER_BM;
+  gtk_text_buffer_get_iter_at_line (commandbuf_BM, &it, lineno - 1);
+  gtk_text_iter_forward_chars (&it, colpos);
+  endit = it;
+  gtk_text_iter_forward_chars (&endit, 1 + strlen (varstr));
+  gtk_text_buffer_apply_tag (commandbuf_BM, dollar_cmdtag_BM, &it, &endit);
+  return _.val;
+}                               /* end parsdollarval_newguicmd_BM */
+
+
+// parse inside $(....)
+value_tyBM
+parsvalexp_newguicmd_BM (struct parser_stBM * pars, unsigned lineno,
+                         unsigned colpos, int depth,
+                         struct stackframe_stBM * stkf)
+{
+  assert (isparser_BM (pars));
+  const struct parserops_stBM *parsops = pars->pars_ops;
+  bool nobuild = parsops && parsops->parsop_nobuild;
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 struct parser_stBM *pars; value_tyBM resval;
+                 value_tyBM srcval;
+                 objectval_tyBM * obj; objectval_tyBM * obsel;
+                 objectval_tyBM * obattr; closure_tyBM * clos;
+                 value_tyBM otherval; const stringval_tyBM * name;;);
+  _.pars = pars;
+  unsigned srclineno = parserlineno_BM (pars);
+  unsigned srccolpos = parsercolpos_BM (pars);
+  parsererrorprintf_BM (pars, srclineno,
+                        srccolpos,
+                        "unimplemented parsvalexp_newguicmd for $(...)");
+#warning parsvalexp_newguicmd_BM unimplemented
+  return NULL;
+}                               /* end parsvalexp_newguicmd_BM */
+
+
+// parse inside $[...]
+const objectval_tyBM *
+parsobjexp_newguicmd_BM (struct parser_stBM *pars,
+                         unsigned lineno, unsigned colpos,
+                         int depth, struct stackframe_stBM *stkf)
+{
+  const struct parserops_stBM *parsops = pars->pars_ops;
+  bool nobuild = parsops && parsops->parsop_nobuild;
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 objectval_tyBM * obj;
+                 const stringval_tyBM * namev; objectval_tyBM * oldnamedob;
+                 value_tyBM val;);
+  assert (isparser_BM (pars));
+  parserskipspaces_BM (pars);
+  unsigned oblineno = parserlineno_BM (pars);
+  unsigned obcolpos = parsercolpos_BM (pars);
+  parsererrorprintf_BM (pars, oblineno,
+                        obcolpos,
+                        "unimplemented parsobjexp_newguicmd for $(...)");
+#warning parsobjexp_newguicmd_BM unimplemented
+  return NULL;
+}                               /* end parsobjexp_newguicmd_BM */
+
+
+
+value_tyBM
+find_named_value_newgui_BM (const char *vstr, struct stackframe_stBM * stkf)
+{
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 value_tyBM val;);
+#warning find_named_value_newgui_BM unimplemented
+  FATAL_BM ("unimplemented find_named_value_newgui_BM %s", vstr);
+}                               /* end find_named_value_newgui_BM */
+
+// expand readmacro-s
+value_tyBM parsreadmacroexp_newguicmd_BM
+  (struct parser_stBM *pars, unsigned lineno, unsigned colpos, int depth,
+   const node_tyBM * nod, struct stackframe_stBM *stkf)
+{
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 struct parser_stBM *pars;
+                 value_tyBM resval; const node_tyBM * nod; value_tyBM crm;
+                 const objectval_tyBM * conn;
+    );
+  _.pars = pars;
+  _.nod = nod;
+  if (depth > MAXDEPTHPARSE_BM)
+    parsererrorprintf_BM (pars, lineno, colpos,
+                          "too deep %d readmacro", depth);
+  assert (isnode_BM ((const value_tyBM) nod));
+  _.conn = nodeconn_BM ((const value_tyBM) _.nod);
+  assert (isobject_BM ((const value_tyBM) _.conn));
+  _.crm = objgetattr_BM (_.conn, BMP_command_readmacro);
+  if (!isclosure_BM ((const value_tyBM) _.crm))
+    {
+      char crmidbuf[32];
+      memset (crmidbuf, 0, sizeof (crmidbuf));
+      idtocbuf32_BM (objid_BM (_.crm), crmidbuf);
+      const char *crmname = findobjectname_BM (_.crm);
+      if (crmname)
+        parsererrorprintf_BM (pars, lineno, colpos,
+                              "readmacro ^ %s |=%s| has bad `command_readmacro` attribute",
+                              crmidbuf, crmname);
+      else
+        parsererrorprintf_BM (pars, lineno, colpos,
+                              "readmacro ^ %s has bad `command_readmacro` attribute",
+                              crmidbuf);
+    }
+  _.resval =                    //
+    apply4_BM (_.crm, (struct stackframe_stBM *) &_,
+               (value_tyBM) _.nod,
+               taggedint_BM (lineno), taggedint_BM (colpos), pars);
+  return _.resval;
+}                               /* end parsreadmacroexp_newguicmd_BM */

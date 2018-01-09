@@ -809,7 +809,8 @@ extern void browsenewlinefordepth_BM (int depth);
 
 // the function to handle tabautocomplete in command
 void tabautocomplete_gui_cmd_BM (void);
-extern void gcmarkgui_BM (struct garbcoll_stBM *gc);
+extern void gcmarkoldgui_BM (struct garbcoll_stBM *gc);
+extern void gcmarknewgui_BM (struct garbcoll_stBM *gc);
 extern void gui_gc_message_BM (const char *msg);
 extern void
 browse_value_BM (const value_tyBM val,
@@ -853,36 +854,8 @@ extern void log_end_message_BM (void);
 extern parser_error_sigBM parserror_guicmd_BM;
 
 
-// for $<var>, use find_named_value_gui_BM, show in  dollar_cmdtag.
-extern parser_expand_dollarval_sigBM parsdollarval_guicmd_BM;
-
-// for $:<var>, use find_named_value_gui_BM, check that value is an
-// object, show it in dollar_cmdtag
-extern parser_expand_dollarobj_sigBM parsdollarobj_guicmd_BM;
-
-// parse inside $(...),
-// handle !> <obselector> (...) # to send a message for its result
-// handle ( .... ) # to apply a function
-// handle !. <obattr> # to get an attribute
-// handle !@ <index> # to get a component
-// handle $% <name>  # toi show and bind to name
-extern parser_expand_valexp_sigBM parsvalexp_guicmd_BM;
 
 
-// parse inside $[...],
-// handle * <name> to create a new (userE) named object
-// handle  !* <name> to create a new (global) named object
-// handle : to create a new transient anonymous object
-// handle ~ to create a new global anonymous object
-// handle % to create a new (userE) anonymous object
-// handle $:<var> to get the object registered as <var>
-// handle ( <expr> ) to cast a value into an object
-// handle <id> or <name> to  refer to an existing object
-extern parser_expand_objexp_sigBM parsobjexp_guicmd_BM;
-
-// expand readmacros nodes with ^ macroname ( args )
-// apply the `command_readmacro` closure from the connective macroname
-extern parser_expand_readmacro_sigBM parsreadmacroexp_guicmd_BM;
 
 // decorate e.g. // or | with commentsign_cmdtag
 extern parser_decorate_comment_sign_sigBM parscommentsign_guicmd_BM;

@@ -542,7 +542,12 @@ full_garbage_collection_BM (struct stackframe_stBM *stkfram)
   gcmarkpredefinedobjects_BM (&GCdata);
   gcmarkconstants_BM (&GCdata);
   gcmarkglobals_BM (&GCdata);
-  gcmarkgui_BM (&GCdata);
+  if (newgui_BM)
+    gcmarknewgui_BM (&GCdata);
+  else
+    gcmarkoldgui_BM (&GCdata);
+  gcmarkdefergtk_BM (&GCdata);
+  gcmarkagenda_BM (&GCdata);
   gcframemark_BM (&GCdata, stkfram, 0);
   unsigned long nbobjscan = 0;
   while (listlength_BM (GCdata.gc_scanlist) > 0)

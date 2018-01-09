@@ -49,6 +49,36 @@ struct browsedval_stBM *browsedval_BM;
 guint browserblinkid_BM;
 struct parenoffset_stBM browserblinkparens_BM;  /// offsets are absolute
 
+// for $<var>, use find_named_value_gui_BM, show in  dollar_cmdtag.
+static parser_expand_dollarval_sigBM parsdollarval_guicmd_BM;
+
+// for $:<var>, use find_named_value_gui_BM, check that value is an
+// object, show it in dollar_cmdtag
+static parser_expand_dollarobj_sigBM parsdollarobj_guicmd_BM;
+
+// parse inside $(...),
+// handle !> <obselector> (...) # to send a message for its result
+// handle ( .... ) # to apply a function
+// handle !. <obattr> # to get an attribute
+// handle !@ <index> # to get a component
+// handle $% <name>  # to show and bind to name
+static parser_expand_valexp_sigBM parsvalexp_guicmd_BM;
+
+
+// parse inside $[...],
+// handle * <name> to create a new (userE) named object
+// handle  !* <name> to create a new (global) named object
+// handle : to create a new transient anonymous object
+// handle ~ to create a new global anonymous object
+// handle % to create a new (userE) anonymous object
+// handle $:<var> to get the object registered as <var>
+// handle ( <expr> ) to cast a value into an object
+// handle <id> or <name> to  refer to an existing object
+static parser_expand_objexp_sigBM parsobjexp_guicmd_BM;
+
+// expand readmacros nodes with ^ macroname ( args )
+// apply the `command_readmacro` closure from the connective macroname
+static parser_expand_readmacro_sigBM parsreadmacroexp_guicmd_BM;
 
 int commandnumber_BM;
 /// stop completely the blinking
@@ -225,7 +255,7 @@ textiterstrdbg_BM (GtkTextIter * it)
 
 
 void
-gcmarkgui_BM (struct garbcoll_stBM *gc)
+gcmarkoldgui_BM (struct garbcoll_stBM *gc)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
   if (browsedobj_BM)
@@ -246,9 +276,7 @@ gcmarkgui_BM (struct garbcoll_stBM *gc)
     }
   if (complsetcmd_BM)
     VALUEGCPROC_BM (gc, complsetcmd_BM, 0);
-  gcmarkdefergtk_BM (gc);
-  gcmarkagenda_BM (gc);
-}                               /* end gcmarkgui_BM */
+}                               /* end gcmarkoldgui_BM */
 
 
 
