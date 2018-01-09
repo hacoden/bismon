@@ -133,12 +133,12 @@ handlekeypress_newgui_cmd_BM (GtkWidget * widg, GdkEventKey * evk,
         }
       else                      // plain RETURN key, propagate it
         return false;
-      return true;
+      return true;              // dont propagate the return when withctrl or withshift
     }
   else if (evk->keyval == GDK_KEY_Tab)
     {
       tabautocomplete_gui_cmd_BM ();
-      return true;
+      return true;              // dont propagate the tab
     }
   else if (evk->keyval >= GDK_KEY_F1 && evk->keyval <= GDK_KEY_F10)
     {
@@ -148,6 +148,7 @@ handlekeypress_newgui_cmd_BM (GtkWidget * widg, GdkEventKey * evk,
       DBGPRINTF_BM ("handlekeypress_newgui_cmd_BM keyval %#x KEY_F%d %s%s",
                     evk->keyval, evk->keyval - (GDK_KEY_F1 - 1),
                     withctrl ? " ctrl" : "", withshift ? " shift" : "");
+#warning should handle the function key
       return false;
     }
   return false;                 // propagate the event
@@ -290,6 +291,7 @@ runcommand_newgui_BM (bool erase)
   char *cmdstr = gtk_text_buffer_get_text (commandbuf_BM, &startit, &endit,
                                            false);
   bool gotffortab = false;
+  // replace tabs and formfeeds
   for (char *pc = cmdstr; *pc; pc++)
     {
       if (*pc == '\t')
@@ -313,7 +315,7 @@ runcommand_newgui_BM (bool erase)
   LOCALFRAME_BM ( /*prev: */ NULL, /*descr: */ NULL,
                  struct parser_stBM *cmdpars;);
   _.cmdpars = cmdpars;
-  int errpars = setjmp (jmperrorcmd_BM);
+  volatile int errpars = setjmp (jmperrorcmd_BM);
   if (!errpars)
     {
       // should parse the command buffer, this could longjmp to jmperrorcmd_BM
@@ -361,6 +363,7 @@ runcommand_newgui_BM (bool erase)
   else                          /* error */
     {
       // the errormessagedialog_BM was created in parserrorcmd_BM
+      DBGPRINTF_BM ("runcommand_newgui errpars %d", errpars);
       if (errormessagedialog_BM)
         {
           gtk_dialog_run (GTK_DIALOG (errormessagedialog_BM));
@@ -398,7 +401,7 @@ enduseraction_newgui_cmd_BM (GtkTextBuffer * txbuf, gpointer data)
   LOCALFRAME_BM ( /*prev: */ NULL, /*descr: */ NULL,
                  struct parser_stBM *cmdpars;);
   _.cmdpars = cmdpars;
-  int errpars = setjmp (jmperrorcmd_BM);
+  volatile int errpars = setjmp (jmperrorcmd_BM);
   if (!errpars)
     {
       // should parse the command buffer
@@ -407,6 +410,7 @@ enduseraction_newgui_cmd_BM (GtkTextBuffer * txbuf, gpointer data)
   else
     {
       // got an error while parsing
+      DBGPRINTF_BM ("newgui command parserror %d", errpars);
     }
   free (cmdstr), cmdstr = NULL;
   // for parenthesis blinking
