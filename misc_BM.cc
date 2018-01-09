@@ -888,7 +888,8 @@ gtk_defer_send3_BM(value_tyBM recv, objectval_tyBM*obsel,  value_tyBM arg1, valu
   for(;;)   // most of the time, this loop runs once
     {
       wrcnt = write(defer_gtk_writepipefd_BM, &ch, 1);
-      if (wrcnt>0) return;
+      if (wrcnt>0)
+        return;
       usleep(1000);
       nbtry++;
       if (nbtry > 256)
@@ -900,6 +901,9 @@ gtk_defer_send3_BM(value_tyBM recv, objectval_tyBM*obsel,  value_tyBM arg1, valu
 
 ////////////////////////////////////////////////////////////////
 /********** agenda support **********/
+#ifndef AGENDA_SLOW_FACTOR_BM
+#define AGENDA_SLOW_FACTOR_BM 1
+#endif /*AGENDA_SLOW_FACTOR_BM*/
 
 typedef void threadidle_sigtBM (int thrank);
 
@@ -993,7 +997,7 @@ start_agenda_work_threads_BM (int nbjobs)
       auto& curth = threadinfo_stBM::ti_array[tix];
       curth.ti_rank = tix;
       curth.ti_thread  = std::thread(threadinfo_stBM::thread_run,tix);
-      usleep (1000+tix%32);
+      usleep (1000+40*(tix%32));
     }
   usleep (200);
   for (int tix=1; tix<=nbjobs; tix++)
@@ -1067,7 +1071,8 @@ agenda_suspend_for_gc_BM (void)
       if (!alldoinggc)
         {
           std::unique_lock<std::mutex> lk_(threadinfo_stBM::ti_agendamtx);
-          threadinfo_stBM::ti_agendacondv.wait_for(lk_,std::chrono::milliseconds{400});
+          threadinfo_stBM::ti_agendacondv.wait_for(lk_,
+              std::chrono::milliseconds{10+(AGENDA_SLOW_FACTOR_BM*400)});
         }
     };
   DBGPRINTF_BM("agenda_suspend_for_gc_BM done");
@@ -1115,7 +1120,8 @@ threadinfo_stBM::thread_run(const int tix)
               DBGPRINTF_BM("thread_run tix%d needgc tid#%ld elapsed %.3f s", tix, (long) gettid_BM(), elapsedtime_BM());
               ti_agendacondv.notify_all();
               std::unique_lock<std::mutex> lk_(ti_agendamtx);
-              ti_agendacondv.wait_for(lk_,std::chrono::milliseconds{900});
+              ti_agendacondv.wait_for(lk_,
+                                      std::chrono::milliseconds{40+(AGENDA_SLOW_FACTOR_BM*800)});
             }
           while(atomic_load(&curthreadinfo_BM->ti_gc));
         }
@@ -1161,7 +1167,7 @@ threadinfo_stBM::thread_run(const int tix)
       else   // no task to run
         {
           std::unique_lock<std::mutex> lk_(ti_agendamtx);
-          int delayms = 1300 + 9*tix +
+          int delayms = 50 + (AGENDA_SLOW_FACTOR_BM*800) + 9*tix +
                         (atomic_load (&want_garbage_collection_BM)?0:3*(g_random_int () % 256));
           ti_agendacondv.wait_for(lk_,std::chrono::milliseconds{delayms});
           DBGPRINTF_BM("thread_run tix%d waited notask tid#%ld elapsed %.3f s",
