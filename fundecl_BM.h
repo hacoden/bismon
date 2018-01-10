@@ -337,9 +337,8 @@ extern void objstrbufferwritetofile_BM (objectval_tyBM * obj,
                                         const char *filepath);
 ///////
 
-extern void *strbuffergcproc_BM (struct garbcoll_stBM *gc,
-                                 struct strbuffer_stBM *sbuf, int depth)
-  __attribute__ ((warn_unused_result));
+extern void strbuffergcmark_BM (struct garbcoll_stBM *gc,
+                                struct strbuffer_stBM *sbuf, int depth);
 extern void strbuffergcdestroy_BM (struct garbcoll_stBM *gc,
                                    struct strbuffer_stBM *sbuf);
 extern void strbuffergckeep_BM (struct garbcoll_stBM *gc,
@@ -425,9 +424,8 @@ static inline struct hashsetobj_stBM *objhashsetpayload_BM (objectval_tyBM *
 extern struct hashsetobj_stBM *hashsetobj_grow_BM (struct hashsetobj_stBM
                                                    *hset, unsigned gap);
 static inline struct hashsetobj_stBM *hashsetobjcast_BM (const value_tyBM v);
-void *hashsetgcproc_BM (struct garbcoll_stBM *gc,
-                        struct hashsetobj_stBM *hset)
-  __attribute__ ((warn_unused_result));
+extern void hashsetgcproc_BM (struct garbcoll_stBM *gc,
+                              struct hashsetobj_stBM *hset);
 void hashsetgcdestroy_BM (struct garbcoll_stBM *gc,
                           struct hashsetobj_stBM *hset);
 void hashsetgckeep_BM (struct garbcoll_stBM *gc,
@@ -454,9 +452,8 @@ extern void listappend_BM (struct listtop_stBM *lis, value_tyBM val);
 extern void listprepend_BM (struct listtop_stBM *lis, value_tyBM val);
 extern void listpopfirst_BM (struct listtop_stBM *lis);
 extern void listpoplast_BM (struct listtop_stBM *lis);
-extern void *listgcproc_BM (struct garbcoll_stBM *gc,
-                            struct listtop_stBM *lis, int depth)
-  __attribute__ ((warn_unused_result));
+extern void listgcmark_BM (struct garbcoll_stBM *gc,
+                           struct listtop_stBM *lis, int depth);
 extern void listgcdestroy_BM (struct garbcoll_stBM *gc,
                               struct listtop_stBM *lis);
 extern void listgckeep_BM (struct garbcoll_stBM *gc,
@@ -514,9 +511,8 @@ extern void *quasinodegcproc_BM (struct garbcoll_stBM *gc,
                                  quasinode_tyBM * quasi, int depth)
   __attribute__ ((warn_unused_result));
 
-extern void *classinfogcproc_BM (struct garbcoll_stBM *gc,
-                                 struct classinfo_stBM *clinf, int depth)
-  __attribute__ ((warn_unused_result));
+extern void classinfogcmark_BM (struct garbcoll_stBM *gc,
+                                struct classinfo_stBM *clinf, int depth);
 extern void classinfogcdestroy_BM (struct garbcoll_stBM *gc,
                                    struct classinfo_stBM *clinf);
 extern void classinfogckeep_BM (struct garbcoll_stBM *gc,

@@ -93,7 +93,8 @@ failure_at_BM (int failcode, const char *fil, int lineno,
                      "corrupted curfailurehandle_BM@%p for failcode %d",
                      curfailurehandle_BM, failcode);
       curfailurehandle_BM->failh_reason = reasonv;
-      longjmp (failcode, curfailurehandle_BM->failh_jmpbuf);
+      longjmp (((struct failurehandler_stBM *)
+                curfailurehandle_BM)->failh_jmpbuf, failcode);
     }
   else
     {
@@ -489,14 +490,24 @@ do_internal_deferred_apply3_gtk_BM (const closure_tyBM * clos,
 {
   LOCALFRAME_BM ( /*prev stackf: */ NULL, /*descr: */ NULL,
                  const closure_tyBM * dclosv; value_tyBM arg1v, arg2v, arg3v;
+                 value_tyBM failres;
     );
   _.dclosv = clos;
   _.arg1v = arg1;
   _.arg2v = arg2;
   _.arg3v = arg3;
-#warning should catch failure with LOCAL_FAILURE_HANDLE_BM then clear curfailurehandle_BM
+  int failcod = 0;
+  LOCAL_FAILURE_HANDLE_BM (failcod, _.failres);
+  if (failcod)
+    {
+      fprintf (stderr, "deffered_apply3_gtk failure, failcod#%d\n", failcod);
+      curfailurehandle_BM = NULL;
+      return;
+    }
   (void) apply3_BM (clos, (struct stackframe_stBM *) &_, arg1, arg2, arg3);
+  curfailurehandle_BM = NULL;
 }                               /* end do_internal_defer_apply3_BM */
+
 
 // called from did_deferredgtk_BM
 void
@@ -507,15 +518,24 @@ do_internal_deferred_send3_gtk_BM (value_tyBM recv, objectval_tyBM * obsel,
   LOCALFRAME_BM ( /*prev stackf: */ NULL, /*descr: */ NULL,
                  objectval_tyBM * obsel;
                  value_tyBM recva, arg1v, arg2v, arg3v;
+                 value_tyBM failres;
     );
   _.recva = recv;
   _.obsel = obsel;
   _.arg1v = arg1;
   _.arg2v = arg2;
   _.arg3v = arg3;
-#warning should catch failure with LOCAL_FAILURE_HANDLE_BM then clear curfailurehandle_BM
+  int failcod = 0;
+  LOCAL_FAILURE_HANDLE_BM (failcod, _.failres);
+  if (failcod)
+    {
+      fprintf (stderr, "deffered_send3_gtk failure, failcod#%d\n", failcod);
+      curfailurehandle_BM = NULL;
+      return;
+    }
   (void) send3_BM (recv, obsel, (struct stackframe_stBM *) &_, arg1, arg2,
                    arg3);
+  curfailurehandle_BM = NULL;
 }                               /* end do_internal_defer_send3_BM */
 
 

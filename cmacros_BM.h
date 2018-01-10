@@ -170,7 +170,7 @@
 #define LOCAL_FAILURE_HANDLE_ATBIS_BM(Fil,Lin,FcodVar,ReasonVar)	\
   struct failurehandler_stBM fh_##Lin					\
    = {									\
-     .pa = {.htyp = typayl_FailureHandler_BM},				\
+     .pA = {.htyp = typayl_FailureHandler_BM},				\
      .failh_magic = FAILUREHANDLEMAGIC_BM,				\
      .failh_lockset = NULL,						\
      .failh_reason = NULL,						\

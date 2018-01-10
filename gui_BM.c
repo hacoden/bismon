@@ -462,8 +462,8 @@ start_browse_object_BM (const objectval_tyBM * obj,
       assert (isobject_BM ((const value_tyBM) mdobj));
       if (mdobj == obj)
         {                       // replacing existing object
-          GtkTextIter startit = EMPTY_TEXT_ITER_BM, endit =
-            EMPTY_TEXT_ITER_BM;
+          GtkTextIter startit = EMPTY_TEXT_ITER_BM;
+          GtkTextIter endit = EMPTY_TEXT_ITER_BM;
           gtk_text_buffer_get_iter_at_mark (browserbuf_BM, &startit,
                                             browsedobj_BM[md].brow_ostartm);
           gtk_text_buffer_get_iter_at_mark (browserbuf_BM, &endit,
