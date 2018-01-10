@@ -1021,10 +1021,9 @@ doload_BM (struct stackframe_stBM *_parentframe, struct loader_stBM *ld)
   while (islist_BM (ld->ld_todolist) && listlength_BM (ld->ld_todolist) > 0)
     {
       _.firsttodo = listfirst_BM (ld->ld_todolist);
-      assert (isclosure_BM (_.firsttodo));
+      assert (isclosure_BM (_.firsttodo) || isobject_BM (_.firsttodo));
       listpopfirst_BM (ld->ld_todolist);
-      apply0_BM ((const closure_tyBM *) (_.firsttodo),
-                 (struct stackframe_stBM *) &_);
+      apply0_BM ((value_tyBM) (_.firsttodo), (struct stackframe_stBM *) &_);
       todocnt++;
       if (todocnt % 128 == 0)
         full_garbage_collection_BM ((struct stackframe_stBM *) &_);
@@ -1061,30 +1060,48 @@ const value_tyBM arg3 __attribute__ ((unused)),
 const value_tyBM arg4 __attribute__ ((unused)),
 const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
+  enum
+  {
+    closix_ix,
+    closix_lineno,
+    closix_colpos,
+    closix_curldobj,
+    closix_data,
+    closix__LAST
+  };
   LOCALFRAME_BM (stkf, BMP_postpone_load_modification,  //
                  objectval_tyBM * curldobj; value_tyBM data;
                  closure_tyBM * cclos;
     );
-  LOCALGETCLOS_BM (_.cclos);
-  assert (closurewidth_BM ((value_tyBM) _.cclos) >= 5);
+  LOCALGETFUNV_BM (_.cclos);
+  WEAKASSERT_BM (isclosure_BM (_.cclos)
+                 && closurewidth_BM ((value_tyBM) _.cclos) >= closix__LAST);
   assert (firstloader_BM != NULL);
   // clos0 is ix
-  assert (istaggedint_BM (closurenthson_BM ((const value_tyBM) _.cclos, 0)));
-  unsigned ix = getint_BM (closurenthson_BM ((const value_tyBM) _.cclos, 0));
+  WEAKASSERT_BM (istaggedint_BM
+                 (closurenthson_BM ((const value_tyBM) _.cclos, closix_ix)));
+  unsigned ix =
+    getint_BM (closurenthson_BM ((const value_tyBM) _.cclos, closix_ix));
   assert (ix < firstloader_BM->ld_maxnum);
   // clos1 is lineno
-  assert (istaggedint_BM (closurenthson_BM ((const value_tyBM) _.cclos, 1)));
+  WEAKASSERT_BM (istaggedint_BM
+                 (closurenthson_BM
+                  ((const value_tyBM) _.cclos, closix_lineno)));
   unsigned lineno =
-    getint_BM (closurenthson_BM ((const value_tyBM) _.cclos, 1));
+    getint_BM (closurenthson_BM ((const value_tyBM) _.cclos, closix_lineno));
   // clos2 is colpos
-  assert (istaggedint_BM (closurenthson_BM ((const value_tyBM) _.cclos, 2)));
+  WEAKASSERT_BM (istaggedint_BM
+                 (closurenthson_BM
+                  ((const value_tyBM) _.cclos, closix_colpos)));
   unsigned colpos =
-    getint_BM (closurenthson_BM ((const value_tyBM) _.cclos, 2));
+    getint_BM (closurenthson_BM ((const value_tyBM) _.cclos, closix_colpos));
   // clos3 is curldobj
-  assert (isobject_BM (closurenthson_BM ((const value_tyBM) _.cclos, 3)));
-  _.curldobj = closurenthson_BM ((const value_tyBM) _.cclos, 3);
+  WEAKASSERT_BM (isobject_BM
+                 (closurenthson_BM
+                  ((const value_tyBM) _.cclos, closix_curldobj)));
+  _.curldobj = closurenthson_BM ((const value_tyBM) _.cclos, closix_curldobj);
   // clos4 is data (cname or named object)
-  _.data = closurenthson_BM ((const value_tyBM) _.cclos, 4);
+  _.data = closurenthson_BM ((const value_tyBM) _.cclos, closix_data);
   struct parser_stBM *ldpars = firstloader_BM->ld_parsarr[ix];
   assert (isparser_BM (ldpars));
   if (isobject_BM (_.data))

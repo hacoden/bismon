@@ -543,59 +543,65 @@ extern const stringval_tyBM *dictkeybefore_BM (struct dict_stBM *dict,
 extern const node_tyBM *dictnodeofkeys_BM (struct dict_stBM *dict,
                                            const objectval_tyBM * obj);
 ////////////////
-extern value_tyBM apply0_BM (const closure_tyBM * clos,
+/** apply a closure, or directly an object; so applying OBJ is same as
+    applying closure % OBJ () without closed values */
+
+extern value_tyBM apply0_BM (const value_tyBM funv,
                              struct stackframe_stBM *stkf);
 
-extern value_tyBM apply1_BM (const closure_tyBM * clos,
+extern value_tyBM apply1_BM (const value_tyBM funv,
                              struct stackframe_stBM *stkf,
                              const value_tyBM arg1);
 
-extern value_tyBM apply2_BM (const closure_tyBM * clos,
+extern value_tyBM apply2_BM (const value_tyBM funv,
                              struct stackframe_stBM *stkf,
                              const value_tyBM arg1, const value_tyBM arg2);
 
-extern value_tyBM apply3_BM (const closure_tyBM * clos,
+extern value_tyBM apply3_BM (const value_tyBM funv,
                              struct stackframe_stBM *stkf,
                              const value_tyBM arg1, const value_tyBM arg2,
                              const value_tyBM arg3);
 
-extern value_tyBM apply4_BM (const closure_tyBM * clos,
+extern value_tyBM apply4_BM (const value_tyBM funv,
                              struct stackframe_stBM *stkf,
                              const value_tyBM arg1, const value_tyBM arg2,
                              const value_tyBM arg3, const value_tyBM arg4);
 
-extern value_tyBM apply5_BM (const closure_tyBM * clos,
+extern value_tyBM apply5_BM (const value_tyBM funv,
                              struct stackframe_stBM *stkf,
                              const value_tyBM arg1, const value_tyBM arg2,
                              const value_tyBM arg3, const value_tyBM arg4,
                              const value_tyBM arg5);
 
-extern value_tyBM apply6_BM (const closure_tyBM * clos,
+extern value_tyBM apply6_BM (const value_tyBM funv,
                              struct stackframe_stBM *stkf,
                              const value_tyBM arg1, const value_tyBM arg2,
                              const value_tyBM arg3, const value_tyBM arg4,
                              const value_tyBM arg5, const value_tyBM arg6);
 
-extern value_tyBM apply7_BM (const closure_tyBM * clos,
+extern value_tyBM apply7_BM (const value_tyBM funv,
                              struct stackframe_stBM *stkf,
                              const value_tyBM arg1, const value_tyBM arg2,
                              const value_tyBM arg3, const value_tyBM arg4,
                              const value_tyBM arg5, const value_tyBM arg6,
                              const value_tyBM arg7);
 
-extern value_tyBM apply8_BM (const closure_tyBM * clos,
+extern value_tyBM apply8_BM (const value_tyBM funv,
                              struct stackframe_stBM *stkf,
                              const value_tyBM arg1, const value_tyBM arg2,
                              const value_tyBM arg3, const value_tyBM arg4,
                              const value_tyBM arg5, const value_tyBM arg6,
                              const value_tyBM arg7, const value_tyBM arg8);
-extern value_tyBM apply9_BM (const closure_tyBM * clos,
+extern value_tyBM apply9_BM (const value_tyBM funv,
                              struct stackframe_stBM *stkf,
                              const value_tyBM arg1, const value_tyBM arg2,
                              const value_tyBM arg3, const value_tyBM arg4,
                              const value_tyBM arg5, const value_tyBM arg6,
                              const value_tyBM arg7, const value_tyBM arg8,
                              const value_tyBM arg9);
+
+value_tyBM applyvar_BM (const value_tyBM funv, struct stackframe_stBM *stkf, unsigned nbargs,   // no more than MAXAPPLYARGS_BM
+                        const value_tyBM * argarr);
 
 extern const char *debug_outstr_value_BM (const value_tyBM val,
                                           struct stackframe_stBM *stkf,

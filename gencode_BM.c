@@ -12,15 +12,12 @@ ROUTINEOBJNAME_BM (_5mnsT1wsdWs_2Qnqsf3wqaP)    // prepare_routine:basiclo_funct
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * clos; value_tyBM recv;
+                 value_tyBM recv;
                  objectval_tyBM * modgenob;
                  value_tyBM args; value_tyBM curarg;
                  objectval_tyBM * routprepob; value_tyBM prepvalset;
                  anyassoc_tyBM * assocbind;
     );
-  LOCALGETCLOS_BM (_.clos);
-  const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
-  assert (closconn != NULL);
   const objectval_tyBM *k_arguments = BMK_0jFqaPPHgYH_5JpjOPxQ67p;
   const objectval_tyBM *k_block = BMK_2U8Sj78DMbl_5eerKpaJsNq;
   const objectval_tyBM *k_locals = BMK_24sSVIADeHm_0Sx34wQfG7W;
@@ -77,10 +74,9 @@ ROUTINEOBJNAME_BM (_6gRlN8loM4E_4pSsNmiCeIa)    // emit_c_type:c_opaque
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * clos; value_tyBM recv;
+                 value_tyBM recv;
                  objectval_tyBM * bufob;
     );
-  LOCALGETCLOS_BM (_.clos);
   // retrieve arguments
   _.recv = /*ctype */ (arg1);
   WEAKASSERT_BM (isobject_BM (_.recv));
@@ -121,13 +117,11 @@ ROUTINEOBJNAME_BM (_979hCujWp2g_9tjRbM8Ht1l)    // emit_c_type:c_enum
  const quasinode_tyBM * restargs)
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * clos;
                  value_tyBM recv;
                  objectval_tyBM * prbufob;
                  const objectval_tyBM * extendingob;
                  const tupleval_tyBM * ownenumtup;
     );
-  LOCALGETCLOS_BM (_.clos);
   // retrieve arguments
   _.recv = /*ctype */ (arg1);
   WEAKASSERT_BM (isobject_BM (_.recv));
@@ -136,8 +130,6 @@ ROUTINEOBJNAME_BM (_979hCujWp2g_9tjRbM8Ht1l)    // emit_c_type:c_enum
   DBGPRINTF_BM
     ("start emit_c_type:c_enum _979hCujWp2g_9tjRbM8Ht1l recv=%s",
      objectdbg_BM (_.recv));
-  const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
-  assert (closconn != NULL);
   const objectval_tyBM *k_extending = BMK_2bqFfs5OYL2_0HRi4lcgFcu;
   const objectval_tyBM *k_own_enumeration = BMK_4ot0ZxxA31Y_8GVFlcbckIH;
   const objectval_tyBM *k_enumeration = BMK_7BROpIWQHzA_8b1C6i49Pkz;
@@ -165,7 +157,7 @@ ROUTINEOBJNAME_BM (_07qYMXftJRR_9dde2ASz4e9)    //  prepare_routine°basiclo_min
  const quasinode_tyBM * restargs)
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * clos; objectval_tyBM * modgen;
+                 objectval_tyBM * modgen;
                  setval_tyBM * prepvalset; objectval_tyBM * curprepob;
                  objectval_tyBM * routprep; objectval_tyBM * obhsetblock;
                  value_tyBM recv;
@@ -181,9 +173,6 @@ ROUTINEOBJNAME_BM (_07qYMXftJRR_9dde2ASz4e9)    //  prepare_routine°basiclo_min
                  value_tyBM bodyv;
                  value_tyBM collbl;
     );
-  LOCALGETCLOS_BM (_.clos);
-  const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
-  assert (closconn != NULL);
   const objectval_tyBM *k_arguments = BMK_0jFqaPPHgYH_5JpjOPxQ67p;
   const objectval_tyBM *k_constants = BMK_5l2zSKsFaVm_9zs6qDOP87i;
   const objectval_tyBM *k_result = BMK_7bD9VtDkGSn_7lxHeYuuFLR;
@@ -371,20 +360,16 @@ ROUTINEOBJNAME_BM (_10XOFm9ui6R_06F8qZQynnA)    //
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * clos; value_tyBM recv;
+                 value_tyBM recv;
                  value_tyBM modgen;
                  value_tyBM funset; objectval_tyBM * plainmod;
                  objectval_tyBM * curfun;
     );
-  LOCALGETCLOS_BM (_.clos);
-  const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
-  assert (closconn != NULL);
   // retrieve arguments
   _.recv = (arg1);
   WEAKASSERT_BM (isobject_BM (_.recv));
   _.modgen = (arg2);
   WEAKASSERT_BM (isobject_BM (_.modgen));
-  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
   const objectval_tyBM *k_functions_set = BMK_9stpgEfdDDE_7LUgqylTeFI;
   const objectval_tyBM *k_plain_module = BMK_8g1WBJBhDT9_1QK8IcuWYx2;
   const objectval_tyBM *k_basiclo_minifunction = BMK_2Z04aTH1OXJ_4ekKKdOCiOM;
@@ -439,14 +424,14 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
     closix__LAST
   };
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * clos;
+                 const closure_tyBM * closv;
                  objectval_tyBM * recv; objectval_tyBM * routprep;
                  objectval_tyBM * curob; value_tyBM curexp; value_tyBM resv;
                  anyassoc_tyBM * routassoc;
     );
-  LOCALGETCLOS_BM (_.clos);
-  const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
-  assert (closconn != NULL);
+  LOCALGETFUNV_BM (_.closv);
+  if (!isclosure_BM (_.closv) || closurewidth_BM (_.closv) != closix__LAST)
+    LOCALRETURN_BM (NULL);
   const objectval_tyBM *k_miniscan_var = BMK_6jh60mO0Cgd_84B0HiNphqA;
   const objectval_tyBM *k_miniscan_expr = BMK_7k3xb0vred0_9ZRHcZmhw77;
   const objectval_tyBM *k_miniscan_block = BMK_2gthNYOWogO_4sVTU1JbmUH;
@@ -462,16 +447,17 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
   int depth = getint_BM (arg3);
   int nbvars = 0, nbargs = 0;
   // retrieve closed integers
-  WEAKASSERT_BM (closurewidth_BM ((const value_tyBM) _.clos) >= closix__LAST);
+  WEAKASSERT_BM (closurewidth_BM ((const value_tyBM) _.closv) >=
+                 closix__LAST);
   {
     value_tyBM nbvarsv =
-      closurenthson_BM ((const value_tyBM) _.clos, closix_nbvars);
+      closurenthson_BM ((const value_tyBM) _.closv, closix_nbvars);
     WEAKASSERT_BM (istaggedint_BM (nbvarsv));
     nbvars = getint_BM (nbvarsv);
   }
   {
     value_tyBM nbargsv =
-      closurenthson_BM ((const value_tyBM) _.clos, closix_nbargs);
+      closurenthson_BM ((const value_tyBM) _.closv, closix_nbargs);
     WEAKASSERT_BM (istaggedint_BM (nbargsv));
     nbargs = getint_BM (nbargsv);
   }
@@ -612,11 +598,9 @@ ROUTINEOBJNAME_BM (_0zzJJsAL6Qm_2uw3eoWQHEq)    //
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * clos;
                  objectval_tyBM * recv; objectval_tyBM * routprepob;
                  objectval_tyBM * fromblockob;
     );
-  LOCALGETCLOS_BM (_.clos);
   int depth = 0;
   _.recv = objectcast_BM (arg1);
   _.routprepob = objectcast_BM (arg2);

@@ -491,14 +491,10 @@ ROUTINEOBJNAME_BM (_7GMLV81ntO3_4NHTv7fCL0A)    // dump_data°hset_object
   objectval_tyBM *k_put = BMK_9pvzBeIKHXF_8YDPCrQ6OEK;
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv;
-                 const closure_tyBM * clos; objectval_tyBM * dumpob;
+                 value_tyBM funv; objectval_tyBM * dumpob;
                  objectval_tyBM * bufob; const setval_tyBM * setv;
                  value_tyBM dumpres;
     );
-  objectval_tyBM *closconn = NULL;
-  LOCALGETCLOS_BM (_.clos);
-  closconn = closureconn_BM ((const value_tyBM) _.clos);
-  assert (isobject_BM (closconn));
   WEAKASSERT_BM (isobject_BM (arg1));
   _.recv = arg1;
   _.dumpob = objectcast_BM (arg2);
@@ -539,12 +535,11 @@ ROUTINEOBJNAME_BM (_26FUvWKvkYr_5hyqhhV8NEh)    // get°hset_object
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 objectval_tyBM * recv; value_tyBM elem;
-                 objectval_tyBM * curob; const closure_tyBM * clos;
+                 objectval_tyBM * recv;
+                 value_tyBM elem; objectval_tyBM * curob;
                  const setval_tyBM * setv;
     );
   struct hashsetobj_stBM *hset = NULL;
-  LOCALGETCLOS_BM (_.clos);
   if (!isobject_BM (arg1))
     LOCALRETURN_BM (NULL);
   _.recv = arg1;
@@ -604,9 +599,7 @@ ROUTINEOBJNAME_BM (_91iTl2vqF09_72WJj4swbNi)    // put°hset_object
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  objectval_tyBM * recv;
                  const seqobval_tyBM * putseqv; objectval_tyBM * curob;
-                 const closure_tyBM * clos;
     );
-  LOCALGETCLOS_BM (_.clos);
   if (!isobject_BM (arg1))
     LOCALRETURN_BM (NULL);
   _.recv = arg1;
@@ -640,10 +633,8 @@ ROUTINEOBJNAME_BM (_2juH5YMCcog_8pQGCuE5mod)    // add°hset_object
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  objectval_tyBM * recv; value_tyBM addend;
                  const seqobval_tyBM * putseqv; objectval_tyBM * curob;
-                 const closure_tyBM * clos;
     );
   struct hashsetobj_stBM *hset = NULL;
-  LOCALGETCLOS_BM (_.clos);
   if (!isobject_BM (arg1))
     LOCALRETURN_BM (NULL);
   _.recv = arg1;
@@ -685,10 +676,8 @@ ROUTINEOBJNAME_BM (_5hedSPIXD0o_5ef69rR2kzb)    // remove°hset_object
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  objectval_tyBM * recv; value_tyBM removedv;
                  const seqobval_tyBM * putseqv; objectval_tyBM * curob;
-                 const closure_tyBM * clos;
     );
   struct hashsetobj_stBM *hset = NULL;
-  LOCALGETCLOS_BM (_.clos);
   if (!isobject_BM (arg1))
     LOCALRETURN_BM (NULL);
   _.recv = arg1;
@@ -729,16 +718,15 @@ extern objrout_sigBM ROUTINEOBJNAME_BM (_88cUYsDqSFO_0DKwKLSOmpm);
 value_tyBM
 ROUTINEOBJNAME_BM (_88cUYsDqSFO_0DKwKLSOmpm)    //
 (struct stackframe_stBM * stkf, const value_tyBM arg1,  /* reciever */
- const value_tyBM arg2 __attribute__ ((unused)), const value_tyBM arg3
- __attribute__ ((unused)), const value_tyBM arg4
- __attribute__ ((unused)), const quasinode_tyBM * restargs
- __attribute__ ((unused)))
+ const value_tyBM arg2 __attribute__ ((unused)),        //
+ const value_tyBM arg3 __attribute__ ((unused)),        //
+ const value_tyBM arg4 __attribute__ ((unused)),        //
+ const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const objectval_tyBM * recv; const closure_tyBM * clos;
+                 const objectval_tyBM * recv;
                  const setval_tyBM * setv;
     );
-  LOCALGETCLOS_BM (_.clos);
   _.recv = arg1;
   if (!isobject_BM (arg1))
     LOCALRETURN_BM (NULL);
@@ -789,14 +777,10 @@ ROUTINEOBJNAME_BM (_0y90r6nyAYP_2MmfH2V00B1)    // dump_data°vector_object
   objectval_tyBM *k_dump_value = BMK_1FEnnpEkGdI_5DAcVDL5XHG;
   objectval_tyBM *k_put = BMK_9pvzBeIKHXF_8YDPCrQ6OEK;
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const objectval_tyBM * recv; const closure_tyBM * clos;
+                 const objectval_tyBM * recv;
                  objectval_tyBM * dumpob; objectval_tyBM * bufob;
                  value_tyBM dumpres;
     );
-  objectval_tyBM *closconn = NULL;
-  LOCALGETCLOS_BM (_.clos);
-  closconn = closureconn_BM ((const value_tyBM) _.clos);
-  assert (isobject_BM (closconn));
   WEAKASSERT_BM (isobject_BM (arg1));
   _.recv = arg1;
   _.dumpob = objectcast_BM (arg2);
@@ -879,18 +863,11 @@ ROUTINEOBJNAME_BM (_9EytjXNb76D_1ZP3iSk9cuu)    // dump_data°assoc_object
  const quasinode_tyBM * restargs)
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const objectval_tyBM * recv;
-                 const closure_tyBM * clos; objectval_tyBM * dumpob;
+                 const objectval_tyBM * recv; objectval_tyBM * dumpob;
                  objectval_tyBM * bufob; const setval_tyBM * setv;
                  objectval_tyBM * curattrob; value_tyBM curval;
                  value_tyBM dumpres;
     );
-  objectval_tyBM *closconn = NULL;
-  const node_tyBM *constnodv = NULL;
-  LOCALGETCLOS_BM (_.clos);
-  closconn = closureconn_BM ((const value_tyBM) _.clos);
-  assert (isobject_BM (closconn));
-  constnodv = objpayload_BM (closconn);
   WEAKASSERT_BM (isobject_BM (arg1));
   _.recv = arg1;
   WEAKASSERT_BM (obdumpgetdumper_BM (arg2) != NULL);
@@ -1243,7 +1220,9 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
                  objectval_tyBM * obsel; value_tyBM resuv;
                  const closure_tyBM * clos;
     );
-  LOCALGETCLOS_BM (_.clos);
+  LOCALGETFUNV_BM (_.clos);
+  if (!isclosure_BM ((const value_tyBM) _.clos))
+    FATAL_BM ("todo_send _9mdRnBqdqf5_9UvgSFA7wIY non-closure called");
   assert (isclosure_BM ((const value_tyBM) _.clos)
           && closurewidth_BM ((const value_tyBM) _.clos) >= closix__REST);
   unsigned wclos = closurewidth_BM ((const value_tyBM) _.clos);
@@ -1323,9 +1302,10 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
                  const closure_tyBM * cclos; const closure_tyBM * closv;
                  objectval_tyBM * ldobj;
     );
-  LOCALGETCLOS_BM (_.cclos);
-  assert (isclosure_BM ((const value_tyBM) _.cclos)
-          && closurewidth_BM ((const value_tyBM) _.cclos) >= closix__REST);
+  LOCALGETFUNV_BM (_.cclos);
+  if (!isclosure_BM ((const value_tyBM) _.cclos)
+      || closurewidth_BM ((const value_tyBM) _.cclos) >= closix__REST)
+    FATAL_BM ("todo_apply _3W8d51P1dJh_3b1BrOW6pua bad closure");
   unsigned wclos = closurewidth_BM ((const value_tyBM) _.cclos);
   _.closv =
     closurecast_BM (closurenthson_BM
@@ -1352,24 +1332,18 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
       LOCALRETURN_BM (apply4_BM
                       (_.closv, (struct stackframe_stBM *) &_, _.ldobj,
                        args[0], args[1], args[2]));
-    case 4:
-      LOCALRETURN_BM (apply5_BM
-                      (_.closv, (struct stackframe_stBM *) &_, _.ldobj,
-                       args[0], args[1], args[2], args[3]));
-    case 5:
-      LOCALRETURN_BM (apply6_BM
-                      (_.closv, (struct stackframe_stBM *) &_, _.ldobj,
-                       args[0], args[1], args[2], args[3], args[4]));
-    case 6:
-      LOCALRETURN_BM (apply7_BM
-                      (_.closv, (struct stackframe_stBM *) &_, _.ldobj,
-                       args[0], args[1], args[2], args[3], args[4], args[5]));
-    case 7:
-      LOCALRETURN_BM (apply8_BM
-                      (_.closv, (struct stackframe_stBM *) &_, _.ldobj,
-                       args[0], args[1], args[2], args[3], args[4], args[5],
-                       args[6]));
-    default:;
+    default:
+      if (nbargs < MAXAPPLYARGS_BM - 1)
+        {
+          value_tyBM argarr[MAXAPPLYARGS_BM];
+          memset (argarr, 0, sizeof (argarr));
+          argarr[0] = _.ldobj;
+          memcpy (argarr + 1, args, nbargs * sizeof (void *));
+          LOCALRETURN_BM (applyvar_BM
+                          ((value_tyBM) _.closv,
+                           (struct stackframe_stBM *) &_, nbargs + 1,
+                           argarr));
+        }
     }
   FATAL_BM ("too many %u arguments in todo_apply", nbargs);
 }                               /* end ROUTINE todo_apply _3W8d51P1dJh_3b1BrOW6pua */
@@ -1401,6 +1375,11 @@ const value_tyBM arg3 __attribute__ ((unused)),
 const value_tyBM arg4 __attribute__ ((unused)),
 const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
+  enum
+  {
+    closix_filnamv,
+    closix__LAST
+  };
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv;
                  objectval_tyBM * dumpob; objectval_tyBM * bufob;
@@ -1411,10 +1390,13 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
   struct dumper_stBM *duptr = obdumpgetdumper_BM (arg2);
   WEAKASSERT_BM (duptr != NULL);
   _.dumpob = arg2;
-  LOCALGETCLOS_BM (_.cclos);
+  LOCALGETFUNV_BM (_.cclos);
+  if (!isclosure_BM (_.cclos) || closurewidth_BM (_.cclos) != closix__LAST)
+    FATAL_BM
+      ("bad closure for _075tZNHCAMa_7XNNBaNM4qv dump_data of dumper_of_predefined");
   _.prsbufob = makeobj_BM ();
   objputstrbuffer_BM (_.prsbufob, 512 * 1024);
-  _.filnamv = closurenthson_BM (_.cclos, 0);
+  _.filnamv = closurenthson_BM (_.cclos, closix_filnamv);
   assert (isstring_BM ((const value_tyBM) _.filnamv));
   const char *basepath = bytstring_BM (_.filnamv);
   objstrbufferprintf_BM (_.prsbufob,
@@ -1536,6 +1518,11 @@ const value_tyBM arg3 __attribute__ ((unused)),
 const value_tyBM arg4 __attribute__ ((unused)),
 const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
+  enum
+  {
+    closix_filnamv,
+    closix__LAST
+  };
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv;
                  objectval_tyBM * dumpob;
@@ -1544,15 +1531,18 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
                  const stringval_tyBM * filnamv;
                  const node_tyBM * nodglobv;
                  const stringval_tyBM * curglobname;
-                 value_tyBM closv;
+                 value_tyBM cclosv;
     );
   struct dumper_stBM *duptr = obdumpgetdumper_BM (arg2);
   WEAKASSERT_BM (duptr != NULL);
+  LOCALGETFUNV_BM (_.cclosv);
+  if (!isclosure_BM (_.cclosv) || closurewidth_BM (_.cclosv) != closix__LAST)
+    FATAL_BM
+      ("bad closure for _4ENXjApm7Qb_3bXo8F6Jg9z dump_data inside dumper_of_globals");
   _.dumpob = arg2;
-  LOCALGETCLOS_BM (_.closv);
   _.prsbufob = makeobj_BM ();
   objputstrbuffer_BM (_.prsbufob, 256 * 1024);
-  _.filnamv = closurenthson_BM (_.closv, 0);
+  _.filnamv = closurenthson_BM (_.cclosv, closix_filnamv);
   _.nodglobv = nodeglobalnames_BM (BMP_node);
   assert (isstring_BM ((const value_tyBM) _.filnamv));
   const char *basepath = bytstring_BM (_.filnamv);
@@ -1586,7 +1576,7 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
   printf ("wrote globals file %s\n", filpath);
   duptr->dump_wrotefilecount++;
   free (filpath), filpath = NULL;
-  LOCALRETURN_BM (_.closv);
+  LOCALRETURN_BM (_.cclosv);
 }                               /* end ROUTINE _4ENXjApm7Qb_3bXo8F6Jg9z dumping globals */
 
 
@@ -1623,7 +1613,7 @@ ROUTINEOBJNAME_BM (_3yJPC4SxGtF_6ilaF37wdxG)    //
   struct dumper_stBM *duptr = obdumpgetdumper_BM (arg2);
   WEAKASSERT_BM (duptr != NULL);
   _.dumpob = arg2;
-  LOCALGETCLOS_BM (_.closv);
+  LOCALGETFUNV_BM (_.closv);
   WEAKASSERT_BM (closurewidth_BM ((const value_tyBM) _.closv) >=
                  closix__LAST);
   closconn = closureconn_BM ((const value_tyBM) _.closv);
@@ -1810,26 +1800,15 @@ ROUTINEOBJNAME_BM (_1gME6zn82Kf_8hzWibLFRfz)    //
  const value_tyBM arg4 __attribute__ ((unused)),
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
-  enum closureix_en
-  {
-    closix__LAST
-  };
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  objectval_tyBM * recv;
-                 const closure_tyBM * clos; objectval_tyBM * closconn;
                  objectval_tyBM * modgenob; objectval_tyBM * generate_module;
                  value_tyBM resprep; value_tyBM resgen;
-                 const node_tyBM * constnodv;
     );
   objectval_tyBM *k_simple_module_generation = NULL;
   objectval_tyBM *k_prepare_module = NULL;
   objectval_tyBM *k_plain_module = NULL;
   objectval_tyBM *k_generate_module = NULL;
-  LOCALGETCLOS_BM (_.clos);
-  // assert (closurewidth_BM ((const value_tyBM) clos) >= closix__LAST);
-  _.closconn = closureconn_BM ((const value_tyBM) _.clos);
-  assert (isobject_BM (_.closconn));
-  _.constnodv = objpayload_BM (_.closconn);
   if (!isobject_BM (arg1))
     LOCALRETURN_BM (NULL);
   _.recv = (objectval_tyBM *) arg1;
@@ -1887,15 +1866,8 @@ ROUTINEOBJNAME_BM (_8zNBXSMY2Ts_1VI5dmY4umA)    //
  const value_tyBM arg4 __attribute__ ((unused)),
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
-  enum closureix_en
-  {
-    closix__LAST
-  };
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  objectval_tyBM * recv;
-                 value_tyBM cclosv;
-                 objectval_tyBM * closconn;
-                 const node_tyBM * constnodv;
                  objectval_tyBM * modgen;       //
                  struct hashsetobj_stBM *hset;
                  value_tyBM curcomp;    //
@@ -1903,7 +1875,6 @@ ROUTINEOBJNAME_BM (_8zNBXSMY2Ts_1VI5dmY4umA)    //
                  value_tyBM partres;    //
                  setval_tyBM * setfun;
     );
-  LOCALGETCLOS_BM (_.cclosv);
   if (!isobject_BM (arg1))
     LOCALRETURN_BM (NULL);
   _.recv = (objectval_tyBM *) arg1;
@@ -1916,9 +1887,6 @@ ROUTINEOBJNAME_BM (_8zNBXSMY2Ts_1VI5dmY4umA)    //
   DBGPRINTF_BM ("@@prepare_module°basiclo*module modgen=%s\n"
                 ".... is a %s\n", objectdbg_BM (_.modgen),
                 objectdbg1_BM (objclass_BM (_.modgen)));
-  _.closconn = closureconn_BM ((const value_tyBM) _.cclosv);
-  assert (isobject_BM (_.closconn));
-  _.constnodv = objpayload_BM (_.closconn);
   objectval_tyBM *k_simple_module_generation = BMK_2HlKptD03wA_7JJCG7lN5nS;
   if (!objectisinstance_BM (_.modgen, k_simple_module_generation))
     LOCALRETURN_BM (NULL);
@@ -2079,10 +2047,8 @@ ROUTINEOBJNAME_BM (_60NdV04Lel2_5FSZVWKbSL7)    //
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  objectval_tyBM * recv;
-                 const closure_tyBM * clos;     //
                  value_tyBM nval;
     );
-  LOCALGETCLOS_BM (_.clos);
   _.recv = arg1;
   _.nval = arg2;
   assert (isobject_BM (_.recv));
@@ -2111,15 +2077,10 @@ ROUTINEOBJNAME_BM (_50d65bJypCN_6IJeVtssx9I)    //
                  objectval_tyBM * curout;
                  objectval_tyBM * modgen;
                  value_tyBM prepval;
-                 value_tyBM preproutval;
-                 const closure_tyBM * clos;
-                 objectval_tyBM * closconn;
-                 const node_tyBM * constnodv;
-                 struct datavectval_stBM *vectprepr;
+                 value_tyBM preproutval; struct datavectval_stBM *vectprepr;
                  value_tyBM prepmod;
     );
   _.recv = arg1;
-  LOCALGETCLOS_BM (_.clos);
   objectval_tyBM *k_prepare_routine = NULL;
   objectval_tyBM *k_prepared_routines = NULL;
   assert (isobject_BM (_.recv));
@@ -2127,9 +2088,6 @@ ROUTINEOBJNAME_BM (_50d65bJypCN_6IJeVtssx9I)    //
     ("@@generate_module°basiclo*module _50d65bJypCN_6IJeVtssx9I recv=%s\n"
      "... is a %s\n",
      objectdbg_BM (_.recv), objectdbg1_BM (objclass_BM (_.recv)));
-  _.closconn = closureconn_BM ((const value_tyBM) _.clos);
-  assert (isobject_BM (_.closconn));
-  _.constnodv = objpayload_BM (_.closconn);
   k_prepare_routine = BMK_6qi1DW0Ygkl_4Aqdxq4n5IV;
   k_prepared_routines = BMK_9qn0Hp8HaF5_7yeAJiNYtp5;
   _.modgen = arg2;
@@ -2197,12 +2155,18 @@ ROUTINEOBJNAME_BM (_5DDSY1YgVZr_6dOU4tiBldk)    //
  const value_tyBM arg4 __attribute__ ((unused)),
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
+  enum
+  { closix_constant,
+    closix__LAST
+  };
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * cclos;
+                 value_tyBM cclos;
     );
-  LOCALGETCLOS_BM (_.cclos);
-  assert (isclosure_BM ((const value_tyBM) _.cclos));
-  LOCALRETURN_BM (closurenthson_BM ((const value_tyBM) _.cclos, 0));
+  LOCALGETFUNV_BM (_.cclos);
+  if (!isclosure_BM (_.cclos) || closurewidth_BM (_.cclos) != closix__LAST)
+    return NULL;
+  LOCALRETURN_BM (closurenthson_BM
+                  ((const value_tyBM) _.cclos, closix_constant));
 }                               /* end ROUTINE _5DDSY1YgVZr_6dOU4tiBldk const */
 
 
@@ -2218,12 +2182,10 @@ ROUTINEOBJNAME_BM (_5DyG7xVcxRI_1Ckpbj7b3QK)    //
  const value_tyBM arg4 __attribute__ ((unused)),
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
-  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * clos; objectval_tyBM * obmod;
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL, objectval_tyBM * obmod;
                  objectval_tyBM * dumpob; objectval_tyBM * bufob;
                  value_tyBM res;
     );
-  LOCALGETCLOS_BM (_.clos);
   assert (isobject_BM (arg1));
   _.obmod = arg1;
   WEAKASSERT_BM (obdumpgetdumper_BM (arg2) != NULL);
@@ -2265,7 +2227,6 @@ ROUTINEOBJNAME_BM (_0kUyX0U19K2_5mcH4RCaBl9)    //
  const quasinode_tyBM * restargs)
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * cclos;
                  const node_tyBM * rnodv; objectval_tyBM * resobj;
                  objectval_tyBM * resclass; objectval_tyBM * curlab;
                  const struct parser_stBM *pars; value_tyBM curson;
@@ -2273,12 +2234,6 @@ ROUTINEOBJNAME_BM (_0kUyX0U19K2_5mcH4RCaBl9)    //
     );
   objectval_tyBM *k_basiclo_block = NULL;
   objectval_tyBM *k_label = NULL;
-  objectval_tyBM *closconn = NULL;
-  const node_tyBM *constnodv = NULL;
-  LOCALGETCLOS_BM (_.cclos);
-  closconn = closureconn_BM ((const value_tyBM) _.cclos);
-  assert (isobject_BM (closconn));
-  constnodv = objpayload_BM (closconn);
   if (!isnode_BM (arg1))
     LOCALRETURN_BM (NULL);
   _.rnodv = arg1;
@@ -2381,13 +2336,12 @@ ROUTINEOBJNAME_BM (_1Geqz0vsOKB_2Dpdb1LDu23)    //
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * clos; const node_tyBM * rnodv;
+                 const node_tyBM * rnodv;
                  objectval_tyBM * resobj; const struct parser_stBM *pars;
                  value_tyBM inv; value_tyBM destv;
                  value_tyBM srcv;
                  value_tyBM curson;
     );
-  LOCALGETCLOS_BM (_.clos);
   _.rnodv = arg1;
   if (!isnode_BM (arg1))
     LOCALRETURN_BM (NULL);
@@ -2396,11 +2350,6 @@ ROUTINEOBJNAME_BM (_1Geqz0vsOKB_2Dpdb1LDu23)    //
   unsigned nodwidth = nodewidth_BM ((value_tyBM) _.rnodv);
 #warning probably a parser object here....
   _.pars = parsercast_BM (arg4);
-
-  LOCALGETCLOS_BM (_.clos);
-  const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
-  assert (isobject_BM ((const value_tyBM) closconn));
-  const value_tyBM constnodv = objpayload_BM (closconn);
   if (!isnode_BM (arg1))
     LOCALRETURN_BM (NULL);
   _.rnodv = arg1;
@@ -2473,9 +2422,8 @@ ROUTINEOBJNAME_BM (_0XbMOJqLLPZ_1t2wg2TwPRA)    //
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * clos; const node_tyBM * rnodv;
-                 const node_tyBM * constnodv; objectval_tyBM * resobj;
-                 objectval_tyBM * closconn; const struct parser_stBM *pars;
+                 const node_tyBM * rnodv;
+                 objectval_tyBM * resobj; const struct parser_stBM *pars;
                  value_tyBM inv; value_tyBM destv;
                  value_tyBM srcv;
                  union
@@ -2484,7 +2432,6 @@ ROUTINEOBJNAME_BM (_0XbMOJqLLPZ_1t2wg2TwPRA)    //
                  };
                  objectval_tyBM * prevobj;
     );
-  LOCALGETCLOS_BM (_.clos);
   _.rnodv = arg1;
   if (!isnode_BM (arg1))
     LOCALRETURN_BM (NULL);
@@ -2492,16 +2439,12 @@ ROUTINEOBJNAME_BM (_0XbMOJqLLPZ_1t2wg2TwPRA)    //
   int colpos = getint_BM (arg3);
   _.pars = parsercast_BM (treenthson_BM ((const value_tyBM) restargs, 0));
 
-  LOCALGETCLOS_BM (_.clos);
-  _.closconn = closureconn_BM ((const value_tyBM) _.clos);
   unsigned nodwidth = nodewidth_BM ((const value_tyBM) _.rnodv);
   DBGPRINTF_BM ("start readmacro:cond _0XbMOJqLLPZ_1t2wg2TwPRA"
                 " lineno=%d colpos=%d nodwidth=%u", lineno, colpos, nodwidth);
-  assert (isobject_BM (_.closconn));
   if (!isnode_BM (arg1))
     LOCALRETURN_BM (NULL);
   _.rnodv = arg1;
-  _.constnodv = objpayload_BM (_.closconn);
   objectval_tyBM *k_basiclo_cond = BMK_0eCRnBKQ0eQ_1atum3gUgEz;
   objectval_tyBM *k_basiclo_when = BMK_3fvdRZNCmJS_5bTAPr83mXg;
   objectval_tyBM *k_nb_conds = BMK_8dLpuaNoSGN_2tdmkpINCsu;
@@ -2594,20 +2537,17 @@ ROUTINEOBJNAME_BM (_7ko2VZaPpqD_1eEmEcp0VV3)    //
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * clos;
                  const node_tyBM * rnodv; const struct parser_stBM *pars;
                  const node_tyBM * constnodv; objectval_tyBM * resobj;
                  objectval_tyBM * closconn; value_tyBM curson;
                  value_tyBM inv;
     );
   objectval_tyBM *k_basiclo_intswitch = NULL;
-  LOCALGETCLOS_BM (_.clos);
   _.rnodv = arg1;
   if (!isnode_BM (arg1))
     LOCALRETURN_BM (NULL);
   int lineno = getint_BM (arg2);
   int colpos = getint_BM (arg3);
-  _.closconn = closureconn_BM ((const value_tyBM) _.clos);
   unsigned nodwidth = nodewidth_BM ((const value_tyBM) _.rnodv);
   _.pars = parsercast_BM (arg4);
   _.resobj = NULL;
@@ -2682,24 +2622,20 @@ ROUTINEOBJNAME_BM (_8uFPIAUyvE6_36pUIgGwmbf)    //
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * clos;
-                 const node_tyBM * rnodv; const struct parser_stBM *pars;
-                 const node_tyBM * constnodv; objectval_tyBM * resobj;
+                 const node_tyBM * rnodv;
+                 const struct parser_stBM *pars; objectval_tyBM * resobj;
                  objectval_tyBM * closconn; value_tyBM curson;
                  value_tyBM inv;
     );
   objectval_tyBM *k_basiclo_objswitch = NULL;
-  LOCALGETCLOS_BM (_.clos);
   _.rnodv = arg1;
   if (!isnode_BM (arg1))
     LOCALRETURN_BM (NULL);
   int lineno = getint_BM (arg2);
   int colpos = getint_BM (arg3);
-  _.closconn = closureconn_BM ((const value_tyBM) _.clos);
   unsigned nodwidth = nodewidth_BM ((const value_tyBM) _.rnodv);
   _.pars = parsercast_BM (treenthson_BM ((const value_tyBM) restargs, 0));
   _.resobj = NULL;
-  _.constnodv = objpayload_BM (_.closconn);
   k_basiclo_objswitch = BMK_3votvybaW1d_35YcL4p51kp;
   DBGPRINTF_BM ("start readmacro:objswitch _8uFPIAUyvE6_36pUIgGwmbf"
                 " lineno=%d colpos=%d nodwidth=%u", lineno, colpos, nodwidth);
@@ -2769,21 +2705,16 @@ ROUTINEOBJNAME_BM (_6SUnsQrN1BV_1WnLPm4QoOq)    //
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * clos;
                  const node_tyBM * rnodv; value_tyBM curson;
                  objectval_tyBM * resobj; objectval_tyBM * resclass;
                  objectval_tyBM * curlab; objectval_tyBM * inv;
                  struct parser_stBM *pars;
     );
-  LOCALGETCLOS_BM (_.clos);
   _.rnodv = arg1;
   if (!isnode_BM (arg1))
     LOCALRETURN_BM (NULL);
   int lineno = getint_BM (arg2);
   int colpos = getint_BM (arg3);
-  const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
-  assert (closconn != NULL);
-  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
   const objectval_tyBM *k_basiclo_loop = BMK_2EjH1ebLzli_4rmA1ZPtIBL;
   const objectval_tyBM *k_label = BMK_3XBrePAliOo_37VlAqBsb5C;
   unsigned nodwidth = nodewidth_BM ((const value_tyBM) _.rnodv);
@@ -2881,19 +2812,14 @@ ROUTINEOBJNAME_BM (_63Q0R4r8xa7_7XOAxxP5pi2)    //
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * clos; const node_tyBM * rnodv;
+                 const node_tyBM * rnodv;
                  objectval_tyBM * resobj; objectval_tyBM * resclass;
                  value_tyBM exitv; value_tyBM curson; value_tyBM inv;
                  const struct parser_stBM *pars;
     );
-  LOCALGETCLOS_BM (_.clos);
   _.pars = parsercast_BM (arg4);
-  const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
-  assert (closconn != NULL);
-  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
   const objectval_tyBM *k_basiclo_exit = BMK_0Yis1n6EoBu_8nfbe8a8yKI;
   const objectval_tyBM *k_exit = BMK_41gbFesxqzD_3l56OLiNdl2;
-  LOCALGETCLOS_BM (_.clos);
   _.rnodv = arg1;
   if (!isnode_BM (arg1))
     LOCALRETURN_BM (NULL);
@@ -2962,13 +2888,12 @@ ROUTINEOBJNAME_BM (_1ufPZmTnWhp_7FX9NANZCAW)    //
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * clos; const node_tyBM * rnodv;
+                 const node_tyBM * rnodv;
                  objectval_tyBM * resobj; objectval_tyBM * resclass;
                  objectval_tyBM * inv; objectval_tyBM * curlab;
                  value_tyBM curson; value_tyBM whilexpv;
                  const struct parser_stBM *pars;
     );
-  LOCALGETCLOS_BM (_.clos);
   _.rnodv = arg1;
   if (!isnode_BM (arg1))
     LOCALRETURN_BM (NULL);
@@ -2977,9 +2902,6 @@ ROUTINEOBJNAME_BM (_1ufPZmTnWhp_7FX9NANZCAW)    //
   unsigned nodwidth = nodewidth_BM ((const value_tyBM) _.rnodv);
   _.resobj = NULL;
   _.pars = parsercast_BM (treenthson_BM ((const value_tyBM) restargs, 0));
-  const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
-  assert (closconn != NULL);
-  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
   const objectval_tyBM *k_basiclo_while = BMK_4Af5NOOf7Qe_7KQdGPoNdJ0;
   const objectval_tyBM *k_while = BMK_7GNnckYYtcH_7wtOnPP4eKU;
   const objectval_tyBM *k_label = BMK_3XBrePAliOo_37VlAqBsb5C;
@@ -3090,12 +3012,11 @@ ROUTINEOBJNAME_BM (_5788HpgOtVV_4zwZIr0jgmq)    //
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * clos; const node_tyBM * rnodv;
+                 const node_tyBM * rnodv;
                  objectval_tyBM * resobj; objectval_tyBM * resclass;
                  objectval_tyBM * inv; value_tyBM curson; value_tyBM resexpv;
                  const struct parser_stBM *pars;
     );
-  LOCALGETCLOS_BM (_.clos);
   _.rnodv = arg1;
   if (!isnode_BM (arg1))
     LOCALRETURN_BM (NULL);
@@ -3107,9 +3028,6 @@ ROUTINEOBJNAME_BM (_5788HpgOtVV_4zwZIr0jgmq)    //
   DBGPRINTF_BM ("start readmacro:return  _5788HpgOtVV_4zwZIr0jgmq"
                 " lineno=%d colpos=%d nodwidth=%u", lineno, colpos, nodwidth);
 
-  const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
-  assert (closconn != NULL);
-  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
   const objectval_tyBM *k_basiclo_return = BMK_6dfdSwPGgR8_2EaBHYhuZ5G;
   const objectval_tyBM *k_return = BMK_2DH0ucElTgh_62vxjxLcfev;
   ///
@@ -3181,12 +3099,11 @@ ROUTINEOBJNAME_BM (_7sg0DjYTA8n_66vhff9SgXH)    //
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * clos; const node_tyBM * rnodv;
+                 const node_tyBM * rnodv;
                  objectval_tyBM * resobj; objectval_tyBM * resclass;
                  objectval_tyBM * inv; value_tyBM curson; value_tyBM runexpv;
                  const struct parser_stBM *pars;
     );
-  LOCALGETCLOS_BM (_.clos);
   _.rnodv = arg1;
   if (!isnode_BM (arg1))
     LOCALRETURN_BM (NULL);
@@ -3197,10 +3114,6 @@ ROUTINEOBJNAME_BM (_7sg0DjYTA8n_66vhff9SgXH)    //
   _.pars = parsercast_BM (treenthson_BM ((const value_tyBM) restargs, 0));
   DBGPRINTF_BM ("start readmacro:run  _7sg0DjYTA8n_66vhff9SgXH"
                 " lineno=%d colpos=%d nodwidth=%u", lineno, colpos, nodwidth);
-
-  const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
-  assert (closconn != NULL);
-  const node_tyBM *constnod = nodecast_BM (objpayload_BM (closconn));
   const objectval_tyBM *k_basiclo_run = BMK_4SHgzjNdlGo_1CxI9hBNDrC;
   const objectval_tyBM *k_run = BMK_4RFtYFUdfau_7Vm5jZ4Wm8e;
   ///
@@ -3279,7 +3192,9 @@ ROUTINEOBJNAME_BM (_42gEKfF4qca_6gGwxSFC1FO)    //
                  value_tyBM tupresultsv; value_tyBM nodargsv;
                  const struct parser_stBM *pars;
     );
-  LOCALGETCLOS_BM (_.clos);
+  LOCALGETFUNV_BM (_.clos);
+  if (!isclosure_BM (_.clos) || closurewidth_BM (_.clos) != closix__LAST)
+    LOCALRETURN_BM (NULL);
   _.rnodv = arg1;
   if (!isnode_BM (arg1))
     LOCALRETURN_BM (NULL);
@@ -3480,13 +3395,12 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const closure_tyBM * clos; const node_tyBM * rnodv;
+                 const node_tyBM * rnodv;
                  objectval_tyBM * resobj; objectval_tyBM * curobj;
                  objectval_tyBM * resclass; const struct parser_stBM *pars;
                  value_tyBM testexpv; value_tyBM * inv;
                  value_tyBM curson, curarg;
     );
-  LOCALGETCLOS_BM (_.clos);
   _.rnodv = nodecast_BM (arg1);
   int lineno = getint_BM (arg2);
   int colpos = getint_BM (arg3);
@@ -3495,8 +3409,6 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
   _.pars = parsercast_BM (arg4);
   DBGPRINTF_BM ("start when readmacro cexpansion _42gEKfF4qca_6gGwxSFC1FO"
                 " lineno=%d colpos=%d nodwidth=%u", lineno, colpos, nodwidth);
-  const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
-  assert (closconn != NULL);
   const objectval_tyBM *k_test = BMK_2j84OTHlFdJ_1pMyQfgsmAz;
   WEAKASSERT_BM (k_test != NULL);
   const objectval_tyBM *k_basiclo_when = BMK_3fvdRZNCmJS_5bTAPr83mXg;

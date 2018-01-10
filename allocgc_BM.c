@@ -472,8 +472,7 @@ gcframemark_BM (struct garbcoll_stBM *gc, struct stackframe_stBM *stkfram,
           if (framsize > MAXSIZE_BM / 2)
             FATAL_BM ("too big framesize %u, curfram=%p, framcnt#%d",
                       framsize, stkfram, framcnt);
-          if (stkfram->stkfram_callclos)
-            VALUEGCPROC_BM (gc, (stkfram->stkfram_callclos), depth + 1);
+          VALUEGCPROC_BM (gc, (stkfram->stkfram_callfun), depth + 1);
           for (unsigned ix = 0; ix < framsize; ix++)
             VALUEGCPROC_BM (gc, stkfram->stkfram_locals[ix], depth + 1);
         }

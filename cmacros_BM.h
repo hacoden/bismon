@@ -6,6 +6,9 @@
 #define MAXDEPTHGC_BM 256
 #define MAXDEPTHPARSE_BM 96
 #define MAXDEPTHMETHOD_BM 96
+
+#define MAXAPPLYARGS_BM 128
+
 #define MARKGC_BM 1
 #define CLEARMGC_BM 0
 #define GCMAGIC_BM 24501383     /*0x175dc87 */
@@ -80,17 +83,18 @@
                   .stkfram_state=0,                             \
                   .stkfram_xtra=0 } }
 
-#define LOCALGETCLOS_ATLIN_BIS_BM(Lin,Clos) do {			\
+#define LOCALGETFUNV_ATLIN_BIS_BM(Lin,Funv) do {			\
   struct stackframe_stBM*prevfram_##Lin					\
     = _.__frame.stkfram_prev;						\
   assert (prevfram_##Lin						\
 	  && ((typedhead_tyBM *)prevfram_##Lin)->htyp			\
 	  == typayl_StackFrame_BM);					\
-  assert (isclosure_BM ((value_tyBM)prevfram_##Lin->stkfram_callclos));	\
-  Clos = (void*)prevfram_##Lin->stkfram_callclos;			\
+  assert (isclosure_BM ((value_tyBM)prevfram_##Lin->stkfram_callfun)	\
+	  || isobject_BM ((value_tyBM)prevfram_##Lin->stkfram_callfun)); \
+  Funv = (void*)prevfram_##Lin->stkfram_callfun;			\
  } while(0)
-#define LOCALGETCLOS_ATLIN_BM(Lin,Clos) LOCALGETCLOS_ATLIN_BIS_BM(Lin,Clos)
-#define LOCALGETCLOS_BM(Clos) LOCALGETCLOS_ATLIN_BM(__LINE__,Clos)
+#define LOCALGETFUNV_ATLIN_BM(Lin,Clos) LOCALGETFUNV_ATLIN_BIS_BM(Lin,Clos)
+#define LOCALGETFUNV_BM(Clos) LOCALGETFUNV_ATLIN_BM(__LINE__,Clos)
 
 #define LOCALRETURN_ATLIN_BIS_BM(Lin,Res) do {		\
   struct stackframe_stBM*prevfram_##Lin			\
@@ -98,7 +102,7 @@
   assert (prevfram_##Lin				\
 	  && ((typedhead_tyBM *)prevfram_##Lin)->htyp	\
 	  == typayl_StackFrame_BM);			\
-  prevfram_##Lin->stkfram_callclos = NULL;		\
+  prevfram_##Lin->stkfram_callfun = NULL;		\
   return (value_tyBM)(Res);				\
  } while(0)
 #define LOCALRETURN_ATLIN_BM(Lin,Res) LOCALRETURN_ATLIN_BIS_BM(Lin,Res)
