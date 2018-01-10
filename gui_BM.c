@@ -1601,6 +1601,7 @@ parserror_guicmd_BM (struct parser_stBM *pars,
       /// errormessagedialog_BM is run in runcommand_BM 
     }
   free (msg);
+#warning should use failure in parserror_guicmd_BM
   longjmp (jmperrorcmd_BM, 1);
 }                               /* end parserror_guicmd_BM */
 

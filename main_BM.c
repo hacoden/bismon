@@ -494,6 +494,7 @@ do_internal_deferred_apply3_gtk_BM (const closure_tyBM * clos,
   _.arg1v = arg1;
   _.arg2v = arg2;
   _.arg3v = arg3;
+#warning should catch failure with LOCAL_FAILURE_HANDLE_BM then clear curfailurehandle_BM
   (void) apply3_BM (clos, (struct stackframe_stBM *) &_, arg1, arg2, arg3);
 }                               /* end do_internal_defer_apply3_BM */
 
@@ -512,6 +513,7 @@ do_internal_deferred_send3_gtk_BM (value_tyBM recv, objectval_tyBM * obsel,
   _.arg1v = arg1;
   _.arg2v = arg2;
   _.arg3v = arg3;
+#warning should catch failure with LOCAL_FAILURE_HANDLE_BM then clear curfailurehandle_BM
   (void) send3_BM (recv, obsel, (struct stackframe_stBM *) &_, arg1, arg2,
                    arg3);
 }                               /* end do_internal_defer_send3_BM */
