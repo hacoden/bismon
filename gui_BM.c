@@ -80,6 +80,9 @@ static parser_expand_objexp_sigBM parsobjexp_guicmd_BM;
 // apply the `command_readmacro` closure from the connective macroname
 static parser_expand_readmacro_sigBM parsreadmacroexp_guicmd_BM;
 
+// error at parsing: color in error_cmdtag, show the error dialog,
+// jongjmp to jmperrorcmd_BM
+static parser_error_sigBM parserror_guicmd_BM;
 int commandnumber_BM;
 /// stop completely the blinking
 static void browserblinkstop_BM (void);

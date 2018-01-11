@@ -851,9 +851,6 @@ extern void log_printf_message_BM (const char *fmt, ...)
   __attribute__ ((format (printf, 1, 2)));
 extern void log_end_message_BM (void);
 
-// error at parsing: color in error_cmdtag, show the error dialog,
-// jongjmp to jmperrorcmd_BM
-extern parser_error_sigBM parserror_guicmd_BM;
 
 
 

@@ -37,6 +37,8 @@ static parser_expand_objexp_sigBM parsobjexp_newguicmd_BM;
 // expand readmacro-s
 static parser_expand_readmacro_sigBM parsreadmacroexp_newguicmd_BM;
 
+static parser_error_sigBM parserror_newguicmd_BM;
+
 static value_tyBM
 find_named_value_newgui_BM (const char *vstr, struct stackframe_stBM *stkf);
 
@@ -44,7 +46,7 @@ const struct parserops_stBM parsop_command_build_newgui_BM = {
   .parsop_magic = PARSOPMAGIC_BM,
   .parsop_serial = 3,
   .parsop_nobuild = false,
-  .parsop_error_rout = parserror_guicmd_BM,
+  .parsop_error_rout = parserror_newguicmd_BM,
   ///
   .parsop_expand_dollarobj_rout = parsdollarobj_newguicmd_BM,
   .parsop_expand_dollarval_rout = parsdollarval_newguicmd_BM,
@@ -69,7 +71,7 @@ const struct parserops_stBM parsop_command_nobuild_newgui_BM = {
   .parsop_magic = PARSOPMAGIC_BM,
   .parsop_serial = 4,
   .parsop_nobuild = true,
-  .parsop_error_rout = parserror_guicmd_BM,
+  .parsop_error_rout = parserror_newguicmd_BM,
   ///
   .parsop_expand_dollarobj_rout = parsdollarobj_newguicmd_BM,
   .parsop_expand_dollarval_rout = parsdollarval_newguicmd_BM,
@@ -674,3 +676,46 @@ value_tyBM parsreadmacroexp_newguicmd_BM
                taggedint_BM (lineno), taggedint_BM (colpos), pars);
   return _.resval;
 }                               /* end parsreadmacroexp_newguicmd_BM */
+
+void
+parserror_newguicmd_BM (struct parser_stBM *pars,
+                        unsigned lineno, unsigned colpos, char *msg)
+{
+  assert (isparser_BM (pars));
+  const struct parserops_stBM *parsops = pars->pars_ops;
+  assert (parsops && parsops->parsop_magic == PARSOPMAGIC_BM);
+  bool nobuild = parsops && parsops->parsop_nobuild;
+  GtkTextIter it = EMPTY_TEXT_ITER_BM;
+  gtk_text_buffer_get_iter_at_line (commandbuf_BM, &it, lineno - 1);
+  gtk_text_iter_forward_chars (&it, colpos);
+  GtkTextIter endit = EMPTY_TEXT_ITER_BM;
+  gtk_text_buffer_get_end_iter (commandbuf_BM, &endit);
+  gtk_text_buffer_apply_tag (commandbuf_BM, errored_cmdtag_BM, &it, &endit);
+  if (!nobuild)
+    {
+      log_begin_message_BM ();
+      char errbuf[64];
+      snprintf (errbuf, sizeof (errbuf), "command error L%dC%d:",
+                lineno, colpos);
+      GtkTextIter logit = EMPTY_TEXT_ITER_BM;
+      gtk_text_buffer_get_end_iter (logbuf_BM, &logit);
+      gtk_text_buffer_insert_with_tags
+        (logbuf_BM, &logit, errbuf, -1, error_logtag_BM, NULL);
+      log_puts_message_BM (msg);
+      log_end_message_BM ();
+      gtk_text_view_scroll_to_iter (GTK_TEXT_VIEW (commandview_BM),
+                                    &it, 0.1, false, 0.5, 0.2);
+      errormessagedialog_BM = gtk_message_dialog_new_with_markup        //
+        (GTK_WINDOW (mainwin_BM),
+         GTK_DIALOG_DESTROY_WITH_PARENT,
+         GTK_MESSAGE_ERROR,
+         GTK_BUTTONS_CLOSE,
+         "<b>command error</b> L%dC%d:\n" "%s", lineno, colpos, msg);
+      gtk_widget_show_all (errormessagedialog_BM);
+      fflush (NULL);
+      /// errormessagedialog_BM is run in runcommand_BM 
+    }
+  free (msg);
+#warning should use failure in parserror_newguicmd_BM
+  longjmp (jmperrorcmd_BM, 1);
+}                               /* end parserror_newguicmd_BM */
