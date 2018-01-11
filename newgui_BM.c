@@ -466,8 +466,8 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
   if (!isparser_BM (pars))
     return;
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 value_tyBM val; objectval_tyBM * obj;
-                 objectval_tyBM * oldfocusobj;
+                 value_tyBM val;
+                 objectval_tyBM * obj; objectval_tyBM * oldfocusobj;
                  const stringval_tyBM * name; const stringval_tyBM * result;
                  objectval_tyBM * parsob;
     );
@@ -499,7 +499,7 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
           _.obj =
             parsergetobject_BM (pars, (struct stackframe_stBM *) &_, 0,
                                 &gotobj);
-#warning should show the _.obj
+#warning parsecommandbuf_newgui should show the _.obj
         }
       // start of value?
       else if (parsertokenstartvalue_BM (pars, tok))
@@ -509,7 +509,12 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
           _.val =
             parsergetvalue_BM (pars, (struct stackframe_stBM *) &_, 0,
                                &gotval);
+#warning parsecommandbuf_newgui should show the _.val
         }
+      else if (tok.tok_kind == plex__NONE)
+        parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
+                              curlineno, curcolpos, "invalid token");
+
 
     }
 }                               /* end parsecommandbuf_newgui_BM */

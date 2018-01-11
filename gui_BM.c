@@ -1696,9 +1696,9 @@ parseobjectcompl_guicmd_BM (struct parser_stBM *pars,
   if (!isparser_BM (pars))
     return false;
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 value_tyBM comp; objectval_tyBM * targobj;
-                 objectval_tyBM * obattr; objectval_tyBM * obclass;
-                 objectval_tyBM * obsel;
+                 value_tyBM comp;
+                 objectval_tyBM * targobj; objectval_tyBM * obattr;
+                 objectval_tyBM * obclass; objectval_tyBM * obsel;
                  const stringval_tyBM * name; objectval_tyBM * parsob;
                  value_tyBM args[MAXARGS_BM];);
   _.parsob = checkedparserowner_BM (pars);
@@ -2185,9 +2185,7 @@ parsvalexp_guicmd_BM (struct parser_stBM * pars, unsigned lineno,
   const struct parserops_stBM *parsops = pars->pars_ops;
   bool nobuild = parsops && parsops->parsop_nobuild;
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 value_tyBM resval;
-                 value_tyBM srcval;
-                 objectval_tyBM * obj;
+                 value_tyBM resval; value_tyBM srcval; objectval_tyBM * obj;
                  objectval_tyBM * obsel; objectval_tyBM * parsob;
                  objectval_tyBM * obattr; closure_tyBM * clos;
                  value_tyBM otherval; const stringval_tyBM * name;

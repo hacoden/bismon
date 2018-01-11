@@ -2737,8 +2737,8 @@ ROUTINEOBJNAME_BM (_6SUnsQrN1BV_1WnLPm4QoOq)    //
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const node_tyBM * rnodv; value_tyBM curson;
-                 objectval_tyBM * resobj;
+                 const node_tyBM * rnodv;
+                 value_tyBM curson; objectval_tyBM * resobj;
                  objectval_tyBM * resclass; objectval_tyBM * curlab;
                  objectval_tyBM * inv; objectval_tyBM * parsob;
     );
@@ -2934,8 +2934,7 @@ ROUTINEOBJNAME_BM (_1ufPZmTnWhp_7FX9NANZCAW)    //
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const node_tyBM * rnodv;
-                 objectval_tyBM * resobj;
+                 const node_tyBM * rnodv; objectval_tyBM * resobj;
                  objectval_tyBM * resclass; objectval_tyBM * inv;
                  objectval_tyBM * curlab; objectval_tyBM * parsob;
                  value_tyBM curson; value_tyBM whilexpv;
@@ -3461,8 +3460,8 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const node_tyBM * rnodv; objectval_tyBM * resobj;
-                 objectval_tyBM * curobj;
+                 const node_tyBM * rnodv;
+                 objectval_tyBM * resobj; objectval_tyBM * curobj;
                  objectval_tyBM * resclass; value_tyBM testexpv;
                  value_tyBM * inv; value_tyBM curson, curarg;
                  objectval_tyBM * parsob;
