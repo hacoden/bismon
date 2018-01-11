@@ -10,7 +10,7 @@ ROUTINEOBJNAME_BM (_3kMqlEugRVW_7DgwjR4CBbP)
 (struct stackframe_stBM * stkf,
 const value_tyBM arg1,
 const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4,
-const quasinode_tyBM * restargs)
+ const quasinode_tyBM * restargs_ __attribute__((unused)))
 {
   assert (istaggedint_BM (arg1));       // the integer to dump
   // arg2 is the bufob
@@ -43,7 +43,7 @@ ROUTINEOBJNAME_BM (_3Tc3E4uo2p5_4EXWCPwCR5b)
 (struct stackframe_stBM * stkf,
 const value_tyBM arg1,
 const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4,
-const quasinode_tyBM * restargs)
+const quasinode_tyBM * restargs_ __attribute__((unused)))
 {
   assert (isset_BM (arg1));     // the set to dump
   // arg2 is the bufob
@@ -91,7 +91,7 @@ ROUTINEOBJNAME_BM (_5D9kkPHSPxq_8suDXpjlzjE)
 (struct stackframe_stBM * stkf,
 const value_tyBM arg1,
 const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4,
-const quasinode_tyBM * restargs)
+const quasinode_tyBM * restargs_ __attribute__((unused)))
 {
   assert (istuple_BM (arg1));   // the tuple to dump
   // arg2 is the bufob
@@ -2073,8 +2073,7 @@ ROUTINEOBJNAME_BM (_50d65bJypCN_6IJeVtssx9I)    //
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 objectval_tyBM * recv;
-                 objectval_tyBM * curout;
+                 objectval_tyBM * recv; objectval_tyBM * curout;
                  objectval_tyBM * modgen; value_tyBM prepval;
                  value_tyBM preproutval; struct datavectval_stBM *vectprepr;
                  value_tyBM prepmod;
@@ -2255,7 +2254,8 @@ ROUTINEOBJNAME_BM (_0kUyX0U19K2_5mcH4RCaBl9)    //
       if (!isobject_BM (_.inv))
         {
           if (_.pars)
-            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                  (struct stackframe_stBM *) &_, lineno,
                                   colpos,
                                   "non-object `in` for block readmacro");
           LOCALRETURN_BM (NULL);
@@ -2276,7 +2276,8 @@ ROUTINEOBJNAME_BM (_0kUyX0U19K2_5mcH4RCaBl9)    //
       if (!isobject_BM (_.curlab))
         {
           if (_.pars)
-            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                  (struct stackframe_stBM *) &_, lineno,
                                   colpos,
                                   "non-object `label` for block readmacro");
           LOCALRETURN_BM (NULL);
@@ -2297,7 +2298,8 @@ ROUTINEOBJNAME_BM (_0kUyX0U19K2_5mcH4RCaBl9)    //
       if (!isobject_BM (_.curson))
         {
           if (_.pars)
-            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                  (struct stackframe_stBM *) &_, lineno,
                                   colpos,
                                   "non-object #%d comp for block readmacro",
                                   ix);
@@ -2365,7 +2367,8 @@ ROUTINEOBJNAME_BM (_1Geqz0vsOKB_2Dpdb1LDu23)    //
       if (!isobject_BM (_.inv))
         {
           if (_.pars)
-            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                  (struct stackframe_stBM *) &_, lineno,
                                   colpos,
                                   "non-object `in` for assign readmacro");
           LOCALRETURN_BM (NULL);
@@ -2382,8 +2385,9 @@ ROUTINEOBJNAME_BM (_1Geqz0vsOKB_2Dpdb1LDu23)    //
   if (nodwidth != startix + 2)
     {
       if (_.pars)
-        parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
-                              colpos, "assign readmacro wants two arguments");
+        parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                              (struct stackframe_stBM *) &_, lineno, colpos,
+                              "assign readmacro wants two arguments");
       LOCALRETURN_BM (NULL);
     }
   _.destv = nodenthson_BM ((const value_tyBM) _.rnodv, startix);
@@ -2391,8 +2395,9 @@ ROUTINEOBJNAME_BM (_1Geqz0vsOKB_2Dpdb1LDu23)    //
   if (!isobject_BM (_.destv))
     {
       if (_.pars)
-        parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
-                              colpos, "assign readmacro wants object as src");
+        parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                              (struct stackframe_stBM *) &_, lineno, colpos,
+                              "assign readmacro wants object as src");
       LOCALRETURN_BM (NULL);
     }
   objresetcomps_BM (_.resobj, 2);
@@ -2457,7 +2462,8 @@ ROUTINEOBJNAME_BM (_0XbMOJqLLPZ_1t2wg2TwPRA)    //
       if (!isobject_BM (_.inv))
         {
           if (_.pars)
-            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                  (struct stackframe_stBM *) &_, lineno,
                                   colpos,
                                   "non-object `in` for cond readmacro");
           LOCALRETURN_BM (NULL);
@@ -2478,7 +2484,8 @@ ROUTINEOBJNAME_BM (_0XbMOJqLLPZ_1t2wg2TwPRA)    //
       if (!isobject_BM (_.curson))
         {
           if (_.pars)
-            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                  (struct stackframe_stBM *) &_, lineno,
                                   colpos,
                                   "non-object arg#%d for cond readmacro", ix);
           LOCALRETURN_BM (NULL);
@@ -2492,7 +2499,8 @@ ROUTINEOBJNAME_BM (_0XbMOJqLLPZ_1t2wg2TwPRA)    //
                                      ((const value_tyBM) _.rnodv, ix - 1)),
                                     k_basiclo_when))
             {
-              parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+              parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                    (struct stackframe_stBM *) &_, lineno,
                                     colpos,
                                     "non-consecutive when %s arg#%d for cond readmacro",
                                     objectdbg_BM ((objectval_tyBM *)
@@ -2564,7 +2572,8 @@ ROUTINEOBJNAME_BM (_7ko2VZaPpqD_1eEmEcp0VV3)    //
       if (!isobject_BM (_.inv))
         {
           if (_.pars)
-            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                  (struct stackframe_stBM *) &_, lineno,
                                   colpos,
                                   "non-object `in` for intswitch readmacro");
           LOCALRETURN_BM (NULL);
@@ -2584,7 +2593,8 @@ ROUTINEOBJNAME_BM (_7ko2VZaPpqD_1eEmEcp0VV3)    //
       if (!isobject_BM (_.curson))
         {
           if (_.pars)
-            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                  (struct stackframe_stBM *) &_, lineno,
                                   colpos,
                                   "non-object arg#%d for cond readmacro", ix);
           LOCALRETURN_BM (NULL);
@@ -2648,7 +2658,8 @@ ROUTINEOBJNAME_BM (_8uFPIAUyvE6_36pUIgGwmbf)    //
       if (!isobject_BM (_.inv))
         {
           if (_.pars)
-            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                  (struct stackframe_stBM *) &_, lineno,
                                   colpos,
                                   "non-object `in` for objswitch readmacro");
           LOCALRETURN_BM (NULL);
@@ -2668,7 +2679,8 @@ ROUTINEOBJNAME_BM (_8uFPIAUyvE6_36pUIgGwmbf)    //
       if (!isobject_BM (_.curson))
         {
           if (_.pars)
-            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                  (struct stackframe_stBM *) &_, lineno,
                                   colpos,
                                   "non-object arg#%d for cond readmacro", ix);
           LOCALRETURN_BM (NULL);
@@ -2730,7 +2742,8 @@ ROUTINEOBJNAME_BM (_6SUnsQrN1BV_1WnLPm4QoOq)    //
       if (!isobject_BM (_.inv))
         {
           if (_.pars)
-            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                  (struct stackframe_stBM *) &_, lineno,
                                   colpos,
                                   "non-object `in` for loop readmacro");
           LOCALRETURN_BM (NULL);
@@ -2749,7 +2762,8 @@ ROUTINEOBJNAME_BM (_6SUnsQrN1BV_1WnLPm4QoOq)    //
       if (!isobject_BM (_.inv))
         {
           if (_.pars)
-            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                  (struct stackframe_stBM *) &_, lineno,
                                   colpos,
                                   "non-object `label` for loop readmacro");
           LOCALRETURN_BM (NULL);
@@ -2770,7 +2784,8 @@ ROUTINEOBJNAME_BM (_6SUnsQrN1BV_1WnLPm4QoOq)    //
       if (!isobject_BM (_.curson))
         {
           if (_.pars)
-            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                  (struct stackframe_stBM *) &_, lineno,
                                   colpos,
                                   "non-object #%d comp for loop readmacro",
                                   ix);
@@ -2838,7 +2853,8 @@ ROUTINEOBJNAME_BM (_63Q0R4r8xa7_7XOAxxP5pi2)    //
       if (!isobject_BM (_.inv))
         {
           if (_.pars)
-            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                  (struct stackframe_stBM *) &_, lineno,
                                   colpos,
                                   "non-object `in` for exit readmacro");
           LOCALRETURN_BM (NULL);
@@ -2853,8 +2869,8 @@ ROUTINEOBJNAME_BM (_63Q0R4r8xa7_7XOAxxP5pi2)    //
   if (!isobject_BM (_.exitv))
     {
       if (_.pars)
-        parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
-                              colpos,
+        parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                              (struct stackframe_stBM *) &_, lineno, colpos,
                               "non-object exit argument for exit readmacro");
       LOCALRETURN_BM (NULL);
     }
@@ -2916,7 +2932,8 @@ ROUTINEOBJNAME_BM (_1ufPZmTnWhp_7FX9NANZCAW)    //
       if (!isobject_BM (_.inv))
         {
           if (_.pars)
-            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                  (struct stackframe_stBM *) &_, lineno,
                                   colpos,
                                   "non-object `in` for while readmacro");
           LOCALRETURN_BM (NULL);
@@ -2935,7 +2952,8 @@ ROUTINEOBJNAME_BM (_1ufPZmTnWhp_7FX9NANZCAW)    //
       if (!isobject_BM (_.inv))
         {
           if (_.pars)
-            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                  (struct stackframe_stBM *) &_, lineno,
                                   colpos,
                                   "non-object `label` for while readmacro");
           LOCALRETURN_BM (NULL);
@@ -2953,8 +2971,8 @@ ROUTINEOBJNAME_BM (_1ufPZmTnWhp_7FX9NANZCAW)    //
   if (startix + 1 < nodwidth)
     {
       if (_.pars)
-        parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
-                              colpos,
+        parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                              (struct stackframe_stBM *) &_, lineno, colpos,
                               "too short %d while readmacro", nodwidth);
       LOCALRETURN_BM (NULL);
     }
@@ -2962,8 +2980,9 @@ ROUTINEOBJNAME_BM (_1ufPZmTnWhp_7FX9NANZCAW)    //
   if (!_.whilexpv)
     {
       if (_.pars)
-        parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
-                              colpos, "nil cond in while readmacro");
+        parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                              (struct stackframe_stBM *) &_, lineno, colpos,
+                              "nil cond in while readmacro");
     }
   for (unsigned ix = startix + 1; ix < nodwidth; ix++)
     {
@@ -2971,7 +2990,8 @@ ROUTINEOBJNAME_BM (_1ufPZmTnWhp_7FX9NANZCAW)    //
       if (!isobject_BM (_.curson))
         {
           if (_.pars)
-            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                  (struct stackframe_stBM *) &_, lineno,
                                   colpos,
                                   "non-object #%d comp for while readmacro",
                                   ix);
@@ -3040,7 +3060,8 @@ ROUTINEOBJNAME_BM (_5788HpgOtVV_4zwZIr0jgmq)    //
       if (!isobject_BM (_.inv))
         {
           if (_.pars)
-            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                  (struct stackframe_stBM *) &_, lineno,
                                   colpos,
                                   "non-object `in` for return readmacro");
           LOCALRETURN_BM (NULL);
@@ -3056,8 +3077,8 @@ ROUTINEOBJNAME_BM (_5788HpgOtVV_4zwZIr0jgmq)    //
   if (startix + 1 < nodwidth)
     {
       if (_.pars)
-        parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
-                              colpos,
+        parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                              (struct stackframe_stBM *) &_, lineno, colpos,
                               "too long %u return readmacro", nodwidth);
       LOCALRETURN_BM (NULL);
     }
@@ -3126,7 +3147,8 @@ ROUTINEOBJNAME_BM (_7sg0DjYTA8n_66vhff9SgXH)    //
       if (!isobject_BM (_.inv))
         {
           if (_.pars)
-            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                  (struct stackframe_stBM *) &_, lineno,
                                   colpos,
                                   "non-object `in` for run readmacro");
           LOCALRETURN_BM (NULL);
@@ -3139,8 +3161,9 @@ ROUTINEOBJNAME_BM (_7sg0DjYTA8n_66vhff9SgXH)    //
   if (startix + 1 > nodwidth)
     {
       if (_.pars)
-        parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
-                              colpos, "too long %u run readmacro", nodwidth);
+        parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                              (struct stackframe_stBM *) &_, lineno, colpos,
+                              "too long %u run readmacro", nodwidth);
       LOCALRETURN_BM (NULL);
     }
   _.runexpv = nodenthson_BM ((const value_tyBM) _.rnodv, startix);
@@ -3227,8 +3250,8 @@ ROUTINEOBJNAME_BM (_42gEKfF4qca_6gGwxSFC1FO)    //
       || !objectisinstance_BM (clos_curcexp, k_basiclo_cexpander))
     {
       if (_.pars)
-        parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
-                              colpos,
+        parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                              (struct stackframe_stBM *) &_, lineno, colpos,
                               "bad cexpander for cexpansion readmacro");
       LOCALRETURN_BM (NULL);
     };
@@ -3252,7 +3275,8 @@ ROUTINEOBJNAME_BM (_42gEKfF4qca_6gGwxSFC1FO)    //
       if (!isobject_BM (_.inv))
         {
           if (_.pars)
-            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                  (struct stackframe_stBM *) &_, lineno,
                                   colpos,
                                   "non-object `in` for cexpansion %s readmacro",
                                   objectdbg_BM (clos_curcexp));
@@ -3269,8 +3293,8 @@ ROUTINEOBJNAME_BM (_42gEKfF4qca_6gGwxSFC1FO)    //
   if (startix + nbresults + nbargs < nodwidth)
     {
       if (_.pars)
-        parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
-                              colpos,
+        parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                              (struct stackframe_stBM *) &_, lineno, colpos,
                               "too short %s cexpansion (%u) readmacro (%d results, %d arguments)",
                               objectdbg_BM (clos_curcexp), nodwidth,
                               nbresults, nbargs);
@@ -3286,7 +3310,8 @@ ROUTINEOBJNAME_BM (_42gEKfF4qca_6gGwxSFC1FO)    //
           if (!isobject_BM (_.curson))
             {
               if (_.pars)
-                parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+                parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                      (struct stackframe_stBM *) &_, lineno,
                                       colpos,
                                       "non-object result#%d for cexpansion %s readmacro",
                                       ix, objectdbg_BM (clos_curcexp));
@@ -3300,7 +3325,8 @@ ROUTINEOBJNAME_BM (_42gEKfF4qca_6gGwxSFC1FO)    //
       if (!isobject_BM (_.curson))
         {
           if (_.pars)
-            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                  (struct stackframe_stBM *) &_, lineno,
                                   colpos,
                                   "non-object body component#%d for cexpansion %s readmacro",
                                   ix, objectdbg_BM (clos_curcexp));
@@ -3428,7 +3454,8 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
       if (!isobject_BM (_.inv))
         {
           if (_.pars)
-            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                  (struct stackframe_stBM *) &_, lineno,
                                   colpos,
                                   "non-object `in` for when readmacro");
           LOCALRETURN_BM (NULL);
@@ -3459,7 +3486,8 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
           memset (curobid32, 0, sizeof (curobid32));
           idtocbuf32_BM (objid_BM (_.curobj), curobid32);
           if (_.pars)
-            parsererrorprintf_BM ((struct parser_stBM *) _.pars, lineno,
+            parsererrorprintf_BM ((struct parser_stBM *) _.pars,
+                                  (struct stackframe_stBM *) &_, lineno,
                                   colpos,
                                   "bad arg #%d (%s) in when readmacro (not a basiclo_statement or basiclo_block)",
                                   ix, curobid32);

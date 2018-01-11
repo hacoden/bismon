@@ -455,6 +455,8 @@ enduseraction_newgui_cmd_BM (GtkTextBuffer * txbuf, gpointer data)
   markset_newgui_cmd_BM (commandbuf_BM, &insit, insmk, NULL);
 }                               /* end enduseraction_newgui_cmd_BM */
 
+
+
 void
 parsecommandbuf_newgui_BM (struct parser_stBM *pars,
                            struct stackframe_stBM *stkf)
@@ -473,18 +475,20 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
   int nbloop = 0;
   for (;;)
     {
-      parserskipspaces_BM (pars);
+      parserskipspaces_BM (pars, (struct stackframe_stBM *) &_);
       if (nbloop++ > MAXSIZE_BM / 32)
-        parsererrorprintf_BM (pars, pars->pars_lineno,
-                              pars->pars_colpos, "too many %d loops", nbloop);
+        parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
+                              pars->pars_lineno, pars->pars_colpos,
+                              "too many %d loops", nbloop);
       if (parserendoffile_BM (pars))
         break;
       unsigned curlineno = parserlineno_BM (pars);
       unsigned curcolpos = parsercolpos_BM (pars);
-      parstoken_tyBM tok = parsertokenget_BM (pars);
+      parstoken_tyBM tok =
+        parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
       DBGPRINTF_BM ("parsecommandbuf_newgui_BM nbloop#%d tok~%s L%dC%d",
-                    nbloop, lexkindname_BM (tok.tok_kind),
-                    curlineno, curcolpos);
+                    nbloop, lexkindname_BM (tok.tok_kind), curlineno,
+                    curcolpos);
       //start of object?
       if (parsertokenstartobject_BM (pars, tok))
         {
@@ -528,12 +532,15 @@ parsdollarobj_newguicmd_BM (struct parser_stBM *pars,
   else if (isobject_BM (varname))
     varstr = findobjectname_BM (varname);
   if (!varstr)
-    parsererrorprintf_BM (pars, lineno, colpos, "invalid $:<var>");
+    parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,
+                          "invalid $:<var>");
   _.val = find_named_value_newgui_BM (varstr, (struct stackframe_stBM *) &_);
   if (!_.val && !nobuild)
-    parsererrorprintf_BM (pars, lineno, colpos, "not found $:%s", varstr);
+    parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,
+                          "not found $:%s", varstr);
   if (!isobject_BM (_.val) && !nobuild)
-    parsererrorprintf_BM (pars, lineno, colpos, "non-object $:%s", varstr);
+    parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,
+                          "non-object $:%s", varstr);
   GtkTextIter it = EMPTY_TEXT_ITER_BM, endit = EMPTY_TEXT_ITER_BM;
   gtk_text_buffer_get_iter_at_line (commandbuf_BM, &it, lineno - 1);
   gtk_text_iter_forward_chars (&it, colpos);
@@ -562,10 +569,12 @@ parsdollarval_newguicmd_BM (struct parser_stBM *pars,
   else if (isobject_BM (varname))
     varstr = findobjectname_BM (varname);
   if (!varstr)
-    parsererrorprintf_BM (pars, lineno, colpos, "invalid $<var>");
+    parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,
+                          "invalid $<var>");
   _.val = find_named_value_newgui_BM (varstr, (struct stackframe_stBM *) &_);
   if (!_.val && !nobuild)
-    parsererrorprintf_BM (pars, lineno, colpos, "not found $%s", varstr);
+    parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,
+                          "not found $%s", varstr);
   GtkTextIter it = EMPTY_TEXT_ITER_BM, endit = EMPTY_TEXT_ITER_BM;
   gtk_text_buffer_get_iter_at_line (commandbuf_BM, &it, lineno - 1);
   gtk_text_iter_forward_chars (&it, colpos);
@@ -594,7 +603,7 @@ parsvalexp_newguicmd_BM (struct parser_stBM * pars, unsigned lineno,
   _.pars = pars;
   unsigned srclineno = parserlineno_BM (pars);
   unsigned srccolpos = parsercolpos_BM (pars);
-  parsererrorprintf_BM (pars, srclineno,
+  parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, srclineno,
                         srccolpos,
                         "unimplemented parsvalexp_newguicmd for $(...)");
 #warning parsvalexp_newguicmd_BM unimplemented
@@ -615,10 +624,10 @@ parsobjexp_newguicmd_BM (struct parser_stBM *pars,
                  const stringval_tyBM * namev; objectval_tyBM * oldnamedob;
                  value_tyBM val;);
   assert (isparser_BM (pars));
-  parserskipspaces_BM (pars);
+  parserskipspaces_BM (pars, (struct stackframe_stBM *) &_);
   unsigned oblineno = parserlineno_BM (pars);
   unsigned obcolpos = parsercolpos_BM (pars);
-  parsererrorprintf_BM (pars, oblineno,
+  parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, oblineno,
                         obcolpos,
                         "unimplemented parsobjexp_newguicmd for $(...)");
 #warning parsobjexp_newguicmd_BM unimplemented
@@ -649,7 +658,7 @@ value_tyBM parsreadmacroexp_newguicmd_BM
   _.pars = pars;
   _.nod = nod;
   if (depth > MAXDEPTHPARSE_BM)
-    parsererrorprintf_BM (pars, lineno, colpos,
+    parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,
                           "too deep %d readmacro", depth);
   assert (isnode_BM ((const value_tyBM) nod));
   _.conn = nodeconn_BM ((const value_tyBM) _.nod);
@@ -662,11 +671,13 @@ value_tyBM parsreadmacroexp_newguicmd_BM
       idtocbuf32_BM (objid_BM (_.crm), crmidbuf);
       const char *crmname = findobjectname_BM (_.crm);
       if (crmname)
-        parsererrorprintf_BM (pars, lineno, colpos,
+        parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno,
+                              colpos,
                               "readmacro ^ %s |=%s| has bad `command_readmacro` attribute",
                               crmidbuf, crmname);
       else
-        parsererrorprintf_BM (pars, lineno, colpos,
+        parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno,
+                              colpos,
                               "readmacro ^ %s has bad `command_readmacro` attribute",
                               crmidbuf);
     }

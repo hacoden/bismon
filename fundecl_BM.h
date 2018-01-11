@@ -424,7 +424,7 @@ static inline struct hashsetobj_stBM *objhashsetpayload_BM (objectval_tyBM *
 extern struct hashsetobj_stBM *hashsetobj_grow_BM (struct hashsetobj_stBM
                                                    *hset, unsigned gap);
 static inline struct hashsetobj_stBM *hashsetobjcast_BM (const value_tyBM v);
-extern void hashsetgcproc_BM (struct garbcoll_stBM *gc,
+extern void hashsetgcmark_BM (struct garbcoll_stBM *gc,
                               struct hashsetobj_stBM *hset);
 void hashsetgcdestroy_BM (struct garbcoll_stBM *gc,
                           struct hashsetobj_stBM *hset);
@@ -687,12 +687,15 @@ static inline bool parseradvanceutf8_BM (struct parser_stBM *pars,
 
 extern void parserseek_BM (struct parser_stBM *pars, unsigned line,
                            unsigned col);
-extern void parsererrorprintf_BM (struct parser_stBM *, unsigned line,
+extern void parsererrorprintf_BM (struct parser_stBM *pars,
+                                  struct stackframe_stBM *stkf, unsigned line,
                                   unsigned col, const char *fmt, ...)
-  __attribute__ ((format (printf, 4, 5), noreturn));
+  __attribute__ ((format (printf, 5, 6), noreturn));
 // skip spaces and comments
-extern void parserskipspaces_BM (struct parser_stBM *pars);
-extern parstoken_tyBM parsertokenget_BM (struct parser_stBM *pars);
+extern void parserskipspaces_BM (struct parser_stBM *pars,
+                                 struct stackframe_stBM *stkf);
+extern parstoken_tyBM parsertokenget_BM (struct parser_stBM *pars,
+                                         struct stackframe_stBM *stkf);
 
 // internal GC related routines
 

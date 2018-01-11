@@ -349,20 +349,19 @@ load_modif_class_BM (struct loader_stBM *ld, int ix,
   _.curldobj = argcurldobj;
   unsigned lineno = parserlineno_BM (ldpars);
   unsigned colpos = parsercolpos_BM (ldpars);
-  parstoken_tyBM tokopen = parsertokenget_BM (ldpars);
+  parstoken_tyBM tokopen =
+    parsertokenget_BM (ldpars, (struct stackframe_stBM *) &_);
   if (tokopen.tok_kind != plex_DELIM
       || tokopen.tok_delim != delim_leftparentilde)
-    parsererrorprintf_BM (ldpars, lineno, colpos,
-                          "expecting (~ after !~class");
+    parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_, lineno,
+                          colpos, "expecting (~ after !~class");
   bool gotsuper = false;
   _.superclassobj =             //
-    parsergetobject_BM          //
-    (ldpars,                    //
-     (struct stackframe_stBM *) &_,     //
-     0, &gotsuper);
+    parsergetobject_BM (ldpars, (struct stackframe_stBM *) &_,  //
+                        0, &gotsuper);
   if (!gotsuper)
-    parsererrorprintf_BM (ldpars, lineno, colpos,
-                          "expecting <superclass> after !~ class (~");
+    parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_, lineno,
+                          colpos, "expecting <superclass> after !~ class (~");
   objputclassinfo_BM (_.curldobj, _.superclassobj);
   parstoken_tyBM toknext = EMPTY_TOKEN_BM;
   unsigned nextlineno = 0;
@@ -371,34 +370,32 @@ load_modif_class_BM (struct loader_stBM *ld, int ix,
     {
       nextlineno = parserlineno_BM (ldpars);
       nextcolpos = parsercolpos_BM (ldpars);
-      toknext = parsertokenget_BM (ldpars);
+      toknext = parsertokenget_BM (ldpars, (struct stackframe_stBM *) &_);
       if (toknext.tok_kind != plex_DELIM
           || toknext.tok_delim != delim_tildecolon)
         break;
       bool gotselectorobj = false;
-      _.selectorobj =           //
-        parsergetobject_BM      //
-        (ldpars,                //
-         (struct stackframe_stBM *) &_, //
-         0, &gotselectorobj);
+      _.selectorobj = parsergetobject_BM (ldpars, (struct stackframe_stBM *) &_,        //
+                                          0, &gotselectorobj);
       if (!gotselectorobj || !_.selectorobj)
         parsererrorprintf_BM    //
-          (ldpars, nextlineno, nextcolpos,
+          (ldpars, (struct stackframe_stBM *) &_, nextlineno, nextcolpos,
            "expecting <selector> after ~: in class modification");
       bool gotmethodv = false;
       _.methodv =               //
-        parsergetvalue_BM (ldpars, (struct stackframe_stBM *) (&_),
+        parsergetvalue_BM (ldpars, (struct stackframe_stBM *) &_,
                            0, &gotmethodv);
       if (!gotmethodv || valtype_BM (_.methodv) != tyClosure_BM)
-        parsererrorprintf_BM (ldpars, nextlineno, nextcolpos,
+        parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                              nextlineno, nextcolpos,
                               "expect method closure");
       objclassinfoputmethod_BM (_.curldobj, _.selectorobj,
                                 (const closure_tyBM *) (_.methodv));
     }
   if (toknext.tok_kind != plex_DELIM
       || toknext.tok_delim != delim_tilderightparen)
-    parsererrorprintf_BM (ldpars, nextlineno, nextcolpos,
-                          "expect ~) ending class modification");
+    parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_, nextlineno,
+                          nextcolpos, "expect ~) ending class modification");
 }                               /* end load_modif_class_BM */
 
 
@@ -424,12 +421,14 @@ load_modif_name_BM (struct loader_stBM *ld, int ix,
   _.curldobj = argcurldobj;
   unsigned lineno = parserlineno_BM (ldpars);
   unsigned colpos = parsercolpos_BM (ldpars);
-  parstoken_tyBM tokopen = parsertokenget_BM (ldpars);
+  parstoken_tyBM tokopen =
+    parsertokenget_BM (ldpars, (struct stackframe_stBM *) &_);
   if (tokopen.tok_kind != plex_DELIM
       || tokopen.tok_delim != delim_leftparentilde)
-    parsererrorprintf_BM (ldpars, lineno, colpos,
-                          "expecting (~ after !~name");
-  parstoken_tyBM tokname = parsertokenget_BM (ldpars);
+    parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_, lineno,
+                          colpos, "expecting (~ after !~name");
+  parstoken_tyBM tokname =
+    parsertokenget_BM (ldpars, (struct stackframe_stBM *) &_);
   const char *namestr = NULL;
   if (tokname.tok_kind == plex_NAMEDOBJ)
     {
@@ -442,7 +441,8 @@ load_modif_name_BM (struct loader_stBM *ld, int ix,
       namestr = bytstring_BM (_.namev);
     }
   else
-    parsererrorprintf_BM (ldpars, lineno, colpos,
+    parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_, lineno,
+                          colpos,
                           "expecting cname or namedobj after !~name (~");
   assert (namestr != NULL);
   const char *oldname = findobjectname_BM (_.curldobj);
@@ -451,16 +451,18 @@ load_modif_name_BM (struct loader_stBM *ld, int ix,
       char idbuf[32];
       memset (idbuf, 0, sizeof (idbuf));
       idtocbuf32_BM (_.curldobj->ob_id, idbuf);
-      parsererrorprintf_BM (ldpars, lineno, colpos,
+      parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_, lineno,
+                            colpos,
                             "already named '%s' object %s cannot get new name '%s'",
                             oldname, idbuf, namestr);
     };
   registername_BM (_.curldobj, namestr);
-  parstoken_tyBM tokclose = parsertokenget_BM (ldpars);
+  parstoken_tyBM tokclose =
+    parsertokenget_BM (ldpars, (struct stackframe_stBM *) &_);
   if (tokclose.tok_kind != plex_DELIM
       || tokclose.tok_delim != delim_tilderightparen)
-    parsererrorprintf_BM (ldpars, lineno, colpos,
-                          "expecting ~) ending !~name");
+    parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_, lineno,
+                          colpos, "expecting ~) ending !~name");
 }                               /* end load_modif_name_BM */
 
 static void
@@ -483,22 +485,25 @@ load_modif_value_BM (struct loader_stBM *ld, int ix,
   _.curldobj = argcurldobj;
   unsigned lineno = parserlineno_BM (ldpars);
   unsigned colpos = parsercolpos_BM (ldpars);
-  parstoken_tyBM tokopen = parsertokenget_BM (ldpars);
+  parstoken_tyBM tokopen =
+    parsertokenget_BM (ldpars, (struct stackframe_stBM *) &_);
   if (tokopen.tok_kind != plex_DELIM
       || tokopen.tok_delim != delim_leftparentilde)
-    parsererrorprintf_BM (ldpars, lineno, colpos,
-                          "expecting (~ after !~value");
+    parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_, lineno,
+                          colpos, "expecting (~ after !~value");
   bool gotval = false;
   _.valv =                      //
     parsergetvalue_BM (ldpars, (struct stackframe_stBM *) (&_), 0, &gotval);
   if (!gotval)
-    parsererrorprintf_BM (ldpars, tokopen.tok_line, tokopen.tok_col,
+    parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                          tokopen.tok_line, tokopen.tok_col,
                           "expect value after !~value (~");
-  parstoken_tyBM tokclose = parsertokenget_BM (ldpars);
+  parstoken_tyBM tokclose =
+    parsertokenget_BM (ldpars, (struct stackframe_stBM *) &_);
   if (tokclose.tok_kind != plex_DELIM
       || tokclose.tok_delim != delim_tilderightparen)
-    parsererrorprintf_BM (ldpars, parserlineno_BM (ldpars),
-                          parsercolpos_BM (ldpars),
+    parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                          parserlineno_BM (ldpars), parsercolpos_BM (ldpars),
                           "expect )~ after !~value (~ <value> ");
   objputpayload_BM (_.curldobj, _.valv);
 }                               /* end load_modif_value_BM */
@@ -527,11 +532,12 @@ load_modif_todo_BM (struct loader_stBM *ld, int ix,
   _.curldobj = argcurldobj;
   unsigned lineno = parserlineno_BM (ldpars);
   unsigned colpos = parsercolpos_BM (ldpars);
-  parstoken_tyBM tokopen = parsertokenget_BM (ldpars);
+  parstoken_tyBM tokopen =
+    parsertokenget_BM (ldpars, (struct stackframe_stBM *) &_);
   if (tokopen.tok_kind != plex_DELIM
       || tokopen.tok_delim != delim_leftparentilde)
-    parsererrorprintf_BM (ldpars, lineno, colpos,
-                          "expecting (~ after !~todo");
+    parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_, lineno,
+                          colpos, "expecting (~ after !~todo");
   bool again;
   do
     {
@@ -541,7 +547,8 @@ load_modif_todo_BM (struct loader_stBM *ld, int ix,
         parsergetvalue_BM (ldpars, (struct stackframe_stBM *) (&_), 0,
                            &gotval);
       if (!gotval)
-        parsererrorprintf_BM (ldpars, tokopen.tok_line, tokopen.tok_col,
+        parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                              tokopen.tok_line, tokopen.tok_col,
                               "expect value after !~todo (~");
       bool gottree = false;
       bool gotselector = false;
@@ -556,7 +563,8 @@ load_modif_todo_BM (struct loader_stBM *ld, int ix,
           _.obselv = (objectval_tyBM *) _.valv;
         }
       else
-        parsererrorprintf_BM (ldpars, tokopen.tok_line, tokopen.tok_col,
+        parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                              tokopen.tok_line, tokopen.tok_col,
                               "expect tree or selector after !~todo (~");
       int nbargs = 0;
       memset (_.args, 0, sizeof (_.args));
@@ -570,13 +578,15 @@ load_modif_todo_BM (struct loader_stBM *ld, int ix,
             break;
           _.args[nbargs++] = _.valv;
         };
-      parstoken_tyBM tokclose = parsertokenget_BM (ldpars);
+      parstoken_tyBM tokclose =
+        parsertokenget_BM (ldpars, (struct stackframe_stBM *) &_);
       if (tokclose.tok_kind == plex_DELIM
           && tokclose.tok_delim == delim_exclamand)
         again = true;
       else if (tokclose.tok_kind != plex_DELIM
                || tokclose.tok_delim != delim_tilderightparen)
-        parsererrorprintf_BM (ldpars, parserlineno_BM (ldpars),
+        parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                              parserlineno_BM (ldpars),
                               parsercolpos_BM (ldpars),
                               "expect )~ after !~todo (~ <tree|selector> <%d-arguments> ",
                               nbargs);
@@ -644,10 +654,11 @@ load_postpone_modif_BM (struct loader_stBM *ld, int ix,
       lineno = parserlineno_BM (ldpars);
       colpos = parsercolpos_BM (ldpars);
       if (parserendoffile_BM (ldpars))
-        parsererrorprintf_BM (ldpars, lineno, colpos,
-                              "end of file reached in modification");
+        parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_, lineno,
+                              colpos, "end of file reached in modification");
       if (ldpars->pars_linebuf[0] == '!' && ldpars->pars_linebuf[1] == ')')
-        parsererrorprintf_BM (ldpars, lineno, colpos,
+        parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_, lineno,
+                              colpos,
                               "end of object reached in modification");
       if (ldpars->pars_linebuf[0] == '~' && ldpars->pars_linebuf[1] == ')')
         break;
@@ -683,22 +694,22 @@ load_second_pass_BM (struct loader_stBM *ld, int ix,
   long nbdirectives = 0;
   for (;;)
     {
-      parserskipspaces_BM (ldpars);
+      parserskipspaces_BM (ldpars, (struct stackframe_stBM *) &_);
       unsigned lineno = parserlineno_BM (ldpars);
       unsigned colpos = parsercolpos_BM (ldpars);
-      parstoken_tyBM tok = parsertokenget_BM (ldpars);
+      parstoken_tyBM tok =
+        parsertokenget_BM (ldpars, (struct stackframe_stBM *) &_);
       //
       // !( <id>   starts a new object
       if (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_exclamleft)
         {
           bool gotldobj = false;
           _.curldobj =          //
-            parsergetobject_BM  //
-            (ldpars,            //
-             (struct stackframe_stBM *) &_,     //
-             0, &gotldobj);
+            parsergetobject_BM (ldpars, (struct stackframe_stBM *) &_,  //
+                                0, &gotldobj);
           if (!gotldobj)
-            parsererrorprintf_BM (ldpars, lineno, colpos,
+            parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                                  lineno, colpos,
                                   "expecting object after !(");
         }
       //
@@ -707,22 +718,24 @@ load_second_pass_BM (struct loader_stBM *ld, int ix,
                && tok.tok_delim == delim_exclamcolon)
         {
           if (!_.curldobj)
-            parsererrorprintf_BM (ldpars, lineno, colpos,
-                                  "!: outside of object");
+            parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                                  lineno, colpos, "!: outside of object");
           bool gotattr = false;
           _.attrobj =           //
             parsergetobject_BM (ldpars, (struct stackframe_stBM *) (&_),
                                 0, &gotattr);
           if (!gotattr)
-            parsererrorprintf_BM (ldpars, lineno, colpos,
+            parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                                  lineno, colpos,
                                   "expect attribute object after !:");
-          parserskipspaces_BM (ldpars);
+          parserskipspaces_BM (ldpars, (struct stackframe_stBM *) &_);
           bool gotval = false;
           _.attrval =           //
             parsergetvalue_BM (ldpars, (struct stackframe_stBM *) (&_),
                                0, &gotval);
           if (!gotval)
-            parsererrorprintf_BM (ldpars, lineno, colpos,
+            parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                                  lineno, colpos,
                                   "expect value of attribute after !:");
           objputattr_BM (_.curldobj, _.attrobj, _.attrval);
           _.attrobj = NULL;
@@ -734,12 +747,13 @@ load_second_pass_BM (struct loader_stBM *ld, int ix,
                && tok.tok_delim == delim_exclamhash)
         {
           if (!_.curldobj)
-            parsererrorprintf_BM (ldpars, lineno, colpos,
-                                  "!# outside of object");
-          parstoken_tyBM tokspa = parsertokenget_BM (ldpars);
+            parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                                  lineno, colpos, "!# outside of object");
+          parstoken_tyBM tokspa =
+            parsertokenget_BM (ldpars, (struct stackframe_stBM *) &_);
           if (tokspa.tok_kind != plex_LLONG)
-            parsererrorprintf_BM (ldpars, lineno, colpos,
-                                  "expecting long after !#");
+            parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                                  lineno, colpos, "expecting long after !#");
           unsigned l = tokspa.tok_llong;
           objreservecomps_BM (_.curldobj, l);
         }
@@ -748,14 +762,15 @@ load_second_pass_BM (struct loader_stBM *ld, int ix,
       else if (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_exclamand)
         {
           if (!_.curldobj)
-            parsererrorprintf_BM (ldpars, lineno, colpos,
-                                  "!& outside of object");
+            parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                                  lineno, colpos, "!& outside of object");
           bool gotval = false;
           _.compval =           //
             parsergetvalue_BM (ldpars, (struct stackframe_stBM *) (&_),
                                0, &gotval);
           if (!gotval)
-            parsererrorprintf_BM (ldpars, lineno, colpos,
+            parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                                  lineno, colpos,
                                   "expect component value after !&");
           objappendcomp_BM (_.curldobj, _.compval);
           _.compval = NULL;
@@ -765,11 +780,13 @@ load_second_pass_BM (struct loader_stBM *ld, int ix,
       else if (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_exclamat)
         {
           if (!_.curldobj)
-            parsererrorprintf_BM (ldpars, lineno, colpos,
-                                  "!@ outside of object");
-          parstoken_tyBM tokmtim = parsertokenget_BM (ldpars);
+            parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                                  lineno, colpos, "!@ outside of object");
+          parstoken_tyBM tokmtim =
+            parsertokenget_BM (ldpars, (struct stackframe_stBM *) &_);
           if (tokmtim.tok_kind != plex_DOUBLE)
-            parsererrorprintf_BM (ldpars, lineno, colpos,
+            parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                                  lineno, colpos,
                                   "expecting double after !@");
           double t = tokmtim.tok_dbl;
           objtouchmtime_BM (_.curldobj, t);
@@ -780,14 +797,15 @@ load_second_pass_BM (struct loader_stBM *ld, int ix,
                && tok.tok_delim == delim_exclamdollar)
         {
           if (!_.curldobj)
-            parsererrorprintf_BM (ldpars, lineno, colpos,
-                                  "!$ outside of object");
+            parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                                  lineno, colpos, "!$ outside of object");
           bool gotclass = false;
           _.classobj =          //
             parsergetobject_BM (ldpars, (struct stackframe_stBM *) (&_),
                                 0, &gotclass);
           if (!gotclass)
-            parsererrorprintf_BM (ldpars, lineno, colpos,
+            parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                                  lineno, colpos,
                                   "expect [class] object after !$");
           objputclass_BM (_.curldobj, _.classobj);
           _.classobj = NULL;
@@ -798,18 +816,20 @@ load_second_pass_BM (struct loader_stBM *ld, int ix,
                && tok.tok_delim == delim_exclamright)
         {
           if (!_.curldobj)
-            parsererrorprintf_BM (ldpars, lineno, colpos,
-                                  "!) outside of object");
-          parstoken_tyBM tokid = parsertokenget_BM (ldpars);
+            parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                                  lineno, colpos, "!) outside of object");
+          parstoken_tyBM tokid =
+            parsertokenget_BM (ldpars, (struct stackframe_stBM *) &_);
           if (tokid.tok_kind != plex_ID)
-            parsererrorprintf_BM (ldpars, lineno, colpos,
-                                  "expecting id after !)");
+            parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                                  lineno, colpos, "expecting id after !)");
           if (tokid.tok_id.id_hi
               && !equalid_BM (tokid.tok_id, objid_BM (_.curldobj)))
             {
               char idbuf[32];
               idtocbuf32_BM (objid_BM (_.curldobj), idbuf);
-              parsererrorprintf_BM (ldpars, lineno, colpos,
+              parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                                    lineno, colpos,
                                     "expecting id %s after !)", idbuf);
 
             }
@@ -820,15 +840,17 @@ load_second_pass_BM (struct loader_stBM *ld, int ix,
       else if (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_exclambar)
         {
           if (!_.curldobj)
-            parsererrorprintf_BM (ldpars, lineno, colpos,
-                                  "!| outside of object");
-          parstoken_tyBM toksig = parsertokenget_BM (ldpars);
+            parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                                  lineno, colpos, "!| outside of object");
+          parstoken_tyBM toksig =
+            parsertokenget_BM (ldpars, (struct stackframe_stBM *) &_);
           if (toksig.tok_kind == plex_DELIM && toksig.tok_delim == delim_star)
             {
               NONPRINTF_BM ("!| followed by * ix#%d line %d for %s",
                             ix, toksig.tok_line, objectdbg_BM (_.curldobj));
               if (!objroutaddr_BM (_.curldobj, BMP_function_sig))
-                parsererrorprintf_BM (ldpars, lineno, colpos,
+                parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                                      lineno, colpos,
                                       "object %s without function_sig has !|*",
                                       objectdbg_BM (_.curldobj));
             }
@@ -843,7 +865,8 @@ load_second_pass_BM (struct loader_stBM *ld, int ix,
               const char *obnam = findobjectname_BM (_.curldobj);
               if (!_.attrobj)
                 {
-                  parsererrorprintf_BM (ldpars, lineno, colpos,
+                  parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                                        lineno, colpos,
                                         "object %s with  !| with bad signature",
                                         obnam ? obnam : curidbuf32);
                 };
@@ -893,7 +916,8 @@ load_second_pass_BM (struct loader_stBM *ld, int ix,
               char idbuf32[32] = "";
               idtocbuf32_BM (_.curldobj->ob_id, idbuf32);
               const char *obnam = findobjectname_BM (_.curldobj);
-              parsererrorprintf_BM (ldpars, lineno, colpos,
+              parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                                    lineno, colpos,
                                     "object %s with bad !| for signature",
                                     obnam ? obnam : idbuf32);
             }
@@ -904,9 +928,10 @@ load_second_pass_BM (struct loader_stBM *ld, int ix,
                && tok.tok_delim == delim_exclamtilde)
         {
           if (!_.curldobj)
-            parsererrorprintf_BM (ldpars, lineno, colpos,
-                                  "!~ outside of object");
-          parstoken_tyBM tokmodif = parsertokenget_BM (ldpars);
+            parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                                  lineno, colpos, "!~ outside of object");
+          parstoken_tyBM tokmodif =
+            parsertokenget_BM (ldpars, (struct stackframe_stBM *) &_);
           /// class modification
           if (tokmodif.tok_kind == plex_NAMEDOBJ
               && tokmodif.tok_namedobj == BMP_class)
@@ -952,8 +977,8 @@ load_second_pass_BM (struct loader_stBM *ld, int ix,
                                       (const value_tyBM) tokmodif.tok_cname);
             }
           else
-            parsererrorprintf_BM (ldpars, lineno, colpos,
-                                  "unexpected modification");
+            parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_,
+                                  lineno, colpos, "unexpected modification");
 
         }
 
@@ -974,7 +999,8 @@ load_second_pass_BM (struct loader_stBM *ld, int ix,
               idtocbuf32_BM (tok.tok_id, xtraid);
               xtratok = xtraid;
             }
-          parsererrorprintf_BM (ldpars, lineno, colpos,
+          parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_, lineno,
+                                colpos,
                                 "unexpected token (kind %d %s) %s for loader",
                                 (int) tok.tok_kind,
                                 lexkindname_BM (tok.tok_kind), xtratok);
@@ -1111,22 +1137,25 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
       idtocbuf32_BM (objid_BM (_.data), idbuf);
       const char *n = findobjectname_BM ((const objectval_tyBM *) _.data);
       if (n)
-        parsererrorprintf_BM (ldpars, lineno, colpos,
+        parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_, lineno,
+                              colpos,
                               "unimplemented named load modification %s (%s)",
                               n, idbuf);
       else
-        parsererrorprintf_BM (ldpars, lineno, colpos,
+        parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_, lineno,
+                              colpos,
                               "unimplemented anon load modification %s",
                               idbuf);
     }
   else if (isstring_BM (_.data))
     {
-      parsererrorprintf_BM (ldpars, lineno, colpos,
+      parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_, lineno,
+                            colpos,
                             "unimplemented string load modification %s",
                             bytstring_BM (_.data));
     }
   else
-    parsererrorprintf_BM (ldpars, lineno, colpos,
-                          "unimplemented load modification");
+    parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_, lineno,
+                          colpos, "unimplemented load modification");
 #warning postpone_load_modification unimplemented
 }                               // end ROUTINEOBJNAME_BM (_7kMNgL8eJ09_6aEpofzWJDP)  postpone_load_modification 
