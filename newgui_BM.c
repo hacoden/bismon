@@ -466,12 +466,12 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
   if (!isparser_BM (pars))
     return;
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 struct parser_stBM * pars;
                  value_tyBM val; objectval_tyBM * obj;
-                 objectval_tyBM * oldfocusobj; const stringval_tyBM * name;
-                 const stringval_tyBM * result;
+                 objectval_tyBM * oldfocusobj;
+                 const stringval_tyBM * name; const stringval_tyBM * result;
+                 objectval_tyBM * parsob;
     );
-  _.pars = pars;
+  _.parsob = checkedparserowner_BM (pars);
   const struct parserops_stBM *parsops = pars->pars_ops;
   assert (!parsops || parsops->parsop_magic == PARSOPMAGIC_BM);
   int nbloop = 0;
@@ -597,12 +597,12 @@ parsvalexp_newguicmd_BM (struct parser_stBM * pars, unsigned lineno,
   const struct parserops_stBM *parsops = pars->pars_ops;
   bool nobuild = parsops && parsops->parsop_nobuild;
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 struct parser_stBM *pars; value_tyBM resval;
-                 value_tyBM srcval;
+                 value_tyBM resval;
+                 value_tyBM srcval; objectval_tyBM * parsob;
                  objectval_tyBM * obj; objectval_tyBM * obsel;
                  objectval_tyBM * obattr; closure_tyBM * clos;
-                 value_tyBM otherval; const stringval_tyBM * name;;);
-  _.pars = pars;
+                 value_tyBM otherval; const stringval_tyBM * name;);
+  _.parsob = checkedparserowner_BM (pars);
   unsigned srclineno = parserlineno_BM (pars);
   unsigned srccolpos = parsercolpos_BM (pars);
   parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, srclineno,
@@ -653,11 +653,12 @@ value_tyBM parsreadmacroexp_newguicmd_BM
    const node_tyBM * nod, struct stackframe_stBM *stkf)
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 struct parser_stBM *pars;
-                 value_tyBM resval; const node_tyBM * nod; value_tyBM crm;
-                 const objectval_tyBM * conn;
+                 value_tyBM resval;
+                 const node_tyBM * nod;
+                 value_tyBM crm; const objectval_tyBM * conn;
+                 objectval_tyBM * parsob;
     );
-  _.pars = pars;
+  _.parsob = checkedparserowner_BM (pars);
   _.nod = nod;
   if (depth > MAXDEPTHPARSE_BM)
     parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,
@@ -686,7 +687,7 @@ value_tyBM parsreadmacroexp_newguicmd_BM
   _.resval =                    //
     apply4_BM (_.crm, (struct stackframe_stBM *) &_,
                (value_tyBM) _.nod,
-               taggedint_BM (lineno), taggedint_BM (colpos), pars);
+               taggedint_BM (lineno), taggedint_BM (colpos), _.parsob);
   return _.resval;
 }                               /* end parsreadmacroexp_newguicmd_BM */
 

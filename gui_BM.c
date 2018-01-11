@@ -1696,12 +1696,12 @@ parseobjectcompl_guicmd_BM (struct parser_stBM *pars,
   if (!isparser_BM (pars))
     return false;
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 struct parser_stBM * pars;
                  value_tyBM comp; objectval_tyBM * targobj;
                  objectval_tyBM * obattr; objectval_tyBM * obclass;
-                 objectval_tyBM * obsel; const stringval_tyBM * name;
+                 objectval_tyBM * obsel;
+                 const stringval_tyBM * name; objectval_tyBM * parsob;
                  value_tyBM args[MAXARGS_BM];);
-  _.pars = pars;
+  _.parsob = checkedparserowner_BM (pars);
   _.targobj = targobj;
   struct parstoken_stBM tok = {
   };
@@ -2185,13 +2185,14 @@ parsvalexp_guicmd_BM (struct parser_stBM * pars, unsigned lineno,
   const struct parserops_stBM *parsops = pars->pars_ops;
   bool nobuild = parsops && parsops->parsop_nobuild;
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 struct parser_stBM *pars; value_tyBM resval;
+                 value_tyBM resval;
                  value_tyBM srcval;
-                 objectval_tyBM * obj; objectval_tyBM * obsel;
+                 objectval_tyBM * obj;
+                 objectval_tyBM * obsel; objectval_tyBM * parsob;
                  objectval_tyBM * obattr; closure_tyBM * clos;
                  value_tyBM otherval; const stringval_tyBM * name;
                  value_tyBM args[MAXARGS_BM];);
-  _.pars = pars;
+  _.parsob = checkedparserowner_BM (pars);
   unsigned srclineno = parserlineno_BM (pars);
   unsigned srccolpos = parsercolpos_BM (pars);
   bool gotsrcval = false;
@@ -2553,11 +2554,12 @@ value_tyBM parsreadmacroexp_guicmd_BM
    const node_tyBM * nod, struct stackframe_stBM * stkf)
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 struct parser_stBM *pars;
-                 value_tyBM resval; const node_tyBM * nod; value_tyBM crm;
-                 const objectval_tyBM * conn;
+                 value_tyBM resval;
+                 const node_tyBM * nod;
+                 value_tyBM crm; const objectval_tyBM * conn;
+                 objectval_tyBM * parsob;
     );
-  _.pars = pars;
+  _.parsob = checkedparserowner_BM (pars);
   _.nod = nod;
   if (depth > MAXDEPTHPARSE_BM)
     parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,
@@ -2586,7 +2588,7 @@ value_tyBM parsreadmacroexp_guicmd_BM
   _.resval =                    //
     apply4_BM (_.crm, (struct stackframe_stBM *) &_,
                (value_tyBM) _.nod,
-               taggedint_BM (lineno), taggedint_BM (colpos), pars);
+               taggedint_BM (lineno), taggedint_BM (colpos), _.parsob);
   return _.resval;
 }                               /* end parsreadmacroexp_guicmd_BM */
 
@@ -2794,12 +2796,12 @@ parsecommandbuf_BM (struct parser_stBM *pars, struct stackframe_stBM *stkf)
   if (!isparser_BM (pars))
     return;
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 struct parser_stBM * pars;
-                 value_tyBM comp; objectval_tyBM * obj;
+                 value_tyBM comp;
+                 objectval_tyBM * obj; objectval_tyBM * parsob;
                  objectval_tyBM * oldfocusobj; const stringval_tyBM * name;
                  const stringval_tyBM * result;
     );
-  _.pars = pars;
+  _.parsob = checkedparserowner_BM (pars);
   const struct parserops_stBM *parsops = pars->pars_ops;
   assert (!parsops || parsops->parsop_magic == PARSOPMAGIC_BM);
   bool nobuild = parsops && parsops->parsop_nobuild;

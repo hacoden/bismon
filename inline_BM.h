@@ -1045,11 +1045,24 @@ checkedparserowner_BM (const extendedval_tyBM v)
   return obown;
 }                               /* end checkedparserowner_BM */
 
-const struct parser_stBM *
+
+struct parser_stBM *
 parsercast_BM (const value_tyBM v)
 {
-  return isparser_BM (v) ? ((const struct parser_stBM *) v) : NULL;
+  return isparser_BM (v) ? ((struct parser_stBM *) v) : NULL;
 };
+
+struct parser_stBM *
+objparserpayload_BM (objectval_tyBM * obj)
+{
+  if (!isobject_BM (obj))
+    return NULL;
+  struct parser_stBM *pars = parsercast_BM (objpayload_BM (obj));
+  if (!pars)
+    return NULL;
+  assert (checkedparserowner_BM (pars) == obj);
+  return pars;
+}                               /* end objparserpayload_BM */
 
 unsigned
 parserlineno_BM (const struct parser_stBM *pars)

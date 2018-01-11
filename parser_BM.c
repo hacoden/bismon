@@ -1273,14 +1273,14 @@ parsergetvalue_BM (struct parser_stBM * pars,
   bool nobuild = parsops && parsops->parsop_nobuild;
   LOCALFRAME_BM                 //
     (prevstkf, NULL,            //
-     value_tyBM resval;
-     value_tyBM macroval;
-     objectval_tyBM * connobj;
+     value_tyBM resval; value_tyBM macroval; objectval_tyBM * connobj;
+     objectval_tyBM * parsob;
      union
      {
      objectval_tyBM * elemobj; objectval_tyBM * compobj; value_tyBM sonval;
      };
      struct datavectval_stBM *contdvec);
+  _.parsob = checkedparserowner_BM (pars);
   parserskipspaces_BM (pars, (struct stackframe_stBM *) &_);
   unsigned lineno = parserlineno_BM (pars);
   unsigned colpos = parsercolpos_BM (pars);
