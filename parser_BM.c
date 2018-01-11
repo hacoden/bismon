@@ -1047,6 +1047,7 @@ again:
       .tok_kind = plex_DELIM,.tok_line = curlin,.tok_col =
           curcol,.tok_delim = delim_dollar};
     }
+#warning should handle dollar followed by non-letter
   // special case for $:<var> the colon should be immediately followed
   // by a letter
   else if (restlin[0] == '$' && restlin[1] == ':' && isalpha (restlin[2]))
@@ -1058,6 +1059,7 @@ again:
       .tok_kind = plex_DELIM,.tok_line = curlin,.tok_col =
           curcol,.tok_delim = delim_dollarcolon};
     }
+#warning should handle dollar colon followed by non-letter
   char delimstr[16];
   memset (delimstr, 0, sizeof (delimstr));
   enum lexdelim_enBM curdelim = delim__NONE;

@@ -1628,6 +1628,8 @@ parsdollarval_guicmd_BM (struct parser_stBM *pars,
     varstr = bytstring_BM (varname);
   else if (isobject_BM (varname))
     varstr = findobjectname_BM (varname);
+  else if (varname == NULL)
+    varstr = BMK_7bD9VtDkGSn_7lxHeYuuFLR;       // result
   if (!varstr)
     parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,
                           "invalid $<var>");
@@ -1662,6 +1664,8 @@ parsdollarobj_guicmd_BM (struct parser_stBM *pars,
     varstr = bytstring_BM (varname);
   else if (isobject_BM (varname))
     varstr = findobjectname_BM (varname);
+  else if (varname == NULL)
+    varstr = BMK_7bD9VtDkGSn_7lxHeYuuFLR;       /* result */
   if (!varstr)
     parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,
                           "invalid $:<var>");
