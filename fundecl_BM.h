@@ -642,9 +642,11 @@ extern void obdumpscanvalue_BM (objectval_tyBM * dumpob, const value_tyBM val,
 extern const char *lexkindname_BM (enum parslexkind_enBM k);
 extern const char *delimstr_BM (enum lexdelim_enBM d);
 
-extern struct parser_stBM *makeparser_of_file_BM (FILE * f);
+extern struct parser_stBM *makeparser_of_file_BM (FILE * f,
+                                                  objectval_tyBM * owner);
 extern struct parser_stBM *makeparser_memopen_BM (const char *filemem,
-                                                  long size);
+                                                  long size,
+                                                  objectval_tyBM * owner);
 static inline bool isparser_BM (const value_tyBM v);
 static inline const struct parser_stBM *parsercast_BM (const value_tyBM v);
 extern void parsergcmark_BM (struct garbcoll_stBM *gc,

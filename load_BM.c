@@ -678,7 +678,7 @@ load_second_pass_BM (struct loader_stBM *ld, int ix,
   if (!fil)
     FATAL_BM ("failed to fopen %s (%m)", curldpath);
   LOCALFRAME_BM (parstkfrm, NULL,       //
-                 struct parser_stBM *ldparser;
+                 objectval_tyBM * ldparsownob;
                  objectval_tyBM * curldobj; objectval_tyBM * attrobj;
                  value_tyBM routbuilder;
                  union
@@ -687,7 +687,8 @@ load_second_pass_BM (struct loader_stBM *ld, int ix,
                  objectval_tyBM * classobj;
                  };
     );
-  struct parser_stBM *ldpars = _.ldparser = makeparser_of_file_BM (fil);
+  _.ldparsownob = makeobj_BM ();
+  struct parser_stBM *ldpars = makeparser_of_file_BM (fil, _.ldparsownob);
   assert (ldpars != NULL);
   ld->ld_parsarr[ix] = ldpars;
   ldpars->pars_path = ld->ld_storepatharr[ix];

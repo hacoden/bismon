@@ -41,9 +41,11 @@ delimstr_BM (enum lexdelim_enBM d)
 
 
 struct parser_stBM *
-makeparser_of_file_BM (FILE * f)
+makeparser_of_file_BM (FILE * f, objectval_tyBM * ownob)
 {
   if (!f)
+    return NULL;
+  if (!isobject_BM (ownob))
     return NULL;
   struct parser_stBM *pars =    //
     allocgcty_BM (typayl_parser_BM, sizeof (struct parser_stBM));
@@ -52,6 +54,7 @@ makeparser_of_file_BM (FILE * f)
   pars->pars_filemem = NULL;
   pars->pars_filesize = 0;
   pars->pars_path = "";
+  pars->pars_ownob = ownob;
   unsigned inilinsiz = 256;
   char *linebuf = calloc (1, inilinsiz);
   if (!linebuf)
@@ -78,20 +81,27 @@ makeparser_of_file_BM (FILE * f)
     FATAL_BM ("memolines calloc failed for size %d (%m)", inimemosiz);
   pars->pars_memolsize = inimemosiz;
   pars->pars_memolcount = 0;
+  {
+    objlock_BM (ownob);
+    objputpayload_BM (ownob, pars);
+    objunlock_BM (ownob);
+  }
   return pars;
 }                               /* end makeparser_of_file_BM */
 
 struct parser_stBM *
-makeparser_memopen_BM (const char *filemem, long size)
+makeparser_memopen_BM (const char *filemem, long size, objectval_tyBM * ownob)
 {
   if (!filemem)
+    return NULL;
+  if (!isobject_BM (ownob))
     return NULL;
   if (size < 0)
     size = strlen (filemem);
   FILE *fil = fmemopen ((void *) filemem, size, "r");
   if (!fil)
     FATAL_BM ("fmemopen failed (%m)");
-  struct parser_stBM *pars = makeparser_of_file_BM (fil);
+  struct parser_stBM *pars = makeparser_of_file_BM (fil, ownob);
   pars->pars_filemem = filemem;
   pars->pars_filesize = size;
   return pars;
@@ -108,8 +118,9 @@ parsergcmark_BM (struct garbcoll_stBM *gc, struct parser_stBM *pars)
     return;
   ((typedhead_tyBM *) pars)->hgc = MARKGC_BM;
   gc->gc_nbmarks++;
-  if (pars->pars_cvalue)
-    VALUEGCPROC_BM (gc, pars->pars_cvalue, 0);
+  VALUEGCPROC_BM (gc, pars->pars_cvalue, 0);
+  if (pars->pars_ownob)
+    gcobjmark_BM (gc, pars->pars_ownob);
 }                               /* end parsergcmark_BM */
 
 

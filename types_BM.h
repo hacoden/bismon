@@ -553,6 +553,7 @@ struct parser_stBM              /* for typayl_parser_BM */
   bool pars_debug;
   const char *pars_path;
   value_tyBM pars_cvalue;       /* client value */
+  objectval_tyBM *pars_ownob;   /* owner object */
   const char *pars_filemem;     /* when using fmemopen */
   size_t pars_filesize;         /* when using fmemopen */
   char *pars_linebuf;           /* given by getline */

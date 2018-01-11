@@ -312,6 +312,8 @@ newgui_get_browsebuf_BM (void)
 void
 runcommand_newgui_BM (bool erase)
 {
+  LOCALFRAME_BM ( /*prev: */ NULL, /*descr: */ NULL,
+                 objectval_tyBM * cmdparsob;);
   DBGPRINTF_BM ("runcommand_newgui_BM start erase=%s", erase ? "yes" : "no");
   GtkTextIter startit = EMPTY_TEXT_ITER_BM;
   GtkTextIter endit = EMPTY_TEXT_ITER_BM;
@@ -344,12 +346,11 @@ runcommand_newgui_BM (bool erase)
     {
       gtk_text_buffer_set_text (commandbuf_BM, cmdstr, -1);
     }
-  struct parser_stBM *cmdpars = makeparser_memopen_BM (cmdstr, -1);
+  _.cmdparsob = makeobj_BM ();
+  struct parser_stBM *cmdpars =
+    makeparser_memopen_BM (cmdstr, -1, _.cmdparsob);
   int cmdlen = strlen (cmdstr);
   cmdpars->pars_ops = &parsop_command_build_newgui_BM;
-  LOCALFRAME_BM ( /*prev: */ NULL, /*descr: */ NULL,
-                 struct parser_stBM *cmdpars;);
-  _.cmdpars = cmdpars;
   volatile int errpars = setjmp (jmperrorcmd_BM);
   if (!errpars)
     {
@@ -422,6 +423,8 @@ markset_newgui_cmd_BM (GtkTextBuffer * tbuf, GtkTextIter * titer,
 void
 enduseraction_newgui_cmd_BM (GtkTextBuffer * txbuf, gpointer data)
 {
+  LOCALFRAME_BM ( /*prev: */ NULL, /*descr: */ NULL,
+                 objectval_tyBM * cmdparsob;);
   assert (txbuf == commandbuf_BM);
   assert (data == NULL);
   GtkTextIter startit = EMPTY_TEXT_ITER_BM;
@@ -431,11 +434,10 @@ enduseraction_newgui_cmd_BM (GtkTextBuffer * txbuf, gpointer data)
   cmd_clear_parens_BM ();
   char *cmdstr = gtk_text_buffer_get_text (commandbuf_BM, &startit, &endit,
                                            false);
-  struct parser_stBM *cmdpars = makeparser_memopen_BM (cmdstr, -1);
+  _.cmdparsob = makeobj_BM ();
+  struct parser_stBM *cmdpars =
+    makeparser_memopen_BM (cmdstr, -1, _.cmdparsob);
   cmdpars->pars_ops = &parsop_command_nobuild_newgui_BM;
-  LOCALFRAME_BM ( /*prev: */ NULL, /*descr: */ NULL,
-                 struct parser_stBM *cmdpars;);
-  _.cmdpars = cmdpars;
   volatile int errpars = setjmp (jmperrorcmd_BM);
   if (!errpars)
     {
@@ -693,6 +695,10 @@ parserror_newguicmd_BM (struct parser_stBM *pars,
                         struct stackframe_stBM *stkf, unsigned lineno,
                         unsigned colpos, char *msg)
 {
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 objectval_tyBM * parsob; value_tyBM errstrv;
+                 value_tyBM errnodv;
+    );
   assert (isparser_BM (pars));
   const struct parserops_stBM *parsops = pars->pars_ops;
   assert (parsops && parsops->parsop_magic == PARSOPMAGIC_BM);

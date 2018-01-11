@@ -4001,16 +4001,18 @@ runcommand_BM (bool erase)
     {
       gtk_text_buffer_set_text (commandbuf_BM, cmdstr, -1);
     }
-  struct parser_stBM *cmdpars = makeparser_memopen_BM (cmdstr, -1);
+  LOCALFRAME_BM ( /*prev: */ NULL, /*descr: */ NULL,
+                 objectval_tyBM * parsownob;
+    );
+  _.parsownob = makeobj_BM ();
+  struct parser_stBM *cmdpars =
+    makeparser_memopen_BM (cmdstr, -1, _.parsownob);
   cmdpars->pars_debug = true;
   int cmdlen = strlen (cmdstr);
   DBGPRINTF_BM
     ("runcommand %s start elapsed %.3f s, cmdlen %d cmdstr@%p:\n%s\n***\n",
      erase ? "erase" : "keep", elapsedtime_BM (), cmdlen, cmdstr, cmdstr);
   cmdpars->pars_ops = &parsop_command_build_BM;
-  LOCALFRAME_BM ( /*prev: */ NULL, /*descr: */ NULL,
-                 struct parser_stBM *cmdpars;);
-  _.cmdpars = cmdpars;
   int errpars = setjmp (jmperrorcmd_BM);
   if (!errpars)
     {
@@ -4092,11 +4094,12 @@ enduseractioncmd_BM (GtkTextBuffer * txbuf, gpointer data)
   cmd_clear_parens_BM ();
   char *cmdstr = gtk_text_buffer_get_text (commandbuf_BM, &startit, &endit,
                                            false);
-  struct parser_stBM *cmdpars = makeparser_memopen_BM (cmdstr, -1);
-  cmdpars->pars_ops = &parsop_command_nobuild_BM;
   LOCALFRAME_BM ( /*prev: */ NULL, /*descr: */ NULL,
-                 struct parser_stBM *cmdpars;);
-  _.cmdpars = cmdpars;
+                 objectval_tyBM * parsownob);
+  _.parsownob = makeobj_BM ();
+  struct parser_stBM *cmdpars =
+    makeparser_memopen_BM (cmdstr, -1, _.parsownob);
+  cmdpars->pars_ops = &parsop_command_nobuild_BM;
   int errpars = setjmp (jmperrorcmd_BM);
   if (!errpars)
     {
