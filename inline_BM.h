@@ -1015,11 +1015,35 @@ nodenthson_BM (const value_tyBM nod, int rk)
 
 
 bool
-isparser_BM (const value_tyBM v)
+isparser_BM (const extendedval_tyBM v)
 {
   int ty = valtype_BM (v);
   return ty == typayl_parser_BM;
 }                               /* end isparser_BM */
+
+objectval_tyBM *
+parserowner_BM (const extendedval_tyBM v)
+{
+  if (!isparser_BM (v))
+    return NULL;
+  return ((struct parser_stBM *) v)->pars_ownob;
+}                               /* end parserowner_BM */
+
+objectval_tyBM *
+checkedparserowner_BM (const extendedval_tyBM v)
+{
+  objectval_tyBM *obown = parserowner_BM (v);
+  if (!obown)
+    FATAL_BM ("parser without owner");
+  if (objpayload_BM (obown) != v)
+    {
+      char objidbuf[32];
+      memset (objidbuf, 0, sizeof (objidbuf));
+      idtocbuf32_BM (objid_BM (obown), objidbuf);
+      FATAL_BM ("parser not owned by %s", objidbuf);
+    };
+  return obown;
+}                               /* end checkedparserowner_BM */
 
 const struct parser_stBM *
 parsercast_BM (const value_tyBM v)
