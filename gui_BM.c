@@ -1566,7 +1566,7 @@ log_printf_message_BM (const char *fmt, ...)
 }                               /* end log_printf_message_BM */
 
 void
-parserror_guicmd_BM (struct parser_stBM *pars,
+parserror_guicmd_BM (struct parser_stBM *pars, struct stackframe_stBM *stkf,
                      unsigned lineno, unsigned colpos, char *msg)
 {
   assert (isparser_BM (pars));

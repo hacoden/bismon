@@ -690,7 +690,8 @@ value_tyBM parsreadmacroexp_newguicmd_BM
 
 void
 parserror_newguicmd_BM (struct parser_stBM *pars,
-                        unsigned lineno, unsigned colpos, char *msg)
+                        struct stackframe_stBM *stkf, unsigned lineno,
+                        unsigned colpos, char *msg)
 {
   assert (isparser_BM (pars));
   const struct parserops_stBM *parsops = pars->pars_ops;

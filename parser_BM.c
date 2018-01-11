@@ -299,7 +299,7 @@ parsererrorprintf_BM (struct parser_stBM *pars, struct stackframe_stBM *stkf,
     {
       assert (parsops->parsop_magic == PARSOPMAGIC_BM);
       if (parsops && parsops->parsop_error_rout)
-        parsops->parsop_error_rout (pars, line, col, buf);
+        parsops->parsop_error_rout (pars, stkf, line, col, buf);
     };
   FATAL_BM ("%s:%d:%d: PARSER ERROR : %s", pars->pars_path, line, col, buf);
 }                               /* end parsererrorprintf_BM */

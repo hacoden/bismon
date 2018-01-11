@@ -10,7 +10,7 @@ ROUTINEOBJNAME_BM (_3kMqlEugRVW_7DgwjR4CBbP)
 (struct stackframe_stBM * stkf,
 const value_tyBM arg1,
 const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4,
- const quasinode_tyBM * restargs_ __attribute__((unused)))
+const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   assert (istaggedint_BM (arg1));       // the integer to dump
   // arg2 is the bufob
@@ -43,7 +43,7 @@ ROUTINEOBJNAME_BM (_3Tc3E4uo2p5_4EXWCPwCR5b)
 (struct stackframe_stBM * stkf,
 const value_tyBM arg1,
 const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4,
-const quasinode_tyBM * restargs_ __attribute__((unused)))
+const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   assert (isset_BM (arg1));     // the set to dump
   // arg2 is the bufob
@@ -91,7 +91,7 @@ ROUTINEOBJNAME_BM (_5D9kkPHSPxq_8suDXpjlzjE)
 (struct stackframe_stBM * stkf,
 const value_tyBM arg1,
 const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4,
-const quasinode_tyBM * restargs_ __attribute__((unused)))
+const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   assert (istuple_BM (arg1));   // the tuple to dump
   // arg2 is the bufob

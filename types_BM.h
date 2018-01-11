@@ -499,10 +499,11 @@ typedef void parser_decorate_start_nesting_sigBM
    enum lexdelim_enBM opendelim, unsigned openlinpos, unsigned opencolpos,
    enum lexdelim_enBM closedelim, unsigned closelinpos, unsigned closecolpos);
 
-// signal parse error; the msg is a malloc-ed string which the routine
+// signal parse error; the msg is a malloc-ed string which the error handling routine
 // should free when it is doing a longjmp
 typedef void parser_error_sigBM
-  (struct parser_stBM *pars, unsigned lineno, unsigned colpos, char *msg)
+  (struct parser_stBM *pars, struct stackframe_stBM *stkf,
+   unsigned lineno, unsigned colpos, char *msg)
   /*__attribute__ ((noreturn))*/ ;
 
 
