@@ -1,5 +1,5 @@
 // generated file store1.bmon
-// for 41 objects
+// for 42 objects
 // with 0 modules
 
 
@@ -309,6 +309,17 @@ _4hIFpPfuaR1_39hcoYwRAm0 |=objectty|
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "for building routines at load, a prefix string or a closure"
 !)_8emBk0Le2Vy_8MxJWC61DPw
+
+
+
+!(_4xEm6fNYKrA_0GZas0sFyYp |=run_tasklet|
+!~ name (~ run_tasklet
+~)
+!@ 1515745964.18
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "selector to run a tasklet of the agenda"
+!)_4xEm6fNYKrA_0GZas0sFyYp
 
 
 
