@@ -1110,7 +1110,7 @@ threadinfo_stBM::thread_run(const int tix)
   // I need to be sure that clocktime_BM(CLOCK_THREAD_CPUTIME_ID) is positive, so warmup the CPU
   {
     volatile double x = tix*0.02 + 0.001;
-    while (clocktime_BM(CLOCK_THREAD_CPUTIME_ID)==0.0 && x<0.5)
+    while (clocktime_BM (CLOCK_THREAD_CPUTIME_ID) <= 0.0  &&  x < 0.8)
       {
         x += 0.25*sin(x + tix*0.0001) + 1.0e-6 + 1.0e-7*(getpid()%16);
       };
@@ -1162,11 +1162,11 @@ threadinfo_stBM::thread_run(const int tix)
       }
       char idbuf[32];
       memset (idbuf, 0, sizeof(idbuf));
-      DBGPRINTF_BM("thread_run tix%d taskob %s tid#%ld", tix,
+      DBGPRINTF_BM("thread_run tix%d taskob %s tid#%ld threadcpu %.5f", tix,
                    taskob
                    ?(idtocbuf32_BM (objid_BM (taskob), idbuf),idbuf)
                    :"*none*",
-                   (long) gettid_BM());
+                   (long) gettid_BM(), clocktime_BM(CLOCK_THREAD_CPUTIME_ID));
       if (taskob)
         {
           failurelockset_stBM fls;
@@ -1214,7 +1214,7 @@ taskletelapsedtime_BM (void)
 {
   double ths = 0.0;
   if (curthreadinfo_BM && (ths=curthreadinfo_BM->ti_thstartelapsedtime) > 0.0)
-    return clocktime_BM(CLOCK_THREAD_CPUTIME_ID) - ths;
+    return clocktime_BM(CLOCK_MONOTONIC) - ths;
   return NAN;
 } // end taskletelapsedtime_BM
 
