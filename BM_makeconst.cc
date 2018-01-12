@@ -102,8 +102,11 @@ int parse_cfile(const char*path, std::set<std::string>& bmconstset, bool verbose
     }
   while (srcin);
   if (verbose)
-    printf("processed %d lines from %s with %d occurrences\n",
-           linecnt, path, nbocc);
+    {
+      printf("processed %d lines from %s with %d occurrences\n",
+             linecnt, path, nbocc);
+      fflush(nullptr);
+    }
   return linecnt;
 } // end parse_cfile
 
@@ -118,10 +121,6 @@ int main(int argc, char**argv)
               "\t -C <generated-code> <C-files>...\n", argv[0]);
       exit(EXIT_FAILURE);
     }
-  fprintf(stderr, __FILE__ " @@running: ");
-  for (int ix=0; ix<argc; ix++) fprintf(stderr, " %s", argv[ix]);
-  fputc('\n', stderr);
-  fflush(stderr);
   if (!strcmp(argv[1], "-H"))
     {
       auto hpath = argv[2];
