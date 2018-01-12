@@ -1107,6 +1107,14 @@ threadinfo_stBM::thread_run(const int tix)
   curthreadinfo_BM = ti_array+tix;
   DBGPRINTF_BM("thread_run tix%d start tid#%ld", tix, (long) gettid_BM());
   usleep(2000+500*tix);
+  // I need to be sure that clocktime_BM(CLOCK_THREAD_CPUTIME_ID) is positive, so warmup the CPU
+  {
+    volatile double x = tix*0.02 + 0.001;
+    while (clocktime_BM(CLOCK_THREAD_CPUTIME_ID)==0.0 && x<0.5)
+      {
+        x += 0.25*sin(x + tix*0.0001) + 1.0e-6 + 1.0e-7*(getpid()%16);
+      };
+  }
   long loopcnt=0;
   for (;;)
     {
