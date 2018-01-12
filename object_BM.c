@@ -1217,9 +1217,12 @@ run_agenda_tasklet_BM (objectval_tyBM * obtk, struct failurelockset_stBM *flh)
                  objectval_tyBM * obtk; closure_tyBM * closv;
                  value_tyBM failres;);
   _.obtk = obtk;
-  if (isclosure_BM (obtk->ob_payl))
+  curfailurehandle_BM = NULL;
+  objlock_BM (_.obtk);
+  value_tyBM obpayl = obtk->ob_payl;
+  if (isclosure_BM (obpayl))
     {
-      _.closv = obtk->ob_payl;
+      _.closv = obpayl;
       volatile int failcod = 0;
       struct failurehandler_stBM fh = {
         .pA = {.htyp = typayl_FailureHandler_BM},
@@ -1248,5 +1251,6 @@ run_agenda_tasklet_BM (objectval_tyBM * obtk, struct failurelockset_stBM *flh)
                    failcod, failmsg);
         };
     }
+  objunlock_BM (_.obtk);
   curfailurehandle_BM = NULL;
 }                               /* end run_agenda_tasklet_BM */
