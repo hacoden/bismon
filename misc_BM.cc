@@ -915,6 +915,8 @@ struct threadinfo_stBM
   std::atomic_bool ti_stop;
   std::atomic_bool ti_gc;
   std::thread ti_thread;
+  double ti_thstartelapsedtime;
+  double ti_thstartcputime;
   std::atomic<threadidle_sigtBM*> ti_idlerout;
   static threadinfo_stBM ti_array[MAXNBWORKJOBS_BM+2];
   static std::atomic_bool ti_needgc;
@@ -944,6 +946,8 @@ struct threadinfo_stBM
   friend bool agenda_remove_tasklet_BM (objectval_tyBM * obtk);
   friend long agenda_get_counts_BM(long*pveryhigh, long*phigh, long*plow, long*pverylow);
   friend long agenda_get_tuples_BM(value_tyBM*pveryhightup, value_tyBM*phightup,  value_tyBM*plowtup, value_tyBM*pverylowtup);
+  friend double taskletcputime_BM (void);
+  friend double taskletelapsedtime_BM (void);
   ////
   threadinfo_stBM() : ti_magic(TI_MAGICNUM_BM)
   {
@@ -1160,7 +1164,11 @@ threadinfo_stBM::thread_run(const int tix)
           failurelockset_stBM fls;
           DBGPRINTF_BM("thread_run tix%d shouldrun tid#%ld elapsed %.3f s",
                        tix,  (long) gettid_BM(), elapsedtime_BM());
+          curthreadinfo_BM->ti_thstartcputime = clocktime_BM(CLOCK_THREAD_CPUTIME_ID);
+          curthreadinfo_BM->ti_thstartelapsedtime = clocktime_BM(CLOCK_MONOTONIC);
           run_agenda_tasklet_BM (taskob, &fls);
+          curthreadinfo_BM->ti_thstartcputime = 0.0;
+          curthreadinfo_BM->ti_thstartelapsedtime = 0.0;
           DBGPRINTF_BM("thread_run tix%d didrun tid#%ld elapsed %.3f s",
                        tix,  (long) gettid_BM(), elapsedtime_BM());
         }
@@ -1181,6 +1189,26 @@ threadinfo_stBM::thread_run(const int tix)
                endcnt, tix, (long) gettid_BM(), elapsedtime_BM());
 } // end thread_run
 
+extern double taskletcputime_BM (void) __attribute__((optimize("-O3")));
+extern double taskletelapsedtime_BM (void) __attribute__((optimize("-O3")));
+
+double
+taskletcputime_BM (void)
+{
+  double ths = 0.0;
+  if (curthreadinfo_BM && (ths=curthreadinfo_BM->ti_thstartcputime) > 0.0)
+    return clocktime_BM(CLOCK_THREAD_CPUTIME_ID) - ths;
+  return NAN;
+} // end taskletcputime_BM
+
+double
+taskletelapsedtime_BM (void)
+{
+  double ths = 0.0;
+  if (curthreadinfo_BM && (ths=curthreadinfo_BM->ti_thstartelapsedtime) > 0.0)
+    return clocktime_BM(CLOCK_THREAD_CPUTIME_ID) - ths;
+  return NAN;
+} // end taskletelapsedtime_BM
 
 int
 agenda_nb_work_jobs_BM (void)
