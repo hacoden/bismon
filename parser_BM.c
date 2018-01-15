@@ -1283,6 +1283,7 @@ parsergetvalue_BM (struct parser_stBM *pars,
   const struct parserops_stBM *parsops = pars->pars_ops;
   assert (!parsops || parsops->parsop_magic == PARSOPMAGIC_BM);
   bool nobuild = parsops && parsops->parsop_nobuild;
+#define TINYARGSNUM_BM 8
   LOCALFRAME_BM                 //
     (prevstkf, NULL,            //
      value_tyBM resval; value_tyBM macroval; objectval_tyBM * connobj;
@@ -1290,9 +1291,8 @@ parsergetvalue_BM (struct parser_stBM *pars,
      union
      {
      objectval_tyBM * elemobj; objectval_tyBM * compobj; value_tyBM sonval;
-     };
-#warning wrong datavect as local in parsergetvalue_BM
-     struct datavectval_stBM *contdvec);
+     }; objectval_tyBM * vecobj;
+     value_tyBM tinyargsarr[TINYARGSNUM_BM]);
   _.parsob = checkedparserowner_BM (pars);
   parserskipspaces_BM (pars, (struct stackframe_stBM *) &_);
   unsigned lineno = parserlineno_BM (pars);
@@ -1368,7 +1368,8 @@ parsergetvalue_BM (struct parser_stBM *pars,
       int tupcol = tok.tok_col;
       // a tuple : [ obj1 .... objn ]
       bool gotcompobj = false;
-      _.contdvec = nobuild ? NULL : datavect_grow_BM (NULL, 5);
+      int nbcomp = 0;
+      memset (_.tinyargsarr, 0, sizeof (_.tinyargsarr));
       while ((gotcompobj = false),      //
              (_.compobj =       //
               parsergetobject_BM (pars, (struct stackframe_stBM *) &_,  //
@@ -1376,7 +1377,25 @@ parsergetvalue_BM (struct parser_stBM *pars,
              gotcompobj)
         {
           if (!nobuild)
-            _.contdvec = datavect_append_BM (_.contdvec, _.compobj);
+            {
+              if (nbcomp < TINYARGSNUM_BM)
+                _.tinyargsarr[nbcomp++] = (value_tyBM) _.compobj;
+              else
+                {
+                  if (!_.vecobj)
+                    {
+                      _.vecobj = makeobj_BM ();
+                      objreservecomps_BM (_.vecobj, 2 * TINYARGSNUM_BM);
+                      for (int ix = 0; ix < TINYARGSNUM_BM; ix++)
+                        objappendcomp_BM (_.vecobj, _.tinyargsarr[ix]);
+                    };
+                  {
+                    objlock_BM (_.vecobj);
+                    objappendcomp_BM (_.vecobj, _.compobj);
+                    objunlock_BM (_.vecobj);
+                  }
+                }
+            }
         }
       parserskipspaces_BM (pars, (struct stackframe_stBM *) &_);
       parstoken_tyBM endtok =
@@ -1393,9 +1412,22 @@ parsergetvalue_BM (struct parser_stBM *pars,
            delim_leftbracket, tuplin, tupcol,
            delim_rightbracket, endlin, endcol);
       if (!nobuild)
-        _.resval = (value_tyBM)
-          maketuple_BM ((objectval_tyBM **) (_.contdvec->vec_data),
-                        datavectlen_BM (_.contdvec));
+        {
+          if (_.vecobj)
+            objlock_BM (_.vecobj);
+          _.resval =
+            (nbcomp < TINYARGSNUM_BM)
+            ? ((value_tyBM)
+               maketuple_BM ((objectval_tyBM **) (_.tinyargsarr),
+                             nbcomp)) : ((value_tyBM)
+                                         maketuple_BM ((objectval_tyBM
+                                                        **) (objcompdata_BM
+                                                             (_.vecobj)),
+                                                       objnbcomps_BM
+                                                       (_.vecobj)));
+          if (_.vecobj)
+            objunlock_BM (_.vecobj);
+        }
       else
         _.resval = NULL;
       *pgotval = true;
@@ -1409,7 +1441,7 @@ parsergetvalue_BM (struct parser_stBM *pars,
       int setlin = tok.tok_line;
       int setcol = tok.tok_col;
       bool gotelemobj = false;
-      _.contdvec = nobuild ? NULL : datavect_grow_BM (NULL, 5);
+      int nbcomp = 0;
       while ((gotelemobj = false),      //
              (_.elemobj =       //
               parsergetobject_BM (pars, (struct stackframe_stBM *) &_,  //
@@ -1417,7 +1449,25 @@ parsergetvalue_BM (struct parser_stBM *pars,
              gotelemobj)
         {
           if (!nobuild)
-            _.contdvec = datavect_append_BM (_.contdvec, _.elemobj);
+            {
+              if (nbcomp < TINYARGSNUM_BM)
+                _.tinyargsarr[nbcomp++] = (value_tyBM) _.compobj;
+              else
+                {
+                  if (!_.vecobj)
+                    {
+                      _.vecobj = makeobj_BM ();
+                      objreservecomps_BM (_.vecobj, 2 * TINYARGSNUM_BM);
+                      for (int ix = 0; ix < TINYARGSNUM_BM; ix++)
+                        objappendcomp_BM (_.vecobj, _.tinyargsarr[ix]);
+                    };
+                  {
+                    objlock_BM (_.vecobj);
+                    objappendcomp_BM (_.vecobj, _.compobj);
+                    objunlock_BM (_.vecobj);
+                  }
+                }
+            }
         }
       parserskipspaces_BM (pars, (struct stackframe_stBM *) &_);
       parstoken_tyBM endtok =
@@ -1433,9 +1483,23 @@ parsergetvalue_BM (struct parser_stBM *pars,
           (pars, depth,
            delim_leftbrace, setlin, setcol, delim_rightbrace, endlin, endcol);
       if (!nobuild)
-        _.resval = (value_tyBM)
-          makeset_BM ((const objectval_tyBM **) (_.contdvec->vec_data),
-                      datavectlen_BM (_.contdvec));
+        {
+          if (_.vecobj)
+            objlock_BM (_.vecobj);
+          _.resval =
+            (nbcomp < TINYARGSNUM_BM)
+            ? ((value_tyBM)
+               makeset_BM ((const objectval_tyBM **) (_.tinyargsarr),
+                           nbcomp)) : ((value_tyBM) makeset_BM ((const
+                                                                 objectval_tyBM
+                                                                 **)
+                                                                (objcompdata_BM
+                                                                 (_.vecobj)),
+                                                                objnbcomps_BM
+                                                                (_.vecobj)));
+          if (_.vecobj)
+            objunlock_BM (_.vecobj);
+        }
       else
         _.resval = NULL;
       *pgotval = true;
@@ -1506,7 +1570,7 @@ parsergetvalue_BM (struct parser_stBM *pars,
       if (lefttok.tok_kind == plex_DELIM
           || lefttok.tok_delim == delim_leftparen)
         {
-          _.contdvec = nobuild ? NULL : datavect_grow_BM (NULL, 3);
+          int nbcomp = 0;
           bool gotson = false;
           while ((gotson = false),      //
                  (_.sonval =    //
@@ -1515,7 +1579,25 @@ parsergetvalue_BM (struct parser_stBM *pars,
                  gotson)
             {
               if (!nobuild)
-                _.contdvec = datavect_append_BM (_.contdvec, _.sonval);
+                {
+                  if (nbcomp < TINYARGSNUM_BM)
+                    _.tinyargsarr[nbcomp++] = (value_tyBM) _.compobj;
+                  else
+                    {
+                      if (!_.vecobj)
+                        {
+                          _.vecobj = makeobj_BM ();
+                          objreservecomps_BM (_.vecobj, 2 * TINYARGSNUM_BM);
+                          for (int ix = 0; ix < TINYARGSNUM_BM; ix++)
+                            objappendcomp_BM (_.vecobj, _.tinyargsarr[ix]);
+                        };
+                      {
+                        objlock_BM (_.vecobj);
+                        objappendcomp_BM (_.vecobj, _.compobj);
+                        objunlock_BM (_.vecobj);
+                      }
+                    }
+                }
             }
           parserskipspaces_BM (pars, (struct stackframe_stBM *) &_);
           parstoken_tyBM endtok =
@@ -1533,10 +1615,17 @@ parsergetvalue_BM (struct parser_stBM *pars,
                delim_leftparen, leftlin, leftcol,
                delim_rightparen, endlin, endcol);
           if (!nobuild)
-            _.resval = (value_tyBM)
-              makenode_BM (_.connobj,
-                           datavectlen_BM (_.contdvec),
-                           (const value_tyBM *) (_.contdvec->vec_data));
+            {
+              if (_.vecobj)
+                objlock_BM (_.vecobj);
+              _.resval = (value_tyBM)
+                (nbcomp < TINYARGSNUM_BM)
+                ? makenode_BM (_.connobj, nbcomp, (_.tinyargsarr))
+                : makenode_BM (_.connobj, objnbcomps_BM (_.vecobj),
+                               (objcompdata_BM (_.vecobj)));
+              if (_.vecobj)
+                objunlock_BM (_.vecobj);
+            }
           else
             _.resval = NULL;
           *pgotval = true;
@@ -1607,8 +1696,9 @@ parsergetvalue_BM (struct parser_stBM *pars,
                               "missing left parenthesis for closure");
       int leftlin = lefttok.tok_line;
       int leftcol = lefttok.tok_col;
-      _.contdvec = nobuild ? NULL : datavect_grow_BM (NULL, 3);
       bool gotson = false;
+      int nbcomp = 0;
+      memset (_.tinyargsarr, 0, sizeof (_.tinyargsarr));
       while ((gotson = false),  //
              (_.sonval =        //
               parsergetvalue_BM (pars, (struct stackframe_stBM *) &_,   //
@@ -1616,7 +1706,25 @@ parsergetvalue_BM (struct parser_stBM *pars,
              gotson)
         {
           if (!nobuild)
-            _.contdvec = datavect_append_BM (_.contdvec, _.sonval);
+            {
+              if (nbcomp < TINYARGSNUM_BM)
+                _.tinyargsarr[nbcomp++] = (value_tyBM) _.sonval;
+              else
+                {
+                  if (!_.vecobj)
+                    {
+                      _.vecobj = makeobj_BM ();
+                      objreservecomps_BM (_.vecobj, 2 * TINYARGSNUM_BM);
+                      for (int ix = 0; ix < TINYARGSNUM_BM; ix++)
+                        objappendcomp_BM (_.vecobj, _.tinyargsarr[ix]);
+                    };
+                  {
+                    objlock_BM (_.vecobj);
+                    objappendcomp_BM (_.vecobj, _.sonval);
+                    objunlock_BM (_.vecobj);
+                  }
+                }
+            }
         }
       parserskipspaces_BM (pars, (struct stackframe_stBM *) &_);
       parstoken_tyBM endtok =
@@ -1634,10 +1742,17 @@ parsergetvalue_BM (struct parser_stBM *pars,
            delim_leftparen, leftlin, leftcol,
            delim_rightparen, endlin, endcol);
       if (!nobuild)
-        _.resval = (value_tyBM)
-          makeclosure_BM (_.connobj,
-                          datavectlen_BM (_.contdvec),
-                          (const value_tyBM *) (_.contdvec->vec_data));
+        {
+          if (_.vecobj)
+            objlock_BM (_.vecobj);
+          _.resval = (value_tyBM)
+            (nbcomp < TINYARGSNUM_BM)
+            ? makeclosure_BM (_.connobj, nbcomp, (_.tinyargsarr))
+            : makeclosure_BM (_.connobj, objnbcomps_BM (_.vecobj),
+                              (objcompdata_BM (_.vecobj)));
+          if (_.vecobj)
+            objunlock_BM (_.vecobj);
+        }
       else
         _.resval = NULL;
       *pgotval = true;
@@ -1668,8 +1783,9 @@ parsergetvalue_BM (struct parser_stBM *pars,
                               "missing left parenthesis for readmacro");
       int leftlin = lefttok.tok_line;
       int leftcol = lefttok.tok_col;
-      _.contdvec = nobuild ? NULL : datavect_grow_BM (NULL, 3);
       bool gotson = false;
+      int nbsons = 0;
+      memset (_.tinyargsarr, 0, sizeof (_.tinyargsarr));
       while ((gotson = false),  //
              (_.sonval =        //
               parsergetvalue_BM //
@@ -1679,7 +1795,25 @@ parsergetvalue_BM (struct parser_stBM *pars,
              gotson)
         {
           if (!nobuild)
-            _.contdvec = datavect_append_BM (_.contdvec, _.sonval);
+            {
+              if (nbsons < TINYARGSNUM_BM)
+                _.tinyargsarr[nbsons++] = (value_tyBM) _.sonval;
+              else
+                {
+                  if (!_.vecobj)
+                    {
+                      _.vecobj = makeobj_BM ();
+                      objreservecomps_BM (_.vecobj, 2 * TINYARGSNUM_BM);
+                      for (int ix = 0; ix < TINYARGSNUM_BM; ix++)
+                        objappendcomp_BM (_.vecobj, _.tinyargsarr[ix]);
+                    };
+                  {
+                    objlock_BM (_.vecobj);
+                    objappendcomp_BM (_.vecobj, _.sonval);
+                    objunlock_BM (_.vecobj);
+                  }
+                }
+            }
         }
       parserskipspaces_BM (pars, (struct stackframe_stBM *) &_);
       parstoken_tyBM endtok =
@@ -1699,9 +1833,10 @@ parsergetvalue_BM (struct parser_stBM *pars,
       if (!nobuild)
         {
           _.macroval = (value_tyBM)
-            makenode_BM (_.connobj,
-                         datavectlen_BM (_.contdvec),
-                         (const value_tyBM *) (_.contdvec->vec_data));
+            (nbsons < TINYARGSNUM_BM)
+            ? makenode_BM (_.connobj, nbsons, (_.tinyargsarr))
+            : makenode_BM (_.connobj, objnbcomps_BM (_.vecobj),
+                           (objcompdata_BM (_.vecobj)));
           _.resval =            //
             parsops->parsop_expand_readmacro_rout
             (pars, nodlin, nodcol, depth, _.macroval,
