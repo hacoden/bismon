@@ -313,7 +313,7 @@ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
               else
                 objstrbufferprintf_BM (_.bufob, "\"&\t\"");
             }
-          else
+          else if (nextp < bend)
             {
               if (uc == '\n')
                 objstrbufferprintf_BM (_.bufob, "\\n\"");
