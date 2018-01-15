@@ -1,5 +1,5 @@
 // generated file store1.bmon
-// for 42 objects
+// for 43 objects
 // with 0 modules
 
 
@@ -278,6 +278,17 @@ _4hIFpPfuaR1_39hcoYwRAm0 |=objectty|
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "to give some origin of the object"
 !)_1xhcI0ZnQ6f_5xOLATXqawx
+
+
+
+!(_70NgEtiUJSh_4E82Y6lFlHv |=parse_unary|
+!~ name (~ parse_unary
+~)
+!@ 1516005732.68
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "for unary parsed connectives, gives the closure"& " telling if it accepts an unary usage""
+!)_70NgEtiUJSh_4E82Y6lFlHv
 
 
 
