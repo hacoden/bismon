@@ -1254,16 +1254,26 @@ parsertokenstartvalue_BM (struct parser_stBM * pars, parstoken_tyBM tok)
       || (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_caret && parsops && parsops->parsop_expand_readmacro_rout)       // read-macro expansion
       || (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_dollar && parsops && parsops->parsop_expand_dollarval_rout)      // $var value
       || (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_dollarleftparen && parsops && parsops->parsop_expand_valexp_rout)        // $( ... )
+      || (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_exclam && parsops && parsops->parsop_accept_unary_rout)  // ! ...
+      || (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_question && parsops && parsops->parsop_accept_unary_rout)        // ? ...
+      || (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_equal && parsops && parsops->parsop_accept_unary_rout)   // = ...
+      || (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_colon && parsops && parsops->parsop_accept_unary_rout)   // : ...
     )
     return true;
   return false;
 }                               /* end parsertokenstartvalue_BM */
 
 
+static value_tyBM parsergetunary_BM (struct parser_stBM *pars,
+                                     struct stackframe_stBM *prevstkf,
+                                     unsigned lineno, unsigned colpos,
+                                     int depth,
+                                     objectval_tyBM * unaryconn,
+                                     bool * pgotval);
 
 value_tyBM
-parsergetvalue_BM (struct parser_stBM * pars,
-                   struct stackframe_stBM * prevstkf, int depth,
+parsergetvalue_BM (struct parser_stBM *pars,
+                   struct stackframe_stBM *prevstkf, int depth,
                    bool * pgotval)
 {
   if (!isparser_BM ((const value_tyBM) pars))
@@ -1281,6 +1291,7 @@ parsergetvalue_BM (struct parser_stBM * pars,
      {
      objectval_tyBM * elemobj; objectval_tyBM * compobj; value_tyBM sonval;
      };
+#warning wrong datavect as local in parsergetvalue_BM
      struct datavectval_stBM *contdvec);
   _.parsob = checkedparserowner_BM (pars);
   parserskipspaces_BM (pars, (struct stackframe_stBM *) &_);
@@ -1824,6 +1835,46 @@ parsergetvalue_BM (struct parser_stBM * pars,
       *pgotval = true;
       return (objectval_tyBM *) _.resval;
     }
+  /// parse  ! <val>
+  else if (tok.tok_kind == plex_DELIM
+           && tok.tok_delim == delim_exclam
+           && parsops && parsops->parsop_accept_unary_rout)
+    {
+      bool gotunary = false;
+      _.resval =
+        parsergetunary_BM (pars, (struct stackframe_stBM *) &_, lineno,
+                           colpos, depth + 1, BMP_exclam, &gotunary);
+    }
+  /// parse  ? <val>
+  else if (tok.tok_kind == plex_DELIM
+           && tok.tok_delim == delim_question
+           && parsops && parsops->parsop_accept_unary_rout)
+    {
+      bool gotunary = false;
+      _.resval =
+        parsergetunary_BM (pars, (struct stackframe_stBM *) &_, lineno,
+                           colpos, depth + 1, BMP_question, &gotunary);
+    }
+  /// parse  = <val>
+  else if (tok.tok_kind == plex_DELIM
+           && tok.tok_delim == delim_equal
+           && parsops && parsops->parsop_accept_unary_rout)
+    {
+      bool gotunary = false;
+      _.resval =
+        parsergetunary_BM (pars, (struct stackframe_stBM *) &_, lineno,
+                           colpos, depth + 1, BMP_equal, &gotunary);
+    }
+  /// parse  : <val>
+  else if (tok.tok_kind == plex_DELIM
+           && tok.tok_delim == delim_equal
+           && parsops && parsops->parsop_accept_unary_rout)
+    {
+      bool gotunary = false;
+      _.resval =
+        parsergetunary_BM (pars, (struct stackframe_stBM *) &_, lineno,
+                           colpos, depth + 1, BMP_colon, &gotunary);
+    }
   //////
 failure:
   parserseek_BM (pars, lineno, colpos);
@@ -1832,9 +1883,31 @@ failure:
 }                               /* end of parsergetvalue_BM */
 
 
+
 value_tyBM
-parsergetchunk_BM (struct parser_stBM * pars,
-                   struct stackframe_stBM * prevstkf, int depth,
+parsergetunary_BM (struct parser_stBM * pars,
+                   struct stackframe_stBM * prevstkf,
+                   unsigned lineno, unsigned colpos,
+                   int depth, objectval_tyBM * unaryconn, bool * pgotval)
+{
+  LOCALFRAME_BM                 //
+    (prevstkf, NULL,            //
+     value_tyBM resval; objectval_tyBM * uconnobj; objectval_tyBM * parsob;
+    );
+  _.parsob = checkedparserowner_BM (pars);
+  assert (isobject_BM (unaryconn));
+  _.uconnobj = unaryconn;
+#warning unimplemented parsergetunary_BM
+  parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno,
+                        colpos, "unimplemented parsergetunary_BM %s",
+                        objectdbg_BM (unaryconn));
+
+}                               /* end parsergetunary_BM */
+
+
+value_tyBM
+parsergetchunk_BM (struct parser_stBM *pars,
+                   struct stackframe_stBM *prevstkf, int depth,
                    bool * pgotchunk)
 {
   if (!isparser_BM ((const value_tyBM) pars))

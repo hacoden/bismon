@@ -1,5 +1,5 @@
 // generated file store1.bmon
-// for 43 objects
+// for 47 objects
 // with 0 modules
 
 
@@ -107,6 +107,17 @@ _7jHHqKoSEZf_6G1dslcAaT8
 
 
 
+!(_89fbFwzcTXz_3OsnBfN89BE |=colon|
+!~ name (~ colon
+~)
+!@ 1516020204.58
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "for unary parsed :<val>"
+!)_89fbFwzcTXz_3OsnBfN89BE
+
+
+
 !(_3EKD6vcwegI_3LMuXHuazib |=command_readmacro|
 !~ name (~ command_readmacro
 ~)
@@ -175,6 +186,28 @@ _7jHHqKoSEZf_6G1dslcAaT8
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "selector to emit a module"
 !)_3MZiKuLf93a_3YTtdOHeUH8
+
+
+
+!(_9HNJ3tJw4WW_3bTqGMi75wj |=equal|
+!~ name (~ equal
+~)
+!@ 1516020204.58
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "for unary parsed =<val>"
+!)_9HNJ3tJw4WW_3bTqGMi75wj
+
+
+
+!(_0e54seiZEXF_1Myf620cHoB |=exclam|
+!~ name (~ exclam
+~)
+!@ 1516020204.58
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "for unary parsed !<val>"
+!)_0e54seiZEXF_1Myf620cHoB
 
 
 
@@ -300,6 +333,17 @@ _4hIFpPfuaR1_39hcoYwRAm0 |=objectty|
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "to postpone loading modification"
 !)_7kMNgL8eJ09_6aEpofzWJDP
+
+
+
+!(_9G7cmLKeL7j_0ILBAfDNflG |=question|
+!~ name (~ question
+~)
+!@ 1516020204.58
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "for unary parsed ?<val>"
+!)_9G7cmLKeL7j_0ILBAfDNflG
 
 
 
