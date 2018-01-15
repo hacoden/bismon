@@ -422,6 +422,15 @@ objnbcomps_BM (const objectval_tyBM * obj)
   return datavectlen_BM (obj->ob_compvec);
 }                               /* end objnbcomps_BM */
 
+value_tyBM *
+objcompdata_BM (const objectval_tyBM * obj)
+{
+  if (!isobject_BM ((const value_tyBM) obj))
+    return NULL;
+  if (!obj->ob_compvec)
+    return NULL;
+  return (value_tyBM *) datavectdata_BM (obj->ob_compvec);
+}                               /* end objcompdata_BM */
 
 
 const setval_tyBM *

@@ -272,6 +272,7 @@ extern value_tyBM send8_BM (const value_tyBM recv,
 
 
 static inline unsigned objnbcomps_BM (const objectval_tyBM * obj);
+static inline value_tyBM *objcompdata_BM (const objectval_tyBM * obj);
 static inline value_tyBM objgetcomp_BM (const objectval_tyBM * obj, int rk);
 static inline void objputcomp_BM (objectval_tyBM * obj, int rk,
                                   const value_tyBM compval);
