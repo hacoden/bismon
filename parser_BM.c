@@ -1546,11 +1546,26 @@ parsergetvalue_BM (struct parser_stBM * pars,
                                     "rejected unary node %s",
                                     coname ? : connid);
             }
-#warning incomplete unary node parsing
-          goto failed_node_parsing;
+          parserseek_BM (pars, leftlin, leftcol);
+          bool gotson = false;
+          _.sonval =            //
+            parsergetvalue_BM (pars, (struct stackframe_stBM *) &_,     //
+                               depth + 1, &gotson);
+          if (!gotson)
+            {
+              char *coname = findobjectname_BM (_.connobj);
+              parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,        //
+                                    "missing son for unary node %s",
+                                    coname ? : connid);
+            }
+          if (!nobuild)
+            _.resval = (value_tyBM) makenode_BM (_.connobj, 1, &_.sonval);
+          else
+            _.resval = NULL;
+          *pgotval = true;
+          return _.resval;
         }
       else
-      failed_node_parsing:
         {
           char *coname = findobjectname_BM (_.connobj);
           parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,    //
