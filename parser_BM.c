@@ -1485,49 +1485,78 @@ parsergetvalue_BM (struct parser_stBM * pars,
       if (!gotconnobj)
         parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,      //
                               "missing connective object of node after *");
+      char connid[32];
+      memset (connid, 0, sizeof (connid));
+      idtocbuf32_BM (objid_BM (_.connobj), connid);
       parstoken_tyBM lefttok =
         parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
-      if (lefttok.tok_kind != plex_DELIM
-          || lefttok.tok_delim != delim_leftparen)
-        parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,      //
-                              "missing left parenthesis for node");
       int leftlin = lefttok.tok_line;
       int leftcol = lefttok.tok_col;
-      _.contdvec = nobuild ? NULL : datavect_grow_BM (NULL, 3);
-      bool gotson = false;
-      while ((gotson = false),  //
-             (_.sonval =        //
-              parsergetvalue_BM (pars, (struct stackframe_stBM *) &_,   //
-                                 depth + 1, &gotson)),  //
-             gotson)
+      if (lefttok.tok_kind == plex_DELIM
+          || lefttok.tok_delim == delim_leftparen)
         {
+          _.contdvec = nobuild ? NULL : datavect_grow_BM (NULL, 3);
+          bool gotson = false;
+          while ((gotson = false),      //
+                 (_.sonval =    //
+                  parsergetvalue_BM (pars, (struct stackframe_stBM *) &_,       //
+                                     depth + 1, &gotson)),      //
+                 gotson)
+            {
+              if (!nobuild)
+                _.contdvec = datavect_append_BM (_.contdvec, _.sonval);
+            }
+          parserskipspaces_BM (pars, (struct stackframe_stBM *) &_);
+          parstoken_tyBM endtok =
+            parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
+          if (endtok.tok_kind != plex_DELIM
+              || endtok.tok_delim != delim_rightparen)
+            parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,  //
+                                  "missing right parenthesis for node");
+          int endlin = endtok.tok_line;
+          int endcol = endtok.tok_col;
+          if (parsops && parsops->parsop_decorate_start_nesting_rout)
+            parsops->parsop_decorate_start_nesting_rout
+              (pars, depth,
+               delim_star, nodlin, nodcol,
+               delim_leftparen, leftlin, leftcol,
+               delim_rightparen, endlin, endcol);
           if (!nobuild)
-            _.contdvec = datavect_append_BM (_.contdvec, _.sonval);
+            _.resval = (value_tyBM)
+              makenode_BM (_.connobj,
+                           datavectlen_BM (_.contdvec),
+                           (const value_tyBM *) (_.contdvec->vec_data));
+          else
+            _.resval = NULL;
+          *pgotval = true;
+          return _.resval;
         }
-      parserskipspaces_BM (pars, (struct stackframe_stBM *) &_);
-      parstoken_tyBM endtok =
-        parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
-      if (endtok.tok_kind != plex_DELIM
-          || endtok.tok_delim != delim_rightparen)
-        parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,      //
-                              "missing right parenthesis for node");
-      int endlin = endtok.tok_line;
-      int endcol = endtok.tok_col;
-      if (parsops && parsops->parsop_decorate_start_nesting_rout)
-        parsops->parsop_decorate_start_nesting_rout
-          (pars, depth,
-           delim_star, nodlin, nodcol,
-           delim_leftparen, leftlin, leftcol,
-           delim_rightparen, endlin, endcol);
-      if (!nobuild)
-        _.resval = (value_tyBM)
-          makenode_BM (_.connobj,
-                       datavectlen_BM (_.contdvec),
-                       (const value_tyBM *) (_.contdvec->vec_data));
+      else if (parsertokenstartvalue_BM (pars, lefttok)
+               && parsops && parsops->parsop_accept_unary_rout)
+        {
+          bool okunary =
+            parsops->parsop_accept_unary_rout (pars, lineno, colpos,
+                                               depth + 1,
+                                               _.connobj,
+                                               (struct stackframe_stBM *) &_);
+          if (!okunary)
+            {
+              char *coname = findobjectname_BM (_.connobj);
+              parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,        //
+                                    "rejected unary node %s",
+                                    coname ? : connid);
+            }
+#warning incomplete unary node parsing
+          goto failed_node_parsing;
+        }
       else
-        _.resval = NULL;
-      *pgotval = true;
-      return _.resval;
+      failed_node_parsing:
+        {
+          char *coname = findobjectname_BM (_.connobj);
+          parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,    //
+                                "missing arguments for node %s",
+                                coname ? : connid);
+        }
     }
   //
   // parse closures

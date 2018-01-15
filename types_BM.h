@@ -448,6 +448,10 @@ typedef const objectval_tyBM *parser_expand_objexp_sigBM
 typedef value_tyBM parser_expand_readmacro_sigBM
   (struct parser_stBM *pars, unsigned lineno, unsigned colpos, int depth,
    const node_tyBM * nod, struct stackframe_stBM *stkf);
+// parse and accept unary * oper <arg> expansion
+typedef bool parser_accept_unary_sigBM
+  (struct parser_stBM *pars, unsigned lineno, unsigned colpos, int depth,
+   objectval_tyBM * unconnob, struct stackframe_stBM *stkf);
 // decorate the comment signs
 typedef void parser_decorate_comment_sign_sigBM
   (struct parser_stBM *pars, unsigned lineno, unsigned colpos,
@@ -525,6 +529,8 @@ struct parserops_stBM
   parser_expand_objexp_sigBM *parsop_expand_objexp_rout;
   // parse then expand ^ object (....) readmacro
   parser_expand_readmacro_sigBM *parsop_expand_readmacro_rout;
+  // parse & accept unary node
+  parser_accept_unary_sigBM *parsop_accept_unary_rout;
   // decoration of comments
   parser_decorate_comment_sign_sigBM *parsop_decorate_comment_sign_rout;
   parser_decorate_comment_inside_sigBM *parsop_decorate_comment_inside_rout;
