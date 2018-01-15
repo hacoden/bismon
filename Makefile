@@ -164,6 +164,5 @@ count:
 redump: bismon
 	time ./bismon --dump-after-load . --batch
 outdump: bismon
-	rm -rf /tmp/bd
-	time ./bismon --dump-after-load /tmp/bd --batch
+	time ./bismon  --run-command 'rm -rvf /tmp/bd'  --dump-after-load /tmp/bd --batch
 	for f in /tmp/bd/* ; do cmp $$f $$(basename $$f); done
