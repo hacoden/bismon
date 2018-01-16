@@ -56,6 +56,9 @@ static parser_expand_dollarval_sigBM parsdollarval_guicmd_BM;
 // object, show it in dollar_cmdtag
 static parser_expand_dollarobj_sigBM parsdollarobj_guicmd_BM;
 
+// parse €<name> or $*<name>
+static parser_expand_newname_sigBM parsmakenewname_guicmd_BM;
+
 // parse inside $(...),
 // handle !> <obselector> (...) # to send a message for its result
 // handle ( .... ) # to apply a function
@@ -183,6 +186,7 @@ const struct parserops_stBM parsop_command_build_BM = {
   .parsop_error_rout = parserror_guicmd_BM,
   .parsop_expand_dollarobj_rout = parsdollarobj_guicmd_BM,
   .parsop_expand_dollarval_rout = parsdollarval_guicmd_BM,
+  .parsop_expand_newname_rout = parsmakenewname_guicmd_BM,
   .parsop_expand_valexp_rout = parsvalexp_guicmd_BM,
   .parsop_expand_objexp_rout = parsobjexp_guicmd_BM,
   .parsop_expand_readmacro_rout = parsreadmacroexp_guicmd_BM,
@@ -206,6 +210,7 @@ const struct parserops_stBM parsop_command_nobuild_BM = {
   .parsop_error_rout = parserror_guicmd_BM,
   .parsop_expand_dollarobj_rout = parsdollarobj_guicmd_BM,
   .parsop_expand_dollarval_rout = parsdollarval_guicmd_BM,
+  .parsop_expand_newname_rout = parsmakenewname_guicmd_BM,
   .parsop_expand_valexp_rout = parsvalexp_guicmd_BM,
   .parsop_expand_objexp_rout = parsobjexp_guicmd_BM,
   .parsop_expand_readmacro_rout = parsreadmacroexp_guicmd_BM,
@@ -1684,6 +1689,38 @@ parsdollarobj_guicmd_BM (struct parser_stBM *pars,
   gtk_text_buffer_apply_tag (commandbuf_BM, dollar_cmdtag_BM, &it, &endit);
   return (const objectval_tyBM *) _.val;
 }                               /* end parsdollarobj_guicmd_BM */
+
+
+// for €<newname> or $*<newname>
+const objectval_tyBM *parsmakenewname_guicmd_BM
+  (struct parser_stBM *pars, unsigned lineno, unsigned colpos,
+   const value_tyBM varname, struct stackframe_stBM *stkf)
+{
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 objectval_tyBM * namedobj;
+                 const stringval_tyBM * strnam; objectval_tyBM * parsob;
+    );
+  if (!isparser_BM (pars))
+    return NULL;
+  _.parsob = checkedparserowner_BM (pars);
+  assert (isstring_BM (varname));
+  _.strnam = varname;
+  if (!validname_BM (bytstring_BM (varname)))
+    parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,
+                          "invalid new name", bytstring_BM (varname));
+  _.namedobj = findnamedobj_BM (bytstring_BM (varname));
+  if (_.namedobj)
+    return _.namedobj;
+  _.namedobj = makeobj_BM ();
+  objtouchnow_BM (_.namedobj);
+  objputspacenum_BM (_.namedobj, GlobalSp_BM);
+  registername_BM (_.namedobj, bytstring_BM (_.strnam));
+  log_begin_message_BM ();
+  log_puts_message_BM ("created global new named object ");
+  log_object_message_BM (_.namedobj);
+  log_end_message_BM ();
+  return _.namedobj;
+}                               /* end parsmakenewname_guicmd_BM */
 
 static bool
 parseobjectcompl_guicmd_BM (struct parser_stBM *pars,
