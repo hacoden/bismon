@@ -1105,6 +1105,10 @@ parsertokenstartobject_BM (struct parser_stBM * pars, parstoken_tyBM tok)
   if (tok.tok_kind == plex_NAMEDOBJ
       || tok.tok_kind == plex_ID
       || (tok.tok_kind == plex_DELIM
+          && tok.tok_delim == delim_dollarstar)
+      || (tok.tok_kind == plex_DELIM
+          && tok.tok_delim == delim_euro)
+      || (tok.tok_kind == plex_DELIM
           && tok.tok_delim == delim_dollarleftbracket
           && parsops && parsops->parsop_expand_objexp_rout)
       || (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_dollarcolon
@@ -1224,6 +1228,39 @@ parsergetobject_BM (struct parser_stBM * pars,
                               resbuf);
       *pgotobj = true;
       return (objectval_tyBM *) _.resobj;
+    }
+  // parse $*<name> or €<name> to possibly create a named object
+  else if (tok.tok_kind == plex_DELIM
+           && (tok.tok_delim == delim_dollarstar
+               || tok.tok_delim == delim_euro))
+    {
+      parstoken_tyBM vartok =
+        parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
+      if (vartok.tok_kind == plex_NAMEDOBJ)
+        {
+          _.resobj = vartok.tok_namedobj;
+          *pgotobj = true;
+          return (objectval_tyBM *) _.resobj;
+        }
+      else if (vartok.tok_kind == plex_CNAME)
+        {
+          if (!nobuild)
+            {
+              parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
+                                    lineno, colpos,
+                                    "unimplemented parsing of €");
+#warning unimplemented parsing of €<newname>
+            }
+          else
+            _.resobj = NULL;
+          *pgotobj = true;
+          return (objectval_tyBM *) _.resobj;
+        }
+      else
+        parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno,
+                              colpos, "expect name after %s",
+                              (tok.tok_delim ==
+                               delim_dollarstar) ? "$*" : "€");
     }
 failure:
   parserseek_BM (pars, lineno, colpos);
