@@ -836,9 +836,11 @@ parse_cords_BM (struct parser_stBM *pars, struct stackframe_stBM *stkf)
 }                               /* end parse_cords_BM */
 
 
+#define EUROBYTELEN_BM 3        /* strlen("€") */
 parstoken_tyBM
 parsertokenget_BM (struct parser_stBM * pars, struct stackframe_stBM * stkf)
 {
+  assert (strlen ("€") == EUROBYTELEN_BM);
   if (!isparser_BM ((const value_tyBM) pars))
     return EMPTY_TOKEN_BM;
   const struct parserops_stBM *parsop = pars->pars_ops;
@@ -1047,7 +1049,6 @@ again:
       .tok_kind = plex_DELIM,.tok_line = curlin,.tok_col =
           curcol,.tok_delim = delim_dollar};
     }
-#warning should handle dollar followed by non-letter
   // special case for $:<var> the colon should be immediately followed
   // by a letter
   else if (restlin[0] == '$' && restlin[1] == ':' && isalpha (restlin[2]))
@@ -1058,6 +1059,27 @@ again:
       {
       .tok_kind = plex_DELIM,.tok_line = curlin,.tok_col =
           curcol,.tok_delim = delim_dollarcolon};
+    }
+  // special case for  $*<name>, the letter should follow immediately
+  else if (restlin[0] == '$' && restlin[1] == '*' && isalpha (restlin[2]))
+    {
+      pars->pars_curbyte += 2;
+      pars->pars_colpos += 2;
+      return (parstoken_tyBM)
+      {
+      .tok_kind = plex_DELIM,.tok_line = curlin,.tok_col =
+          curcol,.tok_delim = delim_dollarstar};
+    }
+  // special case for  €<name>, the letter should follow immediately
+  else if (!strncmp (restlin, "€", EUROBYTELEN_BM)
+           && isalpha (restlin[EUROBYTELEN_BM]))
+    {
+      pars->pars_curbyte += EUROBYTELEN_BM;
+      pars->pars_colpos += EUROBYTELEN_BM;
+      return (parstoken_tyBM)
+      {
+      .tok_kind = plex_DELIM,.tok_line = curlin,.tok_col =
+          curcol,.tok_delim = delim_euro};
     }
 #warning should handle dollar colon followed by non-letter
   char delimstr[16];
@@ -1084,6 +1106,14 @@ again:
     parsererrorprintf_BM (pars, stkf, pars->pars_lineno, pars->pars_colpos,
                           "dollar-colon not immediately followed by letter %s",
                           restlin);
+  else if (curdelim == delim_dollarstar)
+    parsererrorprintf_BM (pars, stkf, pars->pars_lineno, pars->pars_colpos,
+                          "dollar-star not immediately followed by letter %s",
+                          restlin);
+  else if (curdelim == delim_euro)
+    parsererrorprintf_BM (pars, stkf, pars->pars_lineno, pars->pars_colpos,
+                          "euro not immediately followed by letter %s",
+                          restlin);
 
   pars->pars_curbyte += strlen (delimstr);
   pars->pars_colpos += g_utf8_strlen (delimstr, -1);
@@ -1105,9 +1135,11 @@ parsertokenstartobject_BM (struct parser_stBM * pars, parstoken_tyBM tok)
   if (tok.tok_kind == plex_NAMEDOBJ
       || tok.tok_kind == plex_ID
       || (tok.tok_kind == plex_DELIM
-          && tok.tok_delim == delim_dollarstar)
+          && tok.tok_delim == delim_dollarstar
+          && parsops && parsops->parsop_expand_newname_rout)
       || (tok.tok_kind == plex_DELIM
-          && tok.tok_delim == delim_euro)
+          && tok.tok_delim == delim_euro
+          && parsops && parsops->parsop_expand_newname_rout)
       || (tok.tok_kind == plex_DELIM
           && tok.tok_delim == delim_dollarleftbracket
           && parsops && parsops->parsop_expand_objexp_rout)
@@ -1232,7 +1264,8 @@ parsergetobject_BM (struct parser_stBM * pars,
   // parse $*<name> or €<name> to possibly create a named object
   else if (tok.tok_kind == plex_DELIM
            && (tok.tok_delim == delim_dollarstar
-               || tok.tok_delim == delim_euro))
+               || tok.tok_delim == delim_euro)
+           && parsops && parsops->parsop_expand_newname_rout)
     {
       parstoken_tyBM vartok =
         parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
@@ -1246,10 +1279,9 @@ parsergetobject_BM (struct parser_stBM * pars,
         {
           if (!nobuild)
             {
-              parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
-                                    lineno, colpos,
-                                    "unimplemented parsing of €");
-#warning unimplemented parsing of €<newname>
+              _.resobj = parsops->parsop_expand_newname_rout    //
+                (pars, lineno, colpos,
+                 vartok.tok_cname, (struct stackframe_stBM *) &_);
             }
           else
             _.resobj = NULL;

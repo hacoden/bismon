@@ -436,6 +436,10 @@ typedef value_tyBM parser_expand_dollarval_sigBM
 typedef const objectval_tyBM *parser_expand_dollarobj_sigBM
   (struct parser_stBM *pars, unsigned lineno, unsigned colpos,
    const value_tyBM varname, struct stackframe_stBM *stkf);
+// expand the $*<name> or €<name>
+typedef const objectval_tyBM *parser_expand_newname_sigBM
+  (struct parser_stBM *pars, unsigned lineno, unsigned colpos,
+   const value_tyBM varname, struct stackframe_stBM *stkf);
 // parse then expand $( .... ) value expression
 typedef value_tyBM parser_expand_valexp_sigBM
   (struct parser_stBM *pars, unsigned lineno, unsigned colpos, int depth,
@@ -523,6 +527,8 @@ struct parserops_stBM
   parser_expand_dollarval_sigBM *parsop_expand_dollarval_rout;
   // expansion of $:<var> for object
   parser_expand_dollarobj_sigBM *parsop_expand_dollarobj_rout;
+  // expansion of $*<name> or €<name> for new names
+  parser_expand_newname_sigBM *parsop_expand_newname_rout;
   // parse then expand $(...) value expression
   parser_expand_valexp_sigBM *parsop_expand_valexp_rout;
   // parse then expand $[...] object expression
