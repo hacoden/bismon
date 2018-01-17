@@ -105,6 +105,20 @@ const setval_tyBM *complsetcmd_BM;
 int compbegoffcmd_BM, compendoffcmd_BM;
 char *complcommonprefix_BM;
 
+// browse the named value
+static void browse_named_value_gui_BM (const stringval_tyBM * namev,
+                                       const value_tyBM val,
+                                       const objectval_tyBM * objsel,
+                                       int browsdepth,
+                                       struct stackframe_stBM *stkf);
+// hide the named value
+static void hide_named_value_gui_BM (const stringval_tyBM * namev,
+                                     struct stackframe_stBM *stkf);
+
+// find the named value
+static value_tyBM find_named_value_gui_BM (const char *name);
+
+
 //////////////// command
 GtkTextTagTable *commandtagtable_BM;
 GtkTextBuffer *commandbuf_BM;

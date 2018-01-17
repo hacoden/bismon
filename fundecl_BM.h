@@ -802,15 +802,6 @@ void
 gtk_defer_send3_BM (value_tyBM recv, objectval_tyBM * obsel, value_tyBM arg1,
                     value_tyBM arg2, value_tyBM arg3);
 
-// browse the named value
-extern void browse_named_value_gui_BM (const stringval_tyBM * namev,
-                                       const value_tyBM val,
-                                       const objectval_tyBM * objsel,
-                                       int browsdepth,
-                                       struct stackframe_stBM *stkf);
-extern void hide_named_value_gui_BM (const stringval_tyBM * namev,
-                                     struct stackframe_stBM *stkf);
-extern value_tyBM find_named_value_gui_BM (const char *name);
 extern void clear_command_BM (void);
 // internal, inside browsing methods
 extern void browse_value_BM (const value_tyBM val,
