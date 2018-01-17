@@ -2,22 +2,24 @@
 #include "bismon.h"
 
 // each named value has its own GtkTextBuffer, which is displayed in
-// two places: within the command window, in a GtkScrolledWindow
-// containing one GtkFrame (containing a GtkHeaderBar & GtkTextView) per named value;
-// and in the value alternate window, in a GtkScrolledWindow containing one
-// GtkFrame (containing a GtkHeaderBar &  GtkTextView) per named value;
-struct namedvaluenewguixtra_stBM {
-  int nvx_index;		/* corresponding index in browsedval_BM */
-  GtkWidget* nvx_mainframe;
-  GtkWidget* nvx_mainheadb;
-  GtkWidget* nvx_maintextview;
-  GtkWidget* nvx_altframe;
-  GtkWidget* nvx_altheadb;
-  GtkWidget* nvx_alttextview;
+//the value window, containing a GtkPane, in a GtkScrolledWindow
+//containing one GtkFrame (containing a GtkHeaderBar & GtkTextView)
+//per named value;
+struct namedvaluenewguixtra_stBM
+{
+  int nvx_index;                /* corresponding index in browsedval_BM */
+  GtkWidget *nvx_upframe;
+  GtkWidget *nvx_upheadb;
+  GtkWidget *nvx_uptextview;
+  GtkWidget *nvx_loframe;
+  GtkWidget *nvx_loheadb;
+  GtkWidget *nvx_lotextview;
 };
-static GtkWidget* valmainscrollwin_bm;
-static GtkWidget* valaltwindow_bm;
-static GtkWidget* valaltscrollwin_bm;
+
+static GtkWidget *windowvalues_newgui_bm;
+static GtkWidget *valueslabel_newgui_bm;
+static GtkWidget *upperscrollwvalues_newgui_bm;
+static GtkWidget *lowerscrollwvalues_newgui_bm;
 
 /*****************************************************************/
 // the function to handle keypresses of cmd, for Return & Tab
@@ -161,7 +163,7 @@ gcmarknewgui_BM (struct garbcoll_stBM *gc)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
   // mark the browsedobj_BM browsedval_stBM & complsetcmd_BM
-  gcmarkoldgui_BM(gc);
+  gcmarkoldgui_BM (gc);
 }                               /* end gcmarknewgui_BM */
 
 
@@ -309,6 +311,35 @@ initialize_newgui_BM (const char *builderfile, const char *cssfile)
   gtk_paned_add1 (GTK_PANED (paned), commandscrolw);
   gtk_paned_add2 (GTK_PANED (paned), logscrolw);
   ///
+  {
+    windowvalues_newgui_bm = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+    gtk_style_context_add_provider_for_screen
+      (gtk_window_get_screen (GTK_WINDOW (windowvalues_newgui_bm)),
+       GTK_STYLE_PROVIDER (cssprovider),
+       GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    GtkWidget *valuesvbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
+    gtk_container_add (GTK_CONTAINER (windowvalues_newgui_bm), valuesvbox);
+    valueslabel_newgui_bm = gtk_label_new ("values");
+    gtk_box_pack_start (GTK_BOX (valuesvbox), valueslabel_newgui_bm,
+                        BOXNOEXPAND_BM, BOXFILL_BM, 2);
+    GtkWidget *sep1 = gtk_separator_new (GTK_ORIENTATION_HORIZONTAL);
+    gtk_box_pack_start (GTK_BOX (valuesvbox), sep1,
+                        BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
+    GtkWidget *paned = gtk_paned_new (GTK_ORIENTATION_VERTICAL);
+    gtk_paned_set_wide_handle (GTK_PANED (paned), true);
+    gtk_paned_set_position (GTK_PANED (paned), 250);
+    gtk_box_pack_start (GTK_BOX (valuesvbox), paned, BOXEXPAND_BM, BOXFILL_BM,
+                        2);
+    upperscrollwvalues_newgui_bm = gtk_scrolled_window_new (NULL, NULL);
+    lowerscrollwvalues_newgui_bm = gtk_scrolled_window_new (NULL, NULL);
+    gtk_paned_add1 (GTK_PANED (paned), upperscrollwvalues_newgui_bm);
+    gtk_paned_add2 (GTK_PANED (paned), lowerscrollwvalues_newgui_bm);
+    gtk_window_set_title (GTK_WINDOW (windowvalues_newgui_bm),
+                          "bismon values");
+    g_signal_connect (windowvalues_newgui_bm, "delete-event",
+                      (GCallback) deletemainwin_BM, NULL);
+    gtk_widget_show_all (GTK_WIDGET (windowvalues_newgui_bm));
+  }
 #warning initialize_newgui_BM unimplemented
   fprintf (stderr, "initialize_newgui_BM builder %s css %s unimplemented\n",
            builderfile, cssfile);
@@ -707,8 +738,8 @@ const objectval_tyBM *parsmakenewname_newguicmd_BM
 
 // expand readmacro-s
 value_tyBM parsreadmacroexp_newguicmd_BM
-  (struct parser_stBM *pars, unsigned lineno, unsigned colpos, int depth,
-   const node_tyBM * nod, struct stackframe_stBM *stkf)
+  (struct parser_stBM * pars, unsigned lineno, unsigned colpos, int depth,
+   const node_tyBM * nod, struct stackframe_stBM * stkf)
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  value_tyBM resval;

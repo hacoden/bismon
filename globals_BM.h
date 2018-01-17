@@ -89,7 +89,7 @@ struct browsedobj_stBM
   objectval_tyBM *brow_objsel;
   GtkTextMark *brow_ostartm;
   GtkTextMark *brow_oendm;
-  void* brow_odata;		/* extra client data */
+  void *brow_odata;             /* extra client data */
   int brow_odepth;
   unsigned brow_oparensize;     /* allocated size of brow_parenarr */
   unsigned brow_oparenulen;     /* used length of brow_parenarr */
@@ -110,7 +110,7 @@ struct browsedval_stBM
   GtkTextMark *brow_vstartmk;
   GtkTextMark *brow_vendmk;
   int brow_vdepth;
-  void* brow_vdata;		/* extra client data */
+  void *brow_vdata;             /* extra client data */
   unsigned brow_vparensize;     /* allocated size of brow_parenarr */
   unsigned brow_vparenulen;     /* used length of brow_parenarr */
   struct parenoffset_stBM *brow_vparenarr;
