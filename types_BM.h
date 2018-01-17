@@ -585,6 +585,8 @@ struct dict_stBM
   uintptr_t dict_data[8];       /* actually a C++ std::map */
 };
 
+/// NB: struct browsedval_stBM & struct browsedobj_stBM are in globals_BM.h
+
 struct garbcoll_stBM
 {
   uint32_t gc_magic;
