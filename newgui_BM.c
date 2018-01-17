@@ -8,10 +8,15 @@
 struct namedvaluenewguixtra_stBM
 {
   int nvx_index;                /* corresponding index in browsedval_BM */
+  GtkTextBuffer *nvx_tbuffer;
+  // upper 
   GtkWidget *nvx_upframe;
+  GtkWidget *nvx_upvbox;
   GtkWidget *nvx_upheadb;
   GtkWidget *nvx_uptextview;
+  // lower
   GtkWidget *nvx_loframe;
+  GtkWidget *nvx_lovbox;
   GtkWidget *nvx_loheadb;
   GtkWidget *nvx_lotextview;
 };
@@ -874,16 +879,96 @@ browse_named_value_newgui_BM (const stringval_tyBM * namev,
   return;
 }                               /* end browse_named_value_newgui_BM */
 
+
+
 void
 add_indexed_named_value_newgui_BM (const stringval_tyBM * namev,
                                    const value_tyBM val,
                                    int browsdepth,
-                                   unsigned index,
-                                   struct stackframe_stBM *stkf)
+                                   unsigned idx, struct stackframe_stBM *stkf)
 {
-#warning unimplemented add_indexed_named_value_newgui_BM
-  FATAL_BM ("unimplemented add_indexed_named_value_newgui_BM index %u",
-            index);
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 const stringval_tyBM * namev;
+                 value_tyBM val;
+    );
+  _.namev = namev;
+  _.val = val;
+  assert (isstring_BM (namev));
+  assert (val != NULL);
+  assert (idx <= browsednvulen_BM);
+  assert (idx < browsednvsize_BM);
+  assert (pthread_self () == mainthreadid_BM);
+  struct browsedval_stBM *curbv = browsedval_BM + idx;
+  curbv->brow_name = _.namev;
+  curbv->brow_val = _.val;
+  curbv->brow_vstartmk = NULL;
+  curbv->brow_vdepth = browsdepth;
+  curbv->brow_vdata = NULL;
+  curbv->brow_vparensize = 0;
+  curbv->brow_vparenulen = 0;
+  curbv->brow_vparenarr = NULL;
+  struct namedvaluenewguixtra_stBM *nvx =
+    malloc (sizeof (struct namedvaluenewguixtra_stBM));
+  if (!nvx)
+    FATAL_BM ("failed to malloc namedvaluenewguixtra_stBM");
+  memset (nvx, 0, sizeof (*nvx));
+  curbv->brow_vdata = nvx;
+  nvx->nvx_index = (int) idx;
+  nvx->nvx_tbuffer = gtk_text_buffer_new (browsertagtable_BM);
+  nvx->nvx_upframe = gtk_frame_new (NULL);
+  gtk_box_pack_start (GTK_BOX (uppervboxvalues_newgui_bm), nvx->nvx_upframe,
+                      BOXEXPAND_BM, BOXFILL_BM, 2);
+  if (idx > 0)
+    gtk_box_reorder_child (GTK_BOX (uppervboxvalues_newgui_bm),
+                           nvx->nvx_upframe, idx);
+  nvx->nvx_upvbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 2);
+  gtk_container_add (GTK_CONTAINER (nvx->nvx_upframe), nvx->nvx_upvbox);
+  nvx->nvx_upheadb = gtk_header_bar_new ();
+  char *title = g_strdup_printf ("$%s", bytstring_BM (_.namev));
+  char subtitle[16];
+  memset (subtitle, 0, sizeof (subtitle));
+  snprintf (subtitle, sizeof (subtitle), "∇ %d" /*Unicode U+2207 NABLA */ ,
+            browsdepth);
+  gtk_header_bar_set_title (GTK_HEADER_BAR (nvx->nvx_upheadb), title);
+  gtk_header_bar_set_subtitle (GTK_HEADER_BAR (nvx->nvx_upheadb), subtitle);
+  gtk_box_pack_start (GTK_BOX (nvx->nvx_upvbox), nvx->nvx_upheadb,
+                      BOXNOEXPAND_BM, BOXNOFILL_BM, 1);
+  nvx->nvx_uptextview = gtk_text_view_new_with_buffer (nvx->nvx_tbuffer);
+  gtk_box_pack_start (GTK_BOX (nvx->nvx_upvbox), nvx->nvx_uptextview,
+                      BOXEXPAND_BM, BOXFILL_BM, 1);
+  //
+  nvx->nvx_loframe = gtk_frame_new (NULL);
+  gtk_box_pack_start (GTK_BOX (lowervboxvalues_newgui_bm), nvx->nvx_loframe,
+                      BOXEXPAND_BM, BOXFILL_BM, 2);
+  if (idx > 0)
+    gtk_box_reorder_child (GTK_BOX (lowervboxvalues_newgui_bm),
+                           nvx->nvx_loframe, idx);
+  nvx->nvx_lovbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 2);
+  gtk_container_add (GTK_CONTAINER (nvx->nvx_loframe), nvx->nvx_lovbox);
+  nvx->nvx_loheadb = gtk_header_bar_new ();
+  gtk_header_bar_set_title (GTK_HEADER_BAR (nvx->nvx_loheadb), title);
+  gtk_header_bar_set_subtitle (GTK_HEADER_BAR (nvx->nvx_loheadb), subtitle);
+  gtk_box_pack_start (GTK_BOX (nvx->nvx_lovbox), nvx->nvx_loheadb,
+                      BOXNOEXPAND_BM, BOXNOFILL_BM, 1);
+  nvx->nvx_lotextview = gtk_text_view_new_with_buffer (nvx->nvx_tbuffer);
+  gtk_box_pack_start (GTK_BOX (nvx->nvx_lovbox), nvx->nvx_lotextview,
+                      BOXEXPAND_BM, BOXFILL_BM, 1);
+  //
+  gtk_text_buffer_get_start_iter (&browserit_BM, nvx->nvx_tbuffer);
+  browserbuf_BM = nvx->nvx_tbuffer;
+  curbv->brow_vstartmk = gtk_text_buffer_create_mark
+    (nvx->nvx_tbuffer, NULL, &browserit_BM, LEFT_GRAVITY_BM);
+  send2_BM ((const value_tyBM) _.val, BMP_browse_value,
+            (struct stackframe_stBM *) &_,
+            taggedint_BM (browsdepth), taggedint_BM (0));
+  curbv->brow_vendmk = gtk_text_buffer_create_mark
+    (nvx->nvx_tbuffer, NULL, &browserit_BM, RIGHT_GRAVITY_BM);
+  gtk_text_buffer_insert (nvx->nvx_tbuffer, &browserit_BM, "\n", 1);
+  browserbuf_BM = NULL;
+  memset (&browserit_BM, 0, sizeof (browserit_BM));
+  gtk_widget_show_all (nvx->nvx_upframe);
+  gtk_widget_show_all (nvx->nvx_loframe);
+  g_free (title), (title = NULL);
 }                               /* end add_indexed_named_value_newgui_BM */
 
 void
