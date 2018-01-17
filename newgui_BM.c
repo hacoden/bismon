@@ -20,6 +20,8 @@ static GtkWidget *windowvalues_newgui_bm;
 static GtkWidget *valueslabel_newgui_bm;
 static GtkWidget *upperscrollwvalues_newgui_bm;
 static GtkWidget *lowerscrollwvalues_newgui_bm;
+static GtkWidget *uppervboxvalues_newgui_bm;
+static GtkWidget *lowervboxvalues_newgui_bm;
 
 /*****************************************************************/
 // the function to handle keypresses of cmd, for Return & Tab
@@ -326,16 +328,36 @@ initialize_newgui_BM (const char *builderfile, const char *cssfile)
     gtk_box_pack_start (GTK_BOX (valuesvbox), sep1,
                         BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
     GtkWidget *paned = gtk_paned_new (GTK_ORIENTATION_VERTICAL);
-    gtk_paned_set_wide_handle (GTK_PANED (paned), true);
-    gtk_paned_set_position (GTK_PANED (paned), 250);
     gtk_box_pack_start (GTK_BOX (valuesvbox), paned, BOXEXPAND_BM, BOXFILL_BM,
                         2);
     upperscrollwvalues_newgui_bm = gtk_scrolled_window_new (NULL, NULL);
     lowerscrollwvalues_newgui_bm = gtk_scrolled_window_new (NULL, NULL);
+    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW
+                                    (upperscrollwvalues_newgui_bm),
+                                    GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
+    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW
+                                    (lowerscrollwvalues_newgui_bm),
+                                    GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
     gtk_paned_add1 (GTK_PANED (paned), upperscrollwvalues_newgui_bm);
     gtk_paned_add2 (GTK_PANED (paned), lowerscrollwvalues_newgui_bm);
+    gtk_paned_set_wide_handle (GTK_PANED (paned), true);
+    uppervboxvalues_newgui_bm = gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
+    lowervboxvalues_newgui_bm = gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
+    gtk_container_add (GTK_CONTAINER (upperscrollwvalues_newgui_bm),
+                       uppervboxvalues_newgui_bm);
+    GtkWidget *upperlab = gtk_label_new ("upper");
+    gtk_box_pack_start (GTK_BOX (uppervboxvalues_newgui_bm), upperlab,
+                        BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
+    gtk_container_add (GTK_CONTAINER (lowerscrollwvalues_newgui_bm),
+                       lowervboxvalues_newgui_bm);
+    GtkWidget *lowerlab = gtk_label_new ("lower");
+    gtk_box_pack_start (GTK_BOX (lowervboxvalues_newgui_bm), lowerlab,
+                        BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
+    gtk_paned_set_position (GTK_PANED (paned), 220);
     gtk_window_set_title (GTK_WINDOW (windowvalues_newgui_bm),
                           "bismon values");
+    gtk_window_set_default_size (GTK_WINDOW (windowvalues_newgui_bm), 450,
+                                 620);
     g_signal_connect (windowvalues_newgui_bm, "delete-event",
                       (GCallback) deletemainwin_BM, NULL);
     gtk_widget_show_all (GTK_WIDGET (windowvalues_newgui_bm));
