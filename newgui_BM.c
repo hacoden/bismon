@@ -954,6 +954,8 @@ add_indexed_named_value_newgui_BM (const stringval_tyBM * namev,
   gtk_box_pack_start (GTK_BOX (nvx->nvx_lovbox), nvx->nvx_lotextview,
                       BOXEXPAND_BM, BOXFILL_BM, 1);
   //
+  browserobcurix_BM = -1;
+  browsednvcurix_BM = idx;
   gtk_text_buffer_get_start_iter (&browserit_BM, nvx->nvx_tbuffer);
   browserbuf_BM = nvx->nvx_tbuffer;
   curbv->brow_vstartmk = gtk_text_buffer_create_mark
@@ -965,6 +967,8 @@ add_indexed_named_value_newgui_BM (const stringval_tyBM * namev,
     (nvx->nvx_tbuffer, NULL, &browserit_BM, RIGHT_GRAVITY_BM);
   gtk_text_buffer_insert (nvx->nvx_tbuffer, &browserit_BM, "\n", 1);
   browserbuf_BM = NULL;
+  browsednvcurix_BM = -1;
+  browserobcurix_BM = -1;
   memset (&browserit_BM, 0, sizeof (browserit_BM));
   gtk_widget_show_all (nvx->nvx_upframe);
   gtk_widget_show_all (nvx->nvx_loframe);
