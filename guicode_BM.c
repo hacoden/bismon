@@ -337,8 +337,8 @@ ROUTINEOBJNAME_BM (_0B1PYH9bN34_3RZdP24AVyt)    //
  const value_tyBM arg1,         // the reciever
  const value_tyBM arg2,         // the browse maxdepth
  const value_tyBM arg3,         // the current depth
- const value_tyBM arg4,         // the current depth
- const quasinode_tyBM * restargs __attribute__ ((unused)))
+ const value_tyBM arg4_ __attribute__ ((unused)),
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   if (!istuple_BM (arg1))
     FATAL_BM
