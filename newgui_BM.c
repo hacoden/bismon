@@ -1,6 +1,25 @@
 /* file newgui_BM.c */
 #include "bismon.h"
 
+// each named value has its own GtkTextBuffer, which is displayed in
+// two places: within the command window, in a GtkScrolledWindow
+// containing one GtkFrame (containing a GtkHeaderBar & GtkTextView) per named value;
+// and in the value alternate window, in a GtkScrolledWindow containing one
+// GtkFrame (containing a GtkHeaderBar &  GtkTextView) per named value;
+struct namedvaluenewguixtra_stBM {
+  int nvx_index;		/* corresponding index in browsedval_BM */
+  GtkWidget* nvx_mainframe;
+  GtkWidget* nvx_mainheadb;
+  GtkWidget* nvx_maintextview;
+  GtkWidget* nvx_altframe;
+  GtkWidget* nvx_altheadb;
+  GtkWidget* nvx_alttextview;
+};
+static GtkWidget* valmainscrollwin_bm;
+static GtkWidget* valaltwindow_bm;
+static GtkWidget* valaltscrollwin_bm;
+
+/*****************************************************************/
 // the function to handle keypresses of cmd, for Return & Tab
 static gboolean handlekeypress_newgui_cmd_BM (GtkWidget *, GdkEventKey *,
                                               gpointer);
@@ -33,6 +52,8 @@ static parser_expand_valexp_sigBM parsvalexp_newguicmd_BM;
 // parse inside $[...]
 static parser_expand_objexp_sigBM parsobjexp_newguicmd_BM;
 
+// parse €<name> or $*<name>
+static parser_expand_newname_sigBM parsmakenewname_newguicmd_BM;
 
 // expand readmacro-s
 static parser_expand_readmacro_sigBM parsreadmacroexp_newguicmd_BM;
@@ -50,6 +71,7 @@ const struct parserops_stBM parsop_command_build_newgui_BM = {
   ///
   .parsop_expand_dollarobj_rout = parsdollarobj_newguicmd_BM,
   .parsop_expand_dollarval_rout = parsdollarval_newguicmd_BM,
+  .parsop_expand_newname_rout = parsmakenewname_newguicmd_BM,
   .parsop_expand_valexp_rout = parsvalexp_newguicmd_BM,
   .parsop_expand_objexp_rout = parsobjexp_newguicmd_BM,
   .parsop_expand_readmacro_rout = parsreadmacroexp_newguicmd_BM,
@@ -75,6 +97,7 @@ const struct parserops_stBM parsop_command_nobuild_newgui_BM = {
   ///
   .parsop_expand_dollarobj_rout = parsdollarobj_newguicmd_BM,
   .parsop_expand_dollarval_rout = parsdollarval_newguicmd_BM,
+  .parsop_expand_newname_rout = parsmakenewname_newguicmd_BM,
   .parsop_expand_valexp_rout = parsvalexp_newguicmd_BM,
   .parsop_expand_objexp_rout = parsobjexp_newguicmd_BM,
   .parsop_expand_readmacro_rout = parsreadmacroexp_newguicmd_BM,
@@ -137,10 +160,8 @@ void
 gcmarknewgui_BM (struct garbcoll_stBM *gc)
 {
   assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (browsedobj_BM == NULL && browsedval_BM == NULL);
-  // use gcobjmark_BM & VALUEGCPROC_BM
-  if (complsetcmd_BM)
-    VALUEGCPROC_BM (gc, complsetcmd_BM, 0);
+  // mark the browsedobj_BM browsedval_stBM & complsetcmd_BM
+  gcmarkoldgui_BM(gc);
 }                               /* end gcmarknewgui_BM */
 
 
@@ -651,6 +672,38 @@ find_named_value_newgui_BM (const char *vstr, struct stackframe_stBM * stkf)
 #warning find_named_value_newgui_BM unimplemented
   FATAL_BM ("unimplemented find_named_value_newgui_BM %s", vstr);
 }                               /* end find_named_value_newgui_BM */
+
+// for €<newname> or $*<newname>
+const objectval_tyBM *parsmakenewname_newguicmd_BM
+  (struct parser_stBM *pars, unsigned lineno, unsigned colpos,
+   const value_tyBM varname, struct stackframe_stBM *stkf)
+{
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 objectval_tyBM * namedobj;
+                 const stringval_tyBM * strnam; objectval_tyBM * parsob;
+    );
+  if (!isparser_BM (pars))
+    return NULL;
+  _.parsob = checkedparserowner_BM (pars);
+  assert (isstring_BM (varname));
+  _.strnam = varname;
+  if (!validname_BM (bytstring_BM (varname)))
+    parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,
+                          "invalid new name %s", bytstring_BM (varname));
+  _.namedobj = findnamedobj_BM (bytstring_BM (varname));
+  if (_.namedobj)
+    return _.namedobj;
+  _.namedobj = makeobj_BM ();
+  objtouchnow_BM (_.namedobj);
+  objputspacenum_BM (_.namedobj, GlobalSp_BM);
+  registername_BM (_.namedobj, bytstring_BM (_.strnam));
+  log_begin_message_BM ();
+  log_puts_message_BM ("created global new named object ");
+  log_object_message_BM (_.namedobj);
+  log_end_message_BM ();
+  return _.namedobj;
+}                               /* end parsmakenewname_newguicmd_BM */
+
 
 // expand readmacro-s
 value_tyBM parsreadmacroexp_newguicmd_BM

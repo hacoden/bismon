@@ -77,6 +77,8 @@ extern GtkTextTag *str_brotag_BM;
 extern GtkTextTag *stresc_brotag_BM;
 extern GtkTextTag *miscomm_brotag_BM;
 
+
+////////////////
 /// the browsed objects
 extern unsigned browserobsize_BM;       /* allocated size of browsedobj_BM */
 extern unsigned browserobulen_BM;       /* used length */
@@ -87,6 +89,7 @@ struct browsedobj_stBM
   objectval_tyBM *brow_objsel;
   GtkTextMark *brow_ostartm;
   GtkTextMark *brow_oendm;
+  void* brow_odata;		/* extra client data */
   int brow_odepth;
   unsigned brow_oparensize;     /* allocated size of brow_parenarr */
   unsigned brow_oparenulen;     /* used length of brow_parenarr */
@@ -94,6 +97,8 @@ struct browsedobj_stBM
 };
 extern struct browsedobj_stBM *browsedobj_BM;
 
+
+////////////////
 /// the browsed named values
 extern unsigned browsednvsize_BM;       /* allocated size */
 extern unsigned browsednvulen_BM;       /* unsigned length */
@@ -105,6 +110,7 @@ struct browsedval_stBM
   GtkTextMark *brow_vstartmk;
   GtkTextMark *brow_vendmk;
   int brow_vdepth;
+  void* brow_vdata;		/* extra client data */
   unsigned brow_vparensize;     /* allocated size of brow_parenarr */
   unsigned brow_vparenulen;     /* used length of brow_parenarr */
   struct parenoffset_stBM *brow_vparenarr;
@@ -113,6 +119,7 @@ extern struct browsedval_stBM *browsedval_BM;
 extern guint browserblinkid_BM;
 extern struct parenoffset_stBM browserblinkparens_BM;   /// offsets are absolute
 
+////////////////
 extern int commandnumber_BM;
 /// the completion set - should be a GC root
 extern const setval_tyBM *complsetcmd_BM;
