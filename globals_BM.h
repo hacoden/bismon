@@ -101,7 +101,7 @@ extern struct browsedobj_stBM *browsedobj_BM;
 ////////////////
 /// the browsed named values
 extern unsigned browsednvsize_BM;       /* allocated size */
-extern unsigned browsednvulen_BM;       /* unsigned length */
+extern unsigned browsednvulen_BM;       /* used length */
 extern int browsednvcurix_BM;
 struct browsedval_stBM
 {

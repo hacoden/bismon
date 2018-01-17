@@ -67,6 +67,15 @@ static parser_error_sigBM parserror_newguicmd_BM;
 static value_tyBM
 find_named_value_newgui_BM (const char *vstr, struct stackframe_stBM *stkf);
 
+static void
+browse_named_value_newgui_BM (const stringval_tyBM * namev,
+                              const value_tyBM val,
+                              int browsdepth, struct stackframe_stBM *stkf);
+
+static void
+hide_named_value_newgui_BM (const char *namestr,
+                            struct stackframe_stBM *stkf);
+
 const struct parserops_stBM parsop_command_build_newgui_BM = {
   .parsop_magic = PARSOPMAGIC_BM,
   .parsop_serial = 3,
@@ -722,9 +731,172 @@ find_named_value_newgui_BM (const char *vstr, struct stackframe_stBM * stkf)
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  value_tyBM val;);
-#warning find_named_value_newgui_BM unimplemented
-  FATAL_BM ("unimplemented find_named_value_newgui_BM %s", vstr);
+  if (!validname_BM (vstr))
+    return NULL;
+  if (browsednvulen_BM == 0)
+    return NULL;
+  assert (browsednvulen_BM <= browsednvsize_BM);
+  assert (browsednvulen_BM < MAXSIZE_BM);
+  assert (browsedval_BM != NULL);
+  int lo = 0, hi = (int) browsednvulen_BM, md = 0;
+  while (lo + 4 < hi)
+    {
+      md = (lo + hi) / 2;
+      struct browsedval_stBM *mdbv = browsedval_BM + md;
+      assert (isstring_BM ((const value_tyBM) (mdbv->brow_name)));
+      int cmp = strcmp (vstr, bytstring_BM (mdbv->brow_name));
+      if (cmp == 0)
+        return mdbv->brow_val;
+      else if (cmp < 0)
+        hi = md;
+      else
+        lo = md;
+    }
+  for (md = lo; md < hi; md++)
+    {
+      struct browsedval_stBM *mdbv = browsedval_BM + md;
+      assert (isstring_BM (mdbv->brow_name));
+      if (!strcmp (vstr, bytstring_BM (mdbv->brow_name)))
+        return mdbv->brow_val;
+    }
+  return NULL;
 }                               /* end find_named_value_newgui_BM */
+
+static void
+add_indexed_named_value_newgui_BM (const stringval_tyBM * namev,
+                                   const value_tyBM val,
+                                   int browsdepth,
+                                   unsigned index,
+                                   struct stackframe_stBM *stkf);
+
+static void
+replace_indexed_named_value_newgui_BM (const value_tyBM val,
+                                       int browsdepth,
+                                       unsigned index,
+                                       struct stackframe_stBM *stkf);
+
+void
+browse_named_value_newgui_BM (const stringval_tyBM * namev,
+                              const value_tyBM val,
+                              int browsdepth, struct stackframe_stBM *stkf)
+{
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 const stringval_tyBM * namev;
+                 value_tyBM val;);
+  _.namev = namev;
+  _.val = val;
+  if (!isstring_BM (namev))
+    return;
+  if (!validname_BM (bytstring_BM (namev)))
+    return;
+  if (!val)
+    return;
+  if (browsednvulen_BM == 0)
+    {
+      if (!browsedval_BM)
+        {
+          const unsigned inisiz = 11;
+          browsedval_BM = calloc (inisiz, sizeof (struct browsedval_stBM));
+          if (!browsedval_BM)
+            FATAL_BM ("failed to allocate browsedval_BM for %u elements",
+                      inisiz);
+          browsednvsize_BM = inisiz;
+        }
+      browsednvulen_BM = 1;
+      memset (browsedval_BM + 0, 0, sizeof (struct browsedval_stBM));
+      add_indexed_named_value_newgui_BM //
+        (_.namev, _.val, browsdepth, 0, (struct stackframe_stBM *) &_);
+      return;
+    };
+  // grow array if needed
+  if (browsednvulen_BM >= browsednvsize_BM)
+    {
+      unsigned newsiz = prime_above_BM (4 * browsednvsize_BM / 3 + 8);
+      struct browsedval_stBM *newarr =
+        calloc (newsiz, sizeof (struct browsedval_stBM));
+      if (!newarr)
+        FATAL_BM ("failed to grow browsedval_BM for %u elements", newsiz);
+      memcpy (newarr, browsedval_BM,
+              browsednvulen_BM * sizeof (struct browsedval_stBM));
+      free (browsedval_BM), (browsedval_BM = newarr);
+      browsednvsize_BM = newsiz;
+    }
+  int lo = 0, hi = (int) browsednvulen_BM, md = 0;
+  while (lo + 4 < hi)
+    {
+      md = (lo + hi) / 2;
+      struct browsedval_stBM *mdbv = browsedval_BM + md;
+      assert (isstring_BM (mdbv->brow_name));
+      int cmp =
+        strcmp (bytstring_BM (_.namev), bytstring_BM (mdbv->brow_name));
+      if (cmp == 0)
+        {
+          replace_indexed_named_value_newgui_BM //
+            (_.val, browsdepth, (unsigned) md, (struct stackframe_stBM *) &_);
+          return;
+        }
+      else if (cmp < 0)
+        hi = md;
+      else
+        lo = md;
+    }
+  for (md = lo; md < hi; md++)
+    {
+      struct browsedval_stBM *mdbv = browsedval_BM + md;
+      assert (isstring_BM (mdbv->brow_name));
+      int cmp =
+        strcmp (bytstring_BM (_.namev), bytstring_BM (mdbv->brow_name));
+      if (!cmp)
+        {
+          replace_indexed_named_value_newgui_BM //
+            (_.val, browsdepth, (unsigned) md, (struct stackframe_stBM *) &_);
+          return;
+        }
+      else if (cmp > 0)
+        break;
+    }
+  // insert before md
+  assert (md > 0);
+  for (int ix = browsednvulen_BM; ix > md; ix--)
+    {
+      browsedval_BM[ix] = browsedval_BM[ix - 1];
+      struct namedvaluenewguixtra_stBM *xp =
+        (struct namedvaluenewguixtra_stBM *) (browsedval_BM[ix].brow_vdata);
+      if (xp)
+        {
+          assert (xp->nvx_index == ix - 1);
+          xp->nvx_index = ix;
+        }
+    }
+  memset (browsedval_BM + md, 0, sizeof (struct browsedval_stBM));
+  add_indexed_named_value_newgui_BM     //
+    (_.namev, _.val, browsdepth, md, (struct stackframe_stBM *) &_);
+  return;
+}                               /* end browse_named_value_newgui_BM */
+
+void
+add_indexed_named_value_newgui_BM (const stringval_tyBM * namev,
+                                   const value_tyBM val,
+                                   int browsdepth,
+                                   unsigned index,
+                                   struct stackframe_stBM *stkf)
+{
+#warning unimplemented add_indexed_named_value_newgui_BM
+  FATAL_BM ("unimplemented add_indexed_named_value_newgui_BM index %u",
+            index);
+}                               /* end add_indexed_named_value_newgui_BM */
+
+void
+replace_indexed_named_value_newgui_BM (const value_tyBM val,
+                                       int browsdepth,
+                                       unsigned index,
+                                       struct stackframe_stBM *stkf)
+{
+#warning unimplemented replace_indexed_named_value_newgui_BM
+  FATAL_BM ("unimplemented replace_indexed_named_value_newgui_BM index %u",
+            index);
+}                               /* end replace_indexed_named_value_newgui_BM */
+
 
 // for €<newname> or $*<newname>
 const objectval_tyBM *parsmakenewname_newguicmd_BM
