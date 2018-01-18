@@ -1,5 +1,6 @@
 /* file newgui_BM.c */
 #include "bismon.h"
+#include "newgui_BM.const.h"
 
 #define BROWSE_MAXDEPTH_NEWGUI_BM 48
 // each named value has its own GtkTextBuffer, which is displayed in
@@ -21,6 +22,8 @@ struct namedvaluenewguixtra_stBM
   GtkWidget *nvx_loheadb;
   GtkWidget *nvx_lotextview;
 };
+
+static stringval_tyBM *astrval_bm;      // the "a" string value, name of default results
 
 static GtkWidget *windowvalues_newgui_bm;
 static GtkWidget *valueslabel_newgui_bm;
@@ -186,6 +189,7 @@ gcmarknewgui_BM (struct garbcoll_stBM *gc)
   assert (gc && gc->gc_magic == GCMAGIC_BM);
   // mark the browsedobj_BM browsedval_stBM & complsetcmd_BM
   gcmarkoldgui_BM (gc);
+  VALUEGCPROC_BM (gc, astrval_bm, 0);
 }                               /* end gcmarknewgui_BM */
 
 
@@ -306,6 +310,7 @@ initialize_newgui_BM (const char *builderfile, const char *cssfile)
     builderfile = "bismon.ui";
   if (!cssfile)
     cssfile = "bismon.css";
+  browserdepth_BM = 6;
   GtkBuilder *bld = gtk_builder_new_from_file (builderfile);
   GtkCssProvider *cssprovider = gtk_css_provider_get_default ();
   g_signal_connect (cssprovider, "parsing-error",
@@ -560,11 +565,25 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
   if (!isparser_BM (pars))
     return;
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 value_tyBM val;
+                 value_tyBM val; const stringval_tyBM * astrv;
                  objectval_tyBM * obj; objectval_tyBM * oldfocusobj;
                  const stringval_tyBM * name; const stringval_tyBM * result;
                  objectval_tyBM * parsob;
     );
+  if (browserdepth_BM < 2)
+    browserdepth_BM = 2;
+  else if (browserdepth_BM > BROWSE_MAXDEPTH_NEWGUI_BM)
+    browserdepth_BM = BROWSE_MAXDEPTH_NEWGUI_BM;
+  if (!astrval_bm || !isstring_BM (astrval_bm)
+      || strcmp (bytstring_BM (astrval_bm), "a"))
+    {
+      _.astrv = makestring_BM ("a");
+      astrval_bm = _.astrv;
+    }
+  else
+    _.astrv = astrval_bm;
+  objectval_tyBM *k_var = BMK_420mStG8BOS_3taR8WQ2dO5;
+  objectval_tyBM *k_depth = BMK_17YdW6dWrBA_2mn4QmBjMNs;
   _.parsob = checkedparserowner_BM (pars);
   const struct parserops_stBM *parsops = pars->pars_ops;
   assert (!parsops || parsops->parsop_magic == PARSOPMAGIC_BM);
@@ -585,8 +604,33 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
       DBGPRINTF_BM ("parsecommandbuf_newgui_BM nbloop#%d tok~%s L%dC%d",
                     nbloop, lexkindname_BM (tok.tok_kind), curlineno,
                     curcolpos);
+      //command?
+      if (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_comma)
+        {
+          parstoken_tyBM cmdtok =
+            parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
+          if (cmdtok.tok_kind == plex_NAMEDOBJ
+              && cmdtok.tok_namedobj == k_depth)
+            {
+              parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
+                                    cmdtok.tok_line, cmdtok.tok_col,
+                                    "unimplemented ,depth");
+            }
+          else if (cmdtok.tok_kind == plex_NAMEDOBJ
+                   && cmdtok.tok_namedobj == k_var)
+            {
+              parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
+                                    cmdtok.tok_line, cmdtok.tok_col,
+                                    "unimplemented ,var");
+            }
+          else
+            parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
+                                  cmdtok.tok_line, cmdtok.tok_col,
+                                  "unimplemented command");
+
+        }
       //start of object?
-      if (parsertokenstartobject_BM (pars, tok))
+      else if (parsertokenstartobject_BM (pars, tok))
         {
           parserseek_BM (pars, curlineno, curcolpos);
           bool gotobj = false;
@@ -603,6 +647,15 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
           _.val =
             parsergetvalue_BM (pars, (struct stackframe_stBM *) &_, 0,
                                &gotval);
+          if (_.val)
+            browse_named_value_newgui_BM (_.astrv, _.val, browserdepth_BM,
+                                          (struct stackframe_stBM *) &_);
+          else
+            {
+              log_begin_message_BM ();
+              log_printf_message_BM ("no value");
+              log_end_message_BM ();
+            }
 #warning parsecommandbuf_newgui should show the _.val
         }
       else if (tok.tok_kind == plex__NONE)
@@ -1057,6 +1110,7 @@ browse_indexed_named_value_newgui_BM (const value_tyBM val,
   gtk_text_buffer_set_text (txbuf, "", 0);
   browserobcurix_BM = -1;
   browsednvcurix_BM = idx;
+  int prevbrowdepth = browserdepth_BM;
   browserdepth_BM = browsdepth;
   gtk_text_buffer_get_start_iter (&browserit_BM, nvx->nvx_tbuffer);
   browserbuf_BM = nvx->nvx_tbuffer;
@@ -1071,7 +1125,7 @@ browse_indexed_named_value_newgui_BM (const value_tyBM val,
   browserbuf_BM = NULL;
   browsednvcurix_BM = -1;
   browserobcurix_BM = -1;
-  browserdepth_BM = 0;
+  browserdepth_BM = prevbrowdepth;
   memset (&browserit_BM, 0, sizeof (browserit_BM));
 }                               /* end browse_indexed_named_value_newgui_BM */
 
