@@ -1,6 +1,7 @@
 /* file newgui_BM.c */
 #include "bismon.h"
 
+#define BROWSE_MAXDEPTH_NEWGUI_BM 48
 // each named value has its own GtkTextBuffer, which is displayed in
 //the value window, containing a GtkPane, in a GtkScrolledWindow
 //containing one GtkFrame (containing a GtkHeaderBar & GtkTextView)
@@ -780,6 +781,12 @@ replace_indexed_named_value_newgui_BM (const value_tyBM val,
                                        unsigned index,
                                        struct stackframe_stBM *stkf);
 
+static void
+browse_indexed_named_value_newgui_BM (const value_tyBM val,
+                                      int browsdepth,
+                                      unsigned index,
+                                      struct stackframe_stBM *stkf);
+
 void
 browse_named_value_newgui_BM (const stringval_tyBM * namev,
                               const value_tyBM val,
@@ -788,6 +795,10 @@ browse_named_value_newgui_BM (const stringval_tyBM * namev,
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const stringval_tyBM * namev;
                  value_tyBM val;);
+  if (browsdepth < 2)
+    browsdepth = 2;
+  else if (browsdepth > BROWSE_MAXDEPTH_NEWGUI_BM)
+    browsdepth = BROWSE_MAXDEPTH_NEWGUI_BM;
   _.namev = namev;
   _.val = val;
   if (!isstring_BM (namev))
@@ -898,10 +909,12 @@ add_indexed_named_value_newgui_BM (const stringval_tyBM * namev,
   assert (idx <= browsednvulen_BM);
   assert (idx < browsednvsize_BM);
   assert (pthread_self () == mainthreadid_BM);
+  assert (browsdepth > 0 && browsdepth <= BROWSE_MAXDEPTH_NEWGUI_BM);
   struct browsedval_stBM *curbv = browsedval_BM + idx;
   curbv->brow_name = _.namev;
   curbv->brow_val = _.val;
   curbv->brow_vstartmk = NULL;
+  curbv->brow_vendmk = NULL;
   curbv->brow_vdepth = browsdepth;
   curbv->brow_vdata = NULL;
   curbv->brow_vparensize = 0;
@@ -953,9 +966,80 @@ add_indexed_named_value_newgui_BM (const stringval_tyBM * namev,
   nvx->nvx_lotextview = gtk_text_view_new_with_buffer (nvx->nvx_tbuffer);
   gtk_box_pack_start (GTK_BOX (nvx->nvx_lovbox), nvx->nvx_lotextview,
                       BOXEXPAND_BM, BOXFILL_BM, 1);
+  browse_indexed_named_value_newgui_BM (_.val, browsdepth, idx,
+                                        (struct stackframe_stBM *) &_);
   //
+  gtk_widget_show_all (nvx->nvx_upframe);
+  gtk_widget_show_all (nvx->nvx_loframe);
+  g_free (title), (title = NULL);
+}                               /* end add_indexed_named_value_newgui_BM */
+
+
+
+void
+replace_indexed_named_value_newgui_BM (const value_tyBM val,
+                                       int browsdepth,
+                                       unsigned idx,
+                                       struct stackframe_stBM *stkf)
+{
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 value_tyBM val;
+    );
+  _.val = val;
+  assert (val != NULL);
+  assert (idx <= browsednvulen_BM);
+  assert (idx < browsednvsize_BM);
+  assert (browsdepth > 0 && browsdepth <= BROWSE_MAXDEPTH_NEWGUI_BM);
+  assert (pthread_self () == mainthreadid_BM);
+  struct browsedval_stBM *curbv = browsedval_BM + idx;
+  struct namedvaluenewguixtra_stBM *nvx =
+    (struct namedvaluenewguixtra_stBM *) (curbv->brow_vdata);
+  assert (nvx != NULL && nvx->nvx_index == idx);
+  free (curbv->brow_vparenarr), (curbv->brow_vparenarr = NULL);
+  curbv->brow_vparensize = 0;
+  curbv->brow_vparenulen = 0;
+  GtkTextBuffer *txbuf = nvx->nvx_tbuffer;
+  assert (txbuf != NULL);
+  gtk_text_buffer_delete_mark (txbuf, curbv->brow_vstartmk),
+    (curbv->brow_vstartmk = NULL);
+  gtk_text_buffer_delete_mark (txbuf, curbv->brow_vendmk),
+    (curbv->brow_vendmk = NULL);
+  char subtitle[16];
+  memset (subtitle, 0, sizeof (subtitle));
+  snprintf (subtitle, sizeof (subtitle), "∇ %d" /*Unicode U+2207 NABLA */ ,
+            browsdepth);
+  gtk_header_bar_set_subtitle (GTK_HEADER_BAR (nvx->nvx_upheadb), subtitle);
+  gtk_header_bar_set_subtitle (GTK_HEADER_BAR (nvx->nvx_loheadb), subtitle);
+  browse_indexed_named_value_newgui_BM (_.val, browsdepth, idx,
+                                        (struct stackframe_stBM *) &_);
+  gtk_widget_show_all (nvx->nvx_upframe);
+  gtk_widget_show_all (nvx->nvx_loframe);
+}                               /* end replace_indexed_named_value_newgui_BM */
+
+static void
+browse_indexed_named_value_newgui_BM (const value_tyBM val,
+                                      int browsdepth,
+                                      unsigned idx,
+                                      struct stackframe_stBM *stkf)
+{
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 value_tyBM val;
+    );
+  assert (val != NULL);
+  assert (idx <= browsednvulen_BM);
+  assert (idx < browsednvsize_BM);
+  assert (browsdepth > 0 && browsdepth <= BROWSE_MAXDEPTH_NEWGUI_BM);
+  assert (pthread_self () == mainthreadid_BM);
+  struct browsedval_stBM *curbv = browsedval_BM + idx;
+  struct namedvaluenewguixtra_stBM *nvx =
+    (struct namedvaluenewguixtra_stBM *) (curbv->brow_vdata);
+  GtkTextBuffer *txbuf = nvx->nvx_tbuffer;
+  assert (nvx != NULL && nvx->nvx_index == idx);
+  _.val = val;
+  gtk_text_buffer_set_text (txbuf, "", 0);
   browserobcurix_BM = -1;
   browsednvcurix_BM = idx;
+  browserdepth_BM = browsdepth;
   gtk_text_buffer_get_start_iter (&browserit_BM, nvx->nvx_tbuffer);
   browserbuf_BM = nvx->nvx_tbuffer;
   curbv->brow_vstartmk = gtk_text_buffer_create_mark
@@ -969,23 +1053,9 @@ add_indexed_named_value_newgui_BM (const stringval_tyBM * namev,
   browserbuf_BM = NULL;
   browsednvcurix_BM = -1;
   browserobcurix_BM = -1;
+  browserdepth_BM = 0;
   memset (&browserit_BM, 0, sizeof (browserit_BM));
-  gtk_widget_show_all (nvx->nvx_upframe);
-  gtk_widget_show_all (nvx->nvx_loframe);
-  g_free (title), (title = NULL);
-}                               /* end add_indexed_named_value_newgui_BM */
-
-void
-replace_indexed_named_value_newgui_BM (const value_tyBM val,
-                                       int browsdepth,
-                                       unsigned index,
-                                       struct stackframe_stBM *stkf)
-{
-#warning unimplemented replace_indexed_named_value_newgui_BM
-  FATAL_BM ("unimplemented replace_indexed_named_value_newgui_BM index %u",
-            index);
-}                               /* end replace_indexed_named_value_newgui_BM */
-
+}                               /* end browse_indexed_named_value_newgui_BM */
 
 // for €<newname> or $*<newname>
 const objectval_tyBM *parsmakenewname_newguicmd_BM
