@@ -1051,8 +1051,8 @@ browse_indexed_named_value_newgui_BM (const value_tyBM val,
   struct browsedval_stBM *curbv = browsedval_BM + idx;
   struct namedvaluenewguixtra_stBM *nvx =
     (struct namedvaluenewguixtra_stBM *) (curbv->brow_vdata);
-  GtkTextBuffer *txbuf = nvx->nvx_tbuffer;
   assert (nvx != NULL && nvx->nvx_index == idx);
+  GtkTextBuffer *txbuf = nvx->nvx_tbuffer;
   _.val = val;
   gtk_text_buffer_set_text (txbuf, "", 0);
   browserobcurix_BM = -1;
@@ -1074,6 +1074,51 @@ browse_indexed_named_value_newgui_BM (const value_tyBM val,
   browserdepth_BM = 0;
   memset (&browserit_BM, 0, sizeof (browserit_BM));
 }                               /* end browse_indexed_named_value_newgui_BM */
+
+
+
+
+static void
+hide_named_value_newgui_BM (const char *namestr, struct stackframe_stBM *stkf)
+{
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 value_tyBM val;
+    );
+  if (!namestr)
+    return;
+  int idx =
+    find_named_value_newgui_BM (namestr, (struct stackframe_stBM *) &_);
+  if (idx < 0)
+    return;
+  struct browsedval_stBM *curbv = browsedval_BM + idx;
+  struct namedvaluenewguixtra_stBM *nvx =
+    (struct namedvaluenewguixtra_stBM *) (curbv->brow_vdata);
+  assert (nvx != NULL && nvx->nvx_index == idx);
+  GtkTextBuffer *txbuf = nvx->nvx_tbuffer;
+  assert (txbuf != NULL);
+  gtk_text_buffer_set_text (txbuf, "", 0);
+  gtk_text_buffer_delete_mark (txbuf, curbv->brow_vstartmk),
+    (curbv->brow_vstartmk = NULL);
+  gtk_text_buffer_delete_mark (txbuf, curbv->brow_vendmk),
+    (curbv->brow_vendmk = NULL);
+  gtk_container_remove (GTK_CONTAINER (uppervboxvalues_newgui_bm),
+                        nvx->nvx_upframe), (nvx->nvx_upframe = NULL);
+  gtk_container_remove (GTK_CONTAINER (lowervboxvalues_newgui_bm),
+                        nvx->nvx_loframe), (nvx->nvx_loframe = NULL);
+  memset (nvx, 0, sizeof (nvx));
+  free (nvx), (curbv->brow_vdata = nvx = NULL);
+  for (int ix = idx; ix < browsednvulen_BM; ix++)
+    {
+      browsedval_BM[ix] = browsedval_BM[ix + 1];
+      struct namedvaluenewguixtra_stBM *uvx =
+        (struct namedvaluenewguixtra_stBM *) (browsedval_BM[ix].brow_vdata);
+      assert (uvx != NULL && uvx->nvx_index == ix + 1);
+      uvx->nvx_index = ix;
+    }
+#warning hide_named_value_newgui_BM incomplete
+}                               /* end hide_named_value_newgui_BM */
+
+
 
 // for €<newname> or $*<newname>
 const objectval_tyBM *parsmakenewname_newguicmd_BM
