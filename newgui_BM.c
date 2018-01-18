@@ -1115,7 +1115,23 @@ hide_named_value_newgui_BM (const char *namestr, struct stackframe_stBM *stkf)
       assert (uvx != NULL && uvx->nvx_index == ix + 1);
       uvx->nvx_index = ix;
     }
-#warning hide_named_value_newgui_BM incomplete
+  browsednvulen_BM--;
+  if (browsednvsize_BM > 20 && 2 * browsednvulen_BM < browsednvsize_BM)
+    {
+      unsigned newsiz = prime_above_BM (4 * browsednvulen_BM / 3 + 3);
+      if (newsiz < browsednvsize_BM)
+        {
+          struct browsedval_stBM *newarr =
+            calloc (newsiz, sizeof (struct browsedval_stBM));
+          if (!newarr)
+            FATAL_BM ("failed to shrink browsedval_BM for %u elements",
+                      newsiz);
+          memcpy (newarr, browsedval_BM,
+                  browsednvulen_BM * sizeof (struct browsedval_stBM));
+          free (browsedval_BM), (browsedval_BM = newarr);
+          browsednvsize_BM = newsiz;
+        }
+    }
 }                               /* end hide_named_value_newgui_BM */
 
 
