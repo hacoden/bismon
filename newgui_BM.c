@@ -70,6 +70,11 @@ static parser_expand_readmacro_sigBM parsreadmacroexp_newguicmd_BM;
 
 static parser_error_sigBM parserror_newguicmd_BM;
 
+
+// give the index of a name, or -1 if not found
+static int index_named_value_newgui_BM (const char *vstr);
+
+// return the value of a name, or null
 static value_tyBM
 find_named_value_newgui_BM (const char *vstr, struct stackframe_stBM *stkf);
 
@@ -731,16 +736,13 @@ parsobjexp_newguicmd_BM (struct parser_stBM *pars,
 }                               /* end parsobjexp_newguicmd_BM */
 
 
-
-value_tyBM
-find_named_value_newgui_BM (const char *vstr, struct stackframe_stBM * stkf)
+static int
+index_named_value_newgui_BM (const char *vstr)
 {
-  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 value_tyBM val;);
-  if (!validname_BM (vstr))
-    return NULL;
+  if (!vstr || !vstr[0])
+    return -1;
   if (browsednvulen_BM == 0)
-    return NULL;
+    return -1;
   assert (browsednvulen_BM <= browsednvsize_BM);
   assert (browsednvulen_BM < MAXSIZE_BM);
   assert (browsedval_BM != NULL);
@@ -752,7 +754,7 @@ find_named_value_newgui_BM (const char *vstr, struct stackframe_stBM * stkf)
       assert (isstring_BM ((const value_tyBM) (mdbv->brow_name)));
       int cmp = strcmp (vstr, bytstring_BM (mdbv->brow_name));
       if (cmp == 0)
-        return mdbv->brow_val;
+        return md;
       else if (cmp < 0)
         hi = md;
       else
@@ -763,9 +765,25 @@ find_named_value_newgui_BM (const char *vstr, struct stackframe_stBM * stkf)
       struct browsedval_stBM *mdbv = browsedval_BM + md;
       assert (isstring_BM (mdbv->brow_name));
       if (!strcmp (vstr, bytstring_BM (mdbv->brow_name)))
-        return mdbv->brow_val;
+        return md;
     }
-  return NULL;
+  return -1;
+}                               /* end index_named_value_newgui_BM */
+
+value_tyBM
+find_named_value_newgui_BM (const char *vstr, struct stackframe_stBM * stkf)
+{
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 value_tyBM val;);
+  if (!validname_BM (vstr))
+    return NULL;
+  if (browsednvulen_BM == 0)
+    return NULL;
+  int ix = index_named_value_newgui_BM (vstr);
+  if (ix < 0)
+    return NULL;
+  _.val = browsedval_BM[ix].brow_val;
+  return _.val;
 }                               /* end find_named_value_newgui_BM */
 
 static void
