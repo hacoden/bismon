@@ -586,7 +586,8 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
   objectval_tyBM *k_depth = BMK_17YdW6dWrBA_2mn4QmBjMNs;
   _.parsob = checkedparserowner_BM (pars);
   const struct parserops_stBM *parsops = pars->pars_ops;
-  assert (!parsops || parsops->parsop_magic == PARSOPMAGIC_BM);
+  assert (parsops && parsops->parsop_magic == PARSOPMAGIC_BM);
+  bool nobuild = parsops->parsop_nobuild;
   int nbloop = 0;
   for (;;)
     {
@@ -647,16 +648,22 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
           _.val =
             parsergetvalue_BM (pars, (struct stackframe_stBM *) &_, 0,
                                &gotval);
-          if (_.val)
-            browse_named_value_newgui_BM (_.astrv, _.val, browserdepth_BM,
-                                          (struct stackframe_stBM *) &_);
-          else
+          if (!nobuild)
             {
-              log_begin_message_BM ();
-              log_printf_message_BM ("no value");
-              log_end_message_BM ();
+              DBGPRINTF_BM ("parsecommandbuf_newgui val=%s",
+                            debug_outstr_value_BM (_.val,
+                                                   (struct stackframe_stBM *)
+                                                   &_, 5));
+              if (_.val)
+                browse_named_value_newgui_BM (_.astrv, _.val, browserdepth_BM,
+                                              (struct stackframe_stBM *) &_);
+              else
+                {
+                  log_begin_message_BM ();
+                  log_printf_message_BM ("no value");
+                  log_end_message_BM ();
+                }
             }
-#warning parsecommandbuf_newgui should show the _.val
         }
       else if (tok.tok_kind == plex__NONE)
         parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
@@ -999,6 +1006,8 @@ add_indexed_named_value_newgui_BM (const stringval_tyBM * namev,
   curbv->brow_vdata = nvx;
   nvx->nvx_index = (int) idx;
   nvx->nvx_tbuffer = gtk_text_buffer_new (browsertagtable_BM);
+  DBGPRINTF_BM ("add_indexed_named_value_newgui_BM idx=%u nvx_tbuffer@%p",
+                idx, nvx->nvx_tbuffer);
   nvx->nvx_upframe = gtk_frame_new (NULL);
   gtk_box_pack_start (GTK_BOX (uppervboxvalues_newgui_bm), nvx->nvx_upframe,
                       BOXEXPAND_BM, BOXFILL_BM, 2);
@@ -1097,31 +1106,33 @@ browse_indexed_named_value_newgui_BM (const value_tyBM val,
                  value_tyBM val;
     );
   assert (val != NULL);
-  assert (idx <= browsednvulen_BM);
+  assert (idx < browsednvulen_BM);
   assert (idx < browsednvsize_BM);
   assert (browsdepth > 0 && browsdepth <= BROWSE_MAXDEPTH_NEWGUI_BM);
   assert (pthread_self () == mainthreadid_BM);
+  DBGPRINTF_BM ("browse_indexed_named_value_newgui_BM idx=%u", idx);
   struct browsedval_stBM *curbv = browsedval_BM + idx;
   struct namedvaluenewguixtra_stBM *nvx =
     (struct namedvaluenewguixtra_stBM *) (curbv->brow_vdata);
   assert (nvx != NULL && nvx->nvx_index == idx);
   GtkTextBuffer *txbuf = nvx->nvx_tbuffer;
+  assert (GTK_IS_TEXT_BUFFER (txbuf));
   _.val = val;
   gtk_text_buffer_set_text (txbuf, "", 0);
   browserobcurix_BM = -1;
   browsednvcurix_BM = idx;
   int prevbrowdepth = browserdepth_BM;
   browserdepth_BM = browsdepth;
-  gtk_text_buffer_get_start_iter (&browserit_BM, nvx->nvx_tbuffer);
-  browserbuf_BM = nvx->nvx_tbuffer;
+  gtk_text_buffer_get_start_iter (&browserit_BM, txbuf);
+  browserbuf_BM = txbuf;
   curbv->brow_vstartmk = gtk_text_buffer_create_mark
-    (nvx->nvx_tbuffer, NULL, &browserit_BM, LEFT_GRAVITY_BM);
+    (txbuf, NULL, &browserit_BM, LEFT_GRAVITY_BM);
   send2_BM ((const value_tyBM) _.val, BMP_browse_value,
             (struct stackframe_stBM *) &_,
             taggedint_BM (browsdepth), taggedint_BM (0));
   curbv->brow_vendmk = gtk_text_buffer_create_mark
-    (nvx->nvx_tbuffer, NULL, &browserit_BM, RIGHT_GRAVITY_BM);
-  gtk_text_buffer_insert (nvx->nvx_tbuffer, &browserit_BM, "\n", 1);
+    (txbuf, NULL, &browserit_BM, RIGHT_GRAVITY_BM);
+  gtk_text_buffer_insert (txbuf, &browserit_BM, "\n", 1);
   browserbuf_BM = NULL;
   browsednvcurix_BM = -1;
   browserobcurix_BM = -1;
