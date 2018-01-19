@@ -12,6 +12,7 @@ struct namedvaluethings_stBM
 {
   GtkWidget *nvxt_frame;
   GtkWidget *nvxt_vbox;
+  GtkWidget *nvxt_spindepth;
   GtkWidget *nvxt_headb;
   GtkWidget *nvxt_textview;
 };
@@ -997,7 +998,20 @@ spindepth_namedval_newgui_cbBM (GtkSpinButton * spbut, gpointer data)
           && idx < (int) browsednvsize_BM);
   assert (browsedval_BM[idx].brow_vdata == (void *) nvx);
   double d = gtk_spin_button_get_value (spbut);
-  DBGPRINTF_BM ("spindepth_namedval_newgui_cbBM idx=%d d=%.3f", idx, d);
+  int newdepth = (int) d;
+  DBGPRINTF_BM ("spindepth_namedval_newgui_cbBM idx=%d d=%.3f = %d", idx, d,
+                newdepth);
+  browsedval_BM[idx].brow_vdepth = newdepth;
+  browse_indexed_named_value_newgui_BM (browsedval_BM[idx].brow_val, newdepth,
+                                        idx, NULL);
+  if (spbut != nvx->nvx_upper.nvxt_spindepth)
+    gtk_spin_button_set_value (nvx->nvx_upper.nvxt_spindepth,
+                               (double) newdepth);
+  if (spbut != nvx->nvx_lower.nvxt_spindepth)
+    gtk_spin_button_set_value (nvx->nvx_lower.nvxt_spindepth,
+                               (double) newdepth);
+  gtk_widget_show_all (nvx->nvx_upper.nvxt_frame);
+  gtk_widget_show_all (nvx->nvx_lower.nvxt_frame);
 #warning spindepth_namedval_newgui_cbBM unimplemented
 }                               /* end spindepth_namedval_newgui_cbBM */
 
@@ -1031,13 +1045,13 @@ fill_nvx_thing_newgui_BM (struct namedvaluenewguixtra_stBM *nvx, bool upper,
                                    GTK_ICON_SIZE_MENU);
   g_signal_connect (clobut, "activate", closebut_namedval_newgui_cbBM, nvx);
   gtk_header_bar_pack_end (GTK_HEADER_BAR (nt->nvxt_headb), clobut);
-  GtkWidget *depthspin =        //
+  nt->nvxt_spindepth =          //
     gtk_spin_button_new_with_range (2.0,
-                                    (double) BROWSE_MAXDEPTH_NEWGUI_BM,
-                                    1.0);
-  g_signal_connect (depthspin, "value-changed",
+                                    (double) BROWSE_MAXDEPTH_NEWGUI_BM, 1.0);
+  g_signal_connect (nt->nvxt_spindepth, "value-changed",
                     spindepth_namedval_newgui_cbBM, nvx);
-  gtk_header_bar_pack_end (GTK_HEADER_BAR (nt->nvxt_headb), depthspin);
+  gtk_header_bar_pack_end (GTK_HEADER_BAR (nt->nvxt_headb),
+                           nt->nvxt_spindepth);
   gtk_header_bar_set_title (GTK_HEADER_BAR (nt->nvxt_headb), title);
   gtk_header_bar_set_subtitle (GTK_HEADER_BAR (nt->nvxt_headb), subtitle);
   gtk_box_pack_start (GTK_BOX (nt->nvxt_vbox), nt->nvxt_headb,
@@ -1176,6 +1190,14 @@ browse_indexed_named_value_newgui_BM (const value_tyBM val,
   browsednvcurix_BM = idx;
   int prevbrowdepth = browserdepth_BM;
   browserdepth_BM = browsdepth;
+  char subtitle[16];
+  memset (subtitle, 0, sizeof (subtitle));
+  snprintf (subtitle, sizeof (subtitle), "∇ %d" /*Unicode U+2207 NABLA */ ,
+            browsdepth);
+  gtk_header_bar_set_subtitle (GTK_HEADER_BAR (nvx->nvx_upper.nvxt_headb),
+                               subtitle);
+  gtk_header_bar_set_subtitle (GTK_HEADER_BAR (nvx->nvx_lower.nvxt_headb),
+                               subtitle);
   gtk_text_buffer_get_start_iter (txbuf, &browserit_BM);
   browserbuf_BM = txbuf;
   curbv->brow_vstartmk = gtk_text_buffer_create_mark
