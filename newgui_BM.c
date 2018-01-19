@@ -1123,13 +1123,14 @@ browse_indexed_named_value_newgui_BM (const value_tyBM val,
   browsednvcurix_BM = idx;
   int prevbrowdepth = browserdepth_BM;
   browserdepth_BM = browsdepth;
-  gtk_text_buffer_get_start_iter (&browserit_BM, txbuf);
+  gtk_text_buffer_get_start_iter (txbuf, &browserit_BM);
   browserbuf_BM = txbuf;
   curbv->brow_vstartmk = gtk_text_buffer_create_mark
     (txbuf, NULL, &browserit_BM, LEFT_GRAVITY_BM);
   send2_BM ((const value_tyBM) _.val, BMP_browse_value,
             (struct stackframe_stBM *) &_,
             taggedint_BM (browsdepth), taggedint_BM (0));
+  gtk_text_buffer_get_end_iter (txbuf, &browserit_BM);
   curbv->brow_vendmk = gtk_text_buffer_create_mark
     (txbuf, NULL, &browserit_BM, RIGHT_GRAVITY_BM);
   gtk_text_buffer_insert (txbuf, &browserit_BM, "\n", 1);

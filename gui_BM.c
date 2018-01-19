@@ -964,7 +964,7 @@ browse_show_start_offset_BM (void)
       assert (browsedval_BM[browsednvcurix_BM].brow_name != NULL);
       assert (browsedval_BM[browsednvcurix_BM].brow_val != NULL);
       assert (browsedval_BM[browsednvcurix_BM].brow_vstartmk != NULL);
-      assert (browsedval_BM[browsednvcurix_BM].brow_vendmk != NULL);
+      // we don't care about browsedval_BM[browsednvcurix_BM].brow_vendmk; it could be NULL
       gtk_text_buffer_get_iter_at_mark
         (browserbuf_BM, &it, browsedval_BM[browsednvcurix_BM].brow_vstartmk);
     }
