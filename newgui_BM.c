@@ -381,7 +381,7 @@ initialize_newgui_BM (const char *builderfile, const char *cssfile)
     gtk_paned_set_position (GTK_PANED (paned), 220);
     gtk_window_set_title (GTK_WINDOW (windowvalues_newgui_bm),
                           "bismon values");
-    gtk_window_set_default_size (GTK_WINDOW (windowvalues_newgui_bm), 450,
+    gtk_window_set_default_size (GTK_WINDOW (windowvalues_newgui_bm), 550,
                                  620);
     g_signal_connect (windowvalues_newgui_bm, "delete-event",
                       (GCallback) deletemainwin_BM, NULL);
@@ -1017,6 +1017,18 @@ add_indexed_named_value_newgui_BM (const stringval_tyBM * namev,
   nvx->nvx_upvbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 2);
   gtk_container_add (GTK_CONTAINER (nvx->nvx_upframe), nvx->nvx_upvbox);
   nvx->nvx_upheadb = gtk_header_bar_new ();
+  gtk_header_bar_pack_end (GTK_HEADER_BAR (nvx->nvx_upheadb),
+                           /// https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html
+                           gtk_button_new_from_icon_name ("window-close",
+                                                          GTK_ICON_SIZE_MENU));
+  gtk_header_bar_pack_end (GTK_HEADER_BAR (nvx->nvx_upheadb),
+                           gtk_spin_button_new_with_range (2.0,
+                                                           (double)
+                                                           BROWSE_MAXDEPTH_NEWGUI_BM,
+                                                           1.0));
+  // don't use gtk_header_bar_set_show_close_button, since not
+  // relevant and whole window related
+#warning should probably gtk_header_bar_pack_end more widgets in the header bars
   char *title = g_strdup_printf ("$%s", bytstring_BM (_.namev));
   char subtitle[16];
   memset (subtitle, 0, sizeof (subtitle));
