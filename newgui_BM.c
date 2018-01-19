@@ -7,20 +7,20 @@
 //the value window, containing a GtkPane, in a GtkScrolledWindow
 //containing one GtkFrame (containing a GtkHeaderBar & GtkTextView)
 //per named value;
+
+struct namedvaluethings_stBM
+{
+  GtkWidget *nvxt_frame;
+  GtkWidget *nvxt_vbox;
+  GtkWidget *nvxt_headb;
+  GtkWidget *nvxt_textview;
+};
 struct namedvaluenewguixtra_stBM
 {
   int nvx_index;                /* corresponding index in browsedval_BM */
   GtkTextBuffer *nvx_tbuffer;
-  // upper 
-  GtkWidget *nvx_upframe;
-  GtkWidget *nvx_upvbox;
-  GtkWidget *nvx_upheadb;
-  GtkWidget *nvx_uptextview;
-  // lower
-  GtkWidget *nvx_loframe;
-  GtkWidget *nvx_lovbox;
-  GtkWidget *nvx_loheadb;
-  GtkWidget *nvx_lotextview;
+  // upper & lower things
+  struct namedvaluethings_stBM nvx_upper, nvx_lower;
 };
 
 static stringval_tyBM *astrval_bm;      // the "a" string value, name of default results
@@ -823,7 +823,7 @@ index_named_value_newgui_BM (const char *vstr)
   for (md = lo; md < hi; md++)
     {
       struct browsedval_stBM *mdbv = browsedval_BM + md;
-      assert (isstring_BM (mdbv->brow_name));
+      assert (isstring_BM ((value_tyBM) mdbv->brow_name));
       if (!strcmp (vstr, bytstring_BM (mdbv->brow_name)))
         return md;
     }
@@ -970,6 +970,52 @@ browse_named_value_newgui_BM (const stringval_tyBM * namev,
 
 
 
+static void
+fill_nvx_thing_newgui_BM (struct namedvaluenewguixtra_stBM *nvx, bool upper,
+                          const char *title, const char *subtitle)
+{
+  assert (nvx != NULL);
+  assert (title != NULL);
+  assert (subtitle != NULL);
+  struct namedvaluethings_stBM *nt =
+    upper ? (&nvx->nvx_upper) : (&nvx->nvx_lower);
+  int idx = nvx->nvx_index;
+  assert (idx >= 0 && idx <= (int) browsednvulen_BM
+          && idx < (int) browsednvsize_BM);
+  assert (browsedval_BM[idx].brow_vdata == (void *) nvx);
+  nt->nvxt_frame = gtk_frame_new (NULL);
+  gtk_box_pack_start (GTK_BOX
+                      (upper ? uppervboxvalues_newgui_bm :
+                       lowervboxvalues_newgui_bm), nt->nvxt_frame,
+                      BOXEXPAND_BM, BOXFILL_BM, 2);
+  if (idx > 0)
+    gtk_box_reorder_child (GTK_BOX
+                           (upper ? uppervboxvalues_newgui_bm :
+                            lowervboxvalues_newgui_bm), nt->nvxt_frame, idx);
+  nt->nvxt_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 2);
+  gtk_container_add (GTK_CONTAINER (nt->nvxt_frame), nt->nvxt_vbox);
+  nt->nvxt_headb = gtk_header_bar_new ();
+  GtkWidget *clobut =           //
+    gtk_button_new_from_icon_name ("window-close",
+                                   GTK_ICON_SIZE_MENU);
+  gtk_header_bar_pack_end (GTK_HEADER_BAR (nt->nvxt_headb), clobut);
+  GtkWidget *depthspin =        //
+    gtk_spin_button_new_with_range (2.0,
+                                    (double) BROWSE_MAXDEPTH_NEWGUI_BM,
+                                    1.0);
+  gtk_header_bar_pack_end (GTK_HEADER_BAR (nt->nvxt_headb), depthspin);
+  gtk_header_bar_set_title (GTK_HEADER_BAR (nt->nvxt_headb), title);
+  gtk_header_bar_set_subtitle (GTK_HEADER_BAR (nt->nvxt_headb), subtitle);
+  gtk_box_pack_start (GTK_BOX (nt->nvxt_vbox), nt->nvxt_headb,
+                      BOXNOEXPAND_BM, BOXNOFILL_BM, 1);
+  nt->nvxt_textview = gtk_text_view_new_with_buffer (nvx->nvx_tbuffer);
+  gtk_box_pack_start (GTK_BOX (nt->nvxt_vbox), nt->nvxt_textview,
+                      BOXEXPAND_BM, BOXFILL_BM, 1);
+}                               /* end fill_nvx_thing_newgui_BM */
+
+
+
+
 void
 add_indexed_named_value_newgui_BM (const stringval_tyBM * namev,
                                    const value_tyBM val,
@@ -1008,61 +1054,18 @@ add_indexed_named_value_newgui_BM (const stringval_tyBM * namev,
   nvx->nvx_tbuffer = gtk_text_buffer_new (browsertagtable_BM);
   DBGPRINTF_BM ("add_indexed_named_value_newgui_BM idx=%u nvx_tbuffer@%p",
                 idx, nvx->nvx_tbuffer);
-  nvx->nvx_upframe = gtk_frame_new (NULL);
-  gtk_box_pack_start (GTK_BOX (uppervboxvalues_newgui_bm), nvx->nvx_upframe,
-                      BOXEXPAND_BM, BOXFILL_BM, 2);
-  if (idx > 0)
-    gtk_box_reorder_child (GTK_BOX (uppervboxvalues_newgui_bm),
-                           nvx->nvx_upframe, idx);
-  nvx->nvx_upvbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 2);
-  gtk_container_add (GTK_CONTAINER (nvx->nvx_upframe), nvx->nvx_upvbox);
-  nvx->nvx_upheadb = gtk_header_bar_new ();
-  gtk_header_bar_pack_end (GTK_HEADER_BAR (nvx->nvx_upheadb),
-                           /// https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html
-                           gtk_button_new_from_icon_name ("window-close",
-                                                          GTK_ICON_SIZE_MENU));
-  gtk_header_bar_pack_end (GTK_HEADER_BAR (nvx->nvx_upheadb),
-                           gtk_spin_button_new_with_range (2.0,
-                                                           (double)
-                                                           BROWSE_MAXDEPTH_NEWGUI_BM,
-                                                           1.0));
-  // don't use gtk_header_bar_set_show_close_button, since not
-  // relevant and whole window related
-#warning should probably gtk_header_bar_pack_end more widgets in the header bars
   char *title = g_strdup_printf ("$%s", bytstring_BM (_.namev));
   char subtitle[16];
   memset (subtitle, 0, sizeof (subtitle));
   snprintf (subtitle, sizeof (subtitle), "∇ %d" /*Unicode U+2207 NABLA */ ,
             browsdepth);
-  gtk_header_bar_set_title (GTK_HEADER_BAR (nvx->nvx_upheadb), title);
-  gtk_header_bar_set_subtitle (GTK_HEADER_BAR (nvx->nvx_upheadb), subtitle);
-  gtk_box_pack_start (GTK_BOX (nvx->nvx_upvbox), nvx->nvx_upheadb,
-                      BOXNOEXPAND_BM, BOXNOFILL_BM, 1);
-  nvx->nvx_uptextview = gtk_text_view_new_with_buffer (nvx->nvx_tbuffer);
-  gtk_box_pack_start (GTK_BOX (nvx->nvx_upvbox), nvx->nvx_uptextview,
-                      BOXEXPAND_BM, BOXFILL_BM, 1);
-  //
-  nvx->nvx_loframe = gtk_frame_new (NULL);
-  gtk_box_pack_start (GTK_BOX (lowervboxvalues_newgui_bm), nvx->nvx_loframe,
-                      BOXEXPAND_BM, BOXFILL_BM, 2);
-  if (idx > 0)
-    gtk_box_reorder_child (GTK_BOX (lowervboxvalues_newgui_bm),
-                           nvx->nvx_loframe, idx);
-  nvx->nvx_lovbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 2);
-  gtk_container_add (GTK_CONTAINER (nvx->nvx_loframe), nvx->nvx_lovbox);
-  nvx->nvx_loheadb = gtk_header_bar_new ();
-  gtk_header_bar_set_title (GTK_HEADER_BAR (nvx->nvx_loheadb), title);
-  gtk_header_bar_set_subtitle (GTK_HEADER_BAR (nvx->nvx_loheadb), subtitle);
-  gtk_box_pack_start (GTK_BOX (nvx->nvx_lovbox), nvx->nvx_loheadb,
-                      BOXNOEXPAND_BM, BOXNOFILL_BM, 1);
-  nvx->nvx_lotextview = gtk_text_view_new_with_buffer (nvx->nvx_tbuffer);
-  gtk_box_pack_start (GTK_BOX (nvx->nvx_lovbox), nvx->nvx_lotextview,
-                      BOXEXPAND_BM, BOXFILL_BM, 1);
+  fill_nvx_thing_newgui_BM (nvx, true /*upper */ , title, subtitle);
+  fill_nvx_thing_newgui_BM (nvx, false /*lower */ , title, subtitle);
   browse_indexed_named_value_newgui_BM (_.val, browsdepth, idx,
                                         (struct stackframe_stBM *) &_);
   //
-  gtk_widget_show_all (nvx->nvx_upframe);
-  gtk_widget_show_all (nvx->nvx_loframe);
+  gtk_widget_show_all (nvx->nvx_upper.nvxt_frame);
+  gtk_widget_show_all (nvx->nvx_lower.nvxt_frame);
   g_free (title), (title = NULL);
 }                               /* end add_indexed_named_value_newgui_BM */
 
@@ -1100,12 +1103,14 @@ replace_indexed_named_value_newgui_BM (const value_tyBM val,
   memset (subtitle, 0, sizeof (subtitle));
   snprintf (subtitle, sizeof (subtitle), "∇ %d" /*Unicode U+2207 NABLA */ ,
             browsdepth);
-  gtk_header_bar_set_subtitle (GTK_HEADER_BAR (nvx->nvx_upheadb), subtitle);
-  gtk_header_bar_set_subtitle (GTK_HEADER_BAR (nvx->nvx_loheadb), subtitle);
+  gtk_header_bar_set_subtitle (GTK_HEADER_BAR (nvx->nvx_upper.nvxt_headb),
+                               subtitle);
+  gtk_header_bar_set_subtitle (GTK_HEADER_BAR (nvx->nvx_lower.nvxt_headb),
+                               subtitle);
   browse_indexed_named_value_newgui_BM (_.val, browsdepth, idx,
                                         (struct stackframe_stBM *) &_);
-  gtk_widget_show_all (nvx->nvx_upframe);
-  gtk_widget_show_all (nvx->nvx_loframe);
+  gtk_widget_show_all (nvx->nvx_upper.nvxt_frame);
+  gtk_widget_show_all (nvx->nvx_lower.nvxt_frame);
 }                               /* end replace_indexed_named_value_newgui_BM */
 
 static void
@@ -1180,9 +1185,11 @@ hide_named_value_newgui_BM (const char *namestr, struct stackframe_stBM *stkf)
   gtk_text_buffer_delete_mark (txbuf, curbv->brow_vendmk),
     (curbv->brow_vendmk = NULL);
   gtk_container_remove (GTK_CONTAINER (uppervboxvalues_newgui_bm),
-                        nvx->nvx_upframe), (nvx->nvx_upframe = NULL);
+                        nvx->nvx_upper.nvxt_frame),
+    (nvx->nvx_upper.nvxt_frame = NULL);
   gtk_container_remove (GTK_CONTAINER (lowervboxvalues_newgui_bm),
-                        nvx->nvx_loframe), (nvx->nvx_loframe = NULL);
+                        nvx->nvx_lower.nvxt_frame),
+    (nvx->nvx_lower.nvxt_frame = NULL);
   memset (nvx, 0, sizeof (nvx));
   free (nvx), (curbv->brow_vdata = nvx = NULL);
   for (int ix = idx; ix < browsednvulen_BM; ix++)
