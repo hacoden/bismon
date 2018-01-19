@@ -970,10 +970,11 @@ browse_named_value_newgui_BM (const stringval_tyBM * namev,
   return;
 }                               /* end browse_named_value_newgui_BM */
 
-static void closebut_namedval_cbBM (GtkWidget * wbut, gpointer data);
-
+static void closebut_namedval_newgui_cbBM (GtkWidget * wbut, gpointer data);
+static void spindepth_namedval_newgui_cbBM (GtkSpinButton * spbut,
+                                            gpointer data);
 void
-closebut_namedval_cbBM (GtkWidget * wbut, gpointer data)
+closebut_namedval_newgui_cbBM (GtkWidget * wbut, gpointer data)
 {
   assert (GTK_IS_BUTTON (wbut));
   assert (data != NULL);
@@ -983,8 +984,22 @@ closebut_namedval_cbBM (GtkWidget * wbut, gpointer data)
           && idx < (int) browsednvsize_BM);
   assert (browsedval_BM[idx].brow_vdata == (void *) nvx);
   hide_index_named_value_newgui_BM (idx, NULL);
-}                               /* end closebut_namedval_cbBM */
+}                               /* end closebut_namedval_newgui_cbBM */
 
+void
+spindepth_namedval_newgui_cbBM (GtkSpinButton * spbut, gpointer data)
+{
+  assert (GTK_IS_SPIN_BUTTON (spbut));
+  assert (data != NULL);
+  struct namedvaluenewguixtra_stBM *nvx = data;
+  int idx = nvx->nvx_index;
+  assert (idx >= 0 && idx <= (int) browsednvulen_BM
+          && idx < (int) browsednvsize_BM);
+  assert (browsedval_BM[idx].brow_vdata == (void *) nvx);
+  double d = gtk_spin_button_get_value (spbut);
+  DBGPRINTF_BM ("spindepth_namedval_newgui_cbBM idx=%d d=%.3f", idx, d);
+#warning spindepth_namedval_newgui_cbBM unimplemented
+}                               /* end spindepth_namedval_newgui_cbBM */
 
 static void
 fill_nvx_thing_newgui_BM (struct namedvaluenewguixtra_stBM *nvx, bool upper,
@@ -1014,12 +1029,14 @@ fill_nvx_thing_newgui_BM (struct namedvaluenewguixtra_stBM *nvx, bool upper,
   GtkWidget *clobut =           //
     gtk_button_new_from_icon_name ("window-close",
                                    GTK_ICON_SIZE_MENU);
-  g_signal_connect (clobut, "activate", closebut_namedval_cbBM, nvx);
+  g_signal_connect (clobut, "activate", closebut_namedval_newgui_cbBM, nvx);
   gtk_header_bar_pack_end (GTK_HEADER_BAR (nt->nvxt_headb), clobut);
   GtkWidget *depthspin =        //
     gtk_spin_button_new_with_range (2.0,
                                     (double) BROWSE_MAXDEPTH_NEWGUI_BM,
                                     1.0);
+  g_signal_connect (depthspin, "value-changed",
+                    spindepth_namedval_newgui_cbBM, nvx);
   gtk_header_bar_pack_end (GTK_HEADER_BAR (nt->nvxt_headb), depthspin);
   gtk_header_bar_set_title (GTK_HEADER_BAR (nt->nvxt_headb), title);
   gtk_header_bar_set_subtitle (GTK_HEADER_BAR (nt->nvxt_headb), subtitle);
