@@ -606,6 +606,7 @@ extern value_tyBM apply9_BM (const value_tyBM funv,
 value_tyBM applyvar_BM (const value_tyBM funv, struct stackframe_stBM *stkf, unsigned nbargs,   // no more than MAXAPPLYARGS_BM
                         const value_tyBM * argarr);
 
+// send dump_value, making a buffer object, giving its byte contents
 extern const char *debug_outstr_value_BM (const value_tyBM val,
                                           struct stackframe_stBM *stkf,
                                           int curdepth);
