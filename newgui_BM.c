@@ -89,6 +89,8 @@ browse_named_value_newgui_BM (const stringval_tyBM * namev,
 static void
 hide_named_value_newgui_BM (const char *namestr,
                             struct stackframe_stBM *stkf);
+static void
+hide_index_named_value_newgui_BM (int idx, struct stackframe_stBM *stkf);
 
 const struct parserops_stBM parsop_command_build_newgui_BM = {
   .parsop_magic = PARSOPMAGIC_BM,
@@ -968,6 +970,20 @@ browse_named_value_newgui_BM (const stringval_tyBM * namev,
   return;
 }                               /* end browse_named_value_newgui_BM */
 
+static void closebut_namedval_cbBM (GtkWidget * wbut, gpointer data);
+
+void
+closebut_namedval_cbBM (GtkWidget * wbut, gpointer data)
+{
+  assert (GTK_IS_BUTTON (wbut));
+  assert (data != NULL);
+  struct namedvaluenewguixtra_stBM *nvx = data;
+  int idx = nvx->nvx_index;
+  assert (idx >= 0 && idx <= (int) browsednvulen_BM
+          && idx < (int) browsednvsize_BM);
+  assert (browsedval_BM[idx].brow_vdata == (void *) nvx);
+  hide_index_named_value_newgui_BM (idx, NULL);
+}                               /* end closebut_namedval_cbBM */
 
 
 static void
@@ -998,6 +1014,7 @@ fill_nvx_thing_newgui_BM (struct namedvaluenewguixtra_stBM *nvx, bool upper,
   GtkWidget *clobut =           //
     gtk_button_new_from_icon_name ("window-close",
                                    GTK_ICON_SIZE_MENU);
+  g_signal_connect (clobut, "activate", closebut_namedval_cbBM, nvx);
   gtk_header_bar_pack_end (GTK_HEADER_BAR (nt->nvxt_headb), clobut);
   GtkWidget *depthspin =        //
     gtk_spin_button_new_with_range (2.0,
@@ -1009,6 +1026,8 @@ fill_nvx_thing_newgui_BM (struct namedvaluenewguixtra_stBM *nvx, bool upper,
   gtk_box_pack_start (GTK_BOX (nt->nvxt_vbox), nt->nvxt_headb,
                       BOXNOEXPAND_BM, BOXNOFILL_BM, 1);
   nt->nvxt_textview = gtk_text_view_new_with_buffer (nvx->nvx_tbuffer);
+  gtk_text_view_set_editable (GTK_TEXT_VIEW (nt->nvxt_textview), false);
+  gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (nt->nvxt_textview), true);
   gtk_box_pack_start (GTK_BOX (nt->nvxt_vbox), nt->nvxt_textview,
                       BOXEXPAND_BM, BOXFILL_BM, 1);
 }                               /* end fill_nvx_thing_newgui_BM */
@@ -1164,14 +1183,22 @@ browse_indexed_named_value_newgui_BM (const value_tyBM val,
 static void
 hide_named_value_newgui_BM (const char *namestr, struct stackframe_stBM *stkf)
 {
+  if (!namestr)
+    return;
+  int idx = find_named_value_newgui_BM (namestr, stkf);
+  if (idx < 0)
+    return;
+  hide_index_named_value_newgui_BM (idx, stkf);
+}                               /* end hide_named_value_newgui_BM */
+
+
+void
+hide_index_named_value_newgui_BM (int idx, struct stackframe_stBM *stkf)
+{
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  value_tyBM val;
     );
-  if (!namestr)
-    return;
-  int idx =
-    find_named_value_newgui_BM (namestr, (struct stackframe_stBM *) &_);
-  if (idx < 0)
+  if (idx < 0 || idx >= (int) browsednvulen_BM)
     return;
   struct browsedval_stBM *curbv = browsedval_BM + idx;
   struct namedvaluenewguixtra_stBM *nvx =
@@ -1190,9 +1217,9 @@ hide_named_value_newgui_BM (const char *namestr, struct stackframe_stBM *stkf)
   gtk_container_remove (GTK_CONTAINER (lowervboxvalues_newgui_bm),
                         nvx->nvx_lower.nvxt_frame),
     (nvx->nvx_lower.nvxt_frame = NULL);
-  memset (nvx, 0, sizeof (nvx));
+  memset (nvx, 0, sizeof (*nvx));
   free (nvx), (curbv->brow_vdata = nvx = NULL);
-  for (int ix = idx; ix < browsednvulen_BM; ix++)
+  for (int ix = idx; ix < (int) browsednvulen_BM; ix++)
     {
       browsedval_BM[ix] = browsedval_BM[ix + 1];
       struct namedvaluenewguixtra_stBM *uvx =
@@ -1217,7 +1244,7 @@ hide_named_value_newgui_BM (const char *namestr, struct stackframe_stBM *stkf)
           browsednvsize_BM = newsiz;
         }
     }
-}                               /* end hide_named_value_newgui_BM */
+}                               /* end hide_index_named_value_newgui_BM  */
 
 
 
