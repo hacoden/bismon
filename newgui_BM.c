@@ -613,16 +613,32 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
         {
           parstoken_tyBM cmdtok =
             parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
+          // ,depth <number>
           if (cmdtok.tok_kind == plex_NAMEDOBJ
               && cmdtok.tok_namedobj == k_depth)
             {
-              parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
-                                    cmdtok.tok_line, cmdtok.tok_col,
-                                    "unimplemented ,depth");
+              parstoken_tyBM depthtok =
+                parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
+              if (depthtok.tok_kind != plex_LLONG)
+                parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
+                                      cmdtok.tok_line, cmdtok.tok_col,
+                                      ",depth not followed by number");
+              if (depthtok.tok_llong < 2
+                  || depthtok.tok_llong > BROWSE_MAXDEPTH_NEWGUI_BM)
+                parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
+                                      cmdtok.tok_line, cmdtok.tok_col,
+                                      "bad ,depth %lld, should be between 2 and %d",
+                                      depthtok.tok_llong,
+                                      BROWSE_MAXDEPTH_NEWGUI_BM);
+              browserdepth_BM = (int) depthtok.tok_llong;
             }
+          // ,var <name> <value>
           else if (cmdtok.tok_kind == plex_NAMEDOBJ
                    && cmdtok.tok_namedobj == k_var)
             {
+              parstoken_tyBM vartok =
+                parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
+#warning ,var <name> <value> unimplemented
               parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
                                     cmdtok.tok_line, cmdtok.tok_col,
                                     "unimplemented ,var");
