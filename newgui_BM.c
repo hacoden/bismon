@@ -1148,6 +1148,8 @@ add_indexed_named_value_newgui_BM (const stringval_tyBM * namev,
   assert (idx < browsednvsize_BM);
   assert (pthread_self () == mainthreadid_BM);
   assert (browsdepth > 0 && browsdepth <= BROWSE_MAXDEPTH_NEWGUI_BM);
+  DBGPRINTF_BM("add_indexed_named_value_newgui namev: %s browsdepth=%d idx#%d ulen:%u",
+	       bytstring_BM(_.namev), browsdepth, idx,  browsednvulen_BM);
   struct browsedval_stBM *curbv = browsedval_BM + idx;
   curbv->brow_name = _.namev;
   curbv->brow_val = _.val;
