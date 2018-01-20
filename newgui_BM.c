@@ -947,6 +947,8 @@ browse_named_value_newgui_BM (const stringval_tyBM * namev,
     return;
   if (!val)
     return;
+  DBGPRINTF_BM ("browse_named_value_newgui start name: %s depth %d ulen %u",
+                bytstring_BM (_.namev), browsdepth, browsednvulen_BM);
   if (browsednvulen_BM == 0)
     {
       if (!browsedval_BM)
@@ -1012,7 +1014,10 @@ browse_named_value_newgui_BM (const stringval_tyBM * namev,
         break;
     }
   // insert before md
-  assert (md > 0);
+  assert (md >= 0);
+  DBGPRINTF_BM
+    ("browse_named_value_newgui lo=%d, hi=%d, md=%d, ulen=%d, name=%s", lo,
+     hi, md, browsednvulen_BM, bytstring_BM (_.namev));
   for (int ix = browsednvulen_BM; ix > md; ix--)
     {
       browsedval_BM[ix] = browsedval_BM[ix - 1];
