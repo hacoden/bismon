@@ -568,8 +568,8 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
   if (!isparser_BM (pars))
     return;
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 value_tyBM val; const stringval_tyBM * astrv;
-                 objectval_tyBM * obj; objectval_tyBM * oldfocusobj;
+                 value_tyBM val;
+                 const stringval_tyBM * astrv; objectval_tyBM * obj;
                  const stringval_tyBM * name; const stringval_tyBM * result;
                  objectval_tyBM * parsob;
     );
@@ -594,6 +594,10 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
   int nbloop = 0;
   for (;;)
     {
+      _.name = NULL;
+      _.obj = NULL;
+      _.result = NULL;
+      _.val = NULL;
       parserskipspaces_BM (pars, (struct stackframe_stBM *) &_);
       if (nbloop++ > MAXSIZE_BM / 32)
         parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
@@ -608,7 +612,7 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
       DBGPRINTF_BM ("parsecommandbuf_newgui_BM nbloop#%d tok~%s L%dC%d",
                     nbloop, lexkindname_BM (tok.tok_kind), curlineno,
                     curcolpos);
-      //command?
+      //commands starting with comma?
       if (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_comma)
         {
           parstoken_tyBM cmdtok =
@@ -638,10 +642,49 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
             {
               parstoken_tyBM vartok =
                 parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
-#warning ,var <name> <value> unimplemented
-              parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
-                                    cmdtok.tok_line, cmdtok.tok_col,
-                                    "unimplemented ,var");
+              if (vartok.tok_kind == plex_NAMEDOBJ)
+                _.name =
+                  makestring_BM (findobjectname_BM (vartok.tok_namedobj));
+              else if (vartok.tok_kind == plex_CNAME)
+                _.name = vartok.tok_cname;
+              else
+                parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
+                                      cmdtok.tok_line, cmdtok.tok_col,
+                                      "name expected after ,var");
+              bool gotval = false;
+              _.val = parsergetvalue_BM (pars, (struct stackframe_stBM *) &_,
+                                         0, &gotval);
+              if (!gotval)
+                parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
+                                      cmdtok.tok_line, cmdtok.tok_col,
+                                      "value expected after ,var %s",
+                                      bytstring_BM (_.name));
+              if (!nobuild)
+                {
+                  if (_.val)
+                    {
+                      browse_named_value_newgui_BM (_.name, _.val,
+                                                    browserdepth_BM,
+                                                    (struct stackframe_stBM *)
+                                                    &_);
+                      log_begin_message_BM ();
+                      log_printf_message_BM
+                        ("show value named %s at depth %d",
+                         bytstring_BM (_.name), browserdepth_BM);
+                      log_end_message_BM ();
+                    }
+                  else
+                    {
+                      hide_named_value_newgui_BM (bytstring_BM (_.name),
+                                                  (struct stackframe_stBM *)
+                                                  &_);
+                      log_begin_message_BM ();
+                      log_printf_message_BM ("forgot value named %s",
+                                             bytstring_BM (_.name));
+                      log_end_message_BM ();
+                    }
+
+                }
             }
           else
             parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
