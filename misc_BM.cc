@@ -902,7 +902,7 @@ gtk_defer_send3_BM(value_tyBM recv, objectval_tyBM*obsel,  value_tyBM arg1, valu
 ////////////////////////////////////////////////////////////////
 /********** agenda support **********/
 #ifndef AGENDA_SLOW_FACTOR_BM
-#define AGENDA_SLOW_FACTOR_BM 1
+#define AGENDA_SLOW_FACTOR_BM 3
 #endif /*AGENDA_SLOW_FACTOR_BM*/
 
 typedef void threadidle_sigtBM (int thrank);

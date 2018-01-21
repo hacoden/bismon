@@ -964,6 +964,8 @@ browse_named_value_newgui_BM (const stringval_tyBM * namev,
       memset (browsedval_BM + 0, 0, sizeof (struct browsedval_stBM));
       add_indexed_named_value_newgui_BM //
         (_.namev, _.val, browsdepth, 0, (struct stackframe_stBM *) &_);
+      DBGPRINTF_BM ("browse_named_value_newgui (empty) end name: %s",
+                    bytstring_BM (_.namev));
       return;
     };
   // grow array if needed
@@ -978,6 +980,9 @@ browse_named_value_newgui_BM (const stringval_tyBM * namev,
               browsednvulen_BM * sizeof (struct browsedval_stBM));
       free (browsedval_BM), (browsedval_BM = newarr);
       browsednvsize_BM = newsiz;
+      DBGPRINTF_BM
+        ("browse_named_value_newgui grow name: %s nvsize %u ulen %u",
+         bytstring_BM (_.namev), browsednvsize_BM, browsednvulen_BM);
     }
   int lo = 0, hi = (int) browsednvulen_BM, md = 0;
   while (lo + 4 < hi)
@@ -991,6 +996,9 @@ browse_named_value_newgui_BM (const stringval_tyBM * namev,
         {
           replace_indexed_named_value_newgui_BM //
             (_.val, browsdepth, (unsigned) md, (struct stackframe_stBM *) &_);
+          DBGPRINTF_BM
+            ("browse_named_value_newgui end replaced name: %s md %d ulen %u",
+             bytstring_BM (_.namev), md, browsednvulen_BM);
           return;
         }
       else if (cmp < 0)
@@ -1008,6 +1016,9 @@ browse_named_value_newgui_BM (const stringval_tyBM * namev,
         {
           replace_indexed_named_value_newgui_BM //
             (_.val, browsdepth, (unsigned) md, (struct stackframe_stBM *) &_);
+          DBGPRINTF_BM
+            ("browse_named_value_newgui end replaced name: %s md %d ulen %u",
+             bytstring_BM (_.namev), md, browsednvulen_BM);
           return;
         }
       else if (cmp > 0)
@@ -1030,10 +1041,17 @@ browse_named_value_newgui_BM (const stringval_tyBM * namev,
         }
     }
   memset (browsedval_BM + md, 0, sizeof (struct browsedval_stBM));
+  browsednvulen_BM++;
   add_indexed_named_value_newgui_BM     //
     (_.namev, _.val, browsdepth, md, (struct stackframe_stBM *) &_);
+  DBGPRINTF_BM ("browse_named_value_newgui end added name: %s md %d ulen %u",
+                bytstring_BM (_.namev), md, browsednvulen_BM);
   return;
 }                               /* end browse_named_value_newgui_BM */
+
+
+
+
 
 static void closebut_namedval_newgui_cbBM (GtkWidget * wbut, gpointer data);
 static void spindepth_namedval_newgui_cbBM (GtkSpinButton * spbut,
@@ -1045,6 +1063,7 @@ closebut_namedval_newgui_cbBM (GtkWidget * wbut, gpointer data)
   assert (data != NULL);
   struct namedvaluenewguixtra_stBM *nvx = data;
   int idx = nvx->nvx_index;
+  DBGPRINTF_BM ("closebut_namedval_newgui idx=%d", idx);
   assert (idx >= 0 && idx <= (int) browsednvulen_BM
           && idx < (int) browsednvsize_BM);
   assert (browsedval_BM[idx].brow_vdata == (void *) nvx);
@@ -1089,6 +1108,8 @@ fill_nvx_thing_newgui_BM (struct namedvaluenewguixtra_stBM *nvx, bool upper,
   struct namedvaluethings_stBM *nt =
     upper ? (&nvx->nvx_upper) : (&nvx->nvx_lower);
   int idx = nvx->nvx_index;
+  DBGPRINTF_BM ("fill_nvx_thing_newgui %s idx=%d title'%s' subtitle'%s'",
+                upper ? "up" : "low", idx, title, subtitle);
   assert (idx >= 0 && idx <= (int) browsednvulen_BM
           && idx < (int) browsednvsize_BM);
   assert (browsedval_BM[idx].brow_vdata == (void *) nvx);
@@ -1148,8 +1169,9 @@ add_indexed_named_value_newgui_BM (const stringval_tyBM * namev,
   assert (idx < browsednvsize_BM);
   assert (pthread_self () == mainthreadid_BM);
   assert (browsdepth > 0 && browsdepth <= BROWSE_MAXDEPTH_NEWGUI_BM);
-  DBGPRINTF_BM("add_indexed_named_value_newgui namev: %s browsdepth=%d idx#%d ulen:%u",
-	       bytstring_BM(_.namev), browsdepth, idx,  browsednvulen_BM);
+  DBGPRINTF_BM
+    ("add_indexed_named_value_newgui namev: %s browsdepth=%d idx#%d ulen:%u",
+     bytstring_BM (_.namev), browsdepth, idx, browsednvulen_BM);
   struct browsedval_stBM *curbv = browsedval_BM + idx;
   curbv->brow_name = _.namev;
   curbv->brow_val = _.val;
@@ -1168,8 +1190,9 @@ add_indexed_named_value_newgui_BM (const stringval_tyBM * namev,
   curbv->brow_vdata = nvx;
   nvx->nvx_index = (int) idx;
   nvx->nvx_tbuffer = gtk_text_buffer_new (browsertagtable_BM);
-  DBGPRINTF_BM ("add_indexed_named_value_newgui_BM idx=%u nvx_tbuffer@%p",
-                idx, nvx->nvx_tbuffer);
+  DBGPRINTF_BM
+    ("add_indexed_named_value_newgui_BM idx=%u ulen=%u nvx_tbuffer@%p", idx,
+     browsednvulen_BM, nvx->nvx_tbuffer);
   char *title = g_strdup_printf ("$%s", bytstring_BM (_.namev));
   char subtitle[16];
   memset (subtitle, 0, sizeof (subtitle));
@@ -1238,12 +1261,13 @@ browse_indexed_named_value_newgui_BM (const value_tyBM val,
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  value_tyBM val;
     );
+  DBGPRINTF_BM ("browse_indexed_named_value_newgui_BM idx=%u ulen=%u", idx,
+                browsednvulen_BM);
   assert (val != NULL);
   assert (idx < browsednvulen_BM);
   assert (idx < browsednvsize_BM);
   assert (browsdepth > 0 && browsdepth <= BROWSE_MAXDEPTH_NEWGUI_BM);
   assert (pthread_self () == mainthreadid_BM);
-  DBGPRINTF_BM ("browse_indexed_named_value_newgui_BM idx=%u", idx);
   struct browsedval_stBM *curbv = browsedval_BM + idx;
   struct namedvaluenewguixtra_stBM *nvx =
     (struct namedvaluenewguixtra_stBM *) (curbv->brow_vdata);
