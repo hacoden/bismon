@@ -378,6 +378,8 @@ initialize_newgui_BM (const char *builderfile, const char *cssfile)
                         BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
     gtk_container_add (GTK_CONTAINER (lowerscrollwvalues_newgui_bm),
                        lowervboxvalues_newgui_bm);
+    gtk_container_add (GTK_BOX (lowervboxvalues_newgui_bm),
+                       gtk_separator_new (GTK_ORIENTATION_HORIZONTAL));
     GtkWidget *lowerlab = gtk_label_new ("lower");
     gtk_box_pack_start (GTK_BOX (lowervboxvalues_newgui_bm), lowerlab,
                         BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
@@ -1109,7 +1111,7 @@ fill_nvx_thing_newgui_BM (struct namedvaluenewguixtra_stBM *nvx, bool upper,
     upper ? (&nvx->nvx_upper) : (&nvx->nvx_lower);
   int idx = nvx->nvx_index;
   DBGPRINTF_BM ("fill_nvx_thing_newgui %s idx=%d title'%s' subtitle'%s'",
-                upper ? "up" : "low", idx, title, subtitle);
+                upper ? "upper" : "lower", idx, title, subtitle);
   assert (idx >= 0 && idx <= (int) browsednvulen_BM
           && idx < (int) browsednvsize_BM);
   assert (browsedval_BM[idx].brow_vdata == (void *) nvx);
