@@ -378,8 +378,9 @@ initialize_newgui_BM (const char *builderfile, const char *cssfile)
                         BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
     gtk_container_add (GTK_CONTAINER (lowerscrollwvalues_newgui_bm),
                        lowervboxvalues_newgui_bm);
-    gtk_container_add (GTK_BOX (lowervboxvalues_newgui_bm),
-                       gtk_separator_new (GTK_ORIENTATION_HORIZONTAL));
+    gtk_box_pack_start (GTK_BOX (lowervboxvalues_newgui_bm),
+                        gtk_separator_new (GTK_ORIENTATION_HORIZONTAL),
+                        BOXNOEXPAND_BM, BOXNOFILL_BM, 1);
     GtkWidget *lowerlab = gtk_label_new ("lower");
     gtk_box_pack_start (GTK_BOX (lowervboxvalues_newgui_bm), lowerlab,
                         BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
@@ -454,6 +455,9 @@ runcommand_newgui_BM (bool erase)
   struct parser_stBM *cmdpars =
     makeparser_memopen_BM (cmdstr, -1, _.cmdparsob);
   int cmdlen = strlen (cmdstr);
+  DBGPRINTF_BM
+    ("runcommand_newgui cmdparsob=%s cmdlen=%d, @@@cmdstr=\n%s\n\n",
+     objectdbg_BM (_.cmdparsob), cmdlen, cmdstr);
   cmdpars->pars_ops = &parsop_command_build_newgui_BM;
   volatile int errpars = setjmp (jmperrorcmd_BM);
   if (!errpars)
@@ -1110,20 +1114,19 @@ fill_nvx_thing_newgui_BM (struct namedvaluenewguixtra_stBM *nvx, bool upper,
   struct namedvaluethings_stBM *nt =
     upper ? (&nvx->nvx_upper) : (&nvx->nvx_lower);
   int idx = nvx->nvx_index;
-  DBGPRINTF_BM ("fill_nvx_thing_newgui %s idx=%d title'%s' subtitle'%s'",
-                upper ? "upper" : "lower", idx, title, subtitle);
+  DBGPRINTF_BM
+    ("fill_nvx_thing_newgui %s idx=%d ulen:%u title'%s' subtitle'%s'",
+     upper ? "upper" : "lower", idx, browsednvulen_BM, title, subtitle);
   assert (idx >= 0 && idx <= (int) browsednvulen_BM
           && idx < (int) browsednvsize_BM);
   assert (browsedval_BM[idx].brow_vdata == (void *) nvx);
   nt->nvxt_frame = gtk_frame_new (NULL);
-  gtk_box_pack_start (GTK_BOX
-                      (upper ? uppervboxvalues_newgui_bm :
-                       lowervboxvalues_newgui_bm), nt->nvxt_frame,
-                      BOXEXPAND_BM, BOXFILL_BM, 2);
-  if (idx > 0)
-    gtk_box_reorder_child (GTK_BOX
-                           (upper ? uppervboxvalues_newgui_bm :
-                            lowervboxvalues_newgui_bm), nt->nvxt_frame, idx);
+  GtkBox *inbox = GTK_BOX (upper ? uppervboxvalues_newgui_bm :
+                           lowervboxvalues_newgui_bm);
+  gtk_box_pack_start (inbox, nt->nvxt_frame, BOXEXPAND_BM, BOXFILL_BM, 2);
+  // the lower box starts with a separator, so...
+  gtk_box_reorder_child         //
+    (inbox, nt->nvxt_frame, upper ? idx : (idx + 1));
   nt->nvxt_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 2);
   gtk_container_add (GTK_CONTAINER (nt->nvxt_frame), nt->nvxt_vbox);
   nt->nvxt_headb = gtk_header_bar_new ();
