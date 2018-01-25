@@ -1123,7 +1123,7 @@ fill_nvx_thing_newgui_BM (struct namedvaluenewguixtra_stBM *nvx, bool upper,
   nt->nvxt_frame = gtk_frame_new (NULL);
   GtkBox *inbox = GTK_BOX (upper ? uppervboxvalues_newgui_bm :
                            lowervboxvalues_newgui_bm);
-  gtk_box_pack_start (inbox, nt->nvxt_frame, BOXEXPAND_BM, BOXFILL_BM, 2);
+  gtk_box_pack_end (inbox, nt->nvxt_frame, BOXEXPAND_BM, BOXFILL_BM, 2);
   // the lower box starts with a separator, so...
   gtk_box_reorder_child         //
     (inbox, nt->nvxt_frame, upper ? idx : (idx + 1));
