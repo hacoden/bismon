@@ -591,7 +591,7 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
     }
   else
     _.astrv = astrval_bm;
-  objectval_tyBM *k_var = BMK_420mStG8BOS_3taR8WQ2dO5;
+  objectval_tyBM *k_nval = BMK_5xGpTXhdqX1_1aVTq1TZOXX;
   objectval_tyBM *k_depth = BMK_17YdW6dWrBA_2mn4QmBjMNs;
   _.parsob = checkedparserowner_BM (pars);
   const struct parserops_stBM *parsops = pars->pars_ops;
@@ -642,9 +642,9 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
                                       BROWSE_MAXDEPTH_NEWGUI_BM);
               browserdepth_BM = (int) depthtok.tok_llong;
             }
-          // ,var <name> <value>
+          // ,nval <name> <value>
           else if (cmdtok.tok_kind == plex_NAMEDOBJ
-                   && cmdtok.tok_namedobj == k_var)
+                   && cmdtok.tok_namedobj == k_nval)
             {
               parstoken_tyBM vartok =
                 parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
@@ -706,6 +706,9 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
           _.obj =
             parsergetobject_BM (pars, (struct stackframe_stBM *) &_, 0,
                                 &gotobj);
+          if (!gotobj)
+            parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
+                                  curlineno, curcolpos, "invalid object");
 #warning parsecommandbuf_newgui should show the _.obj
         }
       // start of value?
@@ -716,6 +719,9 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
           _.val =
             parsergetvalue_BM (pars, (struct stackframe_stBM *) &_, 0,
                                &gotval);
+          if (!gotval)
+            parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
+                                  curlineno, curcolpos, "invalid value");
           if (!nobuild)
             {
               DBGPRINTF_BM ("parsecommandbuf_newgui val=%s",
