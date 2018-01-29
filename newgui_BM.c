@@ -24,7 +24,7 @@ struct namedvaluenewguixtra_stBM
   struct namedvaluethings_stBM nvx_upper, nvx_lower;
 };
 
-static stringval_tyBM *astrval_bm;      // the "a" string value, name of default results
+static const stringval_tyBM *astrval_bm;        // the "a" string value, name of default results, $a
 
 static GtkWidget *windowvalues_newgui_bm;
 static GtkWidget *valueslabel_newgui_bm;
@@ -33,6 +33,25 @@ static GtkWidget *lowerscrollwvalues_newgui_bm;
 static GtkWidget *uppervboxvalues_newgui_bm;
 static GtkWidget *lowervboxvalues_newgui_bm;
 
+
+#warning objectview is incomplete
+struct objectviewthings_stBM
+{
+  GtkWidget *obvt_frame;
+  GtkWidget *obvt_vbox;
+  GtkWidget *obvt_headb;
+  GtkWidget *obvt_textview;
+};
+
+struct objectview_newgui_stBM
+{
+  GtkTextBuffer *obv_tbuffer;
+  struct objectviewthings_stBM obv_upper, obv_lower;
+};                              /* end objectview_newgui_stBM */
+
+struct objectwindow_newgui_stBM
+{
+};                              /* end objectwindow_newgui_stBM */
 /*****************************************************************/
 // the function to handle keypresses of cmd, for Return & Tab
 static gboolean handlekeypress_newgui_cmd_BM (GtkWidget *, GdkEventKey *,
@@ -587,7 +606,7 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
     browserdepth_BM = 2;
   else if (browserdepth_BM > BROWSE_MAXDEPTH_NEWGUI_BM)
     browserdepth_BM = BROWSE_MAXDEPTH_NEWGUI_BM;
-  if (!astrval_bm || !isstring_BM (astrval_bm)
+  if (!astrval_bm || !isstring_BM ((value_tyBM) astrval_bm)
       || strcmp (bytstring_BM (astrval_bm), "a"))
     {
       _.astrv = makestring_BM ("a");
@@ -988,14 +1007,15 @@ browse_named_value_newgui_BM (const stringval_tyBM * namev,
     browsdepth = BROWSE_MAXDEPTH_NEWGUI_BM;
   _.namev = namev;
   _.val = val;
-  if (!isstring_BM (namev))
+  if (!isstring_BM ((value_tyBM) namev))
     return;
-  if (!validname_BM (bytstring_BM (namev)))
+  if (!validname_BM (bytstring_BM ((value_tyBM) namev)))
     return;
   if (!val)
     return;
   DBGPRINTF_BM ("browse_named_value_newgui start name: %s depth %d ulen %u",
-                bytstring_BM (_.namev), browsdepth, browsednvulen_BM);
+                bytstring_BM ((value_tyBM) _.namev), browsdepth,
+                browsednvulen_BM);
   if (browsednvulen_BM == 0)
     {
       if (!browsedval_BM)
@@ -1036,9 +1056,9 @@ browse_named_value_newgui_BM (const stringval_tyBM * namev,
     {
       md = (lo + hi) / 2;
       struct browsedval_stBM *mdbv = browsedval_BM + md;
-      assert (isstring_BM (mdbv->brow_name));
-      int cmp =
-        strcmp (bytstring_BM (_.namev), bytstring_BM (mdbv->brow_name));
+      assert (isstring_BM ((value_tyBM) mdbv->brow_name));
+      int cmp = strcmp (bytstring_BM ((value_tyBM) _.namev),
+                        bytstring_BM ((value_tyBM) mdbv->brow_name));
       if (cmp == 0)
         {
           replace_indexed_named_value_newgui_BM //
@@ -1056,16 +1076,16 @@ browse_named_value_newgui_BM (const stringval_tyBM * namev,
   for (md = lo; md < hi; md++)
     {
       struct browsedval_stBM *mdbv = browsedval_BM + md;
-      assert (isstring_BM (mdbv->brow_name));
-      int cmp =
-        strcmp (bytstring_BM (_.namev), bytstring_BM (mdbv->brow_name));
+      assert (isstring_BM ((value_tyBM) mdbv->brow_name));
+      int cmp = strcmp (bytstring_BM ((value_tyBM) _.namev),
+                        bytstring_BM ((value_tyBM) mdbv->brow_name));
       if (!cmp)
         {
           replace_indexed_named_value_newgui_BM //
             (_.val, browsdepth, (unsigned) md, (struct stackframe_stBM *) &_);
           DBGPRINTF_BM
             ("browse_named_value_newgui end replaced name: %s md %d ulen %u",
-             bytstring_BM (_.namev), md, browsednvulen_BM);
+             bytstring_BM ((value_tyBM) _.namev), md, browsednvulen_BM);
           return;
         }
       else if (cmp > 0)

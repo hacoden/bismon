@@ -488,6 +488,7 @@ ROUTINEOBJNAME_BM (_7GMLV81ntO3_4NHTv7fCL0A)    // dump_data°hset_object
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   objectval_tyBM *k_dump_value = BMK_1FEnnpEkGdI_5DAcVDL5XHG;
+  assert (k_dump_value != NULL);
   objectval_tyBM *k_put = BMK_9pvzBeIKHXF_8YDPCrQ6OEK;
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv;
@@ -775,7 +776,9 @@ ROUTINEOBJNAME_BM (_0y90r6nyAYP_2MmfH2V00B1)    // dump_data°vector_object
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   objectval_tyBM *k_dump_value = BMK_1FEnnpEkGdI_5DAcVDL5XHG;
+  assert (k_dump_value != NULL);
   objectval_tyBM *k_put = BMK_9pvzBeIKHXF_8YDPCrQ6OEK;
+  assert (k_put != NULL);
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv;
                  objectval_tyBM * dumpob; objectval_tyBM * bufob;
@@ -876,10 +879,10 @@ ROUTINEOBJNAME_BM (_9EytjXNb76D_1ZP3iSk9cuu)    // dump_data°assoc_object
   WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
   WEAKASSERT_BM (restargs == NULL);
   assert (restargs == NULL);
-  objectval_tyBM *k_dump_value = NULL;
-  objectval_tyBM *k_put = NULL;
-  k_dump_value = BMK_1FEnnpEkGdI_5DAcVDL5XHG;
-  k_put = BMK_9pvzBeIKHXF_8YDPCrQ6OEK;
+  objectval_tyBM *k_dump_value = BMK_1FEnnpEkGdI_5DAcVDL5XHG;
+  assert (k_dump_value != NULL);
+  objectval_tyBM *k_put = BMK_9pvzBeIKHXF_8YDPCrQ6OEK;
+  assert (k_put != NULL);
   WEAKASSERT_BM (isobject_BM ((value_tyBM) _.recv));
   WEAKASSERT_BM (isassoc_BM (objpayload_BM (_.recv)));
   anyassoc_tyBM *assoc = assoccast_BM (objpayload_BM (_.recv));
@@ -1319,19 +1322,20 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
     {
     case 0:
       LOCALRETURN_BM (apply1_BM
-                      (_.closv, (struct stackframe_stBM *) &_, _.ldobj));
+                      ((value_tyBM) _.closv, (struct stackframe_stBM *) &_,
+                       _.ldobj));
     case 1:
       LOCALRETURN_BM (apply2_BM
-                      (_.closv, (struct stackframe_stBM *) &_, _.ldobj,
-                       args[0]));
+                      ((value_tyBM) _.closv, (struct stackframe_stBM *) &_,
+                       _.ldobj, args[0]));
     case 2:
       LOCALRETURN_BM (apply3_BM
-                      (_.closv, (struct stackframe_stBM *) &_, _.ldobj,
-                       args[0], args[1]));
+                      ((value_tyBM) _.closv, (struct stackframe_stBM *) &_,
+                       _.ldobj, args[0], args[1]));
     case 3:
       LOCALRETURN_BM (apply4_BM
-                      (_.closv, (struct stackframe_stBM *) &_, _.ldobj,
-                       args[0], args[1], args[2]));
+                      ((value_tyBM) _.closv, (struct stackframe_stBM *) &_,
+                       _.ldobj, args[0], args[1], args[2]));
     default:
       if (nbargs < MAXAPPLYARGS_BM - 1)
         {
@@ -1599,7 +1603,6 @@ ROUTINEOBJNAME_BM (_3yJPC4SxGtF_6ilaF37wdxG)    //
   objectval_tyBM *k_c_type = NULL;
   objectval_tyBM *k_emit_c_type = NULL;
   objectval_tyBM *closconn = NULL;
-  const node_tyBM *constnodv = NULL;
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv;
                  value_tyBM closv;
@@ -1805,19 +1808,15 @@ ROUTINEOBJNAME_BM (_1gME6zn82Kf_8hzWibLFRfz)    //
                  objectval_tyBM * modgenob; objectval_tyBM * generate_module;
                  value_tyBM resprep; value_tyBM resgen;
     );
-  objectval_tyBM *k_simple_module_generation = NULL;
-  objectval_tyBM *k_prepare_module = NULL;
-  objectval_tyBM *k_plain_module = NULL;
-  objectval_tyBM *k_generate_module = NULL;
+  objectval_tyBM *k_simple_module_generation = BMK_2HlKptD03wA_7JJCG7lN5nS;
+  objectval_tyBM *k_prepare_module = BMK_17mrxkMdNtH_2CduQ2WDIy5;
+  objectval_tyBM *k_plain_module = BMK_8g1WBJBhDT9_1QK8IcuWYx2;
+  objectval_tyBM *k_generate_module = BMK_9mq0jsuz4XQ_4doHfd987Q6;
   if (!isobject_BM (arg1))
     LOCALRETURN_BM (NULL);
   _.recv = (objectval_tyBM *) arg1;
   DBGPRINTF_BM ("@@plain_module°emit_module recv=%s", objectdbg_BM (_.recv));
   _.modgenob = makeobj_BM ();
-  k_simple_module_generation = BMK_2HlKptD03wA_7JJCG7lN5nS;
-  k_prepare_module = BMK_17mrxkMdNtH_2CduQ2WDIy5;
-  k_plain_module = BMK_8g1WBJBhDT9_1QK8IcuWYx2;
-  k_generate_module = BMK_9mq0jsuz4XQ_4doHfd987Q6;
   objputclass_BM (_.modgenob, k_simple_module_generation);
   objputattr_BM (_.modgenob, k_plain_module, _.recv);
   objputstrbuffer_BM (_.modgenob, (1024 * 1024));
@@ -3255,7 +3254,8 @@ ROUTINEOBJNAME_BM (_42gEKfF4qca_6gGwxSFC1FO)    //
                  objectval_tyBM * parsob;
     );
   LOCALGETFUNV_BM (_.clos);
-  if (!isclosure_BM (_.clos) || closurewidth_BM (_.clos) != closix__LAST)
+  if (!isclosure_BM ((value_tyBM) _.clos)
+      || closurewidth_BM ((value_tyBM) _.clos) != closix__LAST)
     LOCALRETURN_BM (NULL);
   _.rnodv = arg1;
   if (!isnode_BM (arg1))
