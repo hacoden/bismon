@@ -18,7 +18,7 @@ INDENTFLAGS= --gnu-style --no-tabs --honour-newlines
 ASTYLEFLAGS= --style=gnu -s2
 PACKAGES= gtk+-3.0
 PKGCONFIG= pkg-config
-PREPROFLAGS= -I. -I/usr/local/include $(shell $(PKGCONFIG) --cflags $(PACKAGES))
+PREPROFLAGS= -I. -I/usr/local/include $(shell $(PKGCONFIG) --cflags $(PACKAGES)) -DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED
 
 LIBES= -L/usr/local/lib $(shell $(PKGCONFIG) --libs $(PACKAGES)) -ldl -lm
 RM= rm -fv
