@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 227 objects
+// for 228 objects
 // with 0 modules
 
 
@@ -1141,6 +1141,17 @@ _7T9OwSFlgov_0wVJaK1eZbn |=object|
 !@ 1511768164.86
 !$_7T9OwSFlgov_0wVJaK1eZbn |=object|
 !)_8dLpuaNoSGN_2tdmkpINCsu
+
+
+
+!(_5mgZTJ64WH9_4r2XC8eZmW7 |=nhide|
+!~ name (~ nhide
+~)
+!@ 1517220469.79
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "for command to hide a named value"
+!)_5mgZTJ64WH9_4r2XC8eZmW7
 
 
 

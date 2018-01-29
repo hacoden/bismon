@@ -522,11 +522,14 @@ runcommand_newgui_BM (bool erase)
     gtk_text_buffer_set_text (commandbuf_BM, "", 0);
 }                               /* end runcommand_newgui_BM */
 
+
 void
 markset_newgui_cmd_BM (GtkTextBuffer * tbuf, GtkTextIter * titer,
                        GtkTextMark * tmark, gpointer cdata)
 {
+  DBGPRINTF_BM ("markset_newgui titer=%s", textiterstrdbg_BM (titer));
 }                               /* end markset_newgui_cmd_BM */
+
 
 void
 enduseraction_newgui_cmd_BM (GtkTextBuffer * txbuf, gpointer data)
@@ -551,6 +554,7 @@ enduseraction_newgui_cmd_BM (GtkTextBuffer * txbuf, gpointer data)
     {
       // should parse the command buffer
       parsecommandbuf_newgui_BM (cmdpars, (struct stackframe_stBM *) &_);
+      DBGPRINTF_BM ("newgui command parsed ok");
     }
   else
     {
@@ -593,6 +597,7 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
     _.astrv = astrval_bm;
   objectval_tyBM *k_nval = BMK_5xGpTXhdqX1_1aVTq1TZOXX;
   objectval_tyBM *k_depth = BMK_17YdW6dWrBA_2mn4QmBjMNs;
+  objectval_tyBM *k_nhide = BMK_5mgZTJ64WH9_4r2XC8eZmW7;
   _.parsob = checkedparserowner_BM (pars);
   const struct parserops_stBM *parsops = pars->pars_ops;
   assert (parsops && parsops->parsop_magic == PARSOPMAGIC_BM);
@@ -656,14 +661,14 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
               else
                 parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
                                       cmdtok.tok_line, cmdtok.tok_col,
-                                      "name expected after ,var");
+                                      "name expected after ,nval");
               bool gotval = false;
               _.val = parsergetvalue_BM (pars, (struct stackframe_stBM *) &_,
                                          0, &gotval);
               if (!gotval)
                 parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
                                       cmdtok.tok_line, cmdtok.tok_col,
-                                      "value expected after ,var %s",
+                                      "value expected after ,nval %s",
                                       bytstring_BM (_.name));
               if (!nobuild)
                 {
@@ -690,6 +695,36 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
                       log_end_message_BM ();
                     }
 
+                }
+            }
+          /// ,nhide <name>
+          else if (cmdtok.tok_kind == plex_NAMEDOBJ
+                   && cmdtok.tok_namedobj == k_nhide)
+            {
+              parstoken_tyBM vartok =
+                parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
+              if (vartok.tok_kind == plex_NAMEDOBJ)
+                _.name =
+                  makestring_BM (findobjectname_BM (vartok.tok_namedobj));
+              else if (vartok.tok_kind == plex_CNAME)
+                _.name = vartok.tok_cname;
+              else
+                parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
+                                      cmdtok.tok_line, cmdtok.tok_col,
+                                      "name expected after ,nhide");
+              if (!nobuild)
+                {
+                  if (index_named_value_newgui_BM (bytstring_BM (_.name)) < 0)
+                    parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
+                                          cmdtok.tok_line, cmdtok.tok_col,
+                                          ",nhide %s : unknown name",
+                                          bytstring_BM (_.name));
+                  hide_named_value_newgui_BM (bytstring_BM (_.name),
+                                              (struct stackframe_stBM *) &_);
+                  log_begin_message_BM ();
+                  log_printf_message_BM ("forgot hidden value named %s",
+                                         bytstring_BM (_.name));
+                  log_end_message_BM ();
                 }
             }
           else
