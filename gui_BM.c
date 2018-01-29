@@ -1576,7 +1576,7 @@ log_printf_message_BM (const char *fmt, ...)
       if (!buf)
         FATAL_BM ("failed to calloc for %d bytes (%m)", ln);
       va_start (args, fmt);
-      ln = vsnprintf (buf, ln + 1, fmt, args);
+      vsnprintf (buf, ln + 1, fmt, args);
       va_end (args);
     }
   log_puts_message_BM (buf);

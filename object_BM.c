@@ -621,8 +621,6 @@ hashsetobj_add_BM (struct hashsetobj_stBM *hset, const objectval_tyBM * obj)
   if (4 * ucnt + 8 >= 3 * alsiz)
     {
       hset = hashsetobj_grow_BM (hset, ucnt / 64 + 4);
-      alsiz = ((typedhead_tyBM *) hset)->rlen;
-      ucnt = ((typedsize_tyBM *) hset)->size;
     };
   if (!hashsetobj_insert_BM (hset, obj))
     FATAL_BM ("corrupted hashset");
