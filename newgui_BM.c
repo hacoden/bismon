@@ -1604,3 +1604,25 @@ parserror_newguicmd_BM (struct parser_stBM *pars,
 #warning should use failure in parserror_newguicmd_BM
   longjmp (jmperrorcmd_BM, 1);
 }                               /* end parserror_newguicmd_BM */
+
+
+
+struct objectwindow_newgui_stBM *
+make_obwin_newgui_BM (void)
+{
+  struct objectwindow_newgui_stBM *newobw =
+    malloc (sizeof (struct objectwindow_newgui_stBM));
+  if (!newobw)
+    FATAL_BM
+      ("failed to allocate objectwindow_newgui in make_obwin_newgui_BM");
+  memset (newobw, 0, sizeof (newobw));
+  newobw->obw_next = obwin_first_newgui_BM;
+  assert (obwin_first_newgui_BM == NULL
+          || obwin_first_newgui_BM->obw_prev == NULL);
+  if (obwin_first_newgui_BM)
+    obwin_first_newgui_BM->obw_prev = newobw;
+  obwin_first_newgui_BM = newobw;
+  if (!obwin_last_newgui_BM)
+    obwin_last_newgui_BM = newobw;
+#warning make_obwin_newgui_BM incomplete
+}                               /* end make_obwin_newgui_BM */
