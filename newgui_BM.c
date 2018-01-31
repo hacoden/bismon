@@ -35,6 +35,8 @@ static GtkWidget *lowervboxvalues_newgui_bm;
 
 
 #warning objectview is incomplete
+// each objectview appears twice, in a paned; the widgets inside upper
+// & lower panes ...
 struct objectviewthings_stBM
 {
   GtkWidget *obvt_frame;
@@ -42,16 +44,30 @@ struct objectviewthings_stBM
   GtkWidget *obvt_headb;
   GtkWidget *obvt_textview;
 };
-
+struct objectwindow_newgui_stBM;
 struct objectview_newgui_stBM
 {
+  int obv_rank;                 /* rank in window */
+  int obv_depth;
+  struct objectwindow_newgui_stBM *obv_obwindow;
+  objectval_tyBM *obv_object;
+  objectval_tyBM *obv_obsel;
   GtkTextBuffer *obv_tbuffer;
   struct objectviewthings_stBM obv_upper, obv_lower;
-};                              /* end objectview_newgui_stBM */
+};                              /* end struct objectview_newgui_stBM */
 
+// a window
 struct objectwindow_newgui_stBM
 {
-};                              /* end objectwindow_newgui_stBM */
+  struct objectwindow_newgui_stBM *obw_prev;
+  struct objectwindow_newgui_stBM *obw_next;
+  GtkWidget *obw_window;
+  GtkWidget *obw_paned;
+  int obw_asiz;
+  int obw_ulen;
+  struct objectview_newgui_stBM **obw_arr;
+};                              /* end struct objectwindow_newgui_stBM */
+
 /*****************************************************************/
 // the function to handle keypresses of cmd, for Return & Tab
 static gboolean handlekeypress_newgui_cmd_BM (GtkWidget *, GdkEventKey *,
