@@ -64,6 +64,8 @@ struct objectwindow_newgui_stBM
   struct objectwindow_newgui_stBM *obw_next;
   GtkWidget *obw_window;
   GtkWidget *obw_label;
+  GtkWidget *obw_upperobjvbox;
+  GtkWidget *obw_lowerobjvbox;
   int obw_rank;
   int obw_asiz;
   int obw_ulen;
@@ -72,6 +74,7 @@ struct objectwindow_newgui_stBM
 
 static struct objectwindow_newgui_stBM *obwin_first_newgui_BM;
 static struct objectwindow_newgui_stBM *obwin_last_newgui_BM;
+struct objectwindow_newgui_stBM *obwin_current_newgui_BM;
 
 static struct objectwindow_newgui_stBM *make_obwin_newgui_BM (void);
 /*****************************************************************/
@@ -452,15 +455,13 @@ initialize_newgui_BM (const char *builderfile, const char *cssfile)
                       (GCallback) deletemainwin_BM, NULL);
     gtk_widget_show_all (GTK_WIDGET (windowvalues_newgui_bm));
   }
-#warning initialize_newgui_BM unimplemented
-  fprintf (stderr, "initialize_newgui_BM builder %s css %s unimplemented\n",
-           builderfile, cssfile);
   ///
   gtk_window_set_title (GTK_WINDOW (mainwin_BM), "new-bismon");
   gtk_window_set_default_size (GTK_WINDOW (mainwin_BM), 650, 720);
   // perhaps run the GC twice a second
   g_timeout_add (500, guiperiodicgarbagecollection_BM, NULL);
   gtk_widget_show_all (GTK_WIDGET (mainwin_BM));
+  obwin_current_newgui_BM = make_obwin_newgui_BM();
 }                               /* end initialize_newgui_BM */
 
 
@@ -1656,5 +1657,38 @@ make_obwin_newgui_BM (void)
   gtk_paned_set_wide_handle (GTK_PANED (paned), true);
   gtk_paned_set_position (GTK_PANED (paned), 250);
   gtk_box_pack_start (GTK_BOX (mainvbox), paned, BOXEXPAND_BM, BOXFILL_BM, 2);
+  GtkWidget *uppervbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 1);
+  GtkWidget *lowervbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 1);
+  gtk_paned_add1 (GTK_PANED (paned), uppervbox);
+  gtk_paned_add2 (GTK_PANED (paned), lowervbox);
+  gtk_box_pack_start (GTK_BOX (uppervbox),
+                      gtk_separator_new (GTK_ORIENTATION_HORIZONTAL),
+                      BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
+  gtk_box_pack_start (GTK_BOX (lowervbox),
+                      gtk_separator_new (GTK_ORIENTATION_HORIZONTAL),
+                      BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
+  GtkWidget *upperscrowin = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW
+                                  (upperscrowin),
+                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
+  gtk_box_pack_start (GTK_BOX (uppervbox), upperscrowin, BOXEXPAND_BM,
+                      BOXFILL_BM, 2);
+  GtkWidget *lowerscrowin = gtk_scrolled_window_new (NULL, NULL);
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW
+                                  (lowerscrowin),
+                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
+  gtk_box_pack_start (GTK_BOX (lowervbox), lowerscrowin, BOXEXPAND_BM,
+                      BOXFILL_BM, 2);
+  GtkWidget *upperobvbox = newobw->obw_upperobjvbox =
+    gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
+  GtkWidget *lowerobvbox = newobw->obw_lowerobjvbox =
+    gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
+  gtk_container_add (GTK_CONTAINER (upperscrowin), upperobvbox);
+  gtk_container_add (GTK_CONTAINER (lowerscrowin), lowerobvbox);
+  gtk_window_set_default_size (GTK_WINDOW (obwin), 350, 420);
+  gtk_widget_show_all (obwin);
+  DBGPRINTF_BM("make_obwin_newgui_BM incomplete obwin@%p rank#%d", obwin, newobw->obw_rank);
 #warning make_obwin_newgui_BM incomplete
+  // should connect destructor on that window, etc...
+  return newobw;
 }                               /* end make_obwin_newgui_BM */
