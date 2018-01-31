@@ -56,7 +56,7 @@ struct objectview_newgui_stBM
   struct objectviewthings_stBM obv_upper, obv_lower;
 };                              /* end struct objectview_newgui_stBM */
 
-// a window
+// an  objectwindow
 struct objectwindow_newgui_stBM
 {
   struct objectwindow_newgui_stBM *obw_prev;
@@ -68,6 +68,10 @@ struct objectwindow_newgui_stBM
   struct objectview_newgui_stBM **obw_arr;
 };                              /* end struct objectwindow_newgui_stBM */
 
+static struct objectwindow_newgui_stBM *obwin_first_newgui_BM;
+static struct objectwindow_newgui_stBM *obwin_last_newgui_BM;
+
+static struct objectwindow_newgui_stBM *make_obwin_newgui_BM (void);
 /*****************************************************************/
 // the function to handle keypresses of cmd, for Return & Tab
 static gboolean handlekeypress_newgui_cmd_BM (GtkWidget *, GdkEventKey *,
@@ -228,6 +232,24 @@ gcmarknewgui_BM (struct garbcoll_stBM *gc)
   // mark the browsedobj_BM browsedval_stBM & complsetcmd_BM
   gcmarkoldgui_BM (gc);
   VALUEGCPROC_BM (gc, astrval_bm, 0);
+  for (struct objectwindow_newgui_stBM * obw = obwin_first_newgui_BM;
+       obw != NULL; obw = obw->obw_next)
+    {
+      struct objectview_newgui_stBM **varr = obw->obw_arr;
+      if (varr == NULL)
+        continue;
+      assert (obw->obw_ulen >= 0 && obw->obw_ulen <= obw->obw_asiz);
+      for (int obix = 0; obix < obw->obw_ulen; obix++)
+        {
+          struct objectview_newgui_stBM *oview = varr[obix];
+          if (!oview)
+            continue;
+          assert (oview->obv_rank == obix);
+          assert (oview->obv_obwindow == obw);
+          gcobjmark_BM (gc, oview->obv_object);
+          gcobjmark_BM (gc, oview->obv_obsel);
+        }
+    }
 }                               /* end gcmarknewgui_BM */
 
 
