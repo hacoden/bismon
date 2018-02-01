@@ -1706,6 +1706,36 @@ deleteobjectwin_newgui_BM (GtkWidget * widget,
   struct objectwindow_newgui_stBM *oldobw =
     (struct objectwindow_newgui_stBM *) data;
   assert (oldobw != NULL && oldobw->obw_window == widget);
+  struct objectwindow_newgui_stBM *prevobw = oldobw->obw_prev;
+  struct objectwindow_newgui_stBM *nextobw = oldobw->obw_next;
+  if (prevobw)
+    {
+      assert (oldobw == prevobw->obw_next);
+      prevobw->obw_next = nextobw;
+    }
+  else
+    {
+      assert (oldobw == obwin_first_newgui_BM);
+      obwin_first_newgui_BM = nextobw;
+    }
+  if (nextobw)
+    {
+      assert (oldobw == nextobw->obw_prev);
+      nextobw->obw_prev = prevobw;
+    }
+  else
+    {
+      assert (oldobw == obwin_last_newgui_BM);
+      obwin_last_newgui_BM = prevobw;
+    }
+  if (oldobw->obw_arr)
+    {
+      free (oldobw->obw_arr);
+    }
+  oldobw->obw_arr = NULL;
+  oldobw->obw_asiz = oldobw->obw_ulen = 0;
+  if (obwin_current_newgui_BM == oldobw)
+    obwin_current_newgui_BM = NULL;
 #warning deleteobjectwin_newgui_BM unimplemented
   return false;                 // to let the window be destroyed
 }                               /* end deleteobjectwin_newgui_BM */
