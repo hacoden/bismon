@@ -1440,10 +1440,9 @@ garbcollgui_BM (void)
 }                               /* end garbcollgui_BM */
 
 bool
-deletemainwin_BM (GtkWidget * widget
-                  __attribute__ ((unused)), GdkEvent * ev
-                  __attribute__ ((unused)), gpointer data
-                  __attribute__ ((unused)))
+deletemainwin_BM (GtkWidget * widget __attribute__ ((unused)),  //
+                  GdkEvent * ev __attribute__ ((unused)),       //
+                  gpointer data __attribute__ ((unused)))
 {
   // printf ("deletemainwin_BM\n");
   DBGPRINTF_BM ("deletemainwin_BM tid#%ld", (long) gettid_BM ());

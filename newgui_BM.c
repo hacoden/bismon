@@ -77,6 +77,8 @@ static struct objectwindow_newgui_stBM *obwin_last_newgui_BM;
 struct objectwindow_newgui_stBM *obwin_current_newgui_BM;
 
 static struct objectwindow_newgui_stBM *make_obwin_newgui_BM (void);
+static bool deleteobjectwin_newgui_BM (GtkWidget * widget, GdkEvent * ev,
+                                       gpointer data);
 /*****************************************************************/
 // the function to handle keypresses of cmd, for Return & Tab
 static gboolean handlekeypress_newgui_cmd_BM (GtkWidget *, GdkEventKey *,
@@ -461,7 +463,7 @@ initialize_newgui_BM (const char *builderfile, const char *cssfile)
   // perhaps run the GC twice a second
   g_timeout_add (500, guiperiodicgarbagecollection_BM, NULL);
   gtk_widget_show_all (GTK_WIDGET (mainwin_BM));
-  obwin_current_newgui_BM = make_obwin_newgui_BM();
+  obwin_current_newgui_BM = make_obwin_newgui_BM ();
 }                               /* end initialize_newgui_BM */
 
 
@@ -1687,8 +1689,23 @@ make_obwin_newgui_BM (void)
   gtk_container_add (GTK_CONTAINER (lowerscrowin), lowerobvbox);
   gtk_window_set_default_size (GTK_WINDOW (obwin), 350, 420);
   gtk_widget_show_all (obwin);
-  DBGPRINTF_BM("make_obwin_newgui_BM incomplete obwin@%p rank#%d", obwin, newobw->obw_rank);
+  DBGPRINTF_BM ("make_obwin_newgui_BM incomplete obwin@%p rank#%d", obwin,
+                newobw->obw_rank);
+  g_signal_connect (obwin, "delete-event",
+                    (GCallback) deleteobjectwin_newgui_BM, newobw);
 #warning make_obwin_newgui_BM incomplete
   // should connect destructor on that window, etc...
   return newobw;
 }                               /* end make_obwin_newgui_BM */
+
+bool
+deleteobjectwin_newgui_BM (GtkWidget * widget,
+                           GdkEvent * ev __attribute__ ((unused)),
+                           gpointer data)
+{
+  struct objectwindow_newgui_stBM *oldobw =
+    (struct objectwindow_newgui_stBM *) data;
+  assert (oldobw != NULL && oldobw->obw_window == widget);
+#warning deleteobjectwin_newgui_BM unimplemented
+  return false;                 // to let the window be destroyed
+}                               /* end deleteobjectwin_newgui_BM */
