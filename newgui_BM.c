@@ -69,6 +69,8 @@ struct objectwindow_newgui_stBM
   int obw_rank;
   int obw_asiz;
   int obw_ulen;
+  // the array below is sorted in order of its obv_object using objectnamedcmp_BM
+  // and each obv_object appears at most once
   struct objectview_newgui_stBM **obw_arr;
 };                              /* end struct objectwindow_newgui_stBM */
 
@@ -79,6 +81,10 @@ struct objectwindow_newgui_stBM *obwin_current_newgui_BM;
 static struct objectwindow_newgui_stBM *make_obwin_newgui_BM (void);
 static bool deleteobjectwin_newgui_BM (GtkWidget * widget, GdkEvent * ev,
                                        gpointer data);
+
+
+
+
 /*****************************************************************/
 // the function to handle keypresses of cmd, for Return & Tab
 static gboolean handlekeypress_newgui_cmd_BM (GtkWidget *, GdkEventKey *,
@@ -139,6 +145,14 @@ hide_named_value_newgui_BM (const char *namestr,
 static void
 hide_index_named_value_newgui_BM (int idx, struct stackframe_stBM *stkf);
 
+
+////////////////
+// give the index of a shown object in an obwin, or -1 if not found
+static int index_shown_object_in_obwin_newgui_BM (struct
+                                                  objectwindow_newgui_stBM
+                                                  *obw, objectval_tyBM * obj);
+
+////////////////
 const struct parserops_stBM parsop_command_build_newgui_BM = {
   .parsop_magic = PARSOPMAGIC_BM,
   .parsop_serial = 3,
@@ -1639,11 +1653,10 @@ make_obwin_newgui_BM (void)
   newobw->obw_ulen = 0;
   GtkWidget *obwin = newobw->obw_window =
     gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_style_context_add_provider_for_screen (gtk_window_get_screen
-                                             (GTK_WINDOW (obwin)),
-                                             GTK_STYLE_PROVIDER
-                                             (cssprovider_newgui_bm),
-                                             GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+  gtk_style_context_add_provider_for_screen     //
+    (gtk_window_get_screen (GTK_WINDOW (obwin)),
+     GTK_STYLE_PROVIDER (cssprovider_newgui_bm),
+     GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
   GtkWidget *mainvbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
   gtk_container_add (GTK_CONTAINER (obwin), mainvbox);
   char labelbuf[32];
@@ -1698,6 +1711,8 @@ make_obwin_newgui_BM (void)
   return newobw;
 }                               /* end make_obwin_newgui_BM */
 
+
+
 bool
 deleteobjectwin_newgui_BM (GtkWidget * widget,
                            GdkEvent * ev __attribute__ ((unused)),
@@ -1706,6 +1721,9 @@ deleteobjectwin_newgui_BM (GtkWidget * widget,
   struct objectwindow_newgui_stBM *oldobw =
     (struct objectwindow_newgui_stBM *) data;
   assert (oldobw != NULL && oldobw->obw_window == widget);
+  DBGPRINTF_BM ("deleteobjectwin_newgui oldobw@%p #%d", oldobw,
+                oldobw->obw_rank);
+  gtk_widget_hide (widget);
   struct objectwindow_newgui_stBM *prevobw = oldobw->obw_prev;
   struct objectwindow_newgui_stBM *nextobw = oldobw->obw_next;
   if (prevobw)
@@ -1731,11 +1749,56 @@ deleteobjectwin_newgui_BM (GtkWidget * widget,
   if (oldobw->obw_arr)
     {
       free (oldobw->obw_arr);
+      oldobw->obw_arr = NULL;
     }
-  oldobw->obw_arr = NULL;
   oldobw->obw_asiz = oldobw->obw_ulen = 0;
   if (obwin_current_newgui_BM == oldobw)
     obwin_current_newgui_BM = NULL;
-#warning deleteobjectwin_newgui_BM unimplemented
+  memset (oldobw, 0, sizeof (*oldobw));
+  free (oldobw);
   return false;                 // to let the window be destroyed
 }                               /* end deleteobjectwin_newgui_BM */
+
+
+
+int
+index_shown_object_in_obwin_newgui_BM (struct objectwindow_newgui_stBM *obw,
+                                       objectval_tyBM * shobj)
+{
+  if (!obw)
+    return -1;
+  if (!isobject_BM ((value_tyBM) shobj))
+    return -1;
+  if (!obw->obw_arr || obw->obw_ulen <= 0)
+    return -1;
+  struct objectview_newgui_stBM **obvarr = obw->obw_arr;
+  int ulen = obw->obw_ulen;
+  assert (ulen < obw->obw_asiz);
+  int lo = 0, hi = ulen, md = 0;
+  while (lo + 4 < hi)
+    {
+      md = (lo + hi) / 2;
+      struct objectview_newgui_stBM *curobv = obvarr[md];
+      assert (curobv != NULL);
+      assert (curobv->obv_object != NULL);
+      if (shobj == curobv->obv_object)
+        return md;
+      int cmp = objectnamedcmp_BM (shobj, curobv->obv_object);
+      assert (cmp != 0);
+      if (cmp < 0)
+        hi = md;
+      else if (cmp > 0)
+        lo = md;
+      else
+        FATAL_BM ("corrupted objectwindow #%d", obw->obw_rank);
+    }
+  for (md = lo; md < hi; md++)
+    {
+      struct objectview_newgui_stBM *curobv = obvarr[md];
+      assert (curobv != NULL);
+      assert (curobv->obv_object != NULL);
+      if (shobj == curobv->obv_object)
+        return md;
+    }
+  return -1;
+}                               /* end index_shown_object_in_obwin_newgui_BM */
