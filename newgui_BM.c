@@ -1823,7 +1823,7 @@ void show_object_in_obwin_newgui_BM
     depth = 2;
   else if (depth > BROWSE_MAXDEPTH_NEWGUI_BM)
     depth = BROWSE_MAXDEPTH_NEWGUI_BM;
-  LOCALFRAME_BM ( /*prev: */ stk, /*descr: */ NULL,
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  objectval_tyBM * obj;
                  objectval_tyBM * shobsel;);
   _.obj = obj;
@@ -1851,7 +1851,7 @@ void show_object_in_obwin_newgui_BM
         calloc (1, sizeof (struct objectview_newgui_stBM));
       if (!newobv)
         FATAL_BM ("failed to allocate new objectview for %s",
-                  objectdbg_BM (_.ob));
+                  objectdbg_BM (_.obj));
       newobv->obv_rank = 0;
       newobv->obv_depth = depth;
       newobv->obv_object = _.obj;
