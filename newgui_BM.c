@@ -57,7 +57,7 @@ struct objectview_newgui_stBM
   struct objectviewthings_stBM obv_upper, obv_lower;
 };                              /* end struct objectview_newgui_stBM */
 
-// an  objectwindow
+// an objectwindow
 struct objectwindow_newgui_stBM
 {
   struct objectwindow_newgui_stBM *obw_prev;
@@ -148,9 +148,13 @@ hide_index_named_value_newgui_BM (int idx, struct stackframe_stBM *stkf);
 
 ////////////////
 // give the index of a shown object in an obwin, or -1 if not found
-static int index_shown_object_in_obwin_newgui_BM (struct
-                                                  objectwindow_newgui_stBM
-                                                  *obw, objectval_tyBM * obj);
+static int index_shown_object_in_obwin_newgui_BM
+  (struct objectwindow_newgui_stBM *obw, objectval_tyBM * obj);
+
+// show an object, with a showing selector and depth, in a given obwin
+static void show_object_in_obwin_newgui_BM
+  (struct objectwindow_newgui_stBM *obw, objectval_tyBM * obj,
+   objectval_tyBM * shobsel, int depth, struct stackframe_stBM *stkf);
 
 ////////////////
 const struct parserops_stBM parsop_command_build_newgui_BM = {
@@ -1802,3 +1806,60 @@ index_shown_object_in_obwin_newgui_BM (struct objectwindow_newgui_stBM *obw,
     }
   return -1;
 }                               /* end index_shown_object_in_obwin_newgui_BM */
+
+
+
+void show_object_in_obwin_newgui_BM
+  (struct objectwindow_newgui_stBM *obw, objectval_tyBM * obj,
+   objectval_tyBM * shobsel, int depth, struct stackframe_stBM *stkf)
+{
+  if (!obw)
+    return;
+  if (!isobject_BM ((value_tyBM) obj))
+    return;
+  if (!isobject_BM ((value_tyBM) shobsel))
+    return;
+  if (depth < 2)
+    depth = 2;
+  else if (depth > BROWSE_MAXDEPTH_NEWGUI_BM)
+    depth = BROWSE_MAXDEPTH_NEWGUI_BM;
+  LOCALFRAME_BM ( /*prev: */ stk, /*descr: */ NULL,
+                 objectval_tyBM * obj;
+                 objectval_tyBM * shobsel;);
+  _.obj = obj;
+  _.shobsel = shobsel;
+  DBGPRINTF_BM
+    ("show_object_in_obwin_newgui obj=%s shobsel=%s depth=%d obw@%p start",
+     objectdbg_BM (_.obj), objectdbg1_BM (_.shobsel), obw);
+  if (obw->obw_asiz <= 0)
+    {
+      assert (obw->obw_arr == NULL);
+      int newsiz = 11;
+      struct objectview_newgui_stBM **newarr =
+        calloc (newsiz, sizeof (void *));
+      if (!newarr)
+        FATAL_BM ("failed to allocate array of %d objectviews", newsiz);
+      obw->obw_arr = newarr;
+      obw->obw_asiz = newsiz;
+      obw->obw_ulen = 0;
+    };
+  if (obw->obw_ulen <= 0)
+    {
+      assert (obw->obw_asiz > 2);
+      assert (obw->obw_arr != NULL);
+      struct objectview_newgui_stBM *newobv =
+        calloc (1, sizeof (struct objectview_newgui_stBM));
+      if (!newobv)
+        FATAL_BM ("failed to allocate new objectview for %s",
+                  objectdbg_BM (_.ob));
+      newobv->obv_rank = 0;
+      newobv->obv_depth = depth;
+      newobv->obv_object = _.obj;
+      newobv->obv_obsel = _.shobsel;
+      newobv->obv_obwindow = obw;
+      newobv->obv_tbuffer = gtk_text_buffer_new (browsertagtable_BM);
+      obw->obw_arr[0] = newobv;
+      obw->obw_ulen = 1;
+#warning very incomplete show_object_in_obwin_newgui_BM
+    };
+}                               /* end show_object_in_obwin_newgui_BM */
