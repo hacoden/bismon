@@ -81,7 +81,9 @@ struct objectwindow_newgui_stBM *obwin_current_newgui_BM;
 static struct objectwindow_newgui_stBM *make_obwin_newgui_BM (void);
 static bool deleteobjectwin_newgui_BM (GtkWidget * widget, GdkEvent * ev,
                                        gpointer data);
-
+static void fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
+                                     bool upper,
+                                     struct stackframe_stBM *stkf);
 
 
 
@@ -1842,6 +1844,18 @@ void show_object_in_obwin_newgui_BM
       obw->obw_arr = newarr;
       obw->obw_asiz = newsiz;
       obw->obw_ulen = 0;
+    }
+  else if (obw->obw_ulen + 1 <= obw->obw_asiz)
+    {
+      int newsiz = prime_above_BM (4 * obw->obw_ulen / 3 + 5);
+      struct objectview_newgui_stBM **newarr =
+        calloc (newsiz, sizeof (void *));
+      if (!newarr)
+        FATAL_BM ("failed to grow array of %d objectviews", newsiz);
+      mempcy (newarr, obw->obw_arr,
+              obw->obw_ulen * sizeof (struct objectview_newgui_stBM *));
+      free (obw->obw_arr), obw->obw_arr = newarr;
+      obw->obw_asiz = newsiz;
     };
   if (obw->obw_ulen <= 0)
     {
@@ -1858,8 +1872,32 @@ void show_object_in_obwin_newgui_BM
       newobv->obv_obsel = _.shobsel;
       newobv->obv_obwindow = obw;
       newobv->obv_tbuffer = gtk_text_buffer_new (browsertagtable_BM);
+      fill_objectviewthing_BM (newobv, true, (struct stackframe_stBM *) &_);
+      fill_objectviewthing_BM (newobv, false, (struct stackframe_stBM *) &_);
       obw->obw_arr[0] = newobv;
       obw->obw_ulen = 1;
 #warning very incomplete show_object_in_obwin_newgui_BM
     };
 }                               /* end show_object_in_obwin_newgui_BM */
+
+
+void
+fill_objectviewthing_BM (struct objectview_newgui_stBM *obv, bool upper,
+                         struct stackframe_stBM *stkf)
+{
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 value_tyBM val);
+  assert (obv != NULL);
+  struct objectwindow_newgui_stBM *obwin = obv->obv_obwindow;
+  assert (obwin != NULL);
+  assert (obv->obv_object != NULL);
+  assert (obv->obv_obsel != NULL);
+  struct objectviewthings_stBM *obth =
+    upper ? (&obv->obv_upper) : (&obv->obv_lower);
+  obth->obvt_frame = gtk_frame_new (NULL);
+  GtkBox *inbox = GTK_BOX (upper ? obwin->obw_upperobjvbox
+                           : obwin->obw_lowerobjvbox);
+  assert (inbox != NULL);
+  gtk_box_pack_end (inbox, obth->obvt_frame, BOXEXPAND_BM, BOXFILL_BM, 2);
+#warning fill_objectviewthing_BM is very incomplete
+}                               /* end of fill_objectviewthing_BM */
