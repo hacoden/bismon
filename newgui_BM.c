@@ -43,6 +43,7 @@ struct objectviewthings_stBM
   GtkWidget *obvt_frame;
   GtkWidget *obvt_vbox;
   GtkWidget *obvt_headb;
+  GtkWidget *obvt_spindepth;
   GtkWidget *obvt_textview;
 };
 struct objectwindow_newgui_stBM;
@@ -1880,6 +1881,9 @@ void show_object_in_obwin_newgui_BM
     };
 }                               /* end show_object_in_obwin_newgui_BM */
 
+static void closebut_obview_newgui_cbBM (GtkWidget * wbut, gpointer data);
+static void spindepth_obview_newgui_cbBM (GtkSpinButton * spbut,
+                                          gpointer data);
 
 void
 fill_objectviewthing_BM (struct objectview_newgui_stBM *obv, bool upper,
@@ -1895,9 +1899,52 @@ fill_objectviewthing_BM (struct objectview_newgui_stBM *obv, bool upper,
   struct objectviewthings_stBM *obth =
     upper ? (&obv->obv_upper) : (&obv->obv_lower);
   obth->obvt_frame = gtk_frame_new (NULL);
-  GtkBox *inbox = GTK_BOX (upper ? obwin->obw_upperobjvbox
-                           : obwin->obw_lowerobjvbox);
+  int rk = obv->obv_rank;
+  assert (rk >= 0 && rk <= obwin->obw_ulen);
+  int depth = obv->obv_depth;
+  DBGPRINTF_BM
+    ("fill_objectviewthing start %s obv@%p obwin@%p rk#%d object %s obsel %s depth %d",
+     upper ? "upper" : "lower", obv, obwin, rk,
+     objectdbg_BM (obv->obv_object), objectdbg1_BM (obv->obv_obsel), depth);
+  GtkBox *inbox =
+    GTK_BOX (upper ? obwin->obw_upperobjvbox : obwin->obw_lowerobjvbox);
   assert (inbox != NULL);
   gtk_box_pack_end (inbox, obth->obvt_frame, BOXEXPAND_BM, BOXFILL_BM, 2);
+  // the lower box starts with a separator, so...
+  gtk_box_reorder_child         //
+    (inbox, obth->obvt_frame, upper ? rk : (rk + 1));
+  obth->obvt_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 2);
+  gtk_container_add (GTK_CONTAINER (obth->obvt_frame), obth->obvt_vbox);
+  GtkWidget *headb = obth->obvt_headb = gtk_header_bar_new ();
+  GtkWidget *clobut =           //
+    gtk_button_new_from_icon_name ("window-close",
+                                   GTK_ICON_SIZE_MENU);
+  g_signal_connect (clobut, "activate", closebut_obview_newgui_cbBM, obv);
+  gtk_header_bar_pack_end (GTK_HEADER_BAR (headb), clobut);
+  GtkWidget *spinbut = obth->obvt_spindepth =   //
+    gtk_spin_button_new_with_range (2.0,
+                                    (double) BROWSE_MAXDEPTH_NEWGUI_BM, 1.0);
+  g_signal_connect (spinbut, "value-changed",
+                    spindepth_obview_newgui_cbBM, obv);
+  gtk_header_bar_pack_end (GTK_HEADER_BAR (headb), spinbut);
+  gtk_box_pack_start (GTK_BOX (obth->obvt_vbox), obth->obvt_headb,
+                      BOXNOEXPAND_BM, BOXNOFILL_BM, 1);
+
 #warning fill_objectviewthing_BM is very incomplete
 }                               /* end of fill_objectviewthing_BM */
+
+
+void
+closebut_obview_newgui_cbBM (GtkWidget * wbut, gpointer data)
+{
+  DBGPRINTF_BM ("closebut_obview_newgui_cbBM unimplemented");
+#warning closebut_obview_newgui_cbBM unimplemented
+}                               /* end closebut_obview_newgui_cbBM */
+
+
+void
+spindepth_obview_newgui_cbBM (GtkSpinButton * spbut, gpointer data)
+{
+  DBGPRINTF_BM ("spindepth_obview_newgui_cbBM unimplemented");
+#warning spindepth_obview_newgui_cbBM unimplemented
+}                               /* end spindepth_obview_newgui_cbBM  */
