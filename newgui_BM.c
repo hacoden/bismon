@@ -86,7 +86,8 @@ static void fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
                                      const char *labstr,
                                      bool upper,
                                      struct stackframe_stBM *stkf);
-
+static void fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
+                                      struct stackframe_stBM *stkf);
 
 
 /*****************************************************************/
@@ -1924,6 +1925,7 @@ void show_object_in_obwin_newgui_BM
                                              shobjselidbuf));
             }
         };
+      fill_objectviewbuffer_BM (newobv, (struct stackframe_stBM *) &_);
       fill_objectviewthing_BM (newobv, labstr, true,
                                (struct stackframe_stBM *) &_);
       fill_objectviewthing_BM (newobv, labstr, false,
@@ -1994,7 +1996,12 @@ fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
   gtk_header_bar_pack_end (GTK_HEADER_BAR (headb), spinbut);
   gtk_box_pack_start (GTK_BOX (obth->obvt_vbox), obth->obvt_headb,
                       BOXNOEXPAND_BM, BOXNOFILL_BM, 1);
-#warning fill_objectviewthing_BM is very incomplete
+  GtkWidget *txview = obth->obvt_textview =
+    gtk_text_view_new_with_buffer (obv->obv_tbuffer);
+  gtk_text_view_set_editable (GTK_TEXT_VIEW (txview), false);
+  gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (txview), true);
+  gtk_box_pack_start (GTK_BOX (obth->obvt_vbox), txview,
+                      BOXEXPAND_BM, BOXFILL_BM, 1);
 }                               /* end of fill_objectviewthing_BM */
 
 
@@ -2012,3 +2019,19 @@ spindepth_obview_newgui_cbBM (GtkSpinButton * spbut, gpointer data)
   DBGPRINTF_BM ("spindepth_obview_newgui_cbBM unimplemented");
 #warning spindepth_obview_newgui_cbBM unimplemented
 }                               /* end spindepth_obview_newgui_cbBM  */
+
+
+void
+fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
+                          struct stackframe_stBM *stkf)
+{
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 value_tyBM val);
+  assert (obv != NULL);
+  assert (pthread_self () == mainthreadid_BM);
+  GtkTextBuffer *tbuf = obv->obv_tbuffer;
+  assert (tbuf != NULL);
+  DBGPRINTF_BM ("fill_objectviewbuffer unimplemented rank#%s obwin@%p",
+                obv->obv_rank, obv->obv_obwindow);
+#warning fill_objectviewbuffer_BM unimplemented
+}                               /* end fill_objectviewbuffer_BM */
