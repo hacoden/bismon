@@ -83,6 +83,7 @@ static struct objectwindow_newgui_stBM *make_obwin_newgui_BM (void);
 static bool deleteobjectwin_newgui_BM (GtkWidget * widget, GdkEvent * ev,
                                        gpointer data);
 static void fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
+                                     const char *labstr,
                                      bool upper,
                                      struct stackframe_stBM *stkf);
 
@@ -1873,8 +1874,61 @@ void show_object_in_obwin_newgui_BM
       newobv->obv_obsel = _.shobsel;
       newobv->obv_obwindow = obw;
       newobv->obv_tbuffer = gtk_text_buffer_new (browsertagtable_BM);
-      fill_objectviewthing_BM (newobv, true, (struct stackframe_stBM *) &_);
-      fill_objectviewthing_BM (newobv, false, (struct stackframe_stBM *) &_);
+      char objectidbuf[32];
+      memset (objectidbuf, 0, sizeof (objectidbuf));
+      char *objectstr = findobjectname_BM (_.obj);
+      char shobjselidbuf[32];
+      memset (shobjselidbuf, 0, sizeof (shobjselidbuf));
+      char *shobjselstr = findobjectname_BM (_.shobsel);
+      char *labstr = NULL;
+      if (objectstr)
+        {
+          if (shobjselstr)
+            {
+              labstr = g_markup_printf_escaped ("<big><b>%s</b></big>\n"
+                                                //U+2B6C RIGHTWARDS TRIANGLE-HEADED DASHED ARROW ⭬
+                                                "\342\255\254 "
+                                                "<i>%s</i>",
+                                                objectstr, shobjselstr);
+            }
+          else
+            {
+              labstr = g_markup_printf_escaped ("<big><b>%s</b></big>\n"
+                                                //U+2B6C RIGHTWARDS TRIANGLE-HEADED DASHED ARROW ⭬
+                                                "\342\255\254 "
+                                                "<i><tt>%s</tt></i>",
+                                                objectstr,
+                                                idtocbuf32_BM (objid_BM
+                                                               (_.shobsel),
+                                                               shobjselidbuf));
+            }
+        }
+      else
+        {                       /* no objectstr */
+          idtocbuf32_BM (objid_BM (_.obj), objectidbuf);
+          if (shobjselstr)
+            {
+              labstr = g_markup_printf_escaped
+                ("<big><b><tt>%s</tt></b></big>\n"
+                 //U+2B6C RIGHTWARDS TRIANGLE-HEADED DASHED ARROW ⭬
+                 "\342\255\254 " "<i>%s</i>", objectidbuf, shobjselstr);
+            }
+          else
+            {
+              labstr = g_markup_printf_escaped
+                ("<big><b><tt>%s</tt></b></big>\n"
+                 //U+2B6C RIGHTWARDS TRIANGLE-HEADED DASHED ARROW ⭬
+                 "\342\255\254 "
+                 "<i><tt>%s</tt></i>",
+                 objectidbuf, idtocbuf32_BM (objid_BM (_.shobsel),
+                                             shobjselidbuf));
+            }
+        };
+      fill_objectviewthing_BM (newobv, labstr, true,
+                               (struct stackframe_stBM *) &_);
+      fill_objectviewthing_BM (newobv, labstr, false,
+                               (struct stackframe_stBM *) &_);
+      g_free (labstr), labstr = NULL;
       obw->obw_arr[0] = newobv;
       obw->obw_ulen = 1;
 #warning very incomplete show_object_in_obwin_newgui_BM
@@ -1886,16 +1940,22 @@ static void spindepth_obview_newgui_cbBM (GtkSpinButton * spbut,
                                           gpointer data);
 
 void
-fill_objectviewthing_BM (struct objectview_newgui_stBM *obv, bool upper,
+fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
+                         const char *labstr, bool upper,
                          struct stackframe_stBM *stkf)
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 objectval_tyBM * object; objectval_tyBM * obsel;
                  value_tyBM val);
   assert (obv != NULL);
   struct objectwindow_newgui_stBM *obwin = obv->obv_obwindow;
   assert (obwin != NULL);
   assert (obv->obv_object != NULL);
   assert (obv->obv_obsel != NULL);
+  _.object = obv->obv_object;
+  assert (isobject_BM ((value_tyBM) _.object));
+  _.obsel = obv->obv_obsel;
+  assert (isobject_BM ((value_tyBM) _.obsel));
   struct objectviewthings_stBM *obth =
     upper ? (&obv->obv_upper) : (&obv->obv_lower);
   obth->obvt_frame = gtk_frame_new (NULL);
@@ -1903,8 +1963,9 @@ fill_objectviewthing_BM (struct objectview_newgui_stBM *obv, bool upper,
   assert (rk >= 0 && rk <= obwin->obw_ulen);
   int depth = obv->obv_depth;
   DBGPRINTF_BM
-    ("fill_objectviewthing start %s obv@%p obwin@%p rk#%d object %s obsel %s depth %d",
-     upper ? "upper" : "lower", obv, obwin, rk,
+    ("fill_objectviewthing start %s labstr %s\n"
+     "obv@%p obwin@%p rk#%d object %s obsel %s depth %d",
+     upper ? "upper" : "lower", labstr, obv, obwin, rk,
      objectdbg_BM (obv->obv_object), objectdbg1_BM (obv->obv_obsel), depth);
   GtkBox *inbox =
     GTK_BOX (upper ? obwin->obw_upperobjvbox : obwin->obw_lowerobjvbox);
@@ -1920,6 +1981,10 @@ fill_objectviewthing_BM (struct objectview_newgui_stBM *obv, bool upper,
     gtk_button_new_from_icon_name ("window-close",
                                    GTK_ICON_SIZE_MENU);
   g_signal_connect (clobut, "activate", closebut_obview_newgui_cbBM, obv);
+  GtkWidget *titwidg = gtk_label_new (NULL);
+  gtk_label_set_markup (GTK_LABEL (titwidg), labstr);
+  gtk_label_set_selectable (GTK_LABEL (titwidg), true);
+  gtk_header_bar_set_custom_title (GTK_HEADER_BAR (headb), titwidg);
   gtk_header_bar_pack_end (GTK_HEADER_BAR (headb), clobut);
   GtkWidget *spinbut = obth->obvt_spindepth =   //
     gtk_spin_button_new_with_range (2.0,
@@ -1929,7 +1994,6 @@ fill_objectviewthing_BM (struct objectview_newgui_stBM *obv, bool upper,
   gtk_header_bar_pack_end (GTK_HEADER_BAR (headb), spinbut);
   gtk_box_pack_start (GTK_BOX (obth->obvt_vbox), obth->obvt_headb,
                       BOXNOEXPAND_BM, BOXNOFILL_BM, 1);
-
 #warning fill_objectviewthing_BM is very incomplete
 }                               /* end of fill_objectviewthing_BM */
 
