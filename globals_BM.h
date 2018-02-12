@@ -76,6 +76,7 @@ extern GtkTextTag *toodeep_brotag_BM;
 extern GtkTextTag *str_brotag_BM;
 extern GtkTextTag *stresc_brotag_BM;
 extern GtkTextTag *miscomm_brotag_BM;
+extern GtkTextTag *epilogue_brotag_BM;
 
 
 ////////////////

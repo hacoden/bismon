@@ -31,6 +31,7 @@ GtkTextTag *toodeep_brotag_BM;
 GtkTextTag *str_brotag_BM;
 GtkTextTag *stresc_brotag_BM;
 GtkTextTag *miscomm_brotag_BM;
+GtkTextTag *epilogue_brotag_BM;
 
 #define BLINKDELAYMILLISEC_BM 750
 #define UNBLINKDELAYMILLISEC_BM 400
@@ -1044,6 +1045,9 @@ browse_add_parens_BM (int openoff, int closeoff, int xtraoff,
   else
     FATAL_BM ("no browsed object or named value");
 }                               /* end browse_add_parens_BM */
+
+
+
 
 static void
 browse_object_gui_content_BM (const objectval_tyBM * objbrows,
@@ -4387,6 +4391,10 @@ initialize_gui_tags_BM (GtkBuilder * bld)
     gtk_text_tag_table_lookup (browsertagtable_BM, "miscomm_brotag");
   if (!miscomm_brotag_BM)
     FATAL_BM ("cannot find miscomm_brotag_BM");
+  epilogue_brotag_BM =          //
+    gtk_text_tag_table_lookup (browsertagtable_BM, "epilogue_brotag");
+  if (!epilogue_brotag_BM)
+    FATAL_BM ("cannot find epilogue_brotag_BM");
   ////////////////
   errored_cmdtag_BM =           //
     gtk_text_tag_table_lookup (commandtagtable_BM, "errored_cmdtag");
