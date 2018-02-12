@@ -2026,12 +2026,95 @@ fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
                           struct stackframe_stBM *stkf)
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 value_tyBM val);
+                 objectval_tyBM * object;
+                 objectval_tyBM * shobsel; value_tyBM failreason;
+                 value_tyBM val;);
   assert (obv != NULL);
   assert (pthread_self () == mainthreadid_BM);
   GtkTextBuffer *tbuf = obv->obv_tbuffer;
   assert (tbuf != NULL);
-  DBGPRINTF_BM ("fill_objectviewbuffer unimplemented rank#%s obwin@%p",
+  // both should be objects, so the check should never trigger
+  _.object = obv->obv_object;
+  _.shobsel = obv->obv_obsel;
+  if (!isobject_BM (_.object))
+    FATAL_BM ("fill_objectviewbuffer_BM bad object rank#%d", obv->obv_rank);
+  if (!isobject_BM (_.shobsel))
+    FATAL_BM ("fill_objectviewbuffer_BM bad shobsel rank#%d", obv->obv_rank);
+  DBGPRINTF_BM ("fill_objectviewbuffer unimplemented rank#%d obwin@%p",
                 obv->obv_rank, obv->obv_obwindow);
-#warning fill_objectviewbuffer_BM unimplemented
+  gtk_text_buffer_set_text (tbuf, "", 0);
+  int prevbrowdepth = browserdepth_BM;
+  browserdepth_BM = obv->obv_depth;
+  browserbuf_BM = tbuf;
+  gtk_text_buffer_get_start_iter (tbuf, &browserit_BM);
+  struct failurehandler_stBM *prevfailureh = curfailurehandle_BM;
+  int failcod = 0;
+  _.failreason = NULL;
+  LOCAL_FAILURE_HANDLE_VM (failcod, _.failreason);
+  curfailurehandle_BM = prevfailureh;
+  if (failcod)
+    {
+      // should show some error thing....
+    }
+  else
+    {                           // first run
+      send1_BM ((const value_tyBM) _.object, _.shobsel,
+                (struct stackframe_stBM *) &_,
+                taggedint_BM (browserdepth_BM));
+      gtk_text_buffer_get_end_iter (tbuf, &browserit_BM);
+      gtk_text_buffer_insert (tbuf, &browserit_BM, "\n", -1);
+      // should show some epilogue....
+      gtk_text_buffer_insert_with_tags (tbuf, &browserit_BM, "///- ", -1,
+                                        epilogue_brotag_BM, NULL);
+      {
+        char objectidbuf[32];
+        memset (objectidbuf, 0, sizeof (objectidbuf));
+        idtocbuf32_BM (objid_BM (_.object), objectidbuf);
+        char *objectnamstr = findobjectname_BM (_.object);
+        if (objectnamstr)
+          gtk_text_buffer_insert_with_tags (browserbuf_BM, &browserit_BM,
+                                            objectnamstr, -1,
+                                            epilogue_brotag_BM,
+                                            objname_brotag_BM, NULL);
+        else
+          gtk_text_buffer_insert_with_tags (browserbuf_BM, &browserit_BM,
+                                            objectidbuf, -1,
+                                            epilogue_brotag_BM,
+                                            objid_brotag_BM, NULL);
+        gtk_text_buffer_insert_with_tags (browserbuf_BM, &browserit_BM,
+                                          " \342\207\242"
+                                          /* U+21E2 RIGHTWARDS DASHED ARROW ⇢ */
+                                          , -1,
+                                          epilogue_brotag_BM,
+                                          miscomm_brotag_BM, NULL);
+      }
+      {
+        char shobselidbuf[32];
+        memset (shobselidbuf, 0, sizeof (shobselidbuf));
+        idtocbuf32_BM (objid_BM (_.shobsel), shobselidbuf);
+        char *shobselnamstr = findobjectname_BM (_.shobsel);
+        if (shobselnamstr)
+          gtk_text_buffer_insert_with_tags (browserbuf_BM, &browserit_BM,
+                                            shobselnamstr, -1,
+                                            epilogue_brotag_BM,
+                                            objname_brotag_BM, NULL);
+        else
+          gtk_text_buffer_insert_with_tags (browserbuf_BM, &browserit_BM,
+                                            shobselidbuf, -1,
+                                            epilogue_brotag_BM,
+                                            objid_brotag_BM, NULL);
+      }
+      {
+        char depthbuf[32];
+        memset (depthbuf, 0, sizeof (depthbuf));
+        snprintf (depthbuf, sizeof (depthbuf), " \342\210\207"  // U+2207 NABLA ∇
+                  " %d", obv->obv_depth);
+        gtk_text_buffer_insert_with_tags (browserbuf_BM, &browserit_BM,
+                                          depthbuf, -1,
+                                          epilogue_brotag_BM,
+                                          miscomm_brotag_BM, NULL);
+      }
+      gtk_text_buffer_insert (browserbuf_BM, &browserit_BM, "\n", -1);
+    };
+#warning fill_objectviewbuffer_BM incomplete
 }                               /* end fill_objectviewbuffer_BM */
