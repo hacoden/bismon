@@ -2055,6 +2055,47 @@ fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
   if (failcod)
     {
       // should show some error thing....
+      gtk_text_buffer_get_end_iter (tbuf, &browserit_BM);
+      gtk_text_buffer_insert (tbuf, &browserit_BM, "\n", -1);
+      // should show some error epilogue....
+      browserbuf_BM = tbuf;
+      gtk_text_buffer_insert_with_tags (tbuf, &browserit_BM, "///! ", -1,
+                                        epilogue_brotag_BM, NULL);
+      {
+        char failurebuf[40];
+        memset (failurebuf, 0, sizeof (failurebuf));
+        snprintf (failurebuf, sizeof (failurebuf), "failure %d :\n", failcod);
+        gtk_text_buffer_insert_with_tags (tbuf, &browserit_BM, failurebuf, -1,
+                                          epilogue_brotag_BM, NULL);
+      }
+      {
+        int faildepth = obv->obv_depth;
+        if (faildepth < 2)
+          faildepth = 2;
+        else if (faildepth > BROWSE_MAXDEPTH_NEWGUI_BM)
+          faildepth = BROWSE_MAXDEPTH_NEWGUI_BM;
+        char *failvalstr =
+          debug_outstr_value_BM (_.failreason, (struct stackframe_stBM *) &_,
+                                 faildepth);
+        char *nextnl = NULL;
+        for (const char *curpc = failvalstr;
+             curpc != NULL && ((nextnl = strchr (curpc, '\n')), curpc);
+             (curpc = nextnl ? (nextnl + 1) : NULL), (nextnl = NULL))
+          {
+            gtk_text_buffer_insert_with_tags (tbuf, &browserit_BM, "///!! ",
+                                              -1, epilogue_brotag_BM, NULL);
+            if (nextnl)
+              gtk_text_buffer_insert_with_tags (tbuf, &browserit_BM, curpc,
+                                                nextnl - curpc,
+                                                epilogue_brotag_BM,
+                                                miscomm_brotag_BM, NULL);
+            else
+              gtk_text_buffer_insert_with_tags (tbuf, &browserit_BM, curpc,
+                                                -1, epilogue_brotag_BM,
+                                                miscomm_brotag_BM, NULL);
+          }
+        gtk_text_buffer_insert (tbuf, &browserit_BM, "\n", -1);
+      }
     }
   else
     {                           // first run
@@ -2064,6 +2105,7 @@ fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
       gtk_text_buffer_get_end_iter (tbuf, &browserit_BM);
       gtk_text_buffer_insert (tbuf, &browserit_BM, "\n", -1);
       // should show some epilogue....
+      browserbuf_BM = tbuf;
       gtk_text_buffer_insert_with_tags (tbuf, &browserit_BM, "///- ", -1,
                                         epilogue_brotag_BM, NULL);
       {
