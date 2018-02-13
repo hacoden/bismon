@@ -88,6 +88,8 @@ static void fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
                                      struct stackframe_stBM *stkf);
 static void fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
                                       struct stackframe_stBM *stkf);
+static void destroy_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
+                                         struct stackframe_stBM *stkf);
 
 
 /*****************************************************************/
@@ -2027,7 +2029,7 @@ fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  objectval_tyBM * object;
-                 objectval_tyBM * shobsel; value_tyBM failreason;
+                 objectval_tyBM * shobsel; volatile value_tyBM failreason;
                  value_tyBM val;);
   assert (obv != NULL);
   assert (pthread_self () == mainthreadid_BM);
@@ -2053,7 +2055,7 @@ fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
   LOCAL_FAILURE_HANDLE_VM (failcod, _.failreason);
   curfailurehandle_BM = prevfailureh;
   if (failcod)
-    {
+    {                           // error case....
       // should show some error thing....
       gtk_text_buffer_get_end_iter (tbuf, &browserit_BM);
       gtk_text_buffer_insert (tbuf, &browserit_BM, "\n", -1);
@@ -2160,3 +2162,11 @@ fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
     };
 #warning fill_objectviewbuffer_BM incomplete
 }                               /* end fill_objectviewbuffer_BM */
+
+
+void
+destroy_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
+                             struct stackframe_stBM *stkf)
+{
+#warning destroy_objectviewbuffer_BM unimplemented
+}                               /* end of destroy_objectviewbuffer_BM */
