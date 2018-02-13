@@ -1862,6 +1862,7 @@ void show_object_in_obwin_newgui_BM
       free (obw->obw_arr), obw->obw_arr = newarr;
       obw->obw_asiz = newsiz;
     };
+  ///
   if (obw->obw_ulen <= 0)
     {
       assert (obw->obw_asiz > 2);
@@ -1935,9 +1936,41 @@ void show_object_in_obwin_newgui_BM
       g_free (labstr), labstr = NULL;
       obw->obw_arr[0] = newobv;
       obw->obw_ulen = 1;
+    }
+  else
+    {                           //obw->obw_ulen>0
+      struct objectview_newgui_stBM **obvarr = obw->obw_arr;
+      int ulen = obw->obw_ulen;
+      assert (ulen < obw->obw_asiz);
+      int lo = 0, hi = ulen, md = 0;
+      while (lo + 4 < hi)
+        {
+          md = (lo + hi) / 2;
+          struct objectview_newgui_stBM *curobv = obvarr[md];
+          assert (curobv != NULL);
+          assert (curobv->obv_object != NULL);
+          if (shobj == curobv->obv_object)
+            return md;
+          int cmp = objectnamedcmp_BM (shobj, curobv->obv_object);
+          assert (cmp != 0);
+          if (cmp < 0)
+            hi = md;
+          else if (cmp > 0)
+            lo = md;
+          else
+            FATAL_BM ("corrupted objectwindow #%d", obw->obw_rank);
+        }
+      for (md = lo; md < hi; md++)
+        {
+          struct objectview_newgui_stBM *curobv = obvarr[md];
+          assert (curobv != NULL);
+          assert (curobv->obv_object != NULL);
+        }
 #warning very incomplete show_object_in_obwin_newgui_BM
-    };
+    }
 }                               /* end show_object_in_obwin_newgui_BM */
+
+
 
 static void closebut_obview_newgui_cbBM (GtkWidget * wbut, gpointer data);
 static void spindepth_obview_newgui_cbBM (GtkSpinButton * spbut,
