@@ -2168,5 +2168,26 @@ void
 destroy_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
                              struct stackframe_stBM *stkf)
 {
-#warning destroy_objectviewbuffer_BM unimplemented
+  if (!obv)
+    return;
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 objectval_tyBM * object;
+                 objectval_tyBM * obsel;
+    );
+  struct objectwindow_newgui_stBM *obwin = obv->obwindow;
+  assert (obwin != NULL);
+  _.object = obv->obv_object;
+  _.obsel = obv->obv_obsel;
+  DBGPRINTF_BM
+    ("destroy_objectviewbuffer obv@%p obwin@%p rank#%d object %s obsel %s",
+     obv, obwin, obv->obv_rank, objectdbg_BM (_.object),
+     objectdbg1_BM (_.obsel));
+  if (obv->obv_rank < obwin->obw_ulen && obwin->obw_arr[obv->obv_rank] == obv)
+    obwin->obw_arr[obv->obv_rank] = NULL;
+  GtkWidget *upperframe = obv->obv_upper.obvt_frame;
+  GtkWidget *lowerframe = obv->obv_lower.obvt_frame;
+  gtk_container_remove (GTK_CONTAINER (obwin->obw_upperobjvbox), upperframe);
+  gtk_container_remove (GTK_CONTAINER (obwin->obw_lowerobjvbox), lowerframe);
+  memset (obv, 0, sizeof (struct objectview_newgui_stBM));
+  free (obv);
 }                               /* end of destroy_objectviewbuffer_BM */
