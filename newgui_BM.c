@@ -1226,7 +1226,8 @@ spindepth_namedval_newgui_cbBM (GtkSpinButton * spbut, gpointer data)
     gtk_spin_button_set_value (nvx->nvx_upper.nvxt_spindepth,
                                (double) newdepth);
   if (spbut != nvx->nvx_lower.nvxt_spindepth)
-    gtk_spin_button_set_value (nvx->nvx_lower.nvxt_spindepth,
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON
+                               (nvx->nvx_lower.nvxt_spindepth),
                                (double) newdepth);
   gtk_widget_show_all (nvx->nvx_upper.nvxt_frame);
   gtk_widget_show_all (nvx->nvx_lower.nvxt_frame);
@@ -1814,6 +1815,67 @@ index_shown_object_in_obwin_newgui_BM (struct objectwindow_newgui_stBM *obw,
   return -1;
 }                               /* end index_shown_object_in_obwin_newgui_BM */
 
+static char *labstr_object_in_obwin_newgui_BM (struct objectwindow_newgui_stBM
+                                               *obw, objectval_tyBM * obj,
+                                               objectval_tyBM * shobsel);
+
+char *
+labstr_object_in_obwin_newgui_BM (struct objectwindow_newgui_stBM *obw,
+                                  objectval_tyBM * obj,
+                                  objectval_tyBM * shobsel)
+{
+  char objectidbuf[32];
+  memset (objectidbuf, 0, sizeof (objectidbuf));
+  char *objectstr = findobjectname_BM (obj);
+  char shobjselidbuf[32];
+  memset (shobjselidbuf, 0, sizeof (shobjselidbuf));
+  char *shobjselstr = findobjectname_BM (shobsel);
+  char *labstr = NULL;
+  if (objectstr)
+    {
+      if (shobjselstr)
+        {
+          labstr = g_markup_printf_escaped ("<big><b>%s</b></big>\n"
+                                            //U+2B6C RIGHTWARDS TRIANGLE-HEADED DASHED ARROW ⭬
+                                            "\342\255\254 "
+                                            "<i>%s</i>",
+                                            objectstr, shobjselstr);
+        }
+      else
+        {
+          labstr = g_markup_printf_escaped ("<big><b>%s</b></big>\n"
+                                            //U+2B6C RIGHTWARDS TRIANGLE-HEADED DASHED ARROW ⭬
+                                            "\342\255\254 "
+                                            "<i><tt>%s</tt></i>",
+                                            objectstr,
+                                            idtocbuf32_BM (objid_BM
+                                                           (shobsel),
+                                                           shobjselidbuf));
+        }
+    }
+  else
+    {                           /* no objectstr */
+      idtocbuf32_BM (objid_BM (obj), objectidbuf);
+      if (shobjselstr)
+        {
+          labstr = g_markup_printf_escaped ("<big><b><tt>%s</tt></b></big>\n"
+                                            //U+2B6C RIGHTWARDS TRIANGLE-HEADED DASHED ARROW ⭬
+                                            "\342\255\254 " "<i>%s</i>",
+                                            objectidbuf, shobjselstr);
+        }
+      else
+        {
+          labstr = g_markup_printf_escaped ("<big><b><tt>%s</tt></b></big>\n"
+                                            //U+2B6C RIGHTWARDS TRIANGLE-HEADED DASHED ARROW ⭬
+                                            "\342\255\254 "
+                                            "<i><tt>%s</tt></i>",
+                                            objectidbuf,
+                                            idtocbuf32_BM (objid_BM (shobsel),
+                                                           shobjselidbuf));
+        }
+    };
+  return labstr;
+}                               /* end labstr_object_in_obwin_newgui_BM */
 
 
 void show_object_in_obwin_newgui_BM
@@ -1878,56 +1940,7 @@ void show_object_in_obwin_newgui_BM
       newobv->obv_obsel = _.shobsel;
       newobv->obv_obwindow = obw;
       newobv->obv_tbuffer = gtk_text_buffer_new (browsertagtable_BM);
-      char objectidbuf[32];
-      memset (objectidbuf, 0, sizeof (objectidbuf));
-      char *objectstr = findobjectname_BM (_.obj);
-      char shobjselidbuf[32];
-      memset (shobjselidbuf, 0, sizeof (shobjselidbuf));
-      char *shobjselstr = findobjectname_BM (_.shobsel);
-      char *labstr = NULL;
-      if (objectstr)
-        {
-          if (shobjselstr)
-            {
-              labstr = g_markup_printf_escaped ("<big><b>%s</b></big>\n"
-                                                //U+2B6C RIGHTWARDS TRIANGLE-HEADED DASHED ARROW ⭬
-                                                "\342\255\254 "
-                                                "<i>%s</i>",
-                                                objectstr, shobjselstr);
-            }
-          else
-            {
-              labstr = g_markup_printf_escaped ("<big><b>%s</b></big>\n"
-                                                //U+2B6C RIGHTWARDS TRIANGLE-HEADED DASHED ARROW ⭬
-                                                "\342\255\254 "
-                                                "<i><tt>%s</tt></i>",
-                                                objectstr,
-                                                idtocbuf32_BM (objid_BM
-                                                               (_.shobsel),
-                                                               shobjselidbuf));
-            }
-        }
-      else
-        {                       /* no objectstr */
-          idtocbuf32_BM (objid_BM (_.obj), objectidbuf);
-          if (shobjselstr)
-            {
-              labstr = g_markup_printf_escaped
-                ("<big><b><tt>%s</tt></b></big>\n"
-                 //U+2B6C RIGHTWARDS TRIANGLE-HEADED DASHED ARROW ⭬
-                 "\342\255\254 " "<i>%s</i>", objectidbuf, shobjselstr);
-            }
-          else
-            {
-              labstr = g_markup_printf_escaped
-                ("<big><b><tt>%s</tt></b></big>\n"
-                 //U+2B6C RIGHTWARDS TRIANGLE-HEADED DASHED ARROW ⭬
-                 "\342\255\254 "
-                 "<i><tt>%s</tt></i>",
-                 objectidbuf, idtocbuf32_BM (objid_BM (_.shobsel),
-                                             shobjselidbuf));
-            }
-        };
+      char *labstr = labstr_object_in_obwin_newgui_BM (obw, _.obj, _.shobsel);
       fill_objectviewbuffer_BM (newobv, (struct stackframe_stBM *) &_);
       fill_objectviewthing_BM (newobv, labstr, true,
                                (struct stackframe_stBM *) &_);
@@ -1949,9 +1962,10 @@ void show_object_in_obwin_newgui_BM
           struct objectview_newgui_stBM *curobv = obvarr[md];
           assert (curobv != NULL);
           assert (curobv->obv_object != NULL);
-          if (shobj == curobv->obv_object)
-            return md;
-          int cmp = objectnamedcmp_BM (shobj, curobv->obv_object);
+          if (_.obj == curobv->obv_object)
+            {
+            }
+          int cmp = objectnamedcmp_BM (_.obj, curobv->obv_object);
           assert (cmp != 0);
           if (cmp < 0)
             hi = md;
@@ -2207,7 +2221,7 @@ destroy_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
                  objectval_tyBM * object;
                  objectval_tyBM * obsel;
     );
-  struct objectwindow_newgui_stBM *obwin = obv->obwindow;
+  struct objectwindow_newgui_stBM *obwin = obv->obv_obwindow;
   assert (obwin != NULL);
   _.object = obv->obv_object;
   _.obsel = obv->obv_obsel;
