@@ -1894,7 +1894,8 @@ void show_object_in_obwin_newgui_BM
     depth = BROWSE_MAXDEPTH_NEWGUI_BM;
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  objectval_tyBM * obj;
-                 objectval_tyBM * shobsel;);
+                 objectval_tyBM * shobsel; objectval_tyBM * curobj;
+                 objectval_tyBM * curshobsel;);
   _.obj = obj;
   _.shobsel = shobsel;
   DBGPRINTF_BM
@@ -1979,6 +1980,25 @@ void show_object_in_obwin_newgui_BM
           struct objectview_newgui_stBM *curobv = obvarr[md];
           assert (curobv != NULL);
           assert (curobv->obv_object != NULL);
+          assert (curobv->obv_obwindow == obw);
+          _.curobj = curobv->obv_object;
+          if (_.curobj == _.obj)
+            {
+              curobv->obv_obsel = _.shobsel;
+              curobv->obv_depth = depth;
+              char *labstr =
+                labstr_object_in_obwin_newgui_BM (obw, _.obj, _.shobsel);
+              fill_objectviewbuffer_BM (curobv,
+                                        (struct stackframe_stBM *) &_);
+              fill_objectviewthing_BM (curobv, labstr, true,
+                                       (struct stackframe_stBM *) &_);
+              fill_objectviewthing_BM (curobv, labstr, false,
+                                       (struct stackframe_stBM *) &_);
+              g_free (labstr), labstr = NULL;
+              return;
+            };
+          int cmp = objectnamedcmp_BM (_.obj, _.curobj);
+          assert (cmp != 0);
         }
 #warning very incomplete show_object_in_obwin_newgui_BM
     }
