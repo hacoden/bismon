@@ -166,6 +166,10 @@ static void show_object_in_obwin_newgui_BM
   (struct objectwindow_newgui_stBM *obw, objectval_tyBM * obj,
    objectval_tyBM * shobsel, int depth, struct stackframe_stBM *stkf);
 
+static void
+remove_objectview_newgui_BM (struct objectview_newgui_stBM *obv,
+                             struct stackframe_stBM *stkf);
+
 ////////////////
 const struct parserops_stBM parsop_command_build_newgui_BM = {
   .parsop_magic = PARSOPMAGIC_BM,
@@ -2151,10 +2155,12 @@ closebut_obview_newgui_cbBM (GtkWidget * wbut, gpointer data)
 {
   assert (data != NULL);
   struct objectview_newgui_stBM *obv = (struct objectview_newgui_stBM *) data;
+  struct objectwindow_newgui_stBM *obwin = obv->obv_obwindow;
+  assert (obwin != NULL);
   DBGPRINTF_BM
-    ("closebut_obview_newgui_cbBM obv rank#%d object %s unimplemented",
-     obv->obv_rank, objectdbg_BM (obv->obv_object));
-#warning closebut_obview_newgui_cbBM unimplemented
+    ("closebut_obview_newgui_cbBM obv rank#%d object %s obwin#%d",
+     obv->obv_rank, objectdbg_BM (obv->obv_object), obwin->obw_rank);
+  remove_objectview_newgui_BM (obv, NULL);
 }                               /* end closebut_obview_newgui_cbBM */
 
 
@@ -2165,8 +2171,12 @@ spindepth_obview_newgui_cbBM (GtkSpinButton * spbut, gpointer data)
   int newdepth = gtk_spin_button_get_value_as_int (spbut);
   struct objectview_newgui_stBM *obv = (struct objectview_newgui_stBM *) data;
   DBGPRINTF_BM
-    ("spindepth_obview_newgui_cbBM obv rank#%d object %s newdepth %d unimplemented",
+    ("spindepth_obview_newgui_cbBM obv rank#%d object %s newdepth %d",
      obv->obv_rank, objectdbg_BM (obv->obv_object), newdepth);
+  if (newdepth < 2)
+    newdepth = 2;
+  else if (newdepth > BROWSE_MAXDEPTH_NEWGUI_BM)
+    newdepth = BROWSE_MAXDEPTH_NEWGUI_BM;
 #warning spindepth_obview_newgui_cbBM unimplemented
 }                               /* end spindepth_obview_newgui_cbBM  */
 
@@ -2421,3 +2431,51 @@ newgui_browse_add_parens_BM (int openoff, int closeoff,
                 curobjview_newgui_BM->obv_parenulen);
   curobjview_newgui_BM->obv_parenulen++;
 }                               /* end newgui_browse_add_parens_BM */
+
+static void
+remove_objectview_newgui_BM (struct objectview_newgui_stBM *obv,
+                             struct stackframe_stBM *stkf)
+{
+  if (!obv)
+    return;
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 objectval_tyBM * object;
+                 objectval_tyBM * obsel;
+    );
+  curobjview_newgui_BM = NULL;
+  struct objectwindow_newgui_stBM *obwin = obv->obv_obwindow;
+  assert (obwin != NULL);
+  _.object = obv->obv_object;
+  _.obsel = obv->obv_obsel;
+  int rk = obv->obv_rank;
+  DBGPRINTF_BM
+    ("remove_objectview_newgui_BM obv@%p obwin@%p rank#%d object %s obsel %s",
+     obv, obwin, obv->obv_rank, objectdbg_BM (_.object),
+     objectdbg1_BM (_.obsel));
+  destroy_objectviewbuffer_BM (obv, (struct stackframe_stBM *) &_);
+  int winlen = obwin->obw_ulen;
+  struct objectview_newgui_stBM **warr = obwin->obw_arr;
+  assert (warr != NULL);
+  for (int ix = rk; ix < winlen - 1; ix++)
+    {
+      struct objectview_newgui_stBM *curobv = warr[ix] = warr[ix + 1];
+      curobv->obv_rank = ix;
+    };
+  warr[winlen] = NULL;
+  obwin->obw_ulen = winlen - 1;
+  if (obwin->obw_asiz > 10 && 2 * winlen < obwin->obw_asiz)
+    {
+      int newsiz = prime_above_BM (5 * winlen / 4 + 3);
+      if (newsiz < obwin->obw_asiz)
+        {
+          struct objectview_newgui_stBM **newarr =
+            calloc (newsiz, sizeof (struct objectview_newgui_stBM *));
+          if (!newarr)
+            FATAL_BM ("cannot shrink obwindow#%d to %d", obwin->obw_rank,
+                      newsiz);
+          memcpy (newarr, warr,
+                  (winlen - 1) * sizeof (struct objectview_newgui_stBM *));
+          free (obwin->obw_arr), obwin->obw_arr = newarr;
+        }
+    }
+}                               /* end remove_objectview_newgui_BM  */
