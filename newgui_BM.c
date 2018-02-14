@@ -1878,7 +1878,11 @@ labstr_object_in_obwin_newgui_BM (struct objectwindow_newgui_stBM *obw,
 }                               /* end labstr_object_in_obwin_newgui_BM */
 
 
-void show_object_in_obwin_newgui_BM
+
+
+
+void
+  show_object_in_obwin_newgui_BM
   (struct objectwindow_newgui_stBM *obw, objectval_tyBM * obj,
    objectval_tyBM * shobsel, int depth, struct stackframe_stBM *stkf)
 {
@@ -1999,9 +2003,42 @@ void show_object_in_obwin_newgui_BM
             };
           int cmp = objectnamedcmp_BM (_.obj, _.curobj);
           assert (cmp != 0);
+          if (cmp > 0)
+            break;
         }
-#warning very incomplete show_object_in_obwin_newgui_BM
+      // insert before md
+      assert (md >= 0);
+      for (int ix = ulen; ix > md; ix--)
+        {
+          obvarr[ix] = obvarr[ix - 1];
+          if (obvarr[ix])
+            obvarr[ix]->obv_rank = ix;
+        }
+      obvarr[md] = NULL;
+      struct objectview_newgui_stBM *newobv =
+        calloc (1, sizeof (struct objectview_newgui_stBM));
+      if (!newobv)
+        FATAL_BM ("failed to allocate new objectview for %s",
+                  objectdbg_BM (_.obj));
+      newobv->obv_rank = 0;
+      newobv->obv_depth = depth;
+      newobv->obv_object = _.obj;
+      newobv->obv_obsel = _.shobsel;
+      newobv->obv_obwindow = obw;
+      newobv->obv_tbuffer = gtk_text_buffer_new (browsertagtable_BM);
+      char *labstr = labstr_object_in_obwin_newgui_BM (obw, _.obj, _.shobsel);
+      fill_objectviewbuffer_BM (newobv, (struct stackframe_stBM *) &_);
+      fill_objectviewthing_BM (newobv, labstr, true,
+                               (struct stackframe_stBM *) &_);
+      fill_objectviewthing_BM (newobv, labstr, false,
+                               (struct stackframe_stBM *) &_);
+      g_free (labstr), labstr = NULL;
+      obvarr[md] = newobv;
+      obw->obw_ulen++;
+      return;
+#warning perhaps incomplete show_object_in_obwin_newgui_BM
     }
+  // do we handle the append to end case?
 }                               /* end show_object_in_obwin_newgui_BM */
 
 
