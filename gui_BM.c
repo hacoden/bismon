@@ -993,7 +993,8 @@ browse_add_parens_BM (int openoff, int closeoff, int xtraoff,
                 ".. openlen=%u closelen=%u xtralen=%u depth=%d",
                 openoff, closeoff, xtraoff,
                 openlen, closelen, xtralen, depth);
-  assert ((browserobcurix_BM >= 0 && browserobcurix_BM < (int) browserobulen_BM) || (browsednvcurix_BM >= 0 && browsednvcurix_BM < (int) browsednvulen_BM)      //
+  assert ((browserobcurix_BM >= 0 && browserobcurix_BM < (int) browserobulen_BM)        //
+          || (browsednvcurix_BM >= 0 && browsednvcurix_BM < (int) browsednvulen_BM)     //
           || newgui_BM);
   if (browserobcurix_BM >= 0)
     {
