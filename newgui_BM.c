@@ -2142,6 +2142,8 @@ fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
   gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (txview), true);
   gtk_box_pack_start (GTK_BOX (obth->obvt_vbox), txview,
                       BOXEXPAND_BM, BOXFILL_BM, 1);
+  assert (GTK_IS_WIDGET (inbox));
+  gtk_widget_show_all (inbox);
 }                               /* end of fill_objectviewthing_BM */
 
 
