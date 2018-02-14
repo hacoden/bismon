@@ -2332,3 +2332,20 @@ destroy_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
   memset (obv, 0, sizeof (struct objectview_newgui_stBM));
   free (obv);
 }                               /* end of destroy_objectviewbuffer_BM */
+
+
+void
+newgui_browse_add_parens_BM (int openoff, int closeoff,
+                             int xtraoff, unsigned openlen,
+                             unsigned closelen, unsigned xtralen,
+                             int depth, struct stackframe_stBM *stkf)
+{
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 objectval_tyBM * object;
+                 objectval_tyBM * obsel;
+    );
+  FATAL_BM
+    ("newgui_browse_add_parens_BM unimplemented openoff=%d closeoff=%d",
+     openoff, closeoff);
+#warning newgui_browse_add_parens_BM unimplemented
+}                               /* end newgui_browse_add_parens_BM */

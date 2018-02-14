@@ -382,7 +382,8 @@ ROUTINEOBJNAME_BM (_0B1PYH9bN34_3RZdP24AVyt)    //
   gtk_text_buffer_insert_with_tags (brobuf, &browserit_BM,      //
                                     "]", -1, nest_brotag_BM, NULL);
   int closeoff = gtk_text_iter_get_offset (&browserit_BM) - oboff;
-  browse_add_parens_BM (openoff, closeoff, -1, 1, 1, 0, curdepth);
+  browse_add_parens_BM (openoff, closeoff, -1, 1, 1, 0, curdepth,
+                        (struct stackframe_stBM *) &_);
   LOCALRETURN_BM (_.objbrows);
 }                               /* end ROUTINEOBJNAME_BM (_0BAnB0xjs23_0WEOCOi5Nb)  */
 
@@ -455,7 +456,8 @@ ROUTINEOBJNAME_BM (_3rne4qbpnV9_0pywzeJp3Qr)    //
   gtk_text_buffer_insert_with_tags (brobuf, &browserit_BM,      //
                                     "}", -1, nest_brotag_BM, NULL);
   int closeoff = gtk_text_iter_get_offset (&browserit_BM) - oboff;
-  browse_add_parens_BM (openoff, closeoff, -1, 1, 1, 0, curdepth);
+  browse_add_parens_BM (openoff, closeoff, -1, 1, 1, 0, curdepth,
+                        (struct stackframe_stBM *) &_);
   LOCALRETURN_BM (_.objbrows);
 }                               /* end ROUTINEOBJNAME_BM (_3rne4qbpnV9_0pywzeJp3Qr)  */
 
@@ -621,7 +623,8 @@ ROUTINEOBJNAME_BM (_63ZPkXUI2Uv_6Cp3qmh6Uud)    //
   gtk_text_buffer_insert_with_tags (brobuf, &browserit_BM,      //
                                     "\"", -1, stresc_brotag_BM, NULL);
   int closeoff = gtk_text_iter_get_offset (&browserit_BM) - oboff;
-  browse_add_parens_BM (openoff, closeoff, -1, 1, 1, 0, curdepth);
+  browse_add_parens_BM (openoff, closeoff, -1, 1, 1, 0, curdepth,
+                        (struct stackframe_stBM *) &_);
   if (ccnt >= WANTEDLINEWIDTH_BM / 2)
     browsespacefordepth_BM (curdepth);
   LOCALRETURN_BM (arg1);
@@ -691,7 +694,8 @@ ROUTINEOBJNAME_BM (_7fJKfG4SN0U_1QTu5J832xg)    //
   gtk_text_buffer_insert_with_tags (brobuf, &browserit_BM,      //
                                     ")", -1, nest_brotag_BM, NULL);
   int closeoff = gtk_text_iter_get_offset (&browserit_BM) - oboff;
-  browse_add_parens_BM (openoff, closeoff, xtraoff, 1, 1, 1, curdepth);
+  browse_add_parens_BM (openoff, closeoff, xtraoff, 1, 1, 1, curdepth,
+                        (struct stackframe_stBM *) &_);
   LOCALRETURN_BM (arg1);
 }                               /* end ROUTINEOBJNAME_BM (_7fJKfG4SN0U_1QTu5J832xg) */
 
@@ -761,7 +765,8 @@ ROUTINEOBJNAME_BM (_7CohjJ9tkfZ_4UMAIZCgwac)    //
   gtk_text_buffer_insert_with_tags (brobuf, &browserit_BM,      //
                                     ")", -1, nest_brotag_BM, NULL);
   int closeoff = gtk_text_iter_get_offset (&browserit_BM) - oboff;
-  browse_add_parens_BM (openoff, closeoff, xtraoff, 1, 1, 1, curdepth);
+  browse_add_parens_BM (openoff, closeoff, xtraoff, 1, 1, 1, curdepth,
+                        (struct stackframe_stBM *) &_);
   LOCALRETURN_BM (arg1);
 }                               /* end ROUTINEOBJNAME_BM ( _7CohjJ9tkfZ_4UMAIZCgwac) */
 

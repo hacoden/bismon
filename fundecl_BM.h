@@ -833,7 +833,12 @@ extern struct browsedval_stBM *find_browsed_named_value_BM
 extern void browse_add_parens_BM (int openoff, int closeoff,
                                   int xtraoff, unsigned openlen,
                                   unsigned closelen, unsigned xtralen,
-                                  int depth);
+                                  int depth, struct stackframe_stBM *stkf);
+extern void newgui_browse_add_parens_BM (int openoff, int closeoff,
+                                         int xtraoff, unsigned openlen,
+                                         unsigned closelen, unsigned xtralen,
+                                         int depth,
+                                         struct stackframe_stBM *stkf);
 
 extern const char *textiterstrdbg_BM (GtkTextIter * it);
 

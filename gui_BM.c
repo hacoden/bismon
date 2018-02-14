@@ -986,16 +986,15 @@ browse_show_start_offset_BM (void)
 void
 browse_add_parens_BM (int openoff, int closeoff, int xtraoff,
                       unsigned openlen, unsigned closelen,
-                      unsigned xtralen, int depth)
+                      unsigned xtralen, int depth,
+                      struct stackframe_stBM *stkf)
 {
-  DBGPRINTF_BM ("browse_add_paren openoff=%d closeoff=%d xtraoff=%d\n"
+  DBGPRINTF_BM ("browse_add_parens openoff=%d closeoff=%d xtraoff=%d\n"
                 ".. openlen=%u closelen=%u xtralen=%u depth=%d",
                 openoff, closeoff, xtraoff,
                 openlen, closelen, xtralen, depth);
-  assert ((browserobcurix_BM >= 0
-           && browserobcurix_BM < (int) browserobulen_BM)
-          || (browsednvcurix_BM >= 0
-              && browsednvcurix_BM < (int) browsednvulen_BM));
+  assert ((browserobcurix_BM >= 0 && browserobcurix_BM < (int) browserobulen_BM) || (browsednvcurix_BM >= 0 && browsednvcurix_BM < (int) browsednvulen_BM)      //
+          || newgui_BM);
   if (browserobcurix_BM >= 0)
     {
       assert (browsednvcurix_BM < 0);
@@ -1051,6 +1050,11 @@ browse_add_parens_BM (int openoff, int closeoff, int xtraoff,
       curpar->paroff_xtralen = xtralen;
       curpar->paroff_depth = depth;
       curbrval->brow_vparenulen = oldulen + 1;
+    }
+  else if (newgui_BM)
+    {
+      newgui_browse_add_parens_BM (openoff, closeoff, xtraoff,
+                                   openlen, closelen, xtralen, depth, stkf);
     }
   else
     FATAL_BM ("no browsed object or named value");
