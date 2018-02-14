@@ -1903,8 +1903,8 @@ void
   _.obj = obj;
   _.shobsel = shobsel;
   DBGPRINTF_BM
-    ("show_object_in_obwin_newgui obj=%s shobsel=%s depth=%d obw@%p start",
-     objectdbg_BM (_.obj), objectdbg1_BM (_.shobsel), obw);
+    ("show_object_in_obwin_newgui obj=%s shobsel=%s depth=%d ulen=%d obw@%p start",
+     objectdbg_BM (_.obj), objectdbg1_BM (_.shobsel), obw->obw_ulen, obw);
   if (obw->obw_asiz <= 0)
     {
       assert (obw->obw_arr == NULL);
@@ -2007,6 +2007,9 @@ void
             break;
         }
       // insert before md
+      DBGPRINTF_BM
+        ("show_object_in_obwin_newgui obj=%s depth=%d ulen=%d md=%d",
+         objectdbg_BM (_.obj), depth, obw->obw_ulen, md);
       assert (md >= 0);
       for (int ix = ulen; ix > md; ix--)
         {
@@ -2038,6 +2041,9 @@ void
       return;
 #warning perhaps incomplete show_object_in_obwin_newgui_BM
     }
+  DBGPRINTF_BM
+    ("show_object_in_obwin_newgui obj=%s shobsel=%s depth=%d ulen=%d obw@%p end",
+     objectdbg_BM (_.obj), objectdbg1_BM (_.shobsel), obw->obw_ulen, obw);
   // do we handle the append to end case?
 }                               /* end show_object_in_obwin_newgui_BM */
 
