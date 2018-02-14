@@ -942,10 +942,16 @@ browse_show_start_offset_BM (void)
       if (!browserbuf_BM)
         return -1;
     };
+  GtkTextIter it = EMPTY_TEXT_ITER_BM;
+  if (newgui_BM)
+    {
+      assert (browserbuf_BM != NULL);
+      gtk_text_buffer_get_start_iter (browserbuf_BM, &it);
+      return gtk_text_iter_get_offset (&it);
+    }
   // exactly one of browserobcurix_BM or browsednvcurix_BM is active so >=0
   assert (browserobcurix_BM >= 0 || browsednvcurix_BM >= 0);
   assert (browserobcurix_BM < 0 || browsednvcurix_BM < 0);
-  GtkTextIter it = EMPTY_TEXT_ITER_BM;
   if (browserobcurix_BM >= 0)
     {
       assert (browserobcurix_BM < (int) browserobulen_BM);
