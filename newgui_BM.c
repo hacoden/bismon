@@ -1243,9 +1243,8 @@ spindepth_namedval_newgui_cbBM (GtkSpinButton * spbut, gpointer data)
   assert (idx >= 0 && idx <= (int) browsednvulen_BM
           && idx < (int) browsednvsize_BM);
   assert (browsedval_BM[idx].brow_vdata == (void *) nvx);
-  double d = gtk_spin_button_get_value (spbut);
-  int newdepth = (int) d;
-  DBGPRINTF_BM ("spindepth_namedval_newgui_cbBM idx=%d d=%.3f = %d", idx, d,
+  int newdepth = gtk_spin_button_get_value_as_int (spbut);
+  DBGPRINTF_BM ("spindepth_namedval_newgui_cbBM idx=%d newdepth %d", idx,
                 newdepth);
   browsedval_BM[idx].brow_vdepth = newdepth;
   browse_indexed_named_value_newgui_BM (browsedval_BM[idx].brow_val, newdepth,
@@ -1740,7 +1739,7 @@ make_obwin_newgui_BM (void)
     gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
   gtk_container_add (GTK_CONTAINER (upperscrowin), upperobvbox);
   gtk_container_add (GTK_CONTAINER (lowerscrowin), lowerobvbox);
-  gtk_window_set_default_size (GTK_WINDOW (obwin), 350, 420);
+  gtk_window_set_default_size (GTK_WINDOW (obwin), 550, 450);
   gtk_widget_show_all (obwin);
   DBGPRINTF_BM ("make_obwin_newgui_BM incomplete obwin@%p rank#%d", obwin,
                 newobw->obw_rank);
@@ -2122,7 +2121,7 @@ fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
   GtkWidget *clobut =           //
     gtk_button_new_from_icon_name ("window-close",
                                    GTK_ICON_SIZE_MENU);
-  g_signal_connect (clobut, "activate", closebut_obview_newgui_cbBM, obv);
+  g_signal_connect (clobut, "clicked", closebut_obview_newgui_cbBM, obv);
   GtkWidget *titwidg = gtk_label_new (NULL);
   gtk_label_set_markup (GTK_LABEL (titwidg), labstr);
   gtk_label_set_selectable (GTK_LABEL (titwidg), true);
@@ -2150,7 +2149,11 @@ fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
 void
 closebut_obview_newgui_cbBM (GtkWidget * wbut, gpointer data)
 {
-  DBGPRINTF_BM ("closebut_obview_newgui_cbBM unimplemented");
+  assert (data != NULL);
+  struct objectview_newgui_stBM *obv = (struct objectview_newgui_stBM *) data;
+  DBGPRINTF_BM
+    ("closebut_obview_newgui_cbBM obv rank#%d object %s unimplemented",
+     obv->obv_rank, objectdbg_BM (obv->obv_object));
 #warning closebut_obview_newgui_cbBM unimplemented
 }                               /* end closebut_obview_newgui_cbBM */
 
@@ -2158,7 +2161,12 @@ closebut_obview_newgui_cbBM (GtkWidget * wbut, gpointer data)
 void
 spindepth_obview_newgui_cbBM (GtkSpinButton * spbut, gpointer data)
 {
-  DBGPRINTF_BM ("spindepth_obview_newgui_cbBM unimplemented");
+  assert (data != 0);
+  int newdepth = gtk_spin_button_get_value_as_int (spbut);
+  struct objectview_newgui_stBM *obv = (struct objectview_newgui_stBM *) data;
+  DBGPRINTF_BM
+    ("spindepth_obview_newgui_cbBM obv rank#%d object %s newdepth %d unimplemented",
+     obv->obv_rank, objectdbg_BM (obv->obv_object), newdepth);
 #warning spindepth_obview_newgui_cbBM unimplemented
 }                               /* end spindepth_obview_newgui_cbBM  */
 
