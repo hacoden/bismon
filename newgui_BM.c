@@ -2175,7 +2175,7 @@ fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
     FATAL_BM ("fill_objectviewbuffer_BM bad object rank#%d", obv->obv_rank);
   if (!isobject_BM (_.shobsel))
     FATAL_BM ("fill_objectviewbuffer_BM bad shobsel rank#%d", obv->obv_rank);
-  DBGPRINTF_BM ("fill_objectviewbuffer unimplemented rank#%d obwin@%p",
+  DBGPRINTF_BM ("fill_objectviewbuffer start rank#%d obwin@%p",
                 obv->obv_rank, obv->obv_obwindow);
   gtk_text_buffer_set_text (tbuf, "", 0);
   int prevbrowdepth = browserdepth_BM;
@@ -2189,6 +2189,7 @@ fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
   curfailurehandle_BM = prevfailureh;
   if (failcod)
     {                           // error case....
+      DBGPRINTF_BM ("fill_objectviewbuffer_BM failed failcod=%d", failcod);
       // should show some error thing....
       gtk_text_buffer_get_end_iter (tbuf, &browserit_BM);
       gtk_text_buffer_insert (tbuf, &browserit_BM, "\n", -1);
@@ -2234,11 +2235,18 @@ fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
     }
   else
     {                           // first run
+      int depth = browserdepth_BM;
+      DBGPRINTF_BM ("fill_objectviewbuffer_BM object %s shobsel %s depth %d",
+                    objectdbg_BM (_.object), objectdbg1_BM (_.shobsel),
+                    depth);
       send1_BM ((const value_tyBM) _.object, _.shobsel,
-                (struct stackframe_stBM *) &_,
-                taggedint_BM (browserdepth_BM));
+                (struct stackframe_stBM *) &_, taggedint_BM (depth));
+      browserdepth_BM = depth;
       gtk_text_buffer_get_end_iter (tbuf, &browserit_BM);
       gtk_text_buffer_insert (tbuf, &browserit_BM, "\n", -1);
+      DBGPRINTF_BM
+        ("fill_objectviewbuffer_BM object %s shobsel %s depth %d epilogue",
+         objectdbg_BM (_.object), objectdbg1_BM (_.shobsel), depth);
       // should show some epilogue....
       browserbuf_BM = tbuf;
       gtk_text_buffer_insert_with_tags (tbuf, &browserit_BM, "///- ", -1,
