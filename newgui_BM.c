@@ -55,8 +55,11 @@ struct objectview_newgui_stBM
   objectval_tyBM *obv_object;
   objectval_tyBM *obv_obsel;
   GtkTextBuffer *obv_tbuffer;
+  unsigned obv_parenulen, obv_parenasiz;
+  struct parenoffset_stBM *obv_parenarr;
   struct objectviewthings_stBM obv_upper, obv_lower;
 };                              /* end struct objectview_newgui_stBM */
+static struct objectview_newgui_stBM *curobjview_newgui_BM;
 
 // an objectwindow
 struct objectwindow_newgui_stBM
@@ -403,6 +406,8 @@ initialize_newgui_BM (const char *builderfile, const char *cssfile)
   if (!cssfile)
     cssfile = "bismon.css";
   browserdepth_BM = 6;
+  browserobcurix_BM = -1;
+  browsednvcurix_BM = -1;
   GtkBuilder *bld = gtk_builder_new_from_file (builderfile);
   cssprovider_newgui_bm = gtk_css_provider_get_default ();
   g_signal_connect (cssprovider_newgui_bm, "parsing-error",
@@ -2187,6 +2192,7 @@ fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
   _.failreason = NULL;
   LOCAL_FAILURE_HANDLE_BM (failcod, _.failreason);
   curfailurehandle_BM = prevfailureh;
+  curobjview_newgui_BM = obv;
   if (failcod)
     {                           // error case....
       DBGPRINTF_BM ("fill_objectviewbuffer_BM failed failcod=%d", failcod);
@@ -2232,6 +2238,7 @@ fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
           }
         gtk_text_buffer_insert (tbuf, &browserit_BM, "\n", -1);
       }
+      curobjview_newgui_BM = NULL;
     }
   else
     {                           // first run
@@ -2300,7 +2307,9 @@ fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
                                           miscomm_brotag_BM, NULL);
       }
       gtk_text_buffer_insert (browserbuf_BM, &browserit_BM, "\n", -1);
+      curobjview_newgui_BM = NULL;
     };
+  curobjview_newgui_BM = NULL;
 #warning fill_objectviewbuffer_BM incomplete
 }                               /* end fill_objectviewbuffer_BM */
 
@@ -2315,6 +2324,7 @@ destroy_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
                  objectval_tyBM * object;
                  objectval_tyBM * obsel;
     );
+  curobjview_newgui_BM = NULL;
   struct objectwindow_newgui_stBM *obwin = obv->obv_obwindow;
   assert (obwin != NULL);
   _.object = obv->obv_object;
@@ -2344,8 +2354,54 @@ newgui_browse_add_parens_BM (int openoff, int closeoff,
                  objectval_tyBM * object;
                  objectval_tyBM * obsel;
     );
-  FATAL_BM
-    ("newgui_browse_add_parens_BM unimplemented openoff=%d closeoff=%d",
-     openoff, closeoff);
-#warning newgui_browse_add_parens_BM unimplemented
+  assert (curobjview_newgui_BM != NULL);
+  _.object = curobjview_newgui_BM->obv_object;
+  _.obsel = curobjview_newgui_BM->obv_obsel;
+  if (curobjview_newgui_BM->obv_parenarr == NULL)
+    {
+      int inisiz = 7;
+      struct parenoffset_stBM *newarr =
+        calloc (inisiz, sizeof (struct parenoffset_stBM));
+      if (!newarr)
+        FATAL_BM ("out of memory for parenoffset of size %d for object %s",
+                  inisiz, objectdbg_BM (_.object));
+      curobjview_newgui_BM->obv_parenarr = newarr;
+      curobjview_newgui_BM->obv_parenasiz = inisiz;
+      curobjview_newgui_BM->obv_parenulen = 0;
+    }
+  else if (curobjview_newgui_BM->obv_parenulen + 1 >=
+           curobjview_newgui_BM->obv_parenasiz)
+    {
+      int newsiz =
+        prime_above_BM (4 * curobjview_newgui_BM->obv_parenulen / 3 + 6);
+      struct parenoffset_stBM *newarr =
+        calloc (newsiz, sizeof (struct parenoffset_stBM));
+      if (!newarr)
+        FATAL_BM
+          ("out of memory for parenoffset growing to size %d for object %s",
+           newsiz, objectdbg_BM (_.object));
+      memcpy (newarr, curobjview_newgui_BM->obv_parenarr,
+              curobjview_newgui_BM->obv_parenulen *
+              sizeof (struct parenoffset_stBM));
+      free (curobjview_newgui_BM->obv_parenarr),
+        curobjview_newgui_BM->obv_parenarr = newarr;
+      curobjview_newgui_BM->obv_parenasiz = newsiz;
+    }
+  struct parenoffset_stBM *curpar =
+    curobjview_newgui_BM->obv_parenarr + curobjview_newgui_BM->obv_parenulen;
+  struct objectwindow_newgui_stBM *obwin = curobjview_newgui_BM->obv_obwindow;
+  assert (obwin != NULL);
+  curpar->paroff_open = openoff;
+  curpar->paroff_close = closeoff;
+  curpar->paroff_xtra = xtraoff;
+  curpar->paroff_openlen = openlen;
+  curpar->paroff_closelen = closelen;
+  curpar->paroff_xtralen = xtralen;
+  curpar->paroff_depth = depth;
+  DBGPRINTF_BM ("newgui_browse_add_parens_BM object %s"
+                "\n... obwin#%d open#%d/l%d close#%d/l%d xtra#%d/l%d depth %d ulen %d",
+                objectdbg_BM (_.object), obwin->obw_rank,
+                openoff, openlen, closeoff, closelen, xtraoff, xtralen, depth,
+                curobjview_newgui_BM->obv_parenulen);
+  curobjview_newgui_BM->obv_parenulen++;
 }                               /* end newgui_browse_add_parens_BM */
