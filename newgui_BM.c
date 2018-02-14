@@ -2177,7 +2177,8 @@ spindepth_obview_newgui_cbBM (GtkSpinButton * spbut, gpointer data)
     newdepth = 2;
   else if (newdepth > BROWSE_MAXDEPTH_NEWGUI_BM)
     newdepth = BROWSE_MAXDEPTH_NEWGUI_BM;
-#warning spindepth_obview_newgui_cbBM unimplemented
+  obv->obv_depth = newdepth;
+  fill_objectviewbuffer_BM (obv, NULL);
 }                               /* end spindepth_obview_newgui_cbBM  */
 
 
