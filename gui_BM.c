@@ -988,6 +988,10 @@ browse_add_parens_BM (int openoff, int closeoff, int xtraoff,
                       unsigned openlen, unsigned closelen,
                       unsigned xtralen, int depth)
 {
+  DBGPRINTF_BM ("browse_add_paren openoff=%d closeoff=%d xtraoff=%d\n"
+                ".. openlen=%u closelen=%u xtralen=%u depth=%d",
+                openoff, closeoff, xtraoff,
+                openlen, closelen, xtralen, depth);
   assert ((browserobcurix_BM >= 0
            && browserobcurix_BM < (int) browserobulen_BM)
           || (browsednvcurix_BM >= 0
