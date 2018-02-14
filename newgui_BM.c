@@ -2310,7 +2310,13 @@ fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
       curobjview_newgui_BM = NULL;
     };
   curobjview_newgui_BM = NULL;
-#warning fill_objectviewbuffer_BM incomplete
+  gtk_widget_show_all (obv->obv_upper.obvt_frame);
+  gtk_widget_show_all (obv->obv_lower.obvt_frame);
+  assert (obv->obv_obwindow != NULL);
+  DBGPRINTF_BM
+    ("fill_objectviewbuffer_BM end object %s shobsel %s depth %d rank#%d window#%d",
+     objectdbg_BM (_.object), objectdbg1_BM (_.shobsel), obv->obv_depth,
+     obv->obv_rank, obv->obv_obwindow->obw_rank);
 }                               /* end fill_objectviewbuffer_BM */
 
 
