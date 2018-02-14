@@ -35,7 +35,7 @@ static GtkWidget *uppervboxvalues_newgui_bm;
 static GtkWidget *lowervboxvalues_newgui_bm;
 
 
-#warning objectview is incomplete
+#warning objectview shows a + the_system in wrong order
 // each objectview appears twice, in a paned; the widgets inside upper
 // & lower panes ...
 struct objectviewthings_stBM
