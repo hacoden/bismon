@@ -831,7 +831,30 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
           if (!gotobj)
             parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
                                   curlineno, curcolpos, "invalid object");
-#warning parsecommandbuf_newgui should show the _.obj
+          if (!obwin_current_newgui_BM)
+            parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
+                                  curlineno, curcolpos,
+                                  "no current object window to show object");
+          if (!nobuild)
+            {
+              if (!_.obj)
+                parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
+                                      curlineno, curcolpos, "no object");
+              int depth = browserdepth_BM;
+              DBGPRINTF_BM ("should browse obj %s depth %d in obwin#%d",
+                            objectdbg_BM (_.obj), depth,
+                            obwin_current_newgui_BM->obw_rank);
+              show_object_in_obwin_newgui_BM (obwin_current_newgui_BM, _.obj,
+                                              BMP_browse_in_object, depth,
+                                              (struct stackframe_stBM *) &_);
+              browserdepth_BM = depth;
+              log_begin_message_BM ();
+              log_puts_message_BM ("browsing object ");
+              log_object_message_BM (_.obj);
+              log_printf_message_BM (" at depth %d in obwin#%d.", depth,
+                                     obwin_current_newgui_BM->obw_rank);
+              log_end_message_BM ();
+            }
         }
       // start of value?
       else if (parsertokenstartvalue_BM (pars, tok))
@@ -1924,7 +1947,7 @@ void
         calloc (newsiz, sizeof (void *));
       if (!newarr)
         FATAL_BM ("failed to grow array of %d objectviews", newsiz);
-      mempcy (newarr, obw->obw_arr,
+      memcpy (newarr, obw->obw_arr,
               obw->obw_ulen * sizeof (struct objectview_newgui_stBM *));
       free (obw->obw_arr), obw->obw_arr = newarr;
       obw->obw_asiz = newsiz;
@@ -2162,7 +2185,7 @@ fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
   struct failurehandler_stBM *prevfailureh = curfailurehandle_BM;
   int failcod = 0;
   _.failreason = NULL;
-  LOCAL_FAILURE_HANDLE_VM (failcod, _.failreason);
+  LOCAL_FAILURE_HANDLE_BM (failcod, _.failreason);
   curfailurehandle_BM = prevfailureh;
   if (failcod)
     {                           // error case....
