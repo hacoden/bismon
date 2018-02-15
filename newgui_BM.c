@@ -2543,8 +2543,26 @@ refresh_obwin_newgui_cbBM (gpointer data)
   assert (data != 0);
   struct objectwindow_newgui_stBM *obw =
     (struct objectwindow_newgui_stBM *) data;
-  DBGPRINTF_BM ("refresh_obwin_newgui_cbBM obw@%p #%d unimplemented", obw,
-                obw->obw_rank);
-#warning refresh_obwin_newgui_cbBM  unimplemented
-  return G_SOURCE_CONTINUE;     // or G_SOURCE_REMOVE
+  LOCALFRAME_BM ( /*prev: */ NULL, /*descr: */ NULL,
+                 objectval_tyBM * obj;
+                 objectval_tyBM * shobsel;);
+  int ulen = obw->obw_ulen;
+  DBGPRINTF_BM ("refresh_obwin_newgui_cbBM obw@%p #%d start ulen=%d", obw,
+                obw->obw_rank, ulen);
+  struct objectview_newgui_stBM **warr = obw->obw_arr;
+  assert (ulen == 0 || warr != NULL);
+  for (int ix = 0; ix < ulen; ix++)
+    {
+      struct objectview_newgui_stBM *obv = warr[ix];
+      if (!obv)
+        continue;
+      _.obj = obv->obv_object;
+      _.shobsel = obv->obv_obsel;
+      fill_objectviewbuffer_BM (obv, (struct stackframe_stBM *) &_);
+    }
+  DBGPRINTF_BM ("refresh_obwin_newgui_cbBM obw#%d end", obw->obw_rank);
+  if (obw->obw_refreshperiod > 0)
+    return G_SOURCE_CONTINUE;
+  else
+    return G_SOURCE_REMOVE;
 }                               /* end refresh_obwin_newgui_cbBM */
