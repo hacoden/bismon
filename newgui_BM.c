@@ -2524,8 +2524,9 @@ spinrefresh_obwin_newgui_cbBM (GtkSpinButton * spbut, gpointer data)
   assert (obw->obw_refreshspinbox == GTK_WIDGET (spbut));
   int newdelay = gtk_spin_button_get_value_as_int (spbut);
   DBGPRINTF_BM
-    ("spinrefresh_obwin_newgui_cbBM obwrank#%d newdelay %d incomplete obw@%p",
-     obw->obw_rank, newdelay, obw);
-  obw->obw_refreshspinbox = newdelay;
+    ("spinrefresh_obwin_newgui_cbBM obwrank#%d olddelay %d newdelay %d incomplete obw@%p",
+     obw->obw_rank, obw->obw_refreshperiod, newdelay, obw);
+  obw->obw_refreshperiod = newdelay;
+  DBGPRINTF_BM ("spinrefresh_obwin_newgui_cbBM ending obw@%p", obw);
 #warning spinrefresh_obwin_newgui_cbBM incomplete
 }                               /* end spinrefresh_obwin_newgui_cbBM */
