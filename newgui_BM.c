@@ -2116,9 +2116,11 @@ fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
     GTK_BOX (upper ? obwin->obw_upperobjvbox : obwin->obw_lowerobjvbox);
   assert (inbox != NULL);
   gtk_box_pack_end (inbox, obth->obvt_frame, BOXEXPAND_BM, BOXFILL_BM, 2);
-  // the lower box starts with a separator, so...
+#warning perhaps ordering of obvt_frame is wrong...
+  // @@@ the lower box starts with a separator, so...
   gtk_box_reorder_child         //
-    (inbox, obth->obvt_frame, upper ? rk : (rk + 1));
+    (inbox, obth->obvt_frame,   //upper ? rk : (rk + 1)
+     rk);
   obth->obvt_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 2);
   gtk_container_add (GTK_CONTAINER (obth->obvt_frame), obth->obvt_vbox);
   GtkWidget *headb = obth->obvt_headb = gtk_header_bar_new ();
@@ -2134,8 +2136,10 @@ fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
   GtkWidget *spinbut = obth->obvt_spindepth =   //
     gtk_spin_button_new_with_range (2.0,
                                     (double) BROWSE_MAXDEPTH_NEWGUI_BM, 1.0);
-  g_signal_connect (spinbut, "value-changed",
-                    spindepth_obview_newgui_cbBM, obv);
+  gtk_spin_button_set_value (GTK_SPIN_BUTTON (spinbut),
+                             (double) obv->obv_depth);
+  g_signal_connect (spinbut, "value-changed", spindepth_obview_newgui_cbBM,
+                    obv);
   gtk_header_bar_pack_end (GTK_HEADER_BAR (headb), spinbut);
   gtk_box_pack_start (GTK_BOX (obth->obvt_vbox), obth->obvt_headb,
                       BOXNOEXPAND_BM, BOXNOFILL_BM, 1);
