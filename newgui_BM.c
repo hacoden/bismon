@@ -73,6 +73,7 @@ struct objectwindow_newgui_stBM
   GtkWidget *obw_upperobjvbox;
   GtkWidget *obw_lowerobjvbox;
   int obw_rank;
+  int obw_refreshperiod;
   int obw_asiz;
   int obw_ulen;
   // the array below is sorted in order of its obv_object using objectnamedcmp_BM
@@ -85,6 +86,8 @@ static struct objectwindow_newgui_stBM *obwin_last_newgui_BM;
 struct objectwindow_newgui_stBM *obwin_current_newgui_BM;
 
 static struct objectwindow_newgui_stBM *make_obwin_newgui_BM (void);
+static void spinrefresh_obwin_newgui_cbBM (GtkSpinButton * spbut,
+                                           gpointer data);
 static bool deleteobjectwin_newgui_BM (GtkWidget * widget, GdkEvent * ev,
                                        gpointer data);
 static void fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
@@ -1730,6 +1733,8 @@ make_obwin_newgui_BM (void)
                                       BROWSE_MAXREFRESHDELAY_NEWGUI_BM, 1.0);
     gtk_box_pack_start (GTK_BOX (tophbox), refreshspinbox, BOXNOEXPAND_BM,
                         BOXNOFILL_BM, 2);
+    g_signal_connect (refreshspinbox, "value-changed",
+                      spinrefresh_obwin_newgui_cbBM, newobw);
   }
   GtkWidget *paned = gtk_paned_new (GTK_ORIENTATION_VERTICAL);
   gtk_paned_set_wide_handle (GTK_PANED (paned), true);
@@ -2508,3 +2513,19 @@ remove_objectview_newgui_BM (struct objectview_newgui_stBM *obv,
         }
     }
 }                               /* end remove_objectview_newgui_BM  */
+
+
+void
+spinrefresh_obwin_newgui_cbBM (GtkSpinButton * spbut, gpointer data)
+{
+  assert (data != 0);
+  struct objectwindow_newgui_stBM *obw =
+    (struct objectwindow_newgui_stBM *) data;
+  assert (obw->obw_refreshspinbox == GTK_WIDGET (spbut));
+  int newdelay = gtk_spin_button_get_value_as_int (spbut);
+  DBGPRINTF_BM
+    ("spinrefresh_obwin_newgui_cbBM obwrank#%d newdelay %d incomplete obw@%p",
+     obw->obw_rank, newdelay, obw);
+  obw->obw_refreshspinbox = newdelay;
+#warning spinrefresh_obwin_newgui_cbBM incomplete
+}                               /* end spinrefresh_obwin_newgui_cbBM */
