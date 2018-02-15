@@ -74,6 +74,7 @@ struct objectwindow_newgui_stBM
   GtkWidget *obw_lowerobjvbox;
   int obw_rank;
   int obw_refreshperiod;
+  guint obw_refreshid;
   int obw_asiz;
   int obw_ulen;
   // the array below is sorted in order of its obv_object using objectnamedcmp_BM
@@ -98,7 +99,7 @@ static void fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
                                       struct stackframe_stBM *stkf);
 static void destroy_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
                                          struct stackframe_stBM *stkf);
-
+static gboolean refresh_obwin_newgui_cbBM (gpointer data);
 
 /*****************************************************************/
 // the function to handle keypresses of cmd, for Return & Tab
@@ -2527,6 +2528,23 @@ spinrefresh_obwin_newgui_cbBM (GtkSpinButton * spbut, gpointer data)
     ("spinrefresh_obwin_newgui_cbBM obwrank#%d olddelay %d newdelay %d incomplete obw@%p",
      obw->obw_rank, obw->obw_refreshperiod, newdelay, obw);
   obw->obw_refreshperiod = newdelay;
+  if (newdelay > 0)
+    obw->obw_refreshid =
+      g_timeout_add_seconds (newdelay, refresh_obwin_newgui_cbBM, obw);
+  else if (obw->obw_refreshid > 0)
+    g_source_remove (obw->obw_refreshid), obw->obw_refreshid = 0;
   DBGPRINTF_BM ("spinrefresh_obwin_newgui_cbBM ending obw@%p", obw);
-#warning spinrefresh_obwin_newgui_cbBM incomplete
 }                               /* end spinrefresh_obwin_newgui_cbBM */
+
+
+gboolean
+refresh_obwin_newgui_cbBM (gpointer data)
+{
+  assert (data != 0);
+  struct objectwindow_newgui_stBM *obw =
+    (struct objectwindow_newgui_stBM *) data;
+  DBGPRINTF_BM ("refresh_obwin_newgui_cbBM obw@%p #%d unimplemented", obw,
+                obw->obw_rank);
+#warning refresh_obwin_newgui_cbBM  unimplemented
+  return G_SOURCE_CONTINUE;     // or G_SOURCE_REMOVE
+}                               /* end refresh_obwin_newgui_cbBM */
