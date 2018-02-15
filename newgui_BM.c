@@ -3,6 +3,7 @@
 #include "newgui_BM.const.h"
 
 #define BROWSE_MAXDEPTH_NEWGUI_BM 48
+#define BROWSE_MAXREFRESHDELAY_NEWGUI_BM 10
 // each named value has its own GtkTextBuffer, which is displayed in
 //the value window, containing a GtkPane, in a GtkScrolledWindow
 //containing one GtkFrame (containing a GtkHeaderBar & GtkTextView)
@@ -68,6 +69,7 @@ struct objectwindow_newgui_stBM
   struct objectwindow_newgui_stBM *obw_next;
   GtkWidget *obw_window;
   GtkWidget *obw_label;
+  GtkWidget *obw_refreshspinbox;
   GtkWidget *obw_upperobjvbox;
   GtkWidget *obw_lowerobjvbox;
   int obw_rank;
@@ -1709,9 +1711,26 @@ make_obwin_newgui_BM (void)
   memset (labelbuf, 0, sizeof (labelbuf));
   snprintf (labelbuf, sizeof (labelbuf), "bismonob#%d", newobw->obw_rank);
   gtk_window_set_title (GTK_WINDOW (obwin), labelbuf);
+  GtkWidget *tophbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 2);
   newobw->obw_label = gtk_label_new (labelbuf);
-  gtk_box_pack_start (GTK_BOX (mainvbox), newobw->obw_label, BOXNOEXPAND_BM,
+  gtk_box_pack_start (GTK_BOX (mainvbox), tophbox, BOXNOEXPAND_BM,
                       BOXNOFILL_BM, 2);
+  gtk_box_pack_start (GTK_BOX (tophbox), newobw->obw_label, BOXNOEXPAND_BM,
+                      BOXNOFILL_BM, 2);
+  {
+    GtkWidget *wincommententry = gtk_entry_new ();
+    gtk_box_pack_start (GTK_BOX (tophbox), wincommententry, BOXEXPAND_BM,
+                        BOXFILL_BM, 2);
+    GtkWidget *delaylabel = gtk_label_new (" delay:");
+    gtk_box_pack_start (GTK_BOX (tophbox), delaylabel, BOXNOEXPAND_BM,
+                        BOXNOFILL_BM, 2);
+    GtkWidget *refreshspinbox = newobw->obw_refreshspinbox =
+      gtk_spin_button_new_with_range (0.0,
+                                      (double)
+                                      BROWSE_MAXREFRESHDELAY_NEWGUI_BM, 1.0);
+    gtk_box_pack_start (GTK_BOX (tophbox), refreshspinbox, BOXNOEXPAND_BM,
+                        BOXNOFILL_BM, 2);
+  }
   GtkWidget *paned = gtk_paned_new (GTK_ORIENTATION_VERTICAL);
   gtk_paned_set_wide_handle (GTK_PANED (paned), true);
   gtk_paned_set_position (GTK_PANED (paned), 250);
@@ -2154,7 +2173,7 @@ fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
   gtk_box_pack_start (GTK_BOX (obth->obvt_vbox), txview,
                       BOXEXPAND_BM, BOXFILL_BM, 1);
   assert (GTK_IS_WIDGET (inbox));
-  gtk_widget_show_all (inbox);
+  gtk_widget_show_all (GTK_WIDGET (inbox));
 }                               /* end of fill_objectviewthing_BM */
 
 
@@ -2339,14 +2358,15 @@ fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
       curobjview_newgui_BM = NULL;
     };
   curobjview_newgui_BM = NULL;
-  gtk_widget_show_all (obv->obv_upper.obvt_frame);
-  gtk_widget_show_all (obv->obv_lower.obvt_frame);
+  gtk_widget_show_all (GTK_WIDGET (obv->obv_upper.obvt_frame));
+  gtk_widget_show_all (GTK_WIDGET (obv->obv_lower.obvt_frame));
   assert (obv->obv_obwindow != NULL);
   DBGPRINTF_BM
     ("fill_objectviewbuffer_BM end object %s shobsel %s depth %d rank#%d window#%d",
      objectdbg_BM (_.object), objectdbg1_BM (_.shobsel), obv->obv_depth,
      obv->obv_rank, obv->obv_obwindow->obw_rank);
 }                               /* end fill_objectviewbuffer_BM */
+
 
 
 void
