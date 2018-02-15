@@ -1254,7 +1254,8 @@ spindepth_namedval_newgui_cbBM (GtkSpinButton * spbut, gpointer data)
   browse_indexed_named_value_newgui_BM (browsedval_BM[idx].brow_val, newdepth,
                                         idx, NULL);
   if (spbut != nvx->nvx_upper.nvxt_spindepth)
-    gtk_spin_button_set_value (nvx->nvx_upper.nvxt_spindepth,
+    gtk_spin_button_set_value (GTK_SPIN_BUTTON
+                               (nvx->nvx_upper.nvxt_spindepth),
                                (double) newdepth);
   if (spbut != nvx->nvx_lower.nvxt_spindepth)
     gtk_spin_button_set_value (GTK_SPIN_BUTTON
@@ -1743,7 +1744,7 @@ make_obwin_newgui_BM (void)
     gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
   gtk_container_add (GTK_CONTAINER (upperscrowin), upperobvbox);
   gtk_container_add (GTK_CONTAINER (lowerscrowin), lowerobvbox);
-  gtk_window_set_default_size (GTK_WINDOW (obwin), 550, 450);
+  gtk_window_set_default_size (GTK_WINDOW (obwin), 660, 450);
   gtk_widget_show_all (obwin);
   DBGPRINTF_BM ("make_obwin_newgui_BM incomplete obwin@%p rank#%d", obwin,
                 newobw->obw_rank);
@@ -1960,6 +1961,8 @@ void
       free (obw->obw_arr), obw->obw_arr = newarr;
       obw->obw_asiz = newsiz;
     };
+  DBGPRINTF_BM ("show_object_in_obwin_newgui obj=%s ulen=%d",
+                objectdbg_BM (_.obj), obw->obw_ulen);
   ///
   if (obw->obw_ulen <= 0)
     {
@@ -2039,8 +2042,8 @@ void
         }
       // insert before md
       DBGPRINTF_BM
-        ("show_object_in_obwin_newgui obj=%s depth=%d ulen=%d md=%d",
-         objectdbg_BM (_.obj), depth, obw->obw_ulen, md);
+        ("show_object_in_obwin_newgui obj=%s depth=%d ulen=%d md=%d lo=%d hi=%d",
+         objectdbg_BM (_.obj), depth, obw->obw_ulen, md, lo, hi);
       assert (md >= 0);
       for (int ix = ulen; ix > md; ix--)
         {
@@ -2054,7 +2057,7 @@ void
       if (!newobv)
         FATAL_BM ("failed to allocate new objectview for %s",
                   objectdbg_BM (_.obj));
-      newobv->obv_rank = 0;
+      newobv->obv_rank = md;
       newobv->obv_depth = depth;
       newobv->obv_object = _.obj;
       newobv->obv_obsel = _.shobsel;
@@ -2074,7 +2077,8 @@ void
     }
   DBGPRINTF_BM
     ("show_object_in_obwin_newgui obj=%s shobsel=%s depth=%d ulen=%d obw@%p end",
-     objectdbg_BM (_.obj), objectdbg1_BM (_.shobsel), obw->obw_ulen, obw);
+     objectdbg_BM (_.obj), objectdbg1_BM (_.shobsel), depth, obw->obw_ulen,
+     obw);
   // do we handle the append to end case?
 }                               /* end show_object_in_obwin_newgui_BM */
 
