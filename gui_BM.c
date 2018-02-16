@@ -358,7 +358,7 @@ browserblinkoff_BM (gpointer data __attribute__ ((unused)))
   GtkTextIter endit = EMPTY_TEXT_ITER_BM;
   if (!browserbuf_BM)
     {
-      if (newgui_BM)
+      if (!oldgui_BM)
         browserbuf_BM = newgui_get_browsebuf_BM ();
       if (!browserbuf_BM)
         return G_SOURCE_REMOVE;
@@ -379,7 +379,7 @@ browserblinkon_BM (gpointer data __attribute__ ((unused)))
       GtkTextIter openendit = EMPTY_TEXT_ITER_BM;
       if (!browserbuf_BM)
         {
-          if (newgui_BM)
+          if (!oldgui_BM)
             browserbuf_BM = newgui_get_browsebuf_BM ();
           if (!browserbuf_BM)
             return G_SOURCE_REMOVE;
@@ -445,7 +445,7 @@ start_browse_object_BM (const objectval_tyBM * obj,
 {
   if (!browserbuf_BM)
     {
-      if (newgui_BM)
+      if (!oldgui_BM)
         browserbuf_BM = newgui_get_browsebuf_BM ();
       if (!browserbuf_BM)
         return;
@@ -581,7 +581,7 @@ find_browsed_object_BM (const objectval_tyBM * obj)
     return NULL;
   if (!browserbuf_BM)
     {
-      if (newgui_BM)
+      if (!oldgui_BM)
         browserbuf_BM = newgui_get_browsebuf_BM ();
       if (!browserbuf_BM)
         return NULL;
@@ -617,7 +617,7 @@ hide_object_gui_BM (const objectval_tyBM * objbrows,
     return;
   if (!browserbuf_BM)
     {
-      if (newgui_BM)
+      if (!oldgui_BM)
         browserbuf_BM = newgui_get_browsebuf_BM ();
       if (!browserbuf_BM)
         return;
@@ -682,7 +682,7 @@ start_browse_named_value_BM (const stringval_tyBM * namev,
 {
   if (!browserbuf_BM)
     {
-      if (newgui_BM)
+      if (!oldgui_BM)
         browserbuf_BM = newgui_get_browsebuf_BM ();
       if (!browserbuf_BM)
         return;
@@ -937,13 +937,13 @@ browse_show_start_offset_BM (void)
 {
   if (!browserbuf_BM)
     {
-      if (newgui_BM)
+      if (!oldgui_BM)
         browserbuf_BM = newgui_get_browsebuf_BM ();
       if (!browserbuf_BM)
         return -1;
     };
   GtkTextIter it = EMPTY_TEXT_ITER_BM;
-  if (newgui_BM)
+  if (!oldgui_BM)
     {
       assert (browserbuf_BM != NULL);
       gtk_text_buffer_get_start_iter (browserbuf_BM, &it);
@@ -995,7 +995,7 @@ browse_add_parens_BM (int openoff, int closeoff, int xtraoff,
                 openlen, closelen, xtralen, depth);
   assert ((browserobcurix_BM >= 0 && browserobcurix_BM < (int) browserobulen_BM)        //
           || (browsednvcurix_BM >= 0 && browsednvcurix_BM < (int) browsednvulen_BM)     //
-          || newgui_BM);
+          || !oldgui_BM);
   if (browserobcurix_BM >= 0)
     {
       assert (browsednvcurix_BM < 0);
@@ -1052,7 +1052,7 @@ browse_add_parens_BM (int openoff, int closeoff, int xtraoff,
       curpar->paroff_depth = depth;
       curbrval->brow_vparenulen = oldulen + 1;
     }
-  else if (newgui_BM)
+  else if (!oldgui_BM)
     {
       newgui_browse_add_parens_BM (openoff, closeoff, xtraoff,
                                    openlen, closelen, xtralen, depth, stkf);
@@ -1739,7 +1739,7 @@ const objectval_tyBM *parsmakenewname_guicmd_BM
   _.strnam = varname;
   if (!validname_BM (bytstring_BM (varname)))
     parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,
-                          "invalid new name", bytstring_BM (varname));
+                          "invalid new name %s", bytstring_BM (varname));
   _.namedobj = findnamedobj_BM (bytstring_BM (varname));
   if (_.namedobj)
     return _.namedobj;
@@ -2917,7 +2917,7 @@ parsecommandbuf_BM (struct parser_stBM *pars, struct stackframe_stBM *stkf)
 
           if (!browserbuf_BM)
             {
-              if (newgui_BM)
+              if (!oldgui_BM)
                 browserbuf_BM = newgui_get_browsebuf_BM ();
               if (!browserbuf_BM)
                 return;
@@ -2956,7 +2956,7 @@ parsecommandbuf_BM (struct parser_stBM *pars, struct stackframe_stBM *stkf)
 
           if (!browserbuf_BM)
             {
-              if (newgui_BM)
+              if (!oldgui_BM)
                 browserbuf_BM = newgui_get_browsebuf_BM ();
               if (!browserbuf_BM)
                 return;
@@ -3007,7 +3007,7 @@ parsecommandbuf_BM (struct parser_stBM *pars, struct stackframe_stBM *stkf)
         {
           if (!browserbuf_BM)
             {
-              if (newgui_BM)
+              if (!oldgui_BM)
                 browserbuf_BM = newgui_get_browsebuf_BM ();
               if (!browserbuf_BM)
                 return;
@@ -3045,7 +3045,7 @@ parsecommandbuf_BM (struct parser_stBM *pars, struct stackframe_stBM *stkf)
 
           if (!browserbuf_BM)
             {
-              if (newgui_BM)
+              if (!oldgui_BM)
                 browserbuf_BM = newgui_get_browsebuf_BM ();
             };
           if (!browserbuf_BM)
@@ -3079,7 +3079,7 @@ parsecommandbuf_BM (struct parser_stBM *pars, struct stackframe_stBM *stkf)
         {
           if (!browserbuf_BM)
             {
-              if (newgui_BM)
+              if (!oldgui_BM)
                 browserbuf_BM = newgui_get_browsebuf_BM ();
             };
           if (!browserbuf_BM)
@@ -4203,7 +4203,7 @@ populatepopupbrow_BM (GtkTextView * txview, GtkWidget * popup, gpointer data)
   GtkTextIter cursit = EMPTY_TEXT_ITER_BM;
   if (!browserbuf_BM)
     {
-      if (newgui_BM)
+      if (!oldgui_BM)
         browserbuf_BM = newgui_get_browsebuf_BM ();
       if (!browserbuf_BM)
         return;

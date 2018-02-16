@@ -78,7 +78,7 @@ struct
 } added_predef_bm[MAXADDEDPREDEF_BM];
 
 bool batch_bm;
-bool newgui_BM;
+bool oldgui_BM;
 
 
 
@@ -238,11 +238,11 @@ const GOptionEntry optab[] = {
    .description = "run in batch mode without GUI",
    .arg_description = NULL},
   //
-  {.long_name = "new-gui",.short_name = (char) 'N',
+  {.long_name = "old-gui",.short_name = (char) 0,
    .flags = G_OPTION_FLAG_NONE,
    .arg = G_OPTION_ARG_NONE,
-   .arg_data = &newgui_BM,
-   .description = "run the new GUI",
+   .arg_data = &oldgui_BM,
+   .description = "run the old GUI",
    .arg_description = NULL},
   //
   {}
@@ -373,7 +373,7 @@ main (int argc, char **argv)
     FATAL_BM ("gtk_init_with_args failed");
   if (!batch_bm)
     {
-      if (newgui_BM)
+      if (!oldgui_BM)
         initialize_newgui_BM (builder_file_bm, css_file_bm);
       else
         initialize_gui_BM (builder_file_bm, css_file_bm);
@@ -412,7 +412,7 @@ main (int argc, char **argv)
       printf ("no GUI in batch mode\n");
     }
   else
-    rungui_BM (newgui_BM, nbworkjobs_BM);
+    rungui_BM (!oldgui_BM, nbworkjobs_BM);
   fflush (NULL);
 }                               /* end main */
 

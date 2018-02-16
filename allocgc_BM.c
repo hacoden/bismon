@@ -541,7 +541,7 @@ full_garbage_collection_BM (struct stackframe_stBM *stkfram)
   gcmarkpredefinedobjects_BM (&GCdata);
   gcmarkconstants_BM (&GCdata);
   gcmarkglobals_BM (&GCdata);
-  if (newgui_BM)
+  if (!oldgui_BM)
     gcmarknewgui_BM (&GCdata);
   else
     gcmarkoldgui_BM (&GCdata);
