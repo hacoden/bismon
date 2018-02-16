@@ -118,6 +118,8 @@ static void run_then_keep_newgui_command_BM (void);
 
 static void markset_newgui_cmd_BM (GtkTextBuffer *, GtkTextIter *,
                                    GtkTextMark *, gpointer);
+static void markset_newgui_objview_BM (GtkTextBuffer *, GtkTextIter *,
+                                       GtkTextMark *, gpointer);
 
 static void parsecommandbuf_newgui_BM (struct parser_stBM *pars,
                                        struct stackframe_stBM *stkf);
@@ -629,7 +631,10 @@ void
 markset_newgui_cmd_BM (GtkTextBuffer * tbuf, GtkTextIter * titer,
                        GtkTextMark * tmark, gpointer cdata)
 {
-  DBGPRINTF_BM ("markset_newgui titer=%s", textiterstrdbg_BM (titer));
+  DBGPRINTF_BM ("markset_newgui_cmd titer=%s tmark %s",
+                textiterstrdbg_BM (titer),
+                tmark ? (gtk_text_mark_get_name (tmark) ? : "*anon*") :
+                "*none*");
 }                               /* end markset_newgui_cmd_BM */
 
 
@@ -1881,6 +1886,7 @@ labstr_object_in_obwin_newgui_BM (struct objectwindow_newgui_stBM *obw,
                                   objectval_tyBM * obj,
                                   objectval_tyBM * shobsel)
 {
+  assert (obw != NULL);
   char objectidbuf[32];
   memset (objectidbuf, 0, sizeof (objectidbuf));
   char *objectstr = findobjectname_BM (obj);
@@ -1922,13 +1928,12 @@ labstr_object_in_obwin_newgui_BM (struct objectwindow_newgui_stBM *obw,
         }
       else
         {
+          idtocbuf32_BM (objid_BM (shobsel), shobjselidbuf);
           labstr = g_markup_printf_escaped ("<big><b><tt>%s</tt></b></big>\n"
                                             //U+2B6C RIGHTWARDS TRIANGLE-HEADED DASHED ARROW ⭬
                                             "\342\255\254 "
                                             "<i><tt>%s</tt></i>",
-                                            objectidbuf,
-                                            idtocbuf32_BM (objid_BM (shobsel),
-                                                           shobjselidbuf));
+                                            objectidbuf, shobjselidbuf);
         }
     };
   return labstr;
@@ -2005,6 +2010,8 @@ void
       newobv->obv_obwindow = obw;
       newobv->obv_tbuffer = gtk_text_buffer_new (browsertagtable_BM);
       char *labstr = labstr_object_in_obwin_newgui_BM (obw, _.obj, _.shobsel);
+      g_signal_connect (newobv->obv_tbuffer, "mark-set",
+                        G_CALLBACK (markset_newgui_objview_BM), newobv);
       fill_objectviewbuffer_BM (newobv, (struct stackframe_stBM *) &_);
       fill_objectviewthing_BM (newobv, labstr, true,
                                (struct stackframe_stBM *) &_);
@@ -2566,3 +2573,17 @@ refresh_obwin_newgui_cbBM (gpointer data)
   else
     return G_SOURCE_REMOVE;
 }                               /* end refresh_obwin_newgui_cbBM */
+
+void
+markset_newgui_objview_BM (GtkTextBuffer * tbuf, GtkTextIter * titer,
+                           GtkTextMark * tmark, gpointer cdata)
+{
+  assert (cdata != NULL);
+  struct objectview_newgui_stBM *obv =
+    (struct objectview_newgui_stBM *) cdata;
+  assert (obv->obv_tbuffer == tbuf);
+  DBGPRINTF_BM
+    ("markset_newgui_objview obv@%p #%d object %s titer=%s tmark %s", obv,
+     obv->obv_rank, objectdbg_BM (obv->obv_object), textiterstrdbg_BM (titer),
+     tmark ? (gtk_text_mark_get_name (tmark) ? : "*anon*") : "*none*");
+}                               /* end markset_newgui_cmd_BM */
