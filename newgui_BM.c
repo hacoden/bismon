@@ -2182,6 +2182,8 @@ fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
   GtkWidget *txview = obth->obvt_textview =
     gtk_text_view_new_with_buffer (obv->obv_tbuffer);
   gtk_text_view_set_editable (GTK_TEXT_VIEW (txview), false);
+  g_signal_connect (obv->obv_tbuffer, "mark-set",
+                    G_CALLBACK (markset_newgui_objview_BM), obv);
   gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (txview), true);
   gtk_box_pack_start (GTK_BOX (obth->obvt_vbox), txview,
                       BOXEXPAND_BM, BOXFILL_BM, 1);
