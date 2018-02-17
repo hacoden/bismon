@@ -2120,6 +2120,8 @@ static void closebut_obview_newgui_cbBM (GtkWidget * wbut, gpointer data);
 static void spindepth_obview_newgui_cbBM (GtkSpinButton * spbut,
                                           gpointer data);
 
+
+#warning objectwindow should probably keep the focused objview and focus line & column
 void
 fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
                          const char *labstr, bool upper,
@@ -2588,6 +2590,9 @@ markset_newgui_objview_BM (GtkTextBuffer * tbuf, GtkTextIter * titer,
     return;
   unsigned off = gtk_text_iter_get_offset (titer);
   int parulen = obv->obv_parenulen;
+  struct objectwindow_newgui_stBM *obwin = obv->obv_obwindow;
+  assert (obwin != NULL);
+#warning should probably deal with obwin kept focus and blink...
   struct parenoffset_stBM *pararr = obv->obv_parenarr;
   DBGPRINTF_BM
     ("markset_newgui_objview obv@%p #%d object %s titer=%s off=%u parulen=%d",
