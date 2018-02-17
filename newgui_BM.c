@@ -2584,8 +2584,59 @@ markset_newgui_objview_BM (GtkTextBuffer * tbuf, GtkTextIter * titer,
   struct objectview_newgui_stBM *obv =
     (struct objectview_newgui_stBM *) cdata;
   assert (obv->obv_tbuffer == tbuf);
+  if (tmark != gtk_text_buffer_get_insert (tbuf))
+    return;
+  unsigned off = gtk_text_iter_get_offset (titer);
+  int parulen = obv->obv_parenulen;
+  struct parenoffset_stBM *pararr = obv->obv_parenarr;
   DBGPRINTF_BM
-    ("markset_newgui_objview obv@%p #%d object %s titer=%s tmark %s", obv,
-     obv->obv_rank, objectdbg_BM (obv->obv_object), textiterstrdbg_BM (titer),
-     tmark ? (gtk_text_mark_get_name (tmark) ? : "*anon*") : "*none*");
+    ("markset_newgui_objview obv@%p #%d object %s titer=%s off=%u parulen=%d",
+     obv, obv->obv_rank, objectdbg_BM (obv->obv_object),
+     textiterstrdbg_BM (titer), off, parulen);
+  if (parulen == 0)
+    return;
+  assert (pararr != NULL);
+  int lo = 0, hi = (int) parulen, md = 0;
+  while (lo + 4 < hi)
+    {
+      DBGPRINTF_BM ("markset_newgui_objview lo=%d hi=%d", off, lo, hi);
+      if (pararr[lo].paroff_open <= off && off <= pararr[hi - 1].paroff_close)
+        break;
+      md = (lo + hi) / 2;
+      if (pararr[md].paroff_open < off)
+        lo = md;
+      else if (pararr[md].paroff_close > off)
+        hi = md;
+      else
+        break;
+    }
+  int ix = -1, w = -1;
+  for (md = lo; md < hi; md++)
+    {
+      if (parens_surrounds_BM (pararr + md, off))
+        {
+          if (ix < 0)
+            {
+              ix = md;
+              w = pararr[md].paroff_close - pararr[md].paroff_open;
+            }
+          else
+            {
+              assert (w >= 0);
+              int newi = pararr[md].paroff_close - pararr[md].paroff_open;
+              if (newi < w)
+                {
+                  ix = md;
+                  w = newi;
+                };
+            }
+        }
+    }
+  if (ix > 0)
+    {
+      DBGPRINTF_BM
+        ("markset_newgui_objview ix=%d w=%d off=%u should blink open:%u close:%u",
+         ix, w, off, pararr[ix].paroff_open, pararr[ix].paroff_close);
+#warning markset_newgui_objview should blink
+    }
 }                               /* end markset_newgui_cmd_BM */
