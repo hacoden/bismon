@@ -120,6 +120,8 @@ static void markset_newgui_cmd_BM (GtkTextBuffer *, GtkTextIter *,
                                    GtkTextMark *, gpointer);
 static void markset_newgui_objview_BM (GtkTextBuffer *, GtkTextIter *,
                                        GtkTextMark *, gpointer);
+static void beginuact_newgui_objview_BM (GtkTextBuffer *, gpointer);
+static void enduact_newgui_objview_BM (GtkTextBuffer *, gpointer);
 
 static void parsecommandbuf_newgui_BM (struct parser_stBM *pars,
                                        struct stackframe_stBM *stkf);
@@ -2012,6 +2014,10 @@ void
       char *labstr = labstr_object_in_obwin_newgui_BM (obw, _.obj, _.shobsel);
       g_signal_connect (newobv->obv_tbuffer, "mark-set",
                         G_CALLBACK (markset_newgui_objview_BM), newobv);
+      g_signal_connect (newobv->obv_tbuffer, "begin-user-action",
+                        G_CALLBACK (beginuact_newgui_objview_BM), newobv);
+      g_signal_connect (newobv->obv_tbuffer, "end-user-action",
+                        G_CALLBACK (enduact_newgui_objview_BM), newobv);
       fill_objectviewbuffer_BM (newobv, (struct stackframe_stBM *) &_);
       fill_objectviewthing_BM (newobv, labstr, true,
                                (struct stackframe_stBM *) &_);
@@ -2645,3 +2651,32 @@ markset_newgui_objview_BM (GtkTextBuffer * tbuf, GtkTextIter * titer,
 #warning markset_newgui_objview should blink
     }
 }                               /* end markset_newgui_cmd_BM */
+
+
+void
+beginuact_newgui_objview_BM (GtkTextBuffer * tbuf, gpointer cdata)
+{
+  assert (cdata != NULL);
+  struct objectview_newgui_stBM *obv =
+    (struct objectview_newgui_stBM *) cdata;
+  assert (obv->obv_tbuffer == tbuf);
+  struct objectwindow_newgui_stBM *obwin = obv->obv_obwindow;
+  assert (obwin != NULL);
+  DBGPRINTF_BM ("beginuact_newgui_objview obv@%p #%d object %s incomplete",
+                obv, obv->obv_rank, objectdbg_BM (obv->obv_object));
+#warning beginuact_newgui_objview_BM incomplete
+}                               /* end  beginuact_newgui_objview_BM */
+
+void
+enduact_newgui_objview_BM (GtkTextBuffer * tbuf, gpointer cdata)
+{
+  assert (cdata != NULL);
+  struct objectview_newgui_stBM *obv =
+    (struct objectview_newgui_stBM *) cdata;
+  assert (obv->obv_tbuffer == tbuf);
+  struct objectwindow_newgui_stBM *obwin = obv->obv_obwindow;
+  assert (obwin != NULL);
+  DBGPRINTF_BM ("enduact_newgui_objview obv@%p #%d object %s incomplete",
+                obv, obv->obv_rank, objectdbg_BM (obv->obv_object));
+#warning enduact_newgui_objview_BM incomplete
+}                               /* end  enduact_newgui_objview_BM */
