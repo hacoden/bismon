@@ -2502,6 +2502,7 @@ fill_objectviewbuffer_BM (struct
   DBGPRINTF_BM
     ("fill_objectviewbuffer start rank#%d obwin@%p",
      obv->obv_rank, obv->obv_obwindow);
+  disable_blink_objectview_BM (obv);
   gtk_text_buffer_set_text (tbuf, "", 0);
   int prevbrowdepth = browserdepth_BM;
   browserdepth_BM = obv->obv_depth;
@@ -2911,6 +2912,7 @@ markset_newgui_objview_BM (GtkTextBuffer * tbuf, GtkTextIter * titer,
     }
   else
     disable_blink_objectview_BM (obv);
+  obwin_start_refresh_newgui_BM (obv->obv_obwindow);
 }                               /* end markset_newgui_cmd_BM */
 
 
@@ -3058,10 +3060,10 @@ blink_objectview_cbBM (gpointer data)
         }
       if (par->paroff_close >= 0 && par->paroff_closelen > 0)
         {
-          gtk_text_buffer_get_iter_at_offset (obv->obv_tbuffer, &startit,
+          gtk_text_buffer_get_iter_at_offset (obv->obv_tbuffer, &endit,
                                               par->paroff_close);
-          endit = startit;
-          gtk_text_iter_forward_chars (&endit, par->paroff_closelen);
+          startit = endit;
+          gtk_text_iter_backward_chars (&endit, par->paroff_closelen);
           gtk_text_buffer_apply_tag (obv->obv_tbuffer, blink_brotag_BM,
                                      &startit, &endit);
         }
