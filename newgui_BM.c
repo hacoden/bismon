@@ -89,8 +89,8 @@ struct objectwindow_newgui_stBM *obwin_current_newgui_BM;
 static struct objectwindow_newgui_stBM *make_obwin_newgui_BM (void);
 static void spinrefresh_obwin_newgui_cbBM (GtkSpinButton * spbut,
                                            gpointer data);
-static bool deleteobjectwin_newgui_BM (GtkWidget * widget, GdkEvent * ev,
-                                       gpointer data);
+static bool deleteobjectwin_newgui_cbBM (GtkWidget * widget, GdkEvent * ev,
+                                         gpointer data);
 static void fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
                                      const char *labstr,
                                      bool upper,
@@ -185,6 +185,8 @@ static void obwin_start_refresh_newgui_BM (struct objectwindow_newgui_stBM
                                            *obw);
 static void obwin_stop_refresh_newgui_BM (struct objectwindow_newgui_stBM
                                           *obw);
+static void destroy_obwin_newgui_BM (struct objectwindow_newgui_stBM *oldobw,
+                                     bool destroywin);
 static void remove_objectview_newgui_BM (struct objectview_newgui_stBM *obv,
                                          struct stackframe_stBM *stkf);
 ////////////////
@@ -744,8 +746,8 @@ parsecommandbuf_newgui_BM (struct
     return;
   LOCALFRAME_BM ( /*prev: */ stkf,
                  /*descr: */ NULL,
-                 value_tyBM val; const stringval_tyBM * astrv;
-                 objectval_tyBM * obj;
+                 value_tyBM val;
+                 const stringval_tyBM * astrv; objectval_tyBM * obj;
                  const stringval_tyBM * name; const stringval_tyBM * result;
                  objectval_tyBM * parsob;);
   if (browserdepth_BM < 2)
@@ -1122,10 +1124,8 @@ parsvalexp_newguicmd_BM (struct parser_stBM
   bool nobuild = parsops && parsops->parsop_nobuild;
   LOCALFRAME_BM ( /*prev: */ stkf,
                  /*descr: */ NULL,
-                 value_tyBM resval;
-                 value_tyBM srcval;
-                 objectval_tyBM * parsob;
-                 objectval_tyBM * obj;
+                 value_tyBM resval; value_tyBM srcval;
+                 objectval_tyBM * parsob; objectval_tyBM * obj;
                  objectval_tyBM * obsel; objectval_tyBM * obattr;
                  closure_tyBM * clos; value_tyBM otherval;
                  const stringval_tyBM * name;);
@@ -1975,7 +1975,7 @@ make_obwin_newgui_BM (void)
     ("make_obwin_newgui_BM incomplete obwin@%p rank#%d",
      obwin, newobw->obw_rank);
   g_signal_connect (obwin, "delete-event",
-                    (GCallback) deleteobjectwin_newgui_BM, newobw);
+                    (GCallback) deleteobjectwin_newgui_cbBM, newobw);
 #warning make_obwin_newgui_BM incomplete
   // should connect destructor on that window, etc...
   return newobw;
@@ -1983,18 +1983,15 @@ make_obwin_newgui_BM (void)
 
 
 
-bool
-deleteobjectwin_newgui_BM (GtkWidget *
-                           widget,
-                           GdkEvent * ev
-                           __attribute__ ((unused)), gpointer data)
+void
+destroy_obwin_newgui_BM (struct objectwindow_newgui_stBM *oldobw,
+                         bool destroywin)
 {
-  struct objectwindow_newgui_stBM *oldobw =
-    (struct objectwindow_newgui_stBM *) data;
-  assert (oldobw != NULL && oldobw->obw_window == widget);
-  DBGPRINTF_BM
-    ("deleteobjectwin_newgui oldobw@%p #%d", oldobw, oldobw->obw_rank);
+  if (!oldobw)
+    return;
+  GtkWidget *widget = oldobw->obw_window;
   gtk_widget_hide (widget);
+  obwin_stop_refresh_newgui_BM (oldobw);
   struct objectwindow_newgui_stBM *prevobw = oldobw->obw_prev;
   struct objectwindow_newgui_stBM *nextobw = oldobw->obw_next;
   if (prevobw)
@@ -2026,7 +2023,22 @@ deleteobjectwin_newgui_BM (GtkWidget *
   if (obwin_current_newgui_BM == oldobw)
     obwin_current_newgui_BM = NULL;
   memset (oldobw, 0, sizeof (*oldobw));
+  if (destroywin)
+    gtk_widget_destroy (widget);
   free (oldobw);
+}                               /* end destroy_obwin_newgui_BM */
+
+bool
+deleteobjectwin_newgui_cbBM (GtkWidget * widget,
+                             GdkEvent * ev __attribute__ ((unused)),
+                             gpointer data)
+{
+  struct objectwindow_newgui_stBM *oldobw =
+    (struct objectwindow_newgui_stBM *) data;
+  assert (oldobw != NULL && oldobw->obw_window == widget);
+  DBGPRINTF_BM
+    ("deleteobjectwin_newgui oldobw@%p #%d", oldobw, oldobw->obw_rank);
+  destroy_obwin_newgui_BM (oldobw, false);
   return false;                 // to let the window be destroyed
 }                               /* end deleteobjectwin_newgui_BM */
 
@@ -2232,6 +2244,10 @@ void
                                true, (struct stackframe_stBM *) &_);
       fill_objectviewthing_BM (newobv, labstr,
                                false, (struct stackframe_stBM *) &_);
+      if (obw->obw_refreshperiod > 0)
+        obwin_start_refresh_newgui_BM (obw);
+      else
+        obwin_stop_refresh_newgui_BM (obw);
       g_free (labstr), labstr = NULL;
       obw->obw_arr[0] = newobv;
       obw->obw_ulen = 1;
@@ -2324,6 +2340,10 @@ void
       g_free (labstr), labstr = NULL;
       obvarr[md] = newobv;
       obw->obw_ulen++;
+      if (obw->obw_refreshperiod > 0)
+        obwin_start_refresh_newgui_BM (obw);
+      else
+        obwin_stop_refresh_newgui_BM (obw);
       return;
 #warning perhaps incomplete show_object_in_obwin_newgui_BM
     }
