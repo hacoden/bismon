@@ -122,6 +122,11 @@ static void markset_newgui_objview_BM (GtkTextBuffer *, GtkTextIter *,
                                        GtkTextMark *, gpointer);
 static void beginuact_newgui_objview_BM (GtkTextBuffer *, gpointer);
 static void enduact_newgui_objview_BM (GtkTextBuffer *, gpointer);
+static struct parenoffset_stBM *paren_objview_at_offset_newgui_BM (struct
+                                                                   objectview_newgui_stBM
+                                                                   *obv,
+                                                                   unsigned
+                                                                   off);
 
 static void parsecommandbuf_newgui_BM (struct parser_stBM *pars,
                                        struct stackframe_stBM *stkf);
@@ -2584,6 +2589,8 @@ refresh_obwin_newgui_cbBM (gpointer data)
     return G_SOURCE_REMOVE;
 }                               /* end refresh_obwin_newgui_cbBM */
 
+
+
 void
 markset_newgui_objview_BM (GtkTextBuffer * tbuf, GtkTextIter * titer,
                            GtkTextMark * tmark, gpointer cdata)
@@ -2604,13 +2611,33 @@ markset_newgui_objview_BM (GtkTextBuffer * tbuf, GtkTextIter * titer,
     ("markset_newgui_objview obv@%p #%d object %s titer=%s off=%u parulen=%d",
      obv, obv->obv_rank, objectdbg_BM (obv->obv_object),
      textiterstrdbg_BM (titer), off, parulen);
+  struct parenoffset_stBM *par = paren_objview_at_offset_newgui_BM (obv, off);
+  if (par != NULL)
+    {
+      DBGPRINTF_BM
+        ("markset_newgui_objview off=%u should blink open:%u close:%u", off,
+         par->paroff_open, par->paroff_close);
+#warning markset_newgui_objview should blink
+    }
+}                               /* end markset_newgui_cmd_BM */
+
+
+struct parenoffset_stBM *
+paren_objview_at_offset_newgui_BM (struct objectview_newgui_stBM *obv,
+                                   unsigned off)
+{
+  if (!obv)
+    return NULL;
+  int parulen = obv->obv_parenulen;
+  struct objectwindow_newgui_stBM *obwin = obv->obv_obwindow;
+  assert (obwin != NULL);
+  struct parenoffset_stBM *pararr = obv->obv_parenarr;
   if (parulen == 0)
-    return;
+    return NULL;
   assert (pararr != NULL);
   int lo = 0, hi = (int) parulen, md = 0;
   while (lo + 4 < hi)
     {
-      DBGPRINTF_BM ("markset_newgui_objview lo=%d hi=%d", off, lo, hi);
       if (pararr[lo].paroff_open <= off && off <= pararr[hi - 1].paroff_close)
         break;
       md = (lo + hi) / 2;
@@ -2644,13 +2671,10 @@ markset_newgui_objview_BM (GtkTextBuffer * tbuf, GtkTextIter * titer,
         }
     }
   if (ix > 0)
-    {
-      DBGPRINTF_BM
-        ("markset_newgui_objview ix=%d w=%d off=%u should blink open:%u close:%u",
-         ix, w, off, pararr[ix].paroff_open, pararr[ix].paroff_close);
-#warning markset_newgui_objview should blink
-    }
-}                               /* end markset_newgui_cmd_BM */
+    return pararr + ix;
+  return NULL;
+}                               /* end paren_objview_at_offset_newgui_BM */
+
 
 
 void
