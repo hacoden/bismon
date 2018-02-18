@@ -181,64 +181,92 @@ static void show_object_in_obwin_newgui_BM
   (struct objectwindow_newgui_stBM *obw, objectval_tyBM * obj,
    objectval_tyBM * shobsel, int depth, struct stackframe_stBM *stkf);
 
-static void
-remove_objectview_newgui_BM (struct objectview_newgui_stBM *obv,
-                             struct stackframe_stBM *stkf);
-
+static void obwin_start_refresh_newgui_BM (struct objectwindow_newgui_stBM
+                                           *obw);
+static void obwin_stop_refresh_newgui_BM (struct objectwindow_newgui_stBM
+                                          *obw);
+static void remove_objectview_newgui_BM (struct objectview_newgui_stBM *obv,
+                                         struct stackframe_stBM *stkf);
 ////////////////
 const struct parserops_stBM parsop_command_build_newgui_BM = {
-  .parsop_magic = PARSOPMAGIC_BM,
-  .parsop_serial = 3,
-  .parsop_nobuild = false,
-  .parsop_error_rout = parserror_newguicmd_BM,
+  .parsop_magic =
+    PARSOPMAGIC_BM,.parsop_serial =
+    3,.parsop_nobuild = false,.parsop_error_rout = parserror_newguicmd_BM,
   ///
-  .parsop_expand_dollarobj_rout = parsdollarobj_newguicmd_BM,
-  .parsop_expand_dollarval_rout = parsdollarval_newguicmd_BM,
-  .parsop_expand_newname_rout = parsmakenewname_newguicmd_BM,
-  .parsop_expand_valexp_rout = parsvalexp_newguicmd_BM,
-  .parsop_expand_objexp_rout = parsobjexp_newguicmd_BM,
-  .parsop_expand_readmacro_rout = parsreadmacroexp_newguicmd_BM,
+  .parsop_expand_dollarobj_rout =
+    parsdollarobj_newguicmd_BM,.parsop_expand_dollarval_rout
+    =
+    parsdollarval_newguicmd_BM,.parsop_expand_newname_rout
+    =
+    parsmakenewname_newguicmd_BM,.parsop_expand_valexp_rout
+    =
+    parsvalexp_newguicmd_BM,.parsop_expand_objexp_rout
+    =
+    parsobjexp_newguicmd_BM,.parsop_expand_readmacro_rout
+    = parsreadmacroexp_newguicmd_BM,
   ///
-  .parsop_decorate_comment_sign_rout = parscommentsign_guicmd_BM,
-  .parsop_decorate_comment_inside_rout = parscommentinside_guicmd_BM,
-  .parsop_decorate_delimiter_rout = parsdelim_guicmd_BM,
-  .parsop_decorate_id_rout = parsid_guicmd_BM,
-  .parsop_decorate_known_name_rout = parsknowname_guicmd_BM,
-  .parsop_decorate_new_name_rout = parsnewname_guicmd_BM,
-  .parsop_decorate_number_rout = parsnumber_guicmd_BM,
-  .parsop_decorate_string_sign_rout = parsstringsign_guicmd_BM,
-  .parsop_decorate_string_inside_rout = parsstringinside_guicmd_BM,
-  .parsop_decorate_nesting_rout = parsnesting_guicmd_BM,
-  .parsop_decorate_start_nesting_rout = parsstartnesting_guicmd_BM,
+  .parsop_decorate_comment_sign_rout =
+    parscommentsign_guicmd_BM,.parsop_decorate_comment_inside_rout
+    =
+    parscommentinside_guicmd_BM,.parsop_decorate_delimiter_rout
+    =
+    parsdelim_guicmd_BM,.parsop_decorate_id_rout
+    =
+    parsid_guicmd_BM,.parsop_decorate_known_name_rout
+    =
+    parsknowname_guicmd_BM,.parsop_decorate_new_name_rout
+    =
+    parsnewname_guicmd_BM,.parsop_decorate_number_rout
+    =
+    parsnumber_guicmd_BM,.parsop_decorate_string_sign_rout
+    =
+    parsstringsign_guicmd_BM,.parsop_decorate_string_inside_rout
+    =
+    parsstringinside_guicmd_BM,.parsop_decorate_nesting_rout
+    =
+    parsnesting_guicmd_BM,.parsop_decorate_start_nesting_rout
+    = parsstartnesting_guicmd_BM,
 };
 
 const struct parserops_stBM parsop_command_nobuild_newgui_BM = {
-  .parsop_magic = PARSOPMAGIC_BM,
-  .parsop_serial = 4,
-  .parsop_nobuild = true,
-  .parsop_error_rout = parserror_newguicmd_BM,
+  .parsop_magic =
+    PARSOPMAGIC_BM,.parsop_serial =
+    4,.parsop_nobuild = true,.parsop_error_rout = parserror_newguicmd_BM,
   ///
-  .parsop_expand_dollarobj_rout = parsdollarobj_newguicmd_BM,
-  .parsop_expand_dollarval_rout = parsdollarval_newguicmd_BM,
-  .parsop_expand_newname_rout = parsmakenewname_newguicmd_BM,
-  .parsop_expand_valexp_rout = parsvalexp_newguicmd_BM,
-  .parsop_expand_objexp_rout = parsobjexp_newguicmd_BM,
-  .parsop_expand_readmacro_rout = parsreadmacroexp_newguicmd_BM,
+  .parsop_expand_dollarobj_rout =
+    parsdollarobj_newguicmd_BM,.parsop_expand_dollarval_rout
+    =
+    parsdollarval_newguicmd_BM,.parsop_expand_newname_rout
+    =
+    parsmakenewname_newguicmd_BM,.parsop_expand_valexp_rout
+    =
+    parsvalexp_newguicmd_BM,.parsop_expand_objexp_rout
+    =
+    parsobjexp_newguicmd_BM,.parsop_expand_readmacro_rout
+    = parsreadmacroexp_newguicmd_BM,
   ///
-  .parsop_decorate_comment_sign_rout = parscommentsign_guicmd_BM,
-  .parsop_decorate_comment_inside_rout = parscommentinside_guicmd_BM,
-  .parsop_decorate_delimiter_rout = parsdelim_guicmd_BM,
-  .parsop_decorate_id_rout = parsid_guicmd_BM,
-  .parsop_decorate_known_name_rout = parsknowname_guicmd_BM,
-  .parsop_decorate_new_name_rout = parsnewname_guicmd_BM,
-  .parsop_decorate_number_rout = parsnumber_guicmd_BM,
-  .parsop_decorate_string_sign_rout = parsstringsign_guicmd_BM,
-  .parsop_decorate_string_inside_rout = parsstringinside_guicmd_BM,
-  .parsop_decorate_nesting_rout = parsnesting_guicmd_BM,
-  .parsop_decorate_start_nesting_rout = parsstartnesting_guicmd_BM,
+  .parsop_decorate_comment_sign_rout =
+    parscommentsign_guicmd_BM,.parsop_decorate_comment_inside_rout
+    =
+    parscommentinside_guicmd_BM,.parsop_decorate_delimiter_rout
+    =
+    parsdelim_guicmd_BM,.parsop_decorate_id_rout
+    =
+    parsid_guicmd_BM,.parsop_decorate_known_name_rout
+    =
+    parsknowname_guicmd_BM,.parsop_decorate_new_name_rout
+    =
+    parsnewname_guicmd_BM,.parsop_decorate_number_rout
+    =
+    parsnumber_guicmd_BM,.parsop_decorate_string_sign_rout
+    =
+    parsstringsign_guicmd_BM,.parsop_decorate_string_inside_rout
+    =
+    parsstringinside_guicmd_BM,.parsop_decorate_nesting_rout
+    =
+    parsnesting_guicmd_BM,.parsop_decorate_start_nesting_rout
+    = parsstartnesting_guicmd_BM,
 };
-
-
 
 GtkWidget *
 initialize_newgui_command_scrollview_BM (void)
@@ -286,8 +314,8 @@ gcmarknewgui_BM (struct garbcoll_stBM *gc)
   // mark the browsedobj_BM browsedval_stBM & complsetcmd_BM
   gcmarkoldgui_BM (gc);
   VALUEGCPROC_BM (gc, astrval_bm, 0);
-  for (struct objectwindow_newgui_stBM * obw = obwin_first_newgui_BM;
-       obw != NULL; obw = obw->obw_next)
+  for (struct objectwindow_newgui_stBM *
+       obw = obwin_first_newgui_BM; obw != NULL; obw = obw->obw_next)
     {
       struct objectview_newgui_stBM **varr = obw->obw_arr;
       if (varr == NULL)
@@ -309,8 +337,8 @@ gcmarknewgui_BM (struct garbcoll_stBM *gc)
 
 // for "key-press-event" signal to commandview_BM
 gboolean
-handlekeypress_newgui_cmd_BM (GtkWidget * widg, GdkEventKey * evk,
-                              gpointer data)
+handlekeypress_newgui_cmd_BM (GtkWidget *
+                              widg, GdkEventKey * evk, gpointer data)
 {
   assert (GTK_IS_TEXT_VIEW (widg));
   assert (evk != NULL);
@@ -343,9 +371,11 @@ handlekeypress_newgui_cmd_BM (GtkWidget * widg, GdkEventKey * evk,
       GdkModifierType modmask = gtk_accelerator_get_default_mod_mask ();
       bool withctrl = (evk->state & modmask) == GDK_CONTROL_MASK;
       bool withshift = (evk->state & modmask) == GDK_SHIFT_MASK;
-      DBGPRINTF_BM ("handlekeypress_newgui_cmd_BM keyval %#x KEY_F%d %s%s",
-                    evk->keyval, evk->keyval - (GDK_KEY_F1 - 1),
-                    withctrl ? " ctrl" : "", withshift ? " shift" : "");
+      DBGPRINTF_BM
+        ("handlekeypress_newgui_cmd_BM keyval %#x KEY_F%d %s%s",
+         evk->keyval,
+         evk->keyval - (GDK_KEY_F1 - 1),
+         withctrl ? " ctrl" : "", withshift ? " shift" : "");
 #warning should handle the function key
       return false;
     }
@@ -354,8 +384,8 @@ handlekeypress_newgui_cmd_BM (GtkWidget * widg, GdkEventKey * evk,
 
 
 void
-populatepopup_newgui_cmd_BM (GtkTextView * txview, GtkWidget * popup,
-                             gpointer data)
+populatepopup_newgui_cmd_BM (GtkTextView *
+                             txview, GtkWidget * popup, gpointer data)
 {
   assert (txview == GTK_TEXT_VIEW (commandview_BM));
   assert (GTK_IS_MENU (popup));
@@ -365,20 +395,23 @@ populatepopup_newgui_cmd_BM (GtkTextView * txview, GtkWidget * popup,
   GtkTextIter cursit = EMPTY_TEXT_ITER_BM;
   gtk_text_buffer_get_iter_at_mark      //
     (commandbuf_BM, &cursit, gtk_text_buffer_get_insert (commandbuf_BM));
-  snprintf (cursinfobuf, sizeof (cursinfobuf), "* L%dC%d/%d",
-            gtk_text_iter_get_line (&cursit) + 1,
-            gtk_text_iter_get_line_offset (&cursit),
-            gtk_text_iter_get_offset (&cursit));
-  gtk_menu_shell_append (GTK_MENU_SHELL (popup),
-                         gtk_separator_menu_item_new ());
+  snprintf (cursinfobuf,
+            sizeof (cursinfobuf),
+            "* L%dC%d/%d",
+            gtk_text_iter_get_line (&cursit)
+            + 1,
+            gtk_text_iter_get_line_offset
+            (&cursit), gtk_text_iter_get_offset (&cursit));
+  gtk_menu_shell_append (GTK_MENU_SHELL
+                         (popup), gtk_separator_menu_item_new ());
   {
     GtkWidget *cursinfomenit =  //
       gtk_menu_item_new_with_label (cursinfobuf);
     gtk_widget_set_sensitive (cursinfomenit, false);
     gtk_menu_shell_append (GTK_MENU_SHELL (popup), cursinfomenit);
   }
-  gtk_menu_shell_prepend (GTK_MENU_SHELL (popup),
-                          gtk_separator_menu_item_new ());
+  gtk_menu_shell_prepend (GTK_MENU_SHELL
+                          (popup), gtk_separator_menu_item_new ());
   {
     GtkWidget *clearmenit =     //
       gtk_menu_item_new_with_label ("clear command");
@@ -390,7 +423,8 @@ populatepopup_newgui_cmd_BM (GtkTextView * txview, GtkWidget * popup,
     GtkWidget *runerasemenit =  //
       gtk_menu_item_new_with_label ("run & erase");
     gtk_menu_shell_prepend (GTK_MENU_SHELL (popup), runerasemenit);
-    g_signal_connect (runerasemenit, "activate",
+    g_signal_connect (runerasemenit,
+                      "activate",
                       G_CALLBACK (run_then_erase_newgui_command_BM), NULL);
   }
   {
@@ -429,16 +463,17 @@ initialize_newgui_BM (const char *builderfile, const char *cssfile)
   browsednvcurix_BM = -1;
   GtkBuilder *bld = gtk_builder_new_from_file (builderfile);
   cssprovider_newgui_bm = gtk_css_provider_get_default ();
-  g_signal_connect (cssprovider_newgui_bm, "parsing-error",
-                    G_CALLBACK (cssparsingerror_BM), NULL);
+  g_signal_connect (cssprovider_newgui_bm,
+                    "parsing-error", G_CALLBACK (cssparsingerror_BM), NULL);
   gtk_css_provider_load_from_path (cssprovider_newgui_bm, cssfile, NULL);
   initialize_gui_tags_BM (bld);
   //gtk_builder_add_callback_symbols (bld, "quitaction_BM", quit_BM, NULL);
   mainwin_BM = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_style_context_add_provider_for_screen
-    (gtk_window_get_screen (GTK_WINDOW (mainwin_BM)),
-     GTK_STYLE_PROVIDER (cssprovider_newgui_bm),
-     GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    (gtk_window_get_screen
+     (GTK_WINDOW (mainwin_BM)),
+     GTK_STYLE_PROVIDER
+     (cssprovider_newgui_bm), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
   ////////////////
   GtkWidget *mainvbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
   gtk_container_add (GTK_CONTAINER (mainwin_BM), mainvbox);
@@ -457,53 +492,62 @@ initialize_newgui_BM (const char *builderfile, const char *cssfile)
   {
     windowvalues_newgui_bm = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     gtk_style_context_add_provider_for_screen
-      (gtk_window_get_screen (GTK_WINDOW (windowvalues_newgui_bm)),
-       GTK_STYLE_PROVIDER (cssprovider_newgui_bm),
-       GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+      (gtk_window_get_screen
+       (GTK_WINDOW (windowvalues_newgui_bm)),
+       GTK_STYLE_PROVIDER
+       (cssprovider_newgui_bm), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
     GtkWidget *valuesvbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
     gtk_container_add (GTK_CONTAINER (windowvalues_newgui_bm), valuesvbox);
     valueslabel_newgui_bm = gtk_label_new ("values");
-    gtk_box_pack_start (GTK_BOX (valuesvbox), valueslabel_newgui_bm,
-                        BOXNOEXPAND_BM, BOXFILL_BM, 2);
+    gtk_box_pack_start (GTK_BOX (valuesvbox),
+                        valueslabel_newgui_bm, BOXNOEXPAND_BM, BOXFILL_BM, 2);
     GtkWidget *sep1 = gtk_separator_new (GTK_ORIENTATION_HORIZONTAL);
-    gtk_box_pack_start (GTK_BOX (valuesvbox), sep1,
-                        BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
+    gtk_box_pack_start (GTK_BOX (valuesvbox),
+                        sep1, BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
     GtkWidget *paned = gtk_paned_new (GTK_ORIENTATION_VERTICAL);
-    gtk_box_pack_start (GTK_BOX (valuesvbox), paned, BOXEXPAND_BM, BOXFILL_BM,
-                        2);
+    gtk_box_pack_start (GTK_BOX (valuesvbox),
+                        paned, BOXEXPAND_BM, BOXFILL_BM, 2);
     upperscrollwvalues_newgui_bm = gtk_scrolled_window_new (NULL, NULL);
     lowerscrollwvalues_newgui_bm = gtk_scrolled_window_new (NULL, NULL);
-    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW
-                                    (upperscrollwvalues_newgui_bm),
-                                    GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
-    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW
-                                    (lowerscrollwvalues_newgui_bm),
-                                    GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
+    gtk_scrolled_window_set_policy
+      (GTK_SCROLLED_WINDOW
+       (upperscrollwvalues_newgui_bm),
+       GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
+    gtk_scrolled_window_set_policy
+      (GTK_SCROLLED_WINDOW
+       (lowerscrollwvalues_newgui_bm),
+       GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
     gtk_paned_add1 (GTK_PANED (paned), upperscrollwvalues_newgui_bm);
     gtk_paned_add2 (GTK_PANED (paned), lowerscrollwvalues_newgui_bm);
     gtk_paned_set_wide_handle (GTK_PANED (paned), true);
     uppervboxvalues_newgui_bm = gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
     lowervboxvalues_newgui_bm = gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
-    gtk_container_add (GTK_CONTAINER (upperscrollwvalues_newgui_bm),
+    gtk_container_add (GTK_CONTAINER
+                       (upperscrollwvalues_newgui_bm),
                        uppervboxvalues_newgui_bm);
     GtkWidget *upperlab = gtk_label_new ("upper");
-    gtk_box_pack_start (GTK_BOX (uppervboxvalues_newgui_bm), upperlab,
-                        BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
-    gtk_container_add (GTK_CONTAINER (lowerscrollwvalues_newgui_bm),
+    gtk_box_pack_start (GTK_BOX
+                        (uppervboxvalues_newgui_bm),
+                        upperlab, BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
+    gtk_container_add (GTK_CONTAINER
+                       (lowerscrollwvalues_newgui_bm),
                        lowervboxvalues_newgui_bm);
-    gtk_box_pack_start (GTK_BOX (lowervboxvalues_newgui_bm),
-                        gtk_separator_new (GTK_ORIENTATION_HORIZONTAL),
+    gtk_box_pack_start (GTK_BOX
+                        (lowervboxvalues_newgui_bm),
+                        gtk_separator_new
+                        (GTK_ORIENTATION_HORIZONTAL),
                         BOXNOEXPAND_BM, BOXNOFILL_BM, 1);
     GtkWidget *lowerlab = gtk_label_new ("lower");
-    gtk_box_pack_start (GTK_BOX (lowervboxvalues_newgui_bm), lowerlab,
-                        BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
+    gtk_box_pack_start (GTK_BOX
+                        (lowervboxvalues_newgui_bm),
+                        lowerlab, BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
     gtk_paned_set_position (GTK_PANED (paned), 220);
-    gtk_window_set_title (GTK_WINDOW (windowvalues_newgui_bm),
-                          "bismon values");
-    gtk_window_set_default_size (GTK_WINDOW (windowvalues_newgui_bm), 550,
-                                 620);
-    g_signal_connect (windowvalues_newgui_bm, "delete-event",
-                      (GCallback) deletemainwin_BM, NULL);
+    gtk_window_set_title (GTK_WINDOW
+                          (windowvalues_newgui_bm), "bismon values");
+    gtk_window_set_default_size (GTK_WINDOW
+                                 (windowvalues_newgui_bm), 550, 620);
+    g_signal_connect (windowvalues_newgui_bm,
+                      "delete-event", (GCallback) deletemainwin_BM, NULL);
     gtk_widget_show_all (GTK_WIDGET (windowvalues_newgui_bm));
   }
   ///
@@ -528,7 +572,8 @@ newgui_get_browsebuf_BM (void)
 void
 runcommand_newgui_BM (bool erase)
 {
-  LOCALFRAME_BM ( /*prev: */ NULL, /*descr: */ NULL,
+  LOCALFRAME_BM ( /*prev: */ NULL,
+                 /*descr: */ NULL,
                  objectval_tyBM * cmdparsob;);
   DBGPRINTF_BM ("runcommand_newgui_BM start erase=%s", erase ? "yes" : "no");
   GtkTextIter startit = EMPTY_TEXT_ITER_BM;
@@ -536,12 +581,13 @@ runcommand_newgui_BM (bool erase)
   cmd_clear_parens_BM ();
   if (errormessagedialog_BM)
     {
-      gtk_widget_destroy (errormessagedialog_BM), errormessagedialog_BM =
-        NULL;
+      gtk_widget_destroy (errormessagedialog_BM),
+        errormessagedialog_BM = NULL;
     };
   gtk_text_buffer_get_bounds (commandbuf_BM, &startit, &endit);
   gtk_text_buffer_remove_all_tags (commandbuf_BM, &startit, &endit);
-  char *cmdstr = gtk_text_buffer_get_text (commandbuf_BM, &startit, &endit,
+  char *cmdstr = gtk_text_buffer_get_text (commandbuf_BM,
+                                           &startit, &endit,
                                            false);
   bool gotffortab = false;
   // replace tabs and formfeeds
@@ -563,8 +609,8 @@ runcommand_newgui_BM (bool erase)
       gtk_text_buffer_set_text (commandbuf_BM, cmdstr, -1);
     }
   _.cmdparsob = makeobj_BM ();
-  struct parser_stBM *cmdpars =
-    makeparser_memopen_BM (cmdstr, -1, _.cmdparsob);
+  struct parser_stBM *cmdpars = makeparser_memopen_BM (cmdstr, -1,
+                                                       _.cmdparsob);
   int cmdlen = strlen (cmdstr);
   DBGPRINTF_BM
     ("runcommand_newgui cmdparsob=%s cmdlen=%d, @@@cmdstr=\n%s\n\n",
@@ -582,13 +628,14 @@ runcommand_newgui_BM (bool erase)
       serial63tocbuf16_BM (sercmd, serbuf);
       if (gui_command_log_file_BM)
         {
-          fprintf (gui_command_log_file_BM, "///++%s command #%d,l%d:\n",
+          fprintf (gui_command_log_file_BM,
+                   "///++%s command #%d,l%d:\n",
                    serbuf, commandnumber_BM, cmdlen);
           fputs (cmdstr, gui_command_log_file_BM);
           if (cmdlen > 0 && cmdstr[cmdlen - 1] != '\n')
             putc ('\n', gui_command_log_file_BM);
-          fprintf (gui_command_log_file_BM, "///--%s end command #%d\n\f\n",
-                   serbuf, commandnumber_BM);
+          fprintf (gui_command_log_file_BM,
+                   "///--%s end command #%d\n\f\n", serbuf, commandnumber_BM);
           fflush (gui_command_log_file_BM);
         }
       log_begin_message_BM ();
@@ -597,8 +644,8 @@ runcommand_newgui_BM (bool erase)
          erase ? "erased" : "kept", commandnumber_BM);
       char commbuf[80];
       memset (commbuf, 0, sizeof (commbuf));
-      snprintf (commbuf, sizeof (commbuf), "///++%s command #%d,l%d:",
-                serbuf, commandnumber_BM, cmdlen);
+      snprintf (commbuf, sizeof (commbuf),
+                "///++%s command #%d,l%d:", serbuf, commandnumber_BM, cmdlen);
       GtkTextIter it = EMPTY_TEXT_ITER_BM;
       gtk_text_buffer_get_end_iter (logbuf_BM, &it);
       gtk_text_buffer_insert_with_tags
@@ -608,8 +655,8 @@ runcommand_newgui_BM (bool erase)
         (logbuf_BM, &it, cmdstr, -1, command_logtag_BM, NULL);
       if (cmdlen > 0 && cmdstr[cmdlen - 1] != '\n')
         gtk_text_buffer_insert (logbuf_BM, &it, "\n", -1);
-      snprintf (commbuf, sizeof (commbuf), "///--%s end command #%d",
-                serbuf, commandnumber_BM);
+      snprintf (commbuf, sizeof (commbuf),
+                "///--%s end command #%d", serbuf, commandnumber_BM);
       gtk_text_buffer_insert_with_tags
         (logbuf_BM, &it, commbuf, -1, comment_logtag_BM, NULL);
       gtk_text_buffer_insert (logbuf_BM, &it, "\n", -1);
@@ -622,8 +669,8 @@ runcommand_newgui_BM (bool erase)
       if (errormessagedialog_BM)
         {
           gtk_dialog_run (GTK_DIALOG (errormessagedialog_BM));
-          gtk_widget_destroy (errormessagedialog_BM), errormessagedialog_BM =
-            NULL;
+          gtk_widget_destroy (errormessagedialog_BM),
+            errormessagedialog_BM = NULL;
         }
       free (cmdstr), cmdstr = NULL;
       return;
@@ -635,7 +682,9 @@ runcommand_newgui_BM (bool erase)
 
 
 void
-markset_newgui_cmd_BM (GtkTextBuffer * tbuf, GtkTextIter * titer,
+markset_newgui_cmd_BM (GtkTextBuffer *
+                       tbuf,
+                       GtkTextIter * titer,
                        GtkTextMark * tmark, gpointer cdata)
 {
   DBGPRINTF_BM ("markset_newgui_cmd titer=%s tmark %s",
@@ -648,7 +697,8 @@ markset_newgui_cmd_BM (GtkTextBuffer * tbuf, GtkTextIter * titer,
 void
 enduseraction_newgui_cmd_BM (GtkTextBuffer * txbuf, gpointer data)
 {
-  LOCALFRAME_BM ( /*prev: */ NULL, /*descr: */ NULL,
+  LOCALFRAME_BM ( /*prev: */ NULL,
+                 /*descr: */ NULL,
                  objectval_tyBM * cmdparsob;);
   assert (txbuf == commandbuf_BM);
   assert (data == NULL);
@@ -657,11 +707,12 @@ enduseraction_newgui_cmd_BM (GtkTextBuffer * txbuf, gpointer data)
   gtk_text_buffer_get_bounds (commandbuf_BM, &startit, &endit);
   gtk_text_buffer_remove_all_tags (commandbuf_BM, &startit, &endit);
   cmd_clear_parens_BM ();
-  char *cmdstr = gtk_text_buffer_get_text (commandbuf_BM, &startit, &endit,
+  char *cmdstr = gtk_text_buffer_get_text (commandbuf_BM,
+                                           &startit, &endit,
                                            false);
   _.cmdparsob = makeobj_BM ();
-  struct parser_stBM *cmdpars =
-    makeparser_memopen_BM (cmdstr, -1, _.cmdparsob);
+  struct parser_stBM *cmdpars = makeparser_memopen_BM (cmdstr, -1,
+                                                       _.cmdparsob);
   cmdpars->pars_ops = &parsop_command_nobuild_newgui_BM;
   volatile int errpars = setjmp (jmperrorcmd_BM);
   if (!errpars)
@@ -686,23 +737,24 @@ enduseraction_newgui_cmd_BM (GtkTextBuffer * txbuf, gpointer data)
 
 
 void
-parsecommandbuf_newgui_BM (struct parser_stBM *pars,
-                           struct stackframe_stBM *stkf)
+parsecommandbuf_newgui_BM (struct
+                           parser_stBM *pars, struct stackframe_stBM *stkf)
 {
   if (!isparser_BM (pars))
     return;
-  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 value_tyBM val;
-                 const stringval_tyBM * astrv; objectval_tyBM * obj;
+  LOCALFRAME_BM ( /*prev: */ stkf,
+                 /*descr: */ NULL,
+                 value_tyBM val; const stringval_tyBM * astrv;
+                 objectval_tyBM * obj;
                  const stringval_tyBM * name; const stringval_tyBM * result;
-                 objectval_tyBM * parsob;
-    );
+                 objectval_tyBM * parsob;);
   if (browserdepth_BM < 2)
     browserdepth_BM = 2;
   else if (browserdepth_BM > BROWSE_MAXDEPTH_NEWGUI_BM)
     browserdepth_BM = BROWSE_MAXDEPTH_NEWGUI_BM;
-  if (!astrval_bm || !isstring_BM ((value_tyBM) astrval_bm)
-      || strcmp (bytstring_BM (astrval_bm), "a"))
+  if (!astrval_bm
+      || !isstring_BM ((value_tyBM)
+                       astrval_bm) || strcmp (bytstring_BM (astrval_bm), "a"))
     {
       _.astrv = makestring_BM ("a");
       astrval_bm = _.astrv;
@@ -725,73 +777,99 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
       _.val = NULL;
       parserskipspaces_BM (pars, (struct stackframe_stBM *) &_);
       if (nbloop++ > MAXSIZE_BM / 32)
-        parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
-                              pars->pars_lineno, pars->pars_colpos,
-                              "too many %d loops", nbloop);
+        parsererrorprintf_BM (pars,
+                              (struct
+                               stackframe_stBM
+                               *) &_,
+                              pars->pars_lineno,
+                              pars->pars_colpos, "too many %d loops", nbloop);
       if (parserendoffile_BM (pars))
         break;
       unsigned curlineno = parserlineno_BM (pars);
       unsigned curcolpos = parsercolpos_BM (pars);
-      parstoken_tyBM tok =
-        parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
-      DBGPRINTF_BM ("parsecommandbuf_newgui_BM nbloop#%d tok~%s L%dC%d",
-                    nbloop, lexkindname_BM (tok.tok_kind), curlineno,
-                    curcolpos);
+      parstoken_tyBM tok = parsertokenget_BM (pars,
+                                              (struct stackframe_stBM *) &_);
+      DBGPRINTF_BM
+        ("parsecommandbuf_newgui_BM nbloop#%d tok~%s L%dC%d",
+         nbloop, lexkindname_BM (tok.tok_kind), curlineno, curcolpos);
       //commands starting with comma?
       if (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_comma)
         {
-          parstoken_tyBM cmdtok =
-            parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
+          parstoken_tyBM cmdtok = parsertokenget_BM (pars,
+                                                     (struct stackframe_stBM
+                                                      *) &_);
           // ,depth <number>
           if (cmdtok.tok_kind == plex_NAMEDOBJ
               && cmdtok.tok_namedobj == k_depth)
             {
-              parstoken_tyBM depthtok =
-                parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
+              parstoken_tyBM depthtok = parsertokenget_BM (pars,
+                                                           (struct
+                                                            stackframe_stBM *)
+                                                           &_);
               if (depthtok.tok_kind != plex_LLONG)
-                parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
-                                      cmdtok.tok_line, cmdtok.tok_col,
+                parsererrorprintf_BM (pars,
+                                      (struct
+                                       stackframe_stBM
+                                       *)
+                                      &_,
+                                      cmdtok.tok_line,
+                                      cmdtok.tok_col,
                                       ",depth not followed by number");
               if (depthtok.tok_llong < 2
                   || depthtok.tok_llong > BROWSE_MAXDEPTH_NEWGUI_BM)
-                parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
-                                      cmdtok.tok_line, cmdtok.tok_col,
+                parsererrorprintf_BM (pars,
+                                      (struct
+                                       stackframe_stBM *)
+                                      &_, cmdtok.tok_line,
+                                      cmdtok.tok_col,
                                       "bad ,depth %lld, should be between 2 and %d",
                                       depthtok.tok_llong,
                                       BROWSE_MAXDEPTH_NEWGUI_BM);
               browserdepth_BM = (int) depthtok.tok_llong;
             }
           // ,nval <name> <value>
-          else if (cmdtok.tok_kind == plex_NAMEDOBJ
-                   && cmdtok.tok_namedobj == k_nval)
+          else
+            if (cmdtok.tok_kind == plex_NAMEDOBJ
+                && cmdtok.tok_namedobj == k_nval)
             {
-              parstoken_tyBM vartok =
-                parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
+              parstoken_tyBM vartok = parsertokenget_BM (pars,
+                                                         (struct
+                                                          stackframe_stBM *)
+                                                         &_);
               if (vartok.tok_kind == plex_NAMEDOBJ)
                 _.name =
                   makestring_BM (findobjectname_BM (vartok.tok_namedobj));
               else if (vartok.tok_kind == plex_CNAME)
                 _.name = vartok.tok_cname;
               else
-                parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
-                                      cmdtok.tok_line, cmdtok.tok_col,
+                parsererrorprintf_BM (pars,
+                                      (struct
+                                       stackframe_stBM *)
+                                      &_, cmdtok.tok_line,
+                                      cmdtok.tok_col,
                                       "name expected after ,nval");
               bool gotval = false;
-              _.val = parsergetvalue_BM (pars, (struct stackframe_stBM *) &_,
-                                         0, &gotval);
+              _.val =
+                parsergetvalue_BM (pars,
+                                   (struct stackframe_stBM *) &_, 0, &gotval);
               if (!gotval)
-                parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
-                                      cmdtok.tok_line, cmdtok.tok_col,
+                parsererrorprintf_BM (pars,
+                                      (struct
+                                       stackframe_stBM
+                                       *) &_,
+                                      cmdtok.tok_line,
+                                      cmdtok.tok_col,
                                       "value expected after ,nval %s",
                                       bytstring_BM (_.name));
               if (!nobuild)
                 {
                   if (_.val)
                     {
-                      browse_named_value_newgui_BM (_.name, _.val,
+                      browse_named_value_newgui_BM (_.name,
+                                                    _.val,
                                                     browserdepth_BM,
-                                                    (struct stackframe_stBM *)
-                                                    &_);
+                                                    (struct
+                                                     stackframe_stBM *) &_);
                       log_begin_message_BM ();
                       log_printf_message_BM
                         ("show value named %s at depth %d",
@@ -800,52 +878,65 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
                     }
                   else
                     {
-                      hide_named_value_newgui_BM (bytstring_BM (_.name),
-                                                  (struct stackframe_stBM *)
-                                                  &_);
+                      hide_named_value_newgui_BM (bytstring_BM
+                                                  (_.name),
+                                                  (struct
+                                                   stackframe_stBM *) &_);
                       log_begin_message_BM ();
-                      log_printf_message_BM ("forgot value named %s",
-                                             bytstring_BM (_.name));
+                      log_printf_message_BM
+                        ("forgot value named %s", bytstring_BM (_.name));
                       log_end_message_BM ();
                     }
 
                 }
             }
           /// ,nhide <name>
-          else if (cmdtok.tok_kind == plex_NAMEDOBJ
-                   && cmdtok.tok_namedobj == k_nhide)
+          else
+            if (cmdtok.tok_kind == plex_NAMEDOBJ
+                && cmdtok.tok_namedobj == k_nhide)
             {
-              parstoken_tyBM vartok =
-                parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
+              parstoken_tyBM vartok = parsertokenget_BM (pars,
+                                                         (struct
+                                                          stackframe_stBM *)
+                                                         &_);
               if (vartok.tok_kind == plex_NAMEDOBJ)
                 _.name =
                   makestring_BM (findobjectname_BM (vartok.tok_namedobj));
               else if (vartok.tok_kind == plex_CNAME)
                 _.name = vartok.tok_cname;
               else
-                parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
-                                      cmdtok.tok_line, cmdtok.tok_col,
+                parsererrorprintf_BM (pars,
+                                      (struct
+                                       stackframe_stBM *)
+                                      &_, cmdtok.tok_line,
+                                      cmdtok.tok_col,
                                       "name expected after ,nhide");
               if (!nobuild)
                 {
                   if (index_named_value_newgui_BM (bytstring_BM (_.name)) < 0)
-                    parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
-                                          cmdtok.tok_line, cmdtok.tok_col,
+                    parsererrorprintf_BM (pars,
+                                          (struct
+                                           stackframe_stBM
+                                           *) &_,
+                                          cmdtok.tok_line,
+                                          cmdtok.tok_col,
                                           ",nhide %s : unknown name",
                                           bytstring_BM (_.name));
-                  hide_named_value_newgui_BM (bytstring_BM (_.name),
+                  hide_named_value_newgui_BM (bytstring_BM
+                                              (_.name),
                                               (struct stackframe_stBM *) &_);
                   log_begin_message_BM ();
-                  log_printf_message_BM ("forgot hidden value named %s",
-                                         bytstring_BM (_.name));
+                  log_printf_message_BM
+                    ("forgot hidden value named %s", bytstring_BM (_.name));
                   log_end_message_BM ();
                 }
             }
           else
-            parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
-                                  cmdtok.tok_line, cmdtok.tok_col,
-                                  "unimplemented command");
-
+            parsererrorprintf_BM (pars,
+                                  (struct
+                                   stackframe_stBM *)
+                                  &_, cmdtok.tok_line,
+                                  cmdtok.tok_col, "unimplemented command");
         }
       //start of object?
       else if (parsertokenstartobject_BM (pars, tok))
@@ -853,33 +944,43 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
           parserseek_BM (pars, curlineno, curcolpos);
           bool gotobj = false;
           _.obj =
-            parsergetobject_BM (pars, (struct stackframe_stBM *) &_, 0,
-                                &gotobj);
+            parsergetobject_BM (pars,
+                                (struct stackframe_stBM *) &_, 0, &gotobj);
           if (!gotobj)
-            parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
+            parsererrorprintf_BM (pars,
+                                  (struct
+                                   stackframe_stBM
+                                   *) &_,
                                   curlineno, curcolpos, "invalid object");
           if (!obwin_current_newgui_BM)
-            parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
-                                  curlineno, curcolpos,
+            parsererrorprintf_BM (pars,
+                                  (struct
+                                   stackframe_stBM *)
+                                  &_, curlineno,
+                                  curcolpos,
                                   "no current object window to show object");
           if (!nobuild)
             {
               if (!_.obj)
-                parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
-                                      curlineno, curcolpos, "no object");
+                parsererrorprintf_BM (pars,
+                                      (struct
+                                       stackframe_stBM *)
+                                      &_, curlineno, curcolpos, "no object");
               int depth = browserdepth_BM;
-              DBGPRINTF_BM ("should browse obj %s depth %d in obwin#%d",
-                            objectdbg_BM (_.obj), depth,
-                            obwin_current_newgui_BM->obw_rank);
-              show_object_in_obwin_newgui_BM (obwin_current_newgui_BM, _.obj,
-                                              BMP_browse_in_object, depth,
-                                              (struct stackframe_stBM *) &_);
+              DBGPRINTF_BM
+                ("should browse obj %s depth %d in obwin#%d",
+                 objectdbg_BM (_.obj), depth,
+                 obwin_current_newgui_BM->obw_rank);
+              show_object_in_obwin_newgui_BM
+                (obwin_current_newgui_BM, _.obj,
+                 BMP_browse_in_object, depth, (struct stackframe_stBM *) &_);
               browserdepth_BM = depth;
               log_begin_message_BM ();
               log_puts_message_BM ("browsing object ");
               log_object_message_BM (_.obj);
-              log_printf_message_BM (" at depth %d in obwin#%d.", depth,
-                                     obwin_current_newgui_BM->obw_rank);
+              log_printf_message_BM
+                (" at depth %d in obwin#%d.", depth,
+                 obwin_current_newgui_BM->obw_rank);
               log_end_message_BM ();
             }
         }
@@ -889,19 +990,24 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
           parserseek_BM (pars, curlineno, curcolpos);
           bool gotval = false;
           _.val =
-            parsergetvalue_BM (pars, (struct stackframe_stBM *) &_, 0,
-                               &gotval);
+            parsergetvalue_BM (pars,
+                               (struct stackframe_stBM *) &_, 0, &gotval);
           if (!gotval)
-            parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
+            parsererrorprintf_BM (pars,
+                                  (struct
+                                   stackframe_stBM
+                                   *) &_,
                                   curlineno, curcolpos, "invalid value");
           if (!nobuild)
             {
-              DBGPRINTF_BM ("parsecommandbuf_newgui val=%s",
-                            debug_outstr_value_BM (_.val,
-                                                   (struct stackframe_stBM *)
-                                                   &_, 5));
+              DBGPRINTF_BM
+                ("parsecommandbuf_newgui val=%s",
+                 debug_outstr_value_BM (_.val,
+                                        (struct stackframe_stBM *) &_, 5));
               if (_.val)
-                browse_named_value_newgui_BM (_.astrv, _.val, browserdepth_BM,
+                browse_named_value_newgui_BM (_.astrv,
+                                              _.val,
+                                              browserdepth_BM,
                                               (struct stackframe_stBM *) &_);
               else
                 {
@@ -912,10 +1018,10 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
             }
         }
       else if (tok.tok_kind == plex__NONE)
-        parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
-                              curlineno, curcolpos, "invalid token");
-
-
+        parsererrorprintf_BM (pars,
+                              (struct
+                               stackframe_stBM *)
+                              &_, curlineno, curcolpos, "invalid token");
     }
 }                               /* end parsecommandbuf_newgui_BM */
 
@@ -923,13 +1029,19 @@ parsecommandbuf_newgui_BM (struct parser_stBM *pars,
 
 // for $:<var>
 const objectval_tyBM *
-parsdollarobj_newguicmd_BM (struct parser_stBM *pars,
-                            unsigned lineno, unsigned colpos,
-                            const value_tyBM varname,
-                            struct stackframe_stBM *stkf)
+parsdollarobj_newguicmd_BM (struct
+                            parser_stBM
+                            *pars,
+                            unsigned
+                            lineno,
+                            unsigned
+                            colpos,
+                            const
+                            value_tyBM varname, struct stackframe_stBM *stkf)
 {
 
-  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+  LOCALFRAME_BM ( /*prev: */ stkf,
+                 /*descr: */ NULL,
                  value_tyBM val;);
   const struct parserops_stBM *parsops = pars->pars_ops;
   bool nobuild = parsops && parsops->parsop_nobuild;
@@ -959,14 +1071,19 @@ parsdollarobj_newguicmd_BM (struct parser_stBM *pars,
 
 // for $<var>
 value_tyBM
-parsdollarval_newguicmd_BM (struct parser_stBM *pars,
-                            unsigned lineno,
-                            unsigned colpos,
-                            const value_tyBM varname,
-                            struct stackframe_stBM *stkf)
+parsdollarval_newguicmd_BM (struct
+                            parser_stBM
+                            *pars,
+                            unsigned
+                            lineno,
+                            unsigned
+                            colpos,
+                            const
+                            value_tyBM varname, struct stackframe_stBM *stkf)
 {
   const char *varstr = NULL;
-  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+  LOCALFRAME_BM ( /*prev: */ stkf,
+                 /*descr: */ NULL,
                  value_tyBM val;);
   assert (isparser_BM (pars));
   const struct parserops_stBM *parsops = pars->pars_ops;
@@ -994,23 +1111,31 @@ parsdollarval_newguicmd_BM (struct parser_stBM *pars,
 
 // parse inside $(....)
 value_tyBM
-parsvalexp_newguicmd_BM (struct parser_stBM * pars, unsigned lineno,
-                         unsigned colpos, int depth,
-                         struct stackframe_stBM * stkf)
+parsvalexp_newguicmd_BM (struct parser_stBM
+                         * pars,
+                         unsigned lineno,
+                         unsigned colpos,
+                         int depth, struct stackframe_stBM * stkf)
 {
   assert (isparser_BM (pars));
   const struct parserops_stBM *parsops = pars->pars_ops;
   bool nobuild = parsops && parsops->parsop_nobuild;
-  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+  LOCALFRAME_BM ( /*prev: */ stkf,
+                 /*descr: */ NULL,
                  value_tyBM resval;
-                 value_tyBM srcval; objectval_tyBM * parsob;
-                 objectval_tyBM * obj; objectval_tyBM * obsel;
-                 objectval_tyBM * obattr; closure_tyBM * clos;
-                 value_tyBM otherval; const stringval_tyBM * name;);
+                 value_tyBM srcval;
+                 objectval_tyBM * parsob;
+                 objectval_tyBM * obj;
+                 objectval_tyBM * obsel; objectval_tyBM * obattr;
+                 closure_tyBM * clos; value_tyBM otherval;
+                 const stringval_tyBM * name;);
   _.parsob = checkedparserowner_BM (pars);
   unsigned srclineno = parserlineno_BM (pars);
   unsigned srccolpos = parsercolpos_BM (pars);
-  parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, srclineno,
+  parsererrorprintf_BM (pars,
+                        (struct
+                         stackframe_stBM *)
+                        &_, srclineno,
                         srccolpos,
                         "unimplemented parsvalexp_newguicmd for $(...)");
 #warning parsvalexp_newguicmd_BM unimplemented
@@ -1020,13 +1145,16 @@ parsvalexp_newguicmd_BM (struct parser_stBM * pars, unsigned lineno,
 
 // parse inside $[...]
 const objectval_tyBM *
-parsobjexp_newguicmd_BM (struct parser_stBM *pars,
-                         unsigned lineno, unsigned colpos,
+parsobjexp_newguicmd_BM (struct parser_stBM
+                         *pars,
+                         unsigned lineno,
+                         unsigned colpos,
                          int depth, struct stackframe_stBM *stkf)
 {
   const struct parserops_stBM *parsops = pars->pars_ops;
   bool nobuild = parsops && parsops->parsop_nobuild;
-  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+  LOCALFRAME_BM ( /*prev: */ stkf,
+                 /*descr: */ NULL,
                  objectval_tyBM * obj;
                  const stringval_tyBM * namev; objectval_tyBM * oldnamedob;
                  value_tyBM val;);
@@ -1034,7 +1162,10 @@ parsobjexp_newguicmd_BM (struct parser_stBM *pars,
   parserskipspaces_BM (pars, (struct stackframe_stBM *) &_);
   unsigned oblineno = parserlineno_BM (pars);
   unsigned obcolpos = parsercolpos_BM (pars);
-  parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, oblineno,
+  parsererrorprintf_BM (pars,
+                        (struct
+                         stackframe_stBM *)
+                        &_, oblineno,
                         obcolpos,
                         "unimplemented parsobjexp_newguicmd for $(...)");
 #warning parsobjexp_newguicmd_BM unimplemented
@@ -1058,7 +1189,8 @@ index_named_value_newgui_BM (const char *vstr)
       md = (lo + hi) / 2;
       struct browsedval_stBM *mdbv = browsedval_BM + md;
       assert (isstring_BM ((const value_tyBM) (mdbv->brow_name)));
-      int cmp = strcmp (vstr, bytstring_BM (mdbv->brow_name));
+      int cmp = strcmp (vstr,
+                        bytstring_BM (mdbv->brow_name));
       if (cmp == 0)
         return md;
       else if (cmp < 0)
@@ -1079,7 +1211,8 @@ index_named_value_newgui_BM (const char *vstr)
 value_tyBM
 find_named_value_newgui_BM (const char *vstr, struct stackframe_stBM * stkf)
 {
-  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+  LOCALFRAME_BM ( /*prev: */ stkf,
+                 /*descr: */ NULL,
                  value_tyBM val;);
   if (!validname_BM (vstr))
     return NULL;
@@ -1093,32 +1226,40 @@ find_named_value_newgui_BM (const char *vstr, struct stackframe_stBM * stkf)
 }                               /* end find_named_value_newgui_BM */
 
 static void
-add_indexed_named_value_newgui_BM (const stringval_tyBM * namev,
-                                   const value_tyBM val,
-                                   int browsdepth,
-                                   unsigned index,
-                                   struct stackframe_stBM *stkf);
-
+add_indexed_named_value_newgui_BM (const
+                                   stringval_tyBM
+                                   * namev,
+                                   const
+                                   value_tyBM
+                                   val,
+                                   int
+                                   browsdepth,
+                                   unsigned
+                                   index, struct stackframe_stBM *stkf);
 static void
-replace_indexed_named_value_newgui_BM (const value_tyBM val,
-                                       int browsdepth,
-                                       unsigned index,
-                                       struct stackframe_stBM *stkf);
-
+  replace_indexed_named_value_newgui_BM
+  (const value_tyBM val, int browsdepth,
+   unsigned index, struct stackframe_stBM *stkf);
 static void
-browse_indexed_named_value_newgui_BM (const value_tyBM val,
-                                      int browsdepth,
-                                      unsigned index,
-                                      struct stackframe_stBM *stkf);
-
+browse_indexed_named_value_newgui_BM (const
+                                      value_tyBM
+                                      val,
+                                      int
+                                      browsdepth,
+                                      unsigned
+                                      index, struct stackframe_stBM *stkf);
 void
-browse_named_value_newgui_BM (const stringval_tyBM * namev,
-                              const value_tyBM val,
+browse_named_value_newgui_BM (const
+                              stringval_tyBM
+                              * namev,
+                              const
+                              value_tyBM
+                              val,
                               int browsdepth, struct stackframe_stBM *stkf)
 {
-  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const stringval_tyBM * namev;
-                 value_tyBM val;);
+  LOCALFRAME_BM ( /*prev: */ stkf,
+                 /*descr: */ NULL,
+                 const stringval_tyBM * namev; value_tyBM val;);
   if (browsdepth < 2)
     browsdepth = 2;
   else if (browsdepth > BROWSE_MAXDEPTH_NEWGUI_BM)
@@ -1131,9 +1272,9 @@ browse_named_value_newgui_BM (const stringval_tyBM * namev,
     return;
   if (!val)
     return;
-  DBGPRINTF_BM ("browse_named_value_newgui start name: %s depth %d ulen %u",
-                bytstring_BM ((value_tyBM) _.namev), browsdepth,
-                browsednvulen_BM);
+  DBGPRINTF_BM
+    ("browse_named_value_newgui start name: %s depth %d ulen %u",
+     bytstring_BM ((value_tyBM) _.namev), browsdepth, browsednvulen_BM);
   if (browsednvulen_BM == 0)
     {
       if (!browsedval_BM)
@@ -1141,24 +1282,26 @@ browse_named_value_newgui_BM (const stringval_tyBM * namev,
           const unsigned inisiz = 11;
           browsedval_BM = calloc (inisiz, sizeof (struct browsedval_stBM));
           if (!browsedval_BM)
-            FATAL_BM ("failed to allocate browsedval_BM for %u elements",
-                      inisiz);
+            FATAL_BM
+              ("failed to allocate browsedval_BM for %u elements", inisiz);
           browsednvsize_BM = inisiz;
         }
       browsednvulen_BM = 1;
       memset (browsedval_BM + 0, 0, sizeof (struct browsedval_stBM));
       add_indexed_named_value_newgui_BM //
         (_.namev, _.val, browsdepth, 0, (struct stackframe_stBM *) &_);
-      DBGPRINTF_BM ("browse_named_value_newgui (empty) end name: %s",
-                    bytstring_BM (_.namev));
+      DBGPRINTF_BM
+        ("browse_named_value_newgui (empty) end name: %s",
+         bytstring_BM (_.namev));
       return;
     };
   // grow array if needed
   if (browsednvulen_BM >= browsednvsize_BM)
     {
       unsigned newsiz = prime_above_BM (4 * browsednvsize_BM / 3 + 8);
-      struct browsedval_stBM *newarr =
-        calloc (newsiz, sizeof (struct browsedval_stBM));
+      struct browsedval_stBM *newarr = calloc (newsiz,
+                                               sizeof (struct
+                                                       browsedval_stBM));
       if (!newarr)
         FATAL_BM ("failed to grow browsedval_BM for %u elements", newsiz);
       memcpy (newarr, browsedval_BM,
@@ -1212,8 +1355,8 @@ browse_named_value_newgui_BM (const stringval_tyBM * namev,
   // insert before md
   assert (md >= 0);
   DBGPRINTF_BM
-    ("browse_named_value_newgui lo=%d, hi=%d, md=%d, ulen=%d, name=%s", lo,
-     hi, md, browsednvulen_BM, bytstring_BM (_.namev));
+    ("browse_named_value_newgui lo=%d, hi=%d, md=%d, ulen=%d, name=%s",
+     lo, hi, md, browsednvulen_BM, bytstring_BM (_.namev));
   for (int ix = browsednvulen_BM; ix > md; ix--)
     {
       browsedval_BM[ix] = browsedval_BM[ix - 1];
@@ -1239,8 +1382,8 @@ browse_named_value_newgui_BM (const stringval_tyBM * namev,
 
 
 static void closebut_namedval_newgui_cbBM (GtkWidget * wbut, gpointer data);
-static void spindepth_namedval_newgui_cbBM (GtkSpinButton * spbut,
-                                            gpointer data);
+static void
+spindepth_namedval_newgui_cbBM (GtkSpinButton * spbut, gpointer data);
 void
 closebut_namedval_newgui_cbBM (GtkWidget * wbut, gpointer data)
 {
@@ -1262,15 +1405,15 @@ spindepth_namedval_newgui_cbBM (GtkSpinButton * spbut, gpointer data)
   assert (data != NULL);
   struct namedvaluenewguixtra_stBM *nvx = data;
   int idx = nvx->nvx_index;
-  assert (idx >= 0 && idx <= (int) browsednvulen_BM
-          && idx < (int) browsednvsize_BM);
+  assert (idx >= 0
+          && idx <= (int) browsednvulen_BM && idx < (int) browsednvsize_BM);
   assert (browsedval_BM[idx].brow_vdata == (void *) nvx);
   int newdepth = gtk_spin_button_get_value_as_int (spbut);
-  DBGPRINTF_BM ("spindepth_namedval_newgui_cbBM idx=%d newdepth %d", idx,
-                newdepth);
+  DBGPRINTF_BM
+    ("spindepth_namedval_newgui_cbBM idx=%d newdepth %d", idx, newdepth);
   browsedval_BM[idx].brow_vdepth = newdepth;
-  browse_indexed_named_value_newgui_BM (browsedval_BM[idx].brow_val, newdepth,
-                                        idx, NULL);
+  browse_indexed_named_value_newgui_BM
+    (browsedval_BM[idx].brow_val, newdepth, idx, NULL);
   if (spbut != nvx->nvx_upper.nvxt_spindepth)
     gtk_spin_button_set_value (GTK_SPIN_BUTTON
                                (nvx->nvx_upper.nvxt_spindepth),
@@ -1285,7 +1428,9 @@ spindepth_namedval_newgui_cbBM (GtkSpinButton * spbut, gpointer data)
 }                               /* end spindepth_namedval_newgui_cbBM */
 
 static void
-fill_nvx_thing_newgui_BM (struct namedvaluenewguixtra_stBM *nvx, bool upper,
+fill_nvx_thing_newgui_BM (struct
+                          namedvaluenewguixtra_stBM
+                          *nvx, bool upper,
                           const char *title, const char *subtitle)
 {
   assert (nvx != NULL);
@@ -1297,12 +1442,12 @@ fill_nvx_thing_newgui_BM (struct namedvaluenewguixtra_stBM *nvx, bool upper,
   DBGPRINTF_BM
     ("fill_nvx_thing_newgui %s idx=%d ulen:%u title'%s' subtitle'%s'",
      upper ? "upper" : "lower", idx, browsednvulen_BM, title, subtitle);
-  assert (idx >= 0 && idx <= (int) browsednvulen_BM
-          && idx < (int) browsednvsize_BM);
+  assert (idx >= 0
+          && idx <= (int) browsednvulen_BM && idx < (int) browsednvsize_BM);
   assert (browsedval_BM[idx].brow_vdata == (void *) nvx);
   nt->nvxt_frame = gtk_frame_new (NULL);
-  GtkBox *inbox = GTK_BOX (upper ? uppervboxvalues_newgui_bm :
-                           lowervboxvalues_newgui_bm);
+  GtkBox *inbox =
+    GTK_BOX (upper ? uppervboxvalues_newgui_bm : lowervboxvalues_newgui_bm);
   gtk_box_pack_end (inbox, nt->nvxt_frame, BOXEXPAND_BM, BOXFILL_BM, 2);
   // the lower box starts with a separator, so...
   gtk_box_reorder_child         //
@@ -1311,21 +1456,20 @@ fill_nvx_thing_newgui_BM (struct namedvaluenewguixtra_stBM *nvx, bool upper,
   gtk_container_add (GTK_CONTAINER (nt->nvxt_frame), nt->nvxt_vbox);
   nt->nvxt_headb = gtk_header_bar_new ();
   GtkWidget *clobut =           //
-    gtk_button_new_from_icon_name ("window-close",
-                                   GTK_ICON_SIZE_MENU);
+    gtk_button_new_from_icon_name ("window-close", GTK_ICON_SIZE_MENU);
   g_signal_connect (clobut, "activate", closebut_namedval_newgui_cbBM, nvx);
   gtk_header_bar_pack_end (GTK_HEADER_BAR (nt->nvxt_headb), clobut);
   nt->nvxt_spindepth =          //
-    gtk_spin_button_new_with_range (2.0,
-                                    (double) BROWSE_MAXDEPTH_NEWGUI_BM, 1.0);
+    gtk_spin_button_new_with_range (2.0, (double) BROWSE_MAXDEPTH_NEWGUI_BM,
+                                    1.0);
   g_signal_connect (nt->nvxt_spindepth, "value-changed",
                     spindepth_namedval_newgui_cbBM, nvx);
   gtk_header_bar_pack_end (GTK_HEADER_BAR (nt->nvxt_headb),
                            nt->nvxt_spindepth);
   gtk_header_bar_set_title (GTK_HEADER_BAR (nt->nvxt_headb), title);
   gtk_header_bar_set_subtitle (GTK_HEADER_BAR (nt->nvxt_headb), subtitle);
-  gtk_box_pack_start (GTK_BOX (nt->nvxt_vbox), nt->nvxt_headb,
-                      BOXNOEXPAND_BM, BOXNOFILL_BM, 1);
+  gtk_box_pack_start (GTK_BOX (nt->nvxt_vbox), nt->nvxt_headb, BOXNOEXPAND_BM,
+                      BOXNOFILL_BM, 1);
   nt->nvxt_textview = gtk_text_view_new_with_buffer (nvx->nvx_tbuffer);
   gtk_text_view_set_editable (GTK_TEXT_VIEW (nt->nvxt_textview), false);
   gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (nt->nvxt_textview), true);
@@ -1337,15 +1481,19 @@ fill_nvx_thing_newgui_BM (struct namedvaluenewguixtra_stBM *nvx, bool upper,
 
 
 void
-add_indexed_named_value_newgui_BM (const stringval_tyBM * namev,
-                                   const value_tyBM val,
-                                   int browsdepth,
+add_indexed_named_value_newgui_BM (const
+                                   stringval_tyBM
+                                   * namev,
+                                   const
+                                   value_tyBM
+                                   val,
+                                   int
+                                   browsdepth,
                                    unsigned idx, struct stackframe_stBM *stkf)
 {
-  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const stringval_tyBM * namev;
-                 value_tyBM val;
-    );
+  LOCALFRAME_BM ( /*prev: */ stkf,
+                 /*descr: */ NULL,
+                 const stringval_tyBM * namev; value_tyBM val;);
   _.namev = namev;
   _.val = val;
   assert (isstring_BM (namev));
@@ -1376,17 +1524,21 @@ add_indexed_named_value_newgui_BM (const stringval_tyBM * namev,
   nvx->nvx_index = (int) idx;
   nvx->nvx_tbuffer = gtk_text_buffer_new (browsertagtable_BM);
   DBGPRINTF_BM
-    ("add_indexed_named_value_newgui_BM idx=%u ulen=%u nvx_tbuffer@%p", idx,
-     browsednvulen_BM, nvx->nvx_tbuffer);
-  char *title = g_strdup_printf ("$%s", bytstring_BM (_.namev));
+    ("add_indexed_named_value_newgui_BM idx=%u ulen=%u nvx_tbuffer@%p",
+     idx, browsednvulen_BM, nvx->nvx_tbuffer);
+  char *title = g_strdup_printf ("$%s",
+                                 bytstring_BM (_.namev));
   char subtitle[16];
   memset (subtitle, 0, sizeof (subtitle));
-  snprintf (subtitle, sizeof (subtitle), "∇ %d" /*Unicode U+2207 NABLA */ ,
+  snprintf (subtitle, sizeof (subtitle), "∇ %d"
+            /*Unicode U+2207 NABLA */ ,
             browsdepth);
-  fill_nvx_thing_newgui_BM (nvx, true /*upper */ , title, subtitle);
-  fill_nvx_thing_newgui_BM (nvx, false /*lower */ , title, subtitle);
-  browse_indexed_named_value_newgui_BM (_.val, browsdepth, idx,
-                                        (struct stackframe_stBM *) &_);
+  fill_nvx_thing_newgui_BM (nvx, true /*upper */ ,
+                            title, subtitle);
+  fill_nvx_thing_newgui_BM (nvx, false  /*lower */
+                            , title, subtitle);
+  browse_indexed_named_value_newgui_BM
+    (_.val, browsdepth, idx, (struct stackframe_stBM *) &_);
   //
   gtk_widget_show_all (nvx->nvx_upper.nvxt_frame);
   gtk_widget_show_all (nvx->nvx_lower.nvxt_frame);
@@ -1396,14 +1548,13 @@ add_indexed_named_value_newgui_BM (const stringval_tyBM * namev,
 
 
 void
-replace_indexed_named_value_newgui_BM (const value_tyBM val,
-                                       int browsdepth,
-                                       unsigned idx,
-                                       struct stackframe_stBM *stkf)
+  replace_indexed_named_value_newgui_BM
+  (const value_tyBM val, int browsdepth,
+   unsigned idx, struct stackframe_stBM *stkf)
 {
-  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 value_tyBM val;
-    );
+  LOCALFRAME_BM ( /*prev: */ stkf,
+                 /*descr: */ NULL,
+                 value_tyBM val;);
   _.val = val;
   assert (val != NULL);
   assert (idx <= browsednvulen_BM);
@@ -1419,13 +1570,16 @@ replace_indexed_named_value_newgui_BM (const value_tyBM val,
   curbv->brow_vparenulen = 0;
   GtkTextBuffer *txbuf = nvx->nvx_tbuffer;
   assert (txbuf != NULL);
-  gtk_text_buffer_delete_mark (txbuf, curbv->brow_vstartmk),
+  gtk_text_buffer_delete_mark (txbuf,
+                               curbv->brow_vstartmk),
     (curbv->brow_vstartmk = NULL);
-  gtk_text_buffer_delete_mark (txbuf, curbv->brow_vendmk),
+  gtk_text_buffer_delete_mark (txbuf,
+                               curbv->brow_vendmk),
     (curbv->brow_vendmk = NULL);
   char subtitle[16];
   memset (subtitle, 0, sizeof (subtitle));
-  snprintf (subtitle, sizeof (subtitle), "∇ %d" /*Unicode U+2207 NABLA */ ,
+  snprintf (subtitle, sizeof (subtitle), "∇ %d"
+            /*Unicode U+2207 NABLA */ ,
             browsdepth);
   gtk_header_bar_set_subtitle (GTK_HEADER_BAR (nvx->nvx_upper.nvxt_headb),
                                subtitle);
@@ -1438,16 +1592,20 @@ replace_indexed_named_value_newgui_BM (const value_tyBM val,
 }                               /* end replace_indexed_named_value_newgui_BM */
 
 static void
-browse_indexed_named_value_newgui_BM (const value_tyBM val,
-                                      int browsdepth,
-                                      unsigned idx,
-                                      struct stackframe_stBM *stkf)
+browse_indexed_named_value_newgui_BM (const
+                                      value_tyBM
+                                      val,
+                                      int
+                                      browsdepth,
+                                      unsigned
+                                      idx, struct stackframe_stBM *stkf)
 {
-  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 value_tyBM val;
-    );
-  DBGPRINTF_BM ("browse_indexed_named_value_newgui_BM idx=%u ulen=%u", idx,
-                browsednvulen_BM);
+  LOCALFRAME_BM ( /*prev: */ stkf,
+                 /*descr: */ NULL,
+                 value_tyBM val;);
+  DBGPRINTF_BM
+    ("browse_indexed_named_value_newgui_BM idx=%u ulen=%u",
+     idx, browsednvulen_BM);
   assert (val != NULL);
   assert (idx < browsednvulen_BM);
   assert (idx < browsednvsize_BM);
@@ -1467,7 +1625,8 @@ browse_indexed_named_value_newgui_BM (const value_tyBM val,
   browserdepth_BM = browsdepth;
   char subtitle[16];
   memset (subtitle, 0, sizeof (subtitle));
-  snprintf (subtitle, sizeof (subtitle), "∇ %d" /*Unicode U+2207 NABLA */ ,
+  snprintf (subtitle, sizeof (subtitle), "∇ %d"
+            /*Unicode U+2207 NABLA */ ,
             browsdepth);
   gtk_header_bar_set_subtitle (GTK_HEADER_BAR (nvx->nvx_upper.nvxt_headb),
                                subtitle);
@@ -1475,14 +1634,15 @@ browse_indexed_named_value_newgui_BM (const value_tyBM val,
                                subtitle);
   gtk_text_buffer_get_start_iter (txbuf, &browserit_BM);
   browserbuf_BM = txbuf;
-  curbv->brow_vstartmk = gtk_text_buffer_create_mark
-    (txbuf, NULL, &browserit_BM, LEFT_GRAVITY_BM);
+  curbv->brow_vstartmk =
+    gtk_text_buffer_create_mark (txbuf, NULL, &browserit_BM, LEFT_GRAVITY_BM);
   send2_BM ((const value_tyBM) _.val, BMP_browse_value,
-            (struct stackframe_stBM *) &_,
-            taggedint_BM (browsdepth), taggedint_BM (0));
+            (struct stackframe_stBM *) &_, taggedint_BM (browsdepth),
+            taggedint_BM (0));
   gtk_text_buffer_get_end_iter (txbuf, &browserit_BM);
-  curbv->brow_vendmk = gtk_text_buffer_create_mark
-    (txbuf, NULL, &browserit_BM, RIGHT_GRAVITY_BM);
+  curbv->brow_vendmk =
+    gtk_text_buffer_create_mark (txbuf, NULL, &browserit_BM,
+                                 RIGHT_GRAVITY_BM);
   gtk_text_buffer_insert (txbuf, &browserit_BM, "\n", 1);
   browserbuf_BM = NULL;
   browsednvcurix_BM = -1;
@@ -1509,9 +1669,9 @@ hide_named_value_newgui_BM (const char *namestr, struct stackframe_stBM *stkf)
 void
 hide_index_named_value_newgui_BM (int idx, struct stackframe_stBM *stkf)
 {
-  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 value_tyBM val;
-    );
+  LOCALFRAME_BM ( /*prev: */ stkf,
+                 /*descr: */ NULL,
+                 value_tyBM val;);
   if (idx < 0 || idx >= (int) browsednvulen_BM)
     return;
   struct browsedval_stBM *curbv = browsedval_BM + idx;
@@ -1521,14 +1681,18 @@ hide_index_named_value_newgui_BM (int idx, struct stackframe_stBM *stkf)
   GtkTextBuffer *txbuf = nvx->nvx_tbuffer;
   assert (txbuf != NULL);
   gtk_text_buffer_set_text (txbuf, "", 0);
-  gtk_text_buffer_delete_mark (txbuf, curbv->brow_vstartmk),
+  gtk_text_buffer_delete_mark (txbuf,
+                               curbv->brow_vstartmk),
     (curbv->brow_vstartmk = NULL);
-  gtk_text_buffer_delete_mark (txbuf, curbv->brow_vendmk),
+  gtk_text_buffer_delete_mark (txbuf,
+                               curbv->brow_vendmk),
     (curbv->brow_vendmk = NULL);
-  gtk_container_remove (GTK_CONTAINER (uppervboxvalues_newgui_bm),
+  gtk_container_remove (GTK_CONTAINER
+                        (uppervboxvalues_newgui_bm),
                         nvx->nvx_upper.nvxt_frame),
     (nvx->nvx_upper.nvxt_frame = NULL);
-  gtk_container_remove (GTK_CONTAINER (lowervboxvalues_newgui_bm),
+  gtk_container_remove (GTK_CONTAINER
+                        (lowervboxvalues_newgui_bm),
                         nvx->nvx_lower.nvxt_frame),
     (nvx->nvx_lower.nvxt_frame = NULL);
   memset (nvx, 0, sizeof (*nvx));
@@ -1547,11 +1711,12 @@ hide_index_named_value_newgui_BM (int idx, struct stackframe_stBM *stkf)
       unsigned newsiz = prime_above_BM (4 * browsednvulen_BM / 3 + 3);
       if (newsiz < browsednvsize_BM)
         {
-          struct browsedval_stBM *newarr =
-            calloc (newsiz, sizeof (struct browsedval_stBM));
+          struct browsedval_stBM *newarr = calloc (newsiz,
+                                                   sizeof (struct
+                                                           browsedval_stBM));
           if (!newarr)
-            FATAL_BM ("failed to shrink browsedval_BM for %u elements",
-                      newsiz);
+            FATAL_BM
+              ("failed to shrink browsedval_BM for %u elements", newsiz);
           memcpy (newarr, browsedval_BM,
                   browsednvulen_BM * sizeof (struct browsedval_stBM));
           free (browsedval_BM), (browsedval_BM = newarr);
@@ -1563,14 +1728,22 @@ hide_index_named_value_newgui_BM (int idx, struct stackframe_stBM *stkf)
 
 
 // for €<newname> or $*<newname>
-const objectval_tyBM *parsmakenewname_newguicmd_BM
-  (struct parser_stBM *pars, unsigned lineno, unsigned colpos,
-   const value_tyBM varname, struct stackframe_stBM *stkf)
+const objectval_tyBM *
+parsmakenewname_newguicmd_BM (struct
+                              parser_stBM
+                              *pars,
+                              unsigned
+                              lineno,
+                              unsigned
+                              colpos,
+                              const
+                              value_tyBM
+                              varname, struct stackframe_stBM *stkf)
 {
-  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+  LOCALFRAME_BM ( /*prev: */ stkf,
+                 /*descr: */ NULL,
                  objectval_tyBM * namedobj;
-                 const stringval_tyBM * strnam; objectval_tyBM * parsob;
-    );
+                 const stringval_tyBM * strnam; objectval_tyBM * parsob;);
   if (!isparser_BM (pars))
     return NULL;
   _.parsob = checkedparserowner_BM (pars);
@@ -1596,20 +1769,23 @@ const objectval_tyBM *parsmakenewname_newguicmd_BM
 
 // expand readmacro-s
 value_tyBM parsreadmacroexp_newguicmd_BM
-  (struct parser_stBM * pars, unsigned lineno, unsigned colpos, int depth,
-   const node_tyBM * nod, struct stackframe_stBM * stkf)
+  (struct parser_stBM * pars,
+   unsigned lineno, unsigned colpos,
+   int depth, const node_tyBM * nod, struct stackframe_stBM * stkf)
 {
-  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+  LOCALFRAME_BM ( /*prev: */ stkf,
+                 /*descr: */ NULL,
                  value_tyBM resval;
                  const node_tyBM * nod;
                  value_tyBM crm; const objectval_tyBM * conn;
-                 objectval_tyBM * parsob;
-    );
+                 objectval_tyBM * parsob;);
   _.parsob = checkedparserowner_BM (pars);
   _.nod = nod;
   if (depth > MAXDEPTHPARSE_BM)
-    parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,
-                          "too deep %d readmacro", depth);
+    parsererrorprintf_BM (pars,
+                          (struct
+                           stackframe_stBM *)
+                          &_, lineno, colpos, "too deep %d readmacro", depth);
   assert (isnode_BM ((const value_tyBM) nod));
   _.conn = nodeconn_BM ((const value_tyBM) _.nod);
   assert (isobject_BM ((const value_tyBM) _.conn));
@@ -1621,32 +1797,39 @@ value_tyBM parsreadmacroexp_newguicmd_BM
       idtocbuf32_BM (objid_BM (_.crm), crmidbuf);
       const char *crmname = findobjectname_BM (_.crm);
       if (crmname)
-        parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno,
+        parsererrorprintf_BM (pars,
+                              (struct
+                               stackframe_stBM
+                               *) &_,
+                              lineno,
                               colpos,
                               "readmacro ^ %s |=%s| has bad `command_readmacro` attribute",
                               crmidbuf, crmname);
       else
-        parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno,
-                              colpos,
+        parsererrorprintf_BM (pars,
+                              (struct
+                               stackframe_stBM *)
+                              &_, lineno, colpos,
                               "readmacro ^ %s has bad `command_readmacro` attribute",
                               crmidbuf);
     }
   _.resval =                    //
-    apply4_BM (_.crm, (struct stackframe_stBM *) &_,
-               (value_tyBM) _.nod,
+    apply4_BM (_.crm, (struct stackframe_stBM *) &_, (value_tyBM) _.nod,
                taggedint_BM (lineno), taggedint_BM (colpos), _.parsob);
   return _.resval;
 }                               /* end parsreadmacroexp_newguicmd_BM */
 
 void
-parserror_newguicmd_BM (struct parser_stBM *pars,
-                        struct stackframe_stBM *stkf, unsigned lineno,
-                        unsigned colpos, char *msg)
+parserror_newguicmd_BM (struct parser_stBM
+                        *pars,
+                        struct
+                        stackframe_stBM
+                        *stkf, unsigned lineno, unsigned colpos, char *msg)
 {
-  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+  LOCALFRAME_BM ( /*prev: */ stkf,
+                 /*descr: */ NULL,
                  objectval_tyBM * parsob; value_tyBM errstrv;
-                 value_tyBM errnodv;
-    );
+                 value_tyBM errnodv;);
   assert (isparser_BM (pars));
   const struct parserops_stBM *parsops = pars->pars_ops;
   assert (parsops && parsops->parsop_magic == PARSOPMAGIC_BM);
@@ -1661,16 +1844,16 @@ parserror_newguicmd_BM (struct parser_stBM *pars,
     {
       log_begin_message_BM ();
       char errbuf[64];
-      snprintf (errbuf, sizeof (errbuf), "command error L%dC%d:",
-                lineno, colpos);
+      snprintf (errbuf, sizeof (errbuf), "command error L%dC%d:", lineno,
+                colpos);
       GtkTextIter logit = EMPTY_TEXT_ITER_BM;
       gtk_text_buffer_get_end_iter (logbuf_BM, &logit);
-      gtk_text_buffer_insert_with_tags
-        (logbuf_BM, &logit, errbuf, -1, error_logtag_BM, NULL);
+      gtk_text_buffer_insert_with_tags (logbuf_BM, &logit, errbuf, -1,
+                                        error_logtag_BM, NULL);
       log_puts_message_BM (msg);
       log_end_message_BM ();
-      gtk_text_view_scroll_to_iter (GTK_TEXT_VIEW (commandview_BM),
-                                    &it, 0.1, false, 0.5, 0.2);
+      gtk_text_view_scroll_to_iter (GTK_TEXT_VIEW (commandview_BM), &it, 0.1,
+                                    false, 0.5, 0.2);
       errormessagedialog_BM = gtk_message_dialog_new_with_markup        //
         (GTK_WINDOW (mainwin_BM),
          GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -1716,9 +1899,10 @@ make_obwin_newgui_BM (void)
   GtkWidget *obwin = newobw->obw_window =
     gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_style_context_add_provider_for_screen     //
-    (gtk_window_get_screen (GTK_WINDOW (obwin)),
-     GTK_STYLE_PROVIDER (cssprovider_newgui_bm),
-     GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    (gtk_window_get_screen
+     (GTK_WINDOW (obwin)),
+     GTK_STYLE_PROVIDER
+     (cssprovider_newgui_bm), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
   GtkWidget *mainvbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
   gtk_container_add (GTK_CONTAINER (obwin), mainvbox);
   char labelbuf[32];
@@ -1727,27 +1911,29 @@ make_obwin_newgui_BM (void)
   memset (labelbuf, 0, sizeof (labelbuf));
   snprintf (labelbuf, sizeof (labelbuf), "bismonob#%d", newobw->obw_rank);
   gtk_window_set_title (GTK_WINDOW (obwin), labelbuf);
-  GtkWidget *tophbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 2);
+  GtkWidget *tophbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL,
+                                    2);
   newobw->obw_label = gtk_label_new (labelbuf);
-  gtk_box_pack_start (GTK_BOX (mainvbox), tophbox, BOXNOEXPAND_BM,
-                      BOXNOFILL_BM, 2);
-  gtk_box_pack_start (GTK_BOX (tophbox), newobw->obw_label, BOXNOEXPAND_BM,
-                      BOXNOFILL_BM, 2);
+  gtk_box_pack_start (GTK_BOX (mainvbox),
+                      tophbox, BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
+  gtk_box_pack_start (GTK_BOX (tophbox),
+                      newobw->obw_label, BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
   {
     GtkWidget *wincommententry = gtk_entry_new ();
-    gtk_box_pack_start (GTK_BOX (tophbox), wincommententry, BOXEXPAND_BM,
-                        BOXFILL_BM, 2);
+    gtk_box_pack_start (GTK_BOX (tophbox),
+                        wincommententry, BOXEXPAND_BM, BOXFILL_BM, 2);
     GtkWidget *delaylabel = gtk_label_new (" delay:");
-    gtk_box_pack_start (GTK_BOX (tophbox), delaylabel, BOXNOEXPAND_BM,
-                        BOXNOFILL_BM, 2);
-    GtkWidget *refreshspinbox = newobw->obw_refreshspinbox =
-      gtk_spin_button_new_with_range (0.0,
-                                      (double)
-                                      BROWSE_MAXREFRESHDELAY_NEWGUI_BM, 1.0);
-    gtk_box_pack_start (GTK_BOX (tophbox), refreshspinbox, BOXNOEXPAND_BM,
-                        BOXNOFILL_BM, 2);
-    g_signal_connect (refreshspinbox, "value-changed",
-                      spinrefresh_obwin_newgui_cbBM, newobw);
+    gtk_box_pack_start (GTK_BOX (tophbox),
+                        delaylabel, BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
+    GtkWidget *refreshspinbox =
+      newobw->obw_refreshspinbox = gtk_spin_button_new_with_range (0.0,
+                                                                   (double)
+                                                                   BROWSE_MAXREFRESHDELAY_NEWGUI_BM,
+                                                                   1.0);
+    gtk_box_pack_start (GTK_BOX (tophbox),
+                        refreshspinbox, BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
+    g_signal_connect (refreshspinbox,
+                      "value-changed", spinrefresh_obwin_newgui_cbBM, newobw);
   }
   GtkWidget *paned = gtk_paned_new (GTK_ORIENTATION_VERTICAL);
   gtk_paned_set_wide_handle (GTK_PANED (paned), true);
@@ -1758,33 +1944,36 @@ make_obwin_newgui_BM (void)
   gtk_paned_add1 (GTK_PANED (paned), uppervbox);
   gtk_paned_add2 (GTK_PANED (paned), lowervbox);
   gtk_box_pack_start (GTK_BOX (uppervbox),
-                      gtk_separator_new (GTK_ORIENTATION_HORIZONTAL),
+                      gtk_separator_new
+                      (GTK_ORIENTATION_HORIZONTAL),
                       BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
   gtk_box_pack_start (GTK_BOX (lowervbox),
-                      gtk_separator_new (GTK_ORIENTATION_HORIZONTAL),
+                      gtk_separator_new
+                      (GTK_ORIENTATION_HORIZONTAL),
                       BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
   GtkWidget *upperscrowin = gtk_scrolled_window_new (NULL, NULL);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW
-                                  (upperscrowin),
-                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
-  gtk_box_pack_start (GTK_BOX (uppervbox), upperscrowin, BOXEXPAND_BM,
-                      BOXFILL_BM, 2);
+  gtk_scrolled_window_set_policy
+    (GTK_SCROLLED_WINDOW (upperscrowin),
+     GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
+  gtk_box_pack_start (GTK_BOX (uppervbox),
+                      upperscrowin, BOXEXPAND_BM, BOXFILL_BM, 2);
   GtkWidget *lowerscrowin = gtk_scrolled_window_new (NULL, NULL);
-  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW
-                                  (lowerscrowin),
-                                  GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
-  gtk_box_pack_start (GTK_BOX (lowervbox), lowerscrowin, BOXEXPAND_BM,
-                      BOXFILL_BM, 2);
-  GtkWidget *upperobvbox = newobw->obw_upperobjvbox =
-    gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
-  GtkWidget *lowerobvbox = newobw->obw_lowerobjvbox =
-    gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
+  gtk_scrolled_window_set_policy
+    (GTK_SCROLLED_WINDOW (lowerscrowin),
+     GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
+  gtk_box_pack_start (GTK_BOX (lowervbox),
+                      lowerscrowin, BOXEXPAND_BM, BOXFILL_BM, 2);
+  GtkWidget *upperobvbox =
+    newobw->obw_upperobjvbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
+  GtkWidget *lowerobvbox =
+    newobw->obw_lowerobjvbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
   gtk_container_add (GTK_CONTAINER (upperscrowin), upperobvbox);
   gtk_container_add (GTK_CONTAINER (lowerscrowin), lowerobvbox);
   gtk_window_set_default_size (GTK_WINDOW (obwin), 660, 450);
   gtk_widget_show_all (obwin);
-  DBGPRINTF_BM ("make_obwin_newgui_BM incomplete obwin@%p rank#%d", obwin,
-                newobw->obw_rank);
+  DBGPRINTF_BM
+    ("make_obwin_newgui_BM incomplete obwin@%p rank#%d",
+     obwin, newobw->obw_rank);
   g_signal_connect (obwin, "delete-event",
                     (GCallback) deleteobjectwin_newgui_BM, newobw);
 #warning make_obwin_newgui_BM incomplete
@@ -1795,15 +1984,16 @@ make_obwin_newgui_BM (void)
 
 
 bool
-deleteobjectwin_newgui_BM (GtkWidget * widget,
-                           GdkEvent * ev __attribute__ ((unused)),
-                           gpointer data)
+deleteobjectwin_newgui_BM (GtkWidget *
+                           widget,
+                           GdkEvent * ev
+                           __attribute__ ((unused)), gpointer data)
 {
   struct objectwindow_newgui_stBM *oldobw =
     (struct objectwindow_newgui_stBM *) data;
   assert (oldobw != NULL && oldobw->obw_window == widget);
-  DBGPRINTF_BM ("deleteobjectwin_newgui oldobw@%p #%d", oldobw,
-                oldobw->obw_rank);
+  DBGPRINTF_BM
+    ("deleteobjectwin_newgui oldobw@%p #%d", oldobw, oldobw->obw_rank);
   gtk_widget_hide (widget);
   struct objectwindow_newgui_stBM *prevobw = oldobw->obw_prev;
   struct objectwindow_newgui_stBM *nextobw = oldobw->obw_next;
@@ -1843,8 +2033,8 @@ deleteobjectwin_newgui_BM (GtkWidget * widget,
 
 
 int
-index_shown_object_in_obwin_newgui_BM (struct objectwindow_newgui_stBM *obw,
-                                       objectval_tyBM * shobj)
+  index_shown_object_in_obwin_newgui_BM
+  (struct objectwindow_newgui_stBM *obw, objectval_tyBM * shobj)
 {
   if (!obw)
     return -1;
@@ -1864,7 +2054,8 @@ index_shown_object_in_obwin_newgui_BM (struct objectwindow_newgui_stBM *obw,
       assert (curobv->obv_object != NULL);
       if (shobj == curobv->obv_object)
         return md;
-      int cmp = objectnamedcmp_BM (shobj, curobv->obv_object);
+      int cmp = objectnamedcmp_BM (shobj,
+                                   curobv->obv_object);
       assert (cmp != 0);
       if (cmp < 0)
         hi = md;
@@ -1884,14 +2075,18 @@ index_shown_object_in_obwin_newgui_BM (struct objectwindow_newgui_stBM *obw,
   return -1;
 }                               /* end index_shown_object_in_obwin_newgui_BM */
 
-static char *labstr_object_in_obwin_newgui_BM (struct objectwindow_newgui_stBM
-                                               *obw, objectval_tyBM * obj,
-                                               objectval_tyBM * shobsel);
-
+static char
+  *labstr_object_in_obwin_newgui_BM (struct
+                                     objectwindow_newgui_stBM
+                                     *obw,
+                                     objectval_tyBM
+                                     * obj, objectval_tyBM * shobsel);
 char *
-labstr_object_in_obwin_newgui_BM (struct objectwindow_newgui_stBM *obw,
-                                  objectval_tyBM * obj,
-                                  objectval_tyBM * shobsel)
+labstr_object_in_obwin_newgui_BM (struct
+                                  objectwindow_newgui_stBM
+                                  *obw,
+                                  objectval_tyBM
+                                  * obj, objectval_tyBM * shobsel)
 {
   assert (obw != NULL);
   char objectidbuf[32];
@@ -1908,8 +2103,8 @@ labstr_object_in_obwin_newgui_BM (struct objectwindow_newgui_stBM *obw,
           labstr = g_markup_printf_escaped ("<big><b>%s</b></big>\n"
                                             //U+2B6C RIGHTWARDS TRIANGLE-HEADED DASHED ARROW ⭬
                                             "\342\255\254 "
-                                            "<i>%s</i>",
-                                            objectstr, shobjselstr);
+                                            "<i>%s</i>", objectstr,
+                                            shobjselstr);
         }
       else
         {
@@ -1952,7 +2147,8 @@ labstr_object_in_obwin_newgui_BM (struct objectwindow_newgui_stBM *obw,
 
 void
   show_object_in_obwin_newgui_BM
-  (struct objectwindow_newgui_stBM *obw, objectval_tyBM * obj,
+  (struct objectwindow_newgui_stBM *obw,
+   objectval_tyBM * obj,
    objectval_tyBM * shobsel, int depth, struct stackframe_stBM *stkf)
 {
   if (!obw)
@@ -1965,7 +2161,8 @@ void
     depth = 2;
   else if (depth > BROWSE_MAXDEPTH_NEWGUI_BM)
     depth = BROWSE_MAXDEPTH_NEWGUI_BM;
-  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+  LOCALFRAME_BM ( /*prev: */ stkf,
+                 /*descr: */ NULL,
                  objectval_tyBM * obj;
                  objectval_tyBM * shobsel; objectval_tyBM * curobj;
                  objectval_tyBM * curshobsel;);
@@ -1998,36 +2195,43 @@ void
       free (obw->obw_arr), obw->obw_arr = newarr;
       obw->obw_asiz = newsiz;
     };
-  DBGPRINTF_BM ("show_object_in_obwin_newgui obj=%s ulen=%d",
-                objectdbg_BM (_.obj), obw->obw_ulen);
+  DBGPRINTF_BM
+    ("show_object_in_obwin_newgui obj=%s ulen=%d",
+     objectdbg_BM (_.obj), obw->obw_ulen);
   ///
   if (obw->obw_ulen <= 0)
     {
       assert (obw->obw_asiz > 2);
       assert (obw->obw_arr != NULL);
-      struct objectview_newgui_stBM *newobv =
-        calloc (1, sizeof (struct objectview_newgui_stBM));
+      struct objectview_newgui_stBM *newobv = calloc (1,
+                                                      sizeof (struct
+                                                              objectview_newgui_stBM));
       if (!newobv)
-        FATAL_BM ("failed to allocate new objectview for %s",
-                  objectdbg_BM (_.obj));
+        FATAL_BM
+          ("failed to allocate new objectview for %s", objectdbg_BM (_.obj));
       newobv->obv_rank = 0;
       newobv->obv_depth = depth;
       newobv->obv_object = _.obj;
       newobv->obv_obsel = _.shobsel;
       newobv->obv_obwindow = obw;
       newobv->obv_tbuffer = gtk_text_buffer_new (browsertagtable_BM);
-      char *labstr = labstr_object_in_obwin_newgui_BM (obw, _.obj, _.shobsel);
-      g_signal_connect (newobv->obv_tbuffer, "mark-set",
+      char *labstr = labstr_object_in_obwin_newgui_BM (obw,
+                                                       _.obj,
+                                                       _.shobsel);
+      g_signal_connect (newobv->obv_tbuffer,
+                        "mark-set",
                         G_CALLBACK (markset_newgui_objview_BM), newobv);
-      g_signal_connect (newobv->obv_tbuffer, "begin-user-action",
+      g_signal_connect (newobv->obv_tbuffer,
+                        "begin-user-action",
                         G_CALLBACK (beginuact_newgui_objview_BM), newobv);
-      g_signal_connect (newobv->obv_tbuffer, "end-user-action",
+      g_signal_connect (newobv->obv_tbuffer,
+                        "end-user-action",
                         G_CALLBACK (enduact_newgui_objview_BM), newobv);
       fill_objectviewbuffer_BM (newobv, (struct stackframe_stBM *) &_);
-      fill_objectviewthing_BM (newobv, labstr, true,
-                               (struct stackframe_stBM *) &_);
-      fill_objectviewthing_BM (newobv, labstr, false,
-                               (struct stackframe_stBM *) &_);
+      fill_objectviewthing_BM (newobv, labstr,
+                               true, (struct stackframe_stBM *) &_);
+      fill_objectviewthing_BM (newobv, labstr,
+                               false, (struct stackframe_stBM *) &_);
       g_free (labstr), labstr = NULL;
       obw->obw_arr[0] = newobv;
       obw->obw_ulen = 1;
@@ -2047,7 +2251,8 @@ void
           if (_.obj == curobv->obv_object)
             {
             }
-          int cmp = objectnamedcmp_BM (_.obj, curobv->obv_object);
+          int cmp = objectnamedcmp_BM (_.obj,
+                                       curobv->obv_object);
           assert (cmp != 0);
           if (cmp < 0)
             hi = md;
@@ -2067,14 +2272,15 @@ void
             {
               curobv->obv_obsel = _.shobsel;
               curobv->obv_depth = depth;
-              char *labstr =
-                labstr_object_in_obwin_newgui_BM (obw, _.obj, _.shobsel);
+              char *labstr = labstr_object_in_obwin_newgui_BM (obw,
+                                                               _.obj,
+                                                               _.shobsel);
               fill_objectviewbuffer_BM (curobv,
                                         (struct stackframe_stBM *) &_);
-              fill_objectviewthing_BM (curobv, labstr, true,
-                                       (struct stackframe_stBM *) &_);
-              fill_objectviewthing_BM (curobv, labstr, false,
-                                       (struct stackframe_stBM *) &_);
+              fill_objectviewthing_BM (curobv, labstr,
+                                       true, (struct stackframe_stBM *) &_);
+              fill_objectviewthing_BM (curobv, labstr,
+                                       false, (struct stackframe_stBM *) &_);
               g_free (labstr), labstr = NULL;
               return;
             };
@@ -2095,23 +2301,26 @@ void
             obvarr[ix]->obv_rank = ix;
         }
       obvarr[md] = NULL;
-      struct objectview_newgui_stBM *newobv =
-        calloc (1, sizeof (struct objectview_newgui_stBM));
+      struct objectview_newgui_stBM *newobv = calloc (1,
+                                                      sizeof (struct
+                                                              objectview_newgui_stBM));
       if (!newobv)
-        FATAL_BM ("failed to allocate new objectview for %s",
-                  objectdbg_BM (_.obj));
+        FATAL_BM
+          ("failed to allocate new objectview for %s", objectdbg_BM (_.obj));
       newobv->obv_rank = md;
       newobv->obv_depth = depth;
       newobv->obv_object = _.obj;
       newobv->obv_obsel = _.shobsel;
       newobv->obv_obwindow = obw;
       newobv->obv_tbuffer = gtk_text_buffer_new (browsertagtable_BM);
-      char *labstr = labstr_object_in_obwin_newgui_BM (obw, _.obj, _.shobsel);
+      char *labstr = labstr_object_in_obwin_newgui_BM (obw,
+                                                       _.obj,
+                                                       _.shobsel);
       fill_objectviewbuffer_BM (newobv, (struct stackframe_stBM *) &_);
-      fill_objectviewthing_BM (newobv, labstr, true,
-                               (struct stackframe_stBM *) &_);
-      fill_objectviewthing_BM (newobv, labstr, false,
-                               (struct stackframe_stBM *) &_);
+      fill_objectviewthing_BM (newobv, labstr,
+                               true, (struct stackframe_stBM *) &_);
+      fill_objectviewthing_BM (newobv, labstr,
+                               false, (struct stackframe_stBM *) &_);
       g_free (labstr), labstr = NULL;
       obvarr[md] = newobv;
       obw->obw_ulen++;
@@ -2120,25 +2329,26 @@ void
     }
   DBGPRINTF_BM
     ("show_object_in_obwin_newgui obj=%s shobsel=%s depth=%d ulen=%d obw@%p end",
-     objectdbg_BM (_.obj), objectdbg1_BM (_.shobsel), depth, obw->obw_ulen,
-     obw);
+     objectdbg_BM (_.obj),
+     objectdbg1_BM (_.shobsel), depth, obw->obw_ulen, obw);
   // do we handle the append to end case?
 }                               /* end show_object_in_obwin_newgui_BM */
 
 
 
 static void closebut_obview_newgui_cbBM (GtkWidget * wbut, gpointer data);
-static void spindepth_obview_newgui_cbBM (GtkSpinButton * spbut,
-                                          gpointer data);
-
-
+static void
+spindepth_obview_newgui_cbBM (GtkSpinButton * spbut, gpointer data);
 #warning objectwindow should probably keep the focused objview and focus line & column
 void
-fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
-                         const char *labstr, bool upper,
-                         struct stackframe_stBM *stkf)
+fill_objectviewthing_BM (struct
+                         objectview_newgui_stBM
+                         *obv,
+                         const char
+                         *labstr, bool upper, struct stackframe_stBM *stkf)
 {
-  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+  LOCALFRAME_BM ( /*prev: */ stkf,
+                 /*descr: */ NULL,
                  objectval_tyBM * object; objectval_tyBM * obsel;
                  value_tyBM val);
   assert (obv != NULL);
@@ -2159,8 +2369,9 @@ fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
   DBGPRINTF_BM
     ("fill_objectviewthing start %s labstr %s\n"
      "obv@%p obwin@%p rk#%d object %s obsel %s depth %d",
-     upper ? "upper" : "lower", labstr, obv, obwin, rk,
-     objectdbg_BM (obv->obv_object), objectdbg1_BM (obv->obv_obsel), depth);
+     upper ? "upper" : "lower", labstr, obv,
+     obwin, rk, objectdbg_BM (obv->obv_object),
+     objectdbg1_BM (obv->obv_obsel), depth);
   GtkBox *inbox =
     GTK_BOX (upper ? obwin->obw_upperobjvbox : obwin->obw_lowerobjvbox);
   assert (inbox != NULL);
@@ -2174,8 +2385,7 @@ fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
   gtk_container_add (GTK_CONTAINER (obth->obvt_frame), obth->obvt_vbox);
   GtkWidget *headb = obth->obvt_headb = gtk_header_bar_new ();
   GtkWidget *clobut =           //
-    gtk_button_new_from_icon_name ("window-close",
-                                   GTK_ICON_SIZE_MENU);
+    gtk_button_new_from_icon_name ("window-close", GTK_ICON_SIZE_MENU);
   g_signal_connect (clobut, "clicked", closebut_obview_newgui_cbBM, obv);
   GtkWidget *titwidg = gtk_label_new (NULL);
   gtk_label_set_markup (GTK_LABEL (titwidg), labstr);
@@ -2183,8 +2393,8 @@ fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
   gtk_header_bar_set_custom_title (GTK_HEADER_BAR (headb), titwidg);
   gtk_header_bar_pack_end (GTK_HEADER_BAR (headb), clobut);
   GtkWidget *spinbut = obth->obvt_spindepth =   //
-    gtk_spin_button_new_with_range (2.0,
-                                    (double) BROWSE_MAXDEPTH_NEWGUI_BM, 1.0);
+    gtk_spin_button_new_with_range (2.0, (double) BROWSE_MAXDEPTH_NEWGUI_BM,
+                                    1.0);
   gtk_spin_button_set_value (GTK_SPIN_BUTTON (spinbut),
                              (double) obv->obv_depth);
   g_signal_connect (spinbut, "value-changed", spindepth_obview_newgui_cbBM,
@@ -2198,8 +2408,8 @@ fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
   g_signal_connect (obv->obv_tbuffer, "mark-set",
                     G_CALLBACK (markset_newgui_objview_BM), obv);
   gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (txview), true);
-  gtk_box_pack_start (GTK_BOX (obth->obvt_vbox), txview,
-                      BOXEXPAND_BM, BOXFILL_BM, 1);
+  gtk_box_pack_start (GTK_BOX (obth->obvt_vbox), txview, BOXEXPAND_BM,
+                      BOXFILL_BM, 1);
   assert (GTK_IS_WIDGET (inbox));
   gtk_widget_show_all (GTK_WIDGET (inbox));
 }                               /* end of fill_objectviewthing_BM */
@@ -2212,9 +2422,9 @@ closebut_obview_newgui_cbBM (GtkWidget * wbut, gpointer data)
   struct objectview_newgui_stBM *obv = (struct objectview_newgui_stBM *) data;
   struct objectwindow_newgui_stBM *obwin = obv->obv_obwindow;
   assert (obwin != NULL);
-  DBGPRINTF_BM
-    ("closebut_obview_newgui_cbBM obv rank#%d object %s obwin#%d",
-     obv->obv_rank, objectdbg_BM (obv->obv_object), obwin->obw_rank);
+  DBGPRINTF_BM ("closebut_obview_newgui_cbBM obv rank#%d object %s obwin#%d",
+                obv->obv_rank, objectdbg_BM (obv->obv_object),
+                obwin->obw_rank);
   remove_objectview_newgui_BM (obv, NULL);
 }                               /* end closebut_obview_newgui_cbBM */
 
@@ -2238,10 +2448,12 @@ spindepth_obview_newgui_cbBM (GtkSpinButton * spbut, gpointer data)
 
 
 void
-fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
-                          struct stackframe_stBM *stkf)
+fill_objectviewbuffer_BM (struct
+                          objectview_newgui_stBM
+                          *obv, struct stackframe_stBM *stkf)
 {
-  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+  LOCALFRAME_BM ( /*prev: */ stkf,
+                 /*descr: */ NULL,
                  objectval_tyBM * object;
                  objectval_tyBM * shobsel; volatile value_tyBM failreason;
                  value_tyBM val;);
@@ -2256,8 +2468,9 @@ fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
     FATAL_BM ("fill_objectviewbuffer_BM bad object rank#%d", obv->obv_rank);
   if (!isobject_BM (_.shobsel))
     FATAL_BM ("fill_objectviewbuffer_BM bad shobsel rank#%d", obv->obv_rank);
-  DBGPRINTF_BM ("fill_objectviewbuffer start rank#%d obwin@%p",
-                obv->obv_rank, obv->obv_obwindow);
+  DBGPRINTF_BM
+    ("fill_objectviewbuffer start rank#%d obwin@%p",
+     obv->obv_rank, obv->obv_obwindow);
   gtk_text_buffer_set_text (tbuf, "", 0);
   int prevbrowdepth = browserdepth_BM;
   browserdepth_BM = obv->obv_depth;
@@ -2277,14 +2490,18 @@ fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
       gtk_text_buffer_insert (tbuf, &browserit_BM, "\n", -1);
       // should show some error epilogue....
       browserbuf_BM = tbuf;
-      gtk_text_buffer_insert_with_tags (tbuf, &browserit_BM, "///! ", -1,
-                                        epilogue_brotag_BM, NULL);
+      gtk_text_buffer_insert_with_tags (tbuf,
+                                        &browserit_BM,
+                                        "///! ",
+                                        -1, epilogue_brotag_BM, NULL);
       {
         char failurebuf[40];
         memset (failurebuf, 0, sizeof (failurebuf));
         snprintf (failurebuf, sizeof (failurebuf), "failure %d :\n", failcod);
-        gtk_text_buffer_insert_with_tags (tbuf, &browserit_BM, failurebuf, -1,
-                                          epilogue_brotag_BM, NULL);
+        gtk_text_buffer_insert_with_tags (tbuf,
+                                          &browserit_BM,
+                                          failurebuf,
+                                          -1, epilogue_brotag_BM, NULL);
       }
       {
         int faildepth = obv->obv_depth;
@@ -2292,24 +2509,35 @@ fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
           faildepth = 2;
         else if (faildepth > BROWSE_MAXDEPTH_NEWGUI_BM)
           faildepth = BROWSE_MAXDEPTH_NEWGUI_BM;
-        char *failvalstr =
-          debug_outstr_value_BM (_.failreason, (struct stackframe_stBM *) &_,
-                                 faildepth);
+        char *failvalstr = debug_outstr_value_BM (_.failreason,
+                                                  (struct
+                                                   stackframe_stBM *)
+                                                  &_, faildepth);
         char *nextnl = NULL;
         for (const char *curpc = failvalstr;
-             curpc != NULL && ((nextnl = strchr (curpc, '\n')), curpc);
+             curpc != NULL
+             && ((nextnl = strchr (curpc, '\n')),
+                 curpc);
              (curpc = nextnl ? (nextnl + 1) : NULL), (nextnl = NULL))
           {
-            gtk_text_buffer_insert_with_tags (tbuf, &browserit_BM, "///!! ",
+            gtk_text_buffer_insert_with_tags (tbuf,
+                                              &browserit_BM,
+                                              "///!! ",
                                               -1, epilogue_brotag_BM, NULL);
             if (nextnl)
-              gtk_text_buffer_insert_with_tags (tbuf, &browserit_BM, curpc,
-                                                nextnl - curpc,
+              gtk_text_buffer_insert_with_tags (tbuf,
+                                                &browserit_BM,
+                                                curpc,
+                                                nextnl -
+                                                curpc,
                                                 epilogue_brotag_BM,
                                                 miscomm_brotag_BM, NULL);
             else
-              gtk_text_buffer_insert_with_tags (tbuf, &browserit_BM, curpc,
-                                                -1, epilogue_brotag_BM,
+              gtk_text_buffer_insert_with_tags (tbuf,
+                                                &browserit_BM,
+                                                curpc,
+                                                -1,
+                                                epilogue_brotag_BM,
                                                 miscomm_brotag_BM, NULL);
           }
         gtk_text_buffer_insert (tbuf, &browserit_BM, "\n", -1);
@@ -2319,10 +2547,11 @@ fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
   else
     {                           // first run
       int depth = browserdepth_BM;
-      DBGPRINTF_BM ("fill_objectviewbuffer_BM object %s shobsel %s depth %d",
-                    objectdbg_BM (_.object), objectdbg1_BM (_.shobsel),
-                    depth);
-      send1_BM ((const value_tyBM) _.object, _.shobsel,
+      DBGPRINTF_BM
+        ("fill_objectviewbuffer_BM object %s shobsel %s depth %d",
+         objectdbg_BM (_.object), objectdbg1_BM (_.shobsel), depth);
+      send1_BM ((const value_tyBM) _.object,
+                _.shobsel,
                 (struct stackframe_stBM *) &_, taggedint_BM (depth));
       browserdepth_BM = depth;
       gtk_text_buffer_get_end_iter (tbuf, &browserit_BM);
@@ -2332,29 +2561,27 @@ fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
          objectdbg_BM (_.object), objectdbg1_BM (_.shobsel), depth);
       // should show some epilogue....
       browserbuf_BM = tbuf;
-      gtk_text_buffer_insert_with_tags (tbuf, &browserit_BM, "///- ", -1,
-                                        epilogue_brotag_BM, NULL);
+      gtk_text_buffer_insert_with_tags (tbuf,
+                                        &browserit_BM,
+                                        "///- ",
+                                        -1, epilogue_brotag_BM, NULL);
       {
         char objectidbuf[32];
         memset (objectidbuf, 0, sizeof (objectidbuf));
         idtocbuf32_BM (objid_BM (_.object), objectidbuf);
         char *objectnamstr = findobjectname_BM (_.object);
         if (objectnamstr)
-          gtk_text_buffer_insert_with_tags (browserbuf_BM, &browserit_BM,
-                                            objectnamstr, -1,
-                                            epilogue_brotag_BM,
-                                            objname_brotag_BM, NULL);
+          gtk_text_buffer_insert_with_tags
+            (browserbuf_BM, &browserit_BM,
+             objectnamstr, -1, epilogue_brotag_BM, objname_brotag_BM, NULL);
         else
-          gtk_text_buffer_insert_with_tags (browserbuf_BM, &browserit_BM,
-                                            objectidbuf, -1,
-                                            epilogue_brotag_BM,
-                                            objid_brotag_BM, NULL);
-        gtk_text_buffer_insert_with_tags (browserbuf_BM, &browserit_BM,
-                                          " \342\207\242"
-                                          /* U+21E2 RIGHTWARDS DASHED ARROW ⇢ */
-                                          , -1,
-                                          epilogue_brotag_BM,
-                                          miscomm_brotag_BM, NULL);
+          gtk_text_buffer_insert_with_tags
+            (browserbuf_BM, &browserit_BM, objectidbuf,
+             -1, epilogue_brotag_BM, objid_brotag_BM, NULL);
+        gtk_text_buffer_insert_with_tags
+          (browserbuf_BM, &browserit_BM, " \342\207\242"
+           /* U+21E2 RIGHTWARDS DASHED ARROW ⇢ */
+           , -1, epilogue_brotag_BM, miscomm_brotag_BM, NULL);
       }
       {
         char shobselidbuf[32];
@@ -2362,25 +2589,22 @@ fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
         idtocbuf32_BM (objid_BM (_.shobsel), shobselidbuf);
         char *shobselnamstr = findobjectname_BM (_.shobsel);
         if (shobselnamstr)
-          gtk_text_buffer_insert_with_tags (browserbuf_BM, &browserit_BM,
-                                            shobselnamstr, -1,
-                                            epilogue_brotag_BM,
-                                            objname_brotag_BM, NULL);
+          gtk_text_buffer_insert_with_tags
+            (browserbuf_BM, &browserit_BM,
+             shobselnamstr, -1, epilogue_brotag_BM, objname_brotag_BM, NULL);
         else
-          gtk_text_buffer_insert_with_tags (browserbuf_BM, &browserit_BM,
-                                            shobselidbuf, -1,
-                                            epilogue_brotag_BM,
-                                            objid_brotag_BM, NULL);
+          gtk_text_buffer_insert_with_tags
+            (browserbuf_BM, &browserit_BM,
+             shobselidbuf, -1, epilogue_brotag_BM, objid_brotag_BM, NULL);
       }
       {
         char depthbuf[32];
         memset (depthbuf, 0, sizeof (depthbuf));
         snprintf (depthbuf, sizeof (depthbuf), " \342\210\207"  // U+2207 NABLA ∇
                   " %d", obv->obv_depth);
-        gtk_text_buffer_insert_with_tags (browserbuf_BM, &browserit_BM,
-                                          depthbuf, -1,
-                                          epilogue_brotag_BM,
-                                          miscomm_brotag_BM, NULL);
+        gtk_text_buffer_insert_with_tags
+          (browserbuf_BM, &browserit_BM, depthbuf,
+           -1, epilogue_brotag_BM, miscomm_brotag_BM, NULL);
       }
       gtk_text_buffer_insert (browserbuf_BM, &browserit_BM, "\n", -1);
       curobjview_newgui_BM = NULL;
@@ -2398,15 +2622,15 @@ fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
 
 
 void
-destroy_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
-                             struct stackframe_stBM *stkf)
+destroy_objectviewbuffer_BM (struct
+                             objectview_newgui_stBM
+                             *obv, struct stackframe_stBM *stkf)
 {
   if (!obv)
     return;
-  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 objectval_tyBM * object;
-                 objectval_tyBM * obsel;
-    );
+  LOCALFRAME_BM ( /*prev: */ stkf,
+                 /*descr: */ NULL,
+                 objectval_tyBM * object; objectval_tyBM * obsel;);
   curobjview_newgui_BM = NULL;
   struct objectwindow_newgui_stBM *obwin = obv->obv_obwindow;
   assert (obwin != NULL);
@@ -2428,44 +2652,54 @@ destroy_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
 
 
 void
-newgui_browse_add_parens_BM (int openoff, int closeoff,
-                             int xtraoff, unsigned openlen,
-                             unsigned closelen, unsigned xtralen,
-                             int depth, struct stackframe_stBM *stkf)
+newgui_browse_add_parens_BM (int openoff,
+                             int closeoff,
+                             int xtraoff,
+                             unsigned
+                             openlen,
+                             unsigned
+                             closelen,
+                             unsigned
+                             xtralen, int depth, struct stackframe_stBM *stkf)
 {
-  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+  LOCALFRAME_BM ( /*prev: */ stkf,
+                 /*descr: */ NULL,
                  objectval_tyBM * object;
-                 objectval_tyBM * obsel;
-    );
+                 objectval_tyBM * obsel;);
   assert (curobjview_newgui_BM != NULL);
   _.object = curobjview_newgui_BM->obv_object;
   _.obsel = curobjview_newgui_BM->obv_obsel;
   if (curobjview_newgui_BM->obv_parenarr == NULL)
     {
       int inisiz = 7;
-      struct parenoffset_stBM *newarr =
-        calloc (inisiz, sizeof (struct parenoffset_stBM));
+      struct parenoffset_stBM *newarr = calloc (inisiz,
+                                                sizeof (struct
+                                                        parenoffset_stBM));
       if (!newarr)
-        FATAL_BM ("out of memory for parenoffset of size %d for object %s",
-                  inisiz, objectdbg_BM (_.object));
+        FATAL_BM
+          ("out of memory for parenoffset of size %d for object %s",
+           inisiz, objectdbg_BM (_.object));
       curobjview_newgui_BM->obv_parenarr = newarr;
       curobjview_newgui_BM->obv_parenasiz = inisiz;
       curobjview_newgui_BM->obv_parenulen = 0;
     }
-  else if (curobjview_newgui_BM->obv_parenulen + 1 >=
-           curobjview_newgui_BM->obv_parenasiz)
+  else
+    if (curobjview_newgui_BM->obv_parenulen +
+        1 >= curobjview_newgui_BM->obv_parenasiz)
     {
       int newsiz =
         prime_above_BM (4 * curobjview_newgui_BM->obv_parenulen / 3 + 6);
-      struct parenoffset_stBM *newarr =
-        calloc (newsiz, sizeof (struct parenoffset_stBM));
+      struct parenoffset_stBM *newarr = calloc (newsiz,
+                                                sizeof (struct
+                                                        parenoffset_stBM));
       if (!newarr)
         FATAL_BM
           ("out of memory for parenoffset growing to size %d for object %s",
            newsiz, objectdbg_BM (_.object));
-      memcpy (newarr, curobjview_newgui_BM->obv_parenarr,
-              curobjview_newgui_BM->obv_parenulen *
-              sizeof (struct parenoffset_stBM));
+      memcpy (newarr,
+              curobjview_newgui_BM->obv_parenarr,
+              curobjview_newgui_BM->obv_parenulen
+              * sizeof (struct parenoffset_stBM));
       free (curobjview_newgui_BM->obv_parenarr),
         curobjview_newgui_BM->obv_parenarr = newarr;
       curobjview_newgui_BM->obv_parenasiz = newsiz;
@@ -2483,22 +2717,23 @@ newgui_browse_add_parens_BM (int openoff, int closeoff,
   curpar->paroff_depth = depth;
   DBGPRINTF_BM ("newgui_browse_add_parens_BM object %s"
                 "\n... obwin#%d open#%d/l%d close#%d/l%d xtra#%d/l%d depth %d ulen %d",
-                objectdbg_BM (_.object), obwin->obw_rank,
-                openoff, openlen, closeoff, closelen, xtraoff, xtralen, depth,
+                objectdbg_BM (_.object), obwin->obw_rank, openoff, openlen,
+                closeoff, closelen, xtraoff, xtralen, depth,
                 curobjview_newgui_BM->obv_parenulen);
   curobjview_newgui_BM->obv_parenulen++;
 }                               /* end newgui_browse_add_parens_BM */
 
 static void
-remove_objectview_newgui_BM (struct objectview_newgui_stBM *obv,
-                             struct stackframe_stBM *stkf)
+remove_objectview_newgui_BM (struct
+                             objectview_newgui_stBM
+                             *obv, struct stackframe_stBM *stkf)
 {
   if (!obv)
     return;
-  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+  LOCALFRAME_BM ( /*prev: */ stkf,
+                 /*descr: */ NULL,
                  objectval_tyBM * object;
-                 objectval_tyBM * obsel;
-    );
+                 objectval_tyBM * obsel;);
   curobjview_newgui_BM = NULL;
   struct objectwindow_newgui_stBM *obwin = obv->obv_obwindow;
   assert (obwin != NULL);
@@ -2507,8 +2742,8 @@ remove_objectview_newgui_BM (struct objectview_newgui_stBM *obv,
   int rk = obv->obv_rank;
   DBGPRINTF_BM
     ("remove_objectview_newgui_BM obv@%p obwin@%p rank#%d object %s obsel %s",
-     obv, obwin, obv->obv_rank, objectdbg_BM (_.object),
-     objectdbg1_BM (_.obsel));
+     obv, obwin, obv->obv_rank,
+     objectdbg_BM (_.object), objectdbg1_BM (_.obsel));
   destroy_objectviewbuffer_BM (obv, (struct stackframe_stBM *) &_);
   int winlen = obwin->obw_ulen;
   struct objectview_newgui_stBM **warr = obwin->obw_arr;
@@ -2525,11 +2760,13 @@ remove_objectview_newgui_BM (struct objectview_newgui_stBM *obv,
       int newsiz = prime_above_BM (5 * winlen / 4 + 3);
       if (newsiz < obwin->obw_asiz)
         {
-          struct objectview_newgui_stBM **newarr =
-            calloc (newsiz, sizeof (struct objectview_newgui_stBM *));
+          struct objectview_newgui_stBM **newarr = calloc (newsiz,
+                                                           sizeof (struct
+                                                                   objectview_newgui_stBM
+                                                                   *));
           if (!newarr)
-            FATAL_BM ("cannot shrink obwindow#%d to %d", obwin->obw_rank,
-                      newsiz);
+            FATAL_BM
+              ("cannot shrink obwindow#%d to %d", obwin->obw_rank, newsiz);
           memcpy (newarr, warr,
                   (winlen - 1) * sizeof (struct objectview_newgui_stBM *));
           free (obwin->obw_arr), obwin->obw_arr = newarr;
@@ -2537,6 +2774,28 @@ remove_objectview_newgui_BM (struct objectview_newgui_stBM *obv,
     }
 }                               /* end remove_objectview_newgui_BM  */
 
+
+void
+obwin_start_refresh_newgui_BM (struct objectwindow_newgui_stBM *obw)
+{
+  if (!obw)
+    return;
+  if (obw->obw_refreshid)
+    g_source_remove (obw->obw_refreshid), obw->obw_refreshid = 0;
+  if (obw->obw_refreshperiod > 0)
+    obw->obw_refreshid =
+      g_timeout_add_seconds (obw->obw_refreshperiod,
+                             refresh_obwin_newgui_cbBM, obw);
+}                               /* end obwin_start_refresh_newgui_BM */
+
+void
+obwin_stop_refresh_newgui_BM (struct objectwindow_newgui_stBM *obw)
+{
+  if (!obw)
+    return;
+  if (obw->obw_refreshid)
+    g_source_remove (obw->obw_refreshid), obw->obw_refreshid = 0;
+}                               /* end obwin_start_refresh_newgui_BM */
 
 void
 spinrefresh_obwin_newgui_cbBM (GtkSpinButton * spbut, gpointer data)
@@ -2551,10 +2810,9 @@ spinrefresh_obwin_newgui_cbBM (GtkSpinButton * spbut, gpointer data)
      obw->obw_rank, obw->obw_refreshperiod, newdelay, obw);
   obw->obw_refreshperiod = newdelay;
   if (newdelay > 0)
-    obw->obw_refreshid =
-      g_timeout_add_seconds (newdelay, refresh_obwin_newgui_cbBM, obw);
+    obwin_start_refresh_newgui_BM (obw);
   else if (obw->obw_refreshid > 0)
-    g_source_remove (obw->obw_refreshid), obw->obw_refreshid = 0;
+    obwin_stop_refresh_newgui_BM (obw);
   DBGPRINTF_BM ("spinrefresh_obwin_newgui_cbBM ending obw@%p", obw);
 }                               /* end spinrefresh_obwin_newgui_cbBM */
 
@@ -2623,8 +2881,8 @@ markset_newgui_objview_BM (GtkTextBuffer * tbuf, GtkTextIter * titer,
 
 
 struct parenoffset_stBM *
-paren_objview_at_offset_newgui_BM (struct objectview_newgui_stBM *obv,
-                                   unsigned off)
+paren_objview_at_offset_newgui_BM (struct
+                                   objectview_newgui_stBM *obv, unsigned off)
 {
   if (!obv)
     return NULL;
@@ -2670,7 +2928,7 @@ paren_objview_at_offset_newgui_BM (struct objectview_newgui_stBM *obv,
             }
         }
     }
-  if (ix > 0)
+  if (ix >= 0)
     return pararr + ix;
   return NULL;
 }                               /* end paren_objview_at_offset_newgui_BM */
