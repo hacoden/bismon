@@ -4,6 +4,7 @@
 
 #define BROWSE_MAXDEPTH_NEWGUI_BM 48
 #define BROWSE_MAXREFRESHDELAY_NEWGUI_BM 10
+#define BROWSE_BLINKMILLISECOND_NEWGUI_BM 250
 // each named value has its own GtkTextBuffer, which is displayed in
 //the value window, containing a GtkPane, in a GtkScrolledWindow
 //containing one GtkFrame (containing a GtkHeaderBar & GtkTextView)
@@ -2903,10 +2904,13 @@ markset_newgui_objview_BM (GtkTextBuffer * tbuf, GtkTextIter * titer,
   if (par != NULL)
     {
       DBGPRINTF_BM
-        ("markset_newgui_objview off=%u should blink open:%u close:%u", off,
-         par->paroff_open, par->paroff_close);
-#warning markset_newgui_objview should blink
+        ("markset_newgui_objview off=%u will blink ix#%d open:%u close:%u",
+         (int) (par - obv->obv_parenarr),
+         off, par->paroff_open, par->paroff_close);
+      enable_blink_objectview_BM (obv, (int) (par - obv->obv_parenarr));
     }
+  else
+    disable_blink_objectview_BM (obv);
 }                               /* end markset_newgui_cmd_BM */
 
 
@@ -2993,6 +2997,41 @@ enduact_newgui_objview_BM (GtkTextBuffer * tbuf, gpointer cdata)
 #warning enduact_newgui_objview_BM incomplete
 }                               /* end  enduact_newgui_objview_BM */
 
+void
+enable_blink_objectview_BM (struct objectview_newgui_stBM *obv, int ix)
+{
+  assert (obv != NULL);
+  if (obv->obv_blinkid > 0)
+    g_source_remove (obv->obv_blinkid), obv->obv_blinkid = 0;
+  obv->obv_blinkix = ix;
+  obv->obv_blinkcount = 0;
+  GtkTextIter startit = EMPTY_TEXT_ITER_BM;
+  GtkTextIter endit = EMPTY_TEXT_ITER_BM;
+  gtk_text_buffer_get_bounds (obv->obv_tbuffer, &startit, &endit);
+  gtk_text_buffer_remove_tag (obv->obv_tbuffer, blink_brotag_BM, &startit,
+                              &endit);
+  if (ix > 0)
+    {
+      (void) blink_objectview_cbBM (obv);
+      obv->obv_blinkid =
+        g_timeout_add (BROWSE_BLINKMILLISECOND_NEWGUI_BM,
+                       blink_objectview_cbBM, obv);
+    }
+}                               /* end enable_blink_objectview_BM */
+
+void
+disable_blink_objectview_BM (struct objectview_newgui_stBM *obv)
+{
+  if (obv->obv_blinkid > 0)
+    g_source_remove (obv->obv_blinkid);
+  obv->obv_blinkid = 0;
+  obv->obv_blinkix = -1;
+  GtkTextIter startit = EMPTY_TEXT_ITER_BM;
+  GtkTextIter endit = EMPTY_TEXT_ITER_BM;
+  gtk_text_buffer_get_bounds (obv->obv_tbuffer, &startit, &endit);
+  gtk_text_buffer_remove_tag (obv->obv_tbuffer, blink_brotag_BM, &startit,
+                              &endit);
+}                               /* end disable_blink_objectview_BM */
 
 gboolean
 blink_objectview_cbBM (gpointer data)
@@ -3003,5 +3042,46 @@ blink_objectview_cbBM (gpointer data)
   if (obv->obv_blinkix < 0 || obv->obv_blinkix >= (int) obv->obv_parenulen)
     return G_SOURCE_REMOVE;
   struct parenoffset_stBM *par = obv->obv_parenarr + obv->obv_blinkix;
-#warning blink_objectview_cbBM incomplete
+  obv->obv_blinkcount++;
+  GtkTextIter startit = EMPTY_TEXT_ITER_BM;
+  GtkTextIter endit = EMPTY_TEXT_ITER_BM;
+  if (obv->obv_blinkcount % 3 != 0)
+    {
+      if (par->paroff_open >= 0 && par->paroff_openlen > 0)
+        {
+          gtk_text_buffer_get_iter_at_offset (obv->obv_tbuffer, &startit,
+                                              par->paroff_open);
+          endit = startit;
+          gtk_text_iter_forward_chars (&endit, par->paroff_openlen);
+          gtk_text_buffer_apply_tag (obv->obv_tbuffer, blink_brotag_BM,
+                                     &startit, &endit);
+        }
+      if (par->paroff_close >= 0 && par->paroff_closelen > 0)
+        {
+          gtk_text_buffer_get_iter_at_offset (obv->obv_tbuffer, &startit,
+                                              par->paroff_close);
+          endit = startit;
+          gtk_text_iter_forward_chars (&endit, par->paroff_closelen);
+          gtk_text_buffer_apply_tag (obv->obv_tbuffer, blink_brotag_BM,
+                                     &startit, &endit);
+        }
+      if (par->paroff_xtra >= 0 && par->paroff_xtralen > 0)
+        {
+          gtk_text_buffer_get_iter_at_offset (obv->obv_tbuffer, &startit,
+                                              par->paroff_xtra);
+          endit = startit;
+          gtk_text_iter_forward_chars (&endit, par->paroff_xtralen);
+          gtk_text_buffer_apply_tag (obv->obv_tbuffer, blink_brotag_BM,
+                                     &startit, &endit);
+        }
+    }
+  else
+    {
+      GtkTextIter startit = EMPTY_TEXT_ITER_BM;
+      GtkTextIter endit = EMPTY_TEXT_ITER_BM;
+      gtk_text_buffer_get_bounds (obv->obv_tbuffer, &startit, &endit);
+      gtk_text_buffer_remove_tag (obv->obv_tbuffer, blink_brotag_BM, &startit,
+                                  &endit);
+    }
+  return G_SOURCE_CONTINUE;
 }                               /* end blink_objectview_cbBM */
