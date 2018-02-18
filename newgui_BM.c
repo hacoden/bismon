@@ -59,7 +59,12 @@ struct objectview_newgui_stBM
   unsigned obv_parenulen, obv_parenasiz;
   struct parenoffset_stBM *obv_parenarr;
   struct objectviewthings_stBM obv_upper, obv_lower;
+  int obv_blinkix;              /* index of blinking paren */
+  int obv_blinkcount;           /* counting */
+  guint obv_blinkid;            /* timeout id */
+
 };                              /* end struct objectview_newgui_stBM */
+
 static struct objectview_newgui_stBM *curobjview_newgui_BM;
 
 // an objectwindow
@@ -97,6 +102,10 @@ static void fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
                                      struct stackframe_stBM *stkf);
 static void fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
                                       struct stackframe_stBM *stkf);
+static void enable_blink_objectview_BM (struct objectview_newgui_stBM *obv,
+                                        int ix);
+static void disable_blink_objectview_BM (struct objectview_newgui_stBM *obv);
+static gboolean blink_objectview_cbBM (gpointer data);
 static void destroy_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
                                          struct stackframe_stBM *stkf);
 static gboolean refresh_obwin_newgui_cbBM (gpointer data);
@@ -2226,6 +2235,7 @@ void
       newobv->obv_object = _.obj;
       newobv->obv_obsel = _.shobsel;
       newobv->obv_obwindow = obw;
+      newobv->obv_blinkix = -1;
       newobv->obv_tbuffer = gtk_text_buffer_new (browsertagtable_BM);
       char *labstr = labstr_object_in_obwin_newgui_BM (obw,
                                                        _.obj,
@@ -2982,3 +2992,16 @@ enduact_newgui_objview_BM (GtkTextBuffer * tbuf, gpointer cdata)
                 obv, obv->obv_rank, objectdbg_BM (obv->obv_object));
 #warning enduact_newgui_objview_BM incomplete
 }                               /* end  enduact_newgui_objview_BM */
+
+
+gboolean
+blink_objectview_cbBM (gpointer data)
+{
+  struct objectview_newgui_stBM *obv = (struct objectview_newgui_stBM *) data;
+  assert (obv != NULL);
+  assert (pthread_self () == mainthreadid_BM);
+  if (obv->obv_blinkix < 0 || obv->obv_blinkix >= (int) obv->obv_parenulen)
+    return G_SOURCE_REMOVE;
+  struct parenoffset_stBM *par = obv->obv_parenarr + obv->obv_blinkix;
+#warning blink_objectview_cbBM incomplete
+}                               /* end blink_objectview_cbBM */
