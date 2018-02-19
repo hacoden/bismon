@@ -132,6 +132,9 @@ static void markset_newgui_objview_BM (GtkTextBuffer *, GtkTextIter *,
                                        GtkTextMark *, gpointer);
 static void beginuact_newgui_objview_BM (GtkTextBuffer *, gpointer);
 static void enduact_newgui_objview_BM (GtkTextBuffer *, gpointer);
+// the function to handle "populate-popup" on objectviews
+static void populatepopup_objview_newgui_BM (GtkTextView *, GtkWidget *,
+                                             gpointer);
 static struct parenoffset_stBM *paren_objview_at_offset_newgui_BM (struct
                                                                    objectview_newgui_stBM
                                                                    *obv,
@@ -699,7 +702,7 @@ markset_newgui_cmd_BM (GtkTextBuffer *
                        GtkTextIter * titer,
                        GtkTextMark * tmark, gpointer cdata)
 {
-  DBGPRINTF_BM ("markset_newgui_cmd titer=%s tmark %s",
+  NONPRINTF_BM ("markset_newgui_cmd titer=%s tmark %s",
                 textiterstrdbg_BM (titer),
                 tmark ? (gtk_text_mark_get_name (tmark) ? : "*anon*") :
                 "*none*");
@@ -2439,6 +2442,8 @@ fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
   GtkWidget *txview = obth->obvt_textview =
     gtk_text_view_new_with_buffer (obv->obv_tbuffer);
   gtk_text_view_set_editable (GTK_TEXT_VIEW (txview), false);
+  g_signal_connect (txview, "populate-popup",
+                    G_CALLBACK (populatepopup_objview_newgui_BM), obv);
   g_signal_connect (obv->obv_tbuffer, "mark-set",
                     G_CALLBACK (markset_newgui_objview_BM), obv);
   gtk_text_view_set_cursor_visible (GTK_TEXT_VIEW (txview), true);
@@ -3107,3 +3112,36 @@ blink_objectview_cbBM (gpointer data)
     }
   return G_SOURCE_CONTINUE;
 }                               /* end blink_objectview_cbBM */
+
+
+void
+populatepopup_objview_newgui_BM (GtkTextView * txview, GtkWidget * popup,
+                                 gpointer data)
+{
+  struct objectview_newgui_stBM *obv = (struct objectview_newgui_stBM *) data;
+  assert (obv != NULL);
+  assert (pthread_self () == mainthreadid_BM);
+  assert (txview == obv->obv_upper.obvt_textview
+          || txview == obv->obv_lower.obvt_textview);
+  char cursinfobuf[32];
+  memset (cursinfobuf, 0, sizeof (cursinfobuf));
+  GtkTextIter cursit = EMPTY_TEXT_ITER_BM;
+  gtk_text_buffer_get_iter_at_mark      //
+    (commandbuf_BM, &cursit, gtk_text_buffer_get_insert (commandbuf_BM));
+  snprintf (cursinfobuf,
+            sizeof (cursinfobuf),
+            "* L%dC%d/%d",
+            gtk_text_iter_get_line (&cursit)
+            + 1,
+            gtk_text_iter_get_line_offset
+            (&cursit), gtk_text_iter_get_offset (&cursit));
+  gtk_menu_shell_append (GTK_MENU_SHELL
+                         (popup), gtk_separator_menu_item_new ());
+  {
+    GtkWidget *cursinfomenit =  //
+      gtk_menu_item_new_with_label (cursinfobuf);
+    gtk_widget_set_sensitive (cursinfomenit, false);
+    gtk_menu_shell_append (GTK_MENU_SHELL (popup), cursinfomenit);
+  }
+  gtk_widget_show_all (popup);
+}                               /* end populatepopup_objview_newgui_BM */
