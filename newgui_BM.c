@@ -3077,7 +3077,7 @@ blink_objectview_cbBM (gpointer data)
   GtkTextIter endit = EMPTY_TEXT_ITER_BM;
   if (obv->obv_blinkcount % 3 != 0)
     {
-      DBGPRINTF_BM
+      NONPRINTF_BM
         ("blink_objectview yellow obv rank#%d blinkcount=%d blinkix=%d, par open:%d close:%d",
          obv->obv_rank, obv->obv_blinkcount, obv->obv_blinkix,
          par->paroff_open, par->paroff_close);
@@ -3116,7 +3116,7 @@ blink_objectview_cbBM (gpointer data)
       gtk_text_buffer_get_bounds (obv->obv_tbuffer, &startit, &endit);
       gtk_text_buffer_remove_tag (obv->obv_tbuffer, blink_brotag_BM,
                                   &startit, &endit);
-      DBGPRINTF_BM
+      NONPRINTF_BM
         ("blink_objectview clear obv rank#%d blinkix=%d, par open:%d close:%d",
          obv->obv_rank, obv->obv_blinkix, par->paroff_open,
          par->paroff_close);
