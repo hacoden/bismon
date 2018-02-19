@@ -1467,13 +1467,14 @@ fill_nvx_thing_newgui_BM (struct
   nt->nvxt_headb = gtk_header_bar_new ();
   GtkWidget *clobut =           //
     gtk_button_new_from_icon_name ("window-close", GTK_ICON_SIZE_MENU);
-  g_signal_connect (clobut, "activate", closebut_namedval_newgui_cbBM, nvx);
+  g_signal_connect (clobut, "activate",
+                    (GCallback) closebut_namedval_newgui_cbBM, nvx);
   gtk_header_bar_pack_end (GTK_HEADER_BAR (nt->nvxt_headb), clobut);
   nt->nvxt_spindepth =          //
     gtk_spin_button_new_with_range (2.0, (double) BROWSE_MAXDEPTH_NEWGUI_BM,
                                     1.0);
   g_signal_connect (nt->nvxt_spindepth, "value-changed",
-                    spindepth_namedval_newgui_cbBM, nvx);
+                    (GCallback) spindepth_namedval_newgui_cbBM, nvx);
   gtk_header_bar_pack_end (GTK_HEADER_BAR (nt->nvxt_headb),
                            nt->nvxt_spindepth);
   gtk_header_bar_set_title (GTK_HEADER_BAR (nt->nvxt_headb), title);
@@ -1574,7 +1575,7 @@ void
   struct browsedval_stBM *curbv = browsedval_BM + idx;
   struct namedvaluenewguixtra_stBM *nvx =
     (struct namedvaluenewguixtra_stBM *) (curbv->brow_vdata);
-  assert (nvx != NULL && nvx->nvx_index == idx);
+  assert (nvx != NULL && nvx->nvx_index == (int) idx);
   free (curbv->brow_vparenarr), (curbv->brow_vparenarr = NULL);
   curbv->brow_vparensize = 0;
   curbv->brow_vparenulen = 0;
@@ -2250,11 +2251,13 @@ void
       g_signal_connect (newobv->obv_tbuffer,
                         "end-user-action",
                         G_CALLBACK (enduact_newgui_objview_BM), newobv);
-      fill_objectviewbuffer_BM (newobv, (struct stackframe_stBM *) &_);
       fill_objectviewthing_BM (newobv, labstr,
                                true, (struct stackframe_stBM *) &_);
       fill_objectviewthing_BM (newobv, labstr,
                                false, (struct stackframe_stBM *) &_);
+      fill_objectviewbuffer_BM (newobv, (struct stackframe_stBM *) &_);
+      assert (newobv->obv_upper.obvt_frame != NULL);
+      assert (newobv->obv_lower.obvt_frame != NULL);
       if (obw->obw_refreshperiod > 0)
         obwin_start_refresh_newgui_BM (obw);
       else
@@ -2302,12 +2305,12 @@ void
               char *labstr = labstr_object_in_obwin_newgui_BM (obw,
                                                                _.obj,
                                                                _.shobsel);
-              fill_objectviewbuffer_BM (curobv,
-                                        (struct stackframe_stBM *) &_);
               fill_objectviewthing_BM (curobv, labstr,
                                        true, (struct stackframe_stBM *) &_);
               fill_objectviewthing_BM (curobv, labstr,
                                        false, (struct stackframe_stBM *) &_);
+              fill_objectviewbuffer_BM (curobv,
+                                        (struct stackframe_stBM *) &_);
               g_free (labstr), labstr = NULL;
               return;
             };
@@ -2348,6 +2351,8 @@ void
                                true, (struct stackframe_stBM *) &_);
       fill_objectviewthing_BM (newobv, labstr,
                                false, (struct stackframe_stBM *) &_);
+      assert (newobv->obv_upper.obvt_frame != NULL);
+      assert (newobv->obv_lower.obvt_frame != NULL);
       g_free (labstr), labstr = NULL;
       obvarr[md] = newobv;
       obw->obw_ulen++;
@@ -2372,11 +2377,9 @@ static void
 spindepth_obview_newgui_cbBM (GtkSpinButton * spbut, gpointer data);
 #warning objectwindow should probably keep the focused objview and focus line & column
 void
-fill_objectviewthing_BM (struct
-                         objectview_newgui_stBM
-                         *obv,
-                         const char
-                         *labstr, bool upper, struct stackframe_stBM *stkf)
+fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
+                         const char *labstr, bool upper,
+                         struct stackframe_stBM *stkf)
 {
   LOCALFRAME_BM ( /*prev: */ stkf,
                  /*descr: */ NULL,
@@ -2650,7 +2653,11 @@ fill_objectviewbuffer_BM (struct
       curobjview_newgui_BM = NULL;
     };
   curobjview_newgui_BM = NULL;
+  assert (obv->obv_upper.obvt_frame != NULL);
+  assert (GTK_IS_WIDGET (obv->obv_upper.obvt_frame));
   gtk_widget_show_all (GTK_WIDGET (obv->obv_upper.obvt_frame));
+  assert (obv->obv_lower.obvt_frame != NULL);
+  assert (GTK_IS_WIDGET (obv->obv_lower.obvt_frame));
   gtk_widget_show_all (GTK_WIDGET (obv->obv_lower.obvt_frame));
   assert (obv->obv_obwindow != NULL);
   DBGPRINTF_BM
