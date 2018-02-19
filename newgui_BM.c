@@ -4,7 +4,7 @@
 
 #define BROWSE_MAXDEPTH_NEWGUI_BM 48
 #define BROWSE_MAXREFRESHDELAY_NEWGUI_BM 10
-#define BROWSE_BLINKMILLISECOND_NEWGUI_BM 250
+#define BROWSE_BLINKMILLISECOND_NEWGUI_BM 450
 // each named value has its own GtkTextBuffer, which is displayed in
 //the value window, containing a GtkPane, in a GtkScrolledWindow
 //containing one GtkFrame (containing a GtkHeaderBar & GtkTextView)
@@ -3040,7 +3040,7 @@ enable_blink_objectview_BM (struct objectview_newgui_stBM *obv, int ix)
   gtk_text_buffer_get_bounds (obv->obv_tbuffer, &startit, &endit);
   gtk_text_buffer_remove_tag (obv->obv_tbuffer, blink_brotag_BM, &startit,
                               &endit);
-  if (ix > 0)
+  if (ix >= 0)
     {
       (void) blink_objectview_cbBM (obv);
       obv->obv_blinkid =
@@ -3077,6 +3077,10 @@ blink_objectview_cbBM (gpointer data)
   GtkTextIter endit = EMPTY_TEXT_ITER_BM;
   if (obv->obv_blinkcount % 3 != 0)
     {
+      DBGPRINTF_BM
+        ("blink_objectview yellow obv rank#%d blinkcount=%d blinkix=%d, par open:%d close:%d",
+         obv->obv_rank, obv->obv_blinkcount, obv->obv_blinkix,
+         par->paroff_open, par->paroff_close);
       if (par->paroff_open >= 0 && par->paroff_openlen > 0)
         {
           gtk_text_buffer_get_iter_at_offset (obv->obv_tbuffer, &startit,
@@ -3112,6 +3116,10 @@ blink_objectview_cbBM (gpointer data)
       gtk_text_buffer_get_bounds (obv->obv_tbuffer, &startit, &endit);
       gtk_text_buffer_remove_tag (obv->obv_tbuffer, blink_brotag_BM,
                                   &startit, &endit);
+      DBGPRINTF_BM
+        ("blink_objectview clear obv rank#%d blinkix=%d, par open:%d close:%d",
+         obv->obv_rank, obv->obv_blinkix, par->paroff_open,
+         par->paroff_close);
     }
   return G_SOURCE_CONTINUE;
 }                               /* end blink_objectview_cbBM */
