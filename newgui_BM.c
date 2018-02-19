@@ -1427,11 +1427,11 @@ spindepth_namedval_newgui_cbBM (GtkSpinButton * spbut, gpointer data)
   browsedval_BM[idx].brow_vdepth = newdepth;
   browse_indexed_named_value_newgui_BM
     (browsedval_BM[idx].brow_val, newdepth, idx, NULL);
-  if (spbut != nvx->nvx_upper.nvxt_spindepth)
+  if (newdepth != nvx->nvx_upper.nvxt_spindepth)
     gtk_spin_button_set_value (GTK_SPIN_BUTTON
                                (nvx->nvx_upper.nvxt_spindepth),
                                (double) newdepth);
-  if (spbut != nvx->nvx_lower.nvxt_spindepth)
+  if (newdepth != nvx->nvx_lower.nvxt_spindepth)
     gtk_spin_button_set_value (GTK_SPIN_BUTTON
                                (nvx->nvx_lower.nvxt_spindepth),
                                (double) newdepth);
@@ -2924,21 +2924,24 @@ markset_newgui_objview_BM (GtkTextBuffer * tbuf, GtkTextIter * titer,
   struct parenoffset_stBM *par = paren_objview_at_offset_newgui_BM (obv, off);
   if (par != NULL)
     {
+      int parix = (int) (par - obv->obv_parenarr);
       DBGPRINTF_BM
-        ("markset_newgui_objview off=%u will blink ix#%d open:%u close:%u",
-         (int) (par - obv->obv_parenarr),
-         off, par->paroff_open, par->paroff_close);
-      enable_blink_objectview_BM (obv, (int) (par - obv->obv_parenarr));
+        ("markset_newgui_objview will blink parix#%d off=%u open:%u close:%u",
+         parix, off, par->paroff_open, par->paroff_close);
+      enable_blink_objectview_BM (obv, parix);
     }
   else
-    disable_blink_objectview_BM (obv);
-  obwin_start_refresh_newgui_BM (obv->obv_obwindow);
+    {
+      DBGPRINTF_BM ("markset_newgui_objview no blink off=%u", off);
+      disable_blink_objectview_BM (obv);
+      obwin_start_refresh_newgui_BM (obv->obv_obwindow);
+    }
 }                               /* end markset_newgui_cmd_BM */
 
 
 struct parenoffset_stBM *
-paren_objview_at_offset_newgui_BM (struct
-                                   objectview_newgui_stBM *obv, unsigned off)
+paren_objview_at_offset_newgui_BM (struct objectview_newgui_stBM *obv,
+                                   unsigned off)
 {
   if (!obv)
     return NULL;
@@ -3107,8 +3110,8 @@ blink_objectview_cbBM (gpointer data)
       GtkTextIter startit = EMPTY_TEXT_ITER_BM;
       GtkTextIter endit = EMPTY_TEXT_ITER_BM;
       gtk_text_buffer_get_bounds (obv->obv_tbuffer, &startit, &endit);
-      gtk_text_buffer_remove_tag (obv->obv_tbuffer, blink_brotag_BM, &startit,
-                                  &endit);
+      gtk_text_buffer_remove_tag (obv->obv_tbuffer, blink_brotag_BM,
+                                  &startit, &endit);
     }
   return G_SOURCE_CONTINUE;
 }                               /* end blink_objectview_cbBM */
@@ -3121,22 +3124,20 @@ populatepopup_objview_newgui_BM (GtkTextView * txview, GtkWidget * popup,
   struct objectview_newgui_stBM *obv = (struct objectview_newgui_stBM *) data;
   assert (obv != NULL);
   assert (pthread_self () == mainthreadid_BM);
-  assert (txview == obv->obv_upper.obvt_textview
-          || txview == obv->obv_lower.obvt_textview);
+  assert (txview == GTK_TEXT_VIEW (obv->obv_upper.obvt_textview)
+          || txview == GTK_TEXT_VIEW (obv->obv_lower.obvt_textview));
   char cursinfobuf[32];
   memset (cursinfobuf, 0, sizeof (cursinfobuf));
   GtkTextIter cursit = EMPTY_TEXT_ITER_BM;
   gtk_text_buffer_get_iter_at_mark      //
-    (commandbuf_BM, &cursit, gtk_text_buffer_get_insert (commandbuf_BM));
-  snprintf (cursinfobuf,
-            sizeof (cursinfobuf),
-            "* L%dC%d/%d",
-            gtk_text_iter_get_line (&cursit)
-            + 1,
-            gtk_text_iter_get_line_offset
-            (&cursit), gtk_text_iter_get_offset (&cursit));
-  gtk_menu_shell_append (GTK_MENU_SHELL
-                         (popup), gtk_separator_menu_item_new ());
+    (obv->obv_tbuffer, &cursit,
+     gtk_text_buffer_get_insert (obv->obv_tbuffer));
+  snprintf (cursinfobuf, sizeof (cursinfobuf), "* L%dC%d/%d",
+            gtk_text_iter_get_line (&cursit) + 1,
+            gtk_text_iter_get_line_offset (&cursit),
+            gtk_text_iter_get_offset (&cursit));
+  gtk_menu_shell_append (GTK_MENU_SHELL (popup),
+                         gtk_separator_menu_item_new ());
   {
     GtkWidget *cursinfomenit =  //
       gtk_menu_item_new_with_label (cursinfobuf);
