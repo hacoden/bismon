@@ -2639,6 +2639,14 @@ fill_objectviewbuffer_BM (struct
            -1, epilogue_brotag_BM, miscomm_brotag_BM, NULL);
       }
       gtk_text_buffer_insert (browserbuf_BM, &browserit_BM, "\n", -1);
+      for (int pix = 0; pix < (int) obv->obv_parenulen; pix++)
+        {
+          struct parenoffset_stBM *curpar = obv->obv_parenarr + pix;
+          DBGPRINTF_BM
+            ("fill_objectviewbuffer_BM par#%d open:%d/l%d close:%d/l%d", pix,
+             curpar->paroff_open, curpar->paroff_openlen,
+             curpar->paroff_close, curpar->paroff_closelen);
+        };
       curobjview_newgui_BM = NULL;
     };
   curobjview_newgui_BM = NULL;
@@ -2923,6 +2931,9 @@ paren_objview_at_offset_newgui_BM (struct
   if (!obv)
     return NULL;
   int parulen = obv->obv_parenulen;
+  DBGPRINTF_BM
+    ("paren_objview_at_offset_newgui start objview %s off %u ulen %d",
+     objectdbg_BM (obv->obv_object), off, parulen);
   struct objectwindow_newgui_stBM *obwin = obv->obv_obwindow;
   assert (obwin != NULL);
   struct parenoffset_stBM *pararr = obv->obv_parenarr;
@@ -2932,10 +2943,11 @@ paren_objview_at_offset_newgui_BM (struct
   int lo = 0, hi = (int) parulen, md = 0;
   while (lo + 4 < hi)
     {
+      DBGPRINTF_BM ("paren_objview_at_offset_newgui lo=%d hi=%d", lo, hi);
       if (pararr[lo].paroff_open <= off && off <= pararr[hi - 1].paroff_close)
         break;
       md = (lo + hi) / 2;
-      if (pararr[md].paroff_open < off)
+      if (pararr[md].paroff_open < off && pararr[md].paroff_close < off)
         lo = md;
       else if (pararr[md].paroff_close > off)
         hi = md;
@@ -2964,6 +2976,7 @@ paren_objview_at_offset_newgui_BM (struct
             }
         }
     }
+  DBGPRINTF_BM ("paren_objview_at_offset_newgui off=%d ix=%d", off, ix);
   if (ix >= 0)
     return pararr + ix;
   return NULL;
