@@ -947,6 +947,7 @@ parsecommandbuf_newgui_BM (struct
                   log_end_message_BM ();
                 }
             }
+#warning should have a ,newobwin command and deal with general commands
           else
             parsererrorprintf_BM (pars,
                                   (struct
