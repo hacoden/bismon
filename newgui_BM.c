@@ -78,6 +78,7 @@ struct objectwindow_newgui_stBM
   GtkWidget *obw_refreshspinbox;
   GtkWidget *obw_upperobjvbox;
   GtkWidget *obw_lowerobjvbox;
+#warning objectwindow should have a focus button and a refresh button
   int obw_rank;
   int obw_refreshperiod;
   guint obw_refreshid;
