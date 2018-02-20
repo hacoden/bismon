@@ -80,6 +80,7 @@ struct objectwindow_newgui_stBM
   GtkWidget *obw_label;
   GtkWidget *obw_refreshbutton;
   GtkWidget *obw_refreshspinbox;
+  GtkWidget *obw_focustoggle;
   GtkWidget *obw_upperobjvbox;
   GtkWidget *obw_lowerobjvbox;
 #warning objectwindow should have a focus button
@@ -101,11 +102,12 @@ static struct objectwindow_newgui_stBM *make_obwin_newgui_BM (void);
 static void spinrefresh_obwin_newgui_cbBM (GtkSpinButton * spbut,
                                            gpointer data);
 static void refreshbut_obwin_newgui_cbBM (GtkButton * but, gpointer data);
+static void focustoggle_obwin_newgui_cbBM (GtkToggleButton * toggle,
+                                           gpointer data);
 static bool deleteobjectwin_newgui_cbBM (GtkWidget * widget, GdkEvent * ev,
                                          gpointer data);
 static void fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
-                                     const char *labstr,
-                                     bool upper,
+                                     const char *labstr, bool upper,
                                      struct stackframe_stBM *stkf);
 static void fill_objectviewbuffer_BM (struct objectview_newgui_stBM *obv,
                                       struct stackframe_stBM *stkf);
@@ -1949,7 +1951,12 @@ make_obwin_newgui_BM (void)
                       newobw);
     gtk_box_pack_start (GTK_BOX (tophbox), refreshbut, BOXNOEXPAND_BM,
                         BOXNOFILL_BM, 2);
-
+    GtkWidget *focustoggle = newobw->obw_focustoggle =  //
+      gtk_toggle_button_new_with_label ("\342\232\223");        // U+2693 ANCHOR ⚓
+    g_signal_connect (focustoggle, "toggled", focustoggle_obwin_newgui_cbBM,
+                      newobw);
+    gtk_box_pack_start (GTK_BOX (tophbox), focustoggle, BOXNOEXPAND_BM,
+                        BOXNOFILL_BM, 2);
     GtkWidget *delaylabel = gtk_label_new (" delay:");
     gtk_box_pack_start (GTK_BOX (tophbox),
                         delaylabel, BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
@@ -2892,6 +2899,17 @@ refreshbut_obwin_newgui_cbBM (GtkButton * but, gpointer data)
   DBGPRINTF_BM ("refreshbut_obwin_newgui obw@%p", obw);
   (void) refresh_obwin_newgui_cbBM (obw);
 }                               /* end refreshbut_obwin_newgui_cbBM */
+
+void
+focustoggle_obwin_newgui_cbBM (GtkToggleButton * toggle, gpointer data)
+{
+  assert (data != 0);
+  struct objectwindow_newgui_stBM *obw = data;
+  assert (GTK_TOGGLE_BUTTON (obw->obw_focustoggle) == toggle);
+  DBGPRINTF_BM ("focustoggle_obwin_newgui obw@%p incomplete", obw);
+#warning focustoggle_obwin_newgui_cbBM incomplete
+}                               /* end focustoggle_obwin_newgui_cbBM */
+
 
 gboolean
 refresh_obwin_newgui_cbBM (gpointer data)
