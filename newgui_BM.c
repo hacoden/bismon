@@ -37,7 +37,7 @@ static GtkWidget *uppervboxvalues_newgui_bm;
 static GtkWidget *lowervboxvalues_newgui_bm;
 
 
-#warning objectview shows a + the_system in wrong order
+
 // each objectview appears twice, in a paned; the widgets inside upper
 // & lower panes ...
 struct objectviewthings_stBM
@@ -68,6 +68,9 @@ struct objectview_newgui_stBM
 
 static struct objectview_newgui_stBM *curobjview_newgui_BM;
 
+/// see https://specifications.freedesktop.org/icon-naming-spec/latest/
+
+
 // an objectwindow
 struct objectwindow_newgui_stBM
 {
@@ -75,10 +78,11 @@ struct objectwindow_newgui_stBM
   struct objectwindow_newgui_stBM *obw_next;
   GtkWidget *obw_window;
   GtkWidget *obw_label;
+  GtkWidget *obw_refreshbutton;
   GtkWidget *obw_refreshspinbox;
   GtkWidget *obw_upperobjvbox;
   GtkWidget *obw_lowerobjvbox;
-#warning objectwindow should have a focus button and a refresh button
+#warning objectwindow should have a focus button
   int obw_rank;
   int obw_refreshperiod;
   guint obw_refreshid;
@@ -96,6 +100,7 @@ struct objectwindow_newgui_stBM *obwin_current_newgui_BM;
 static struct objectwindow_newgui_stBM *make_obwin_newgui_BM (void);
 static void spinrefresh_obwin_newgui_cbBM (GtkSpinButton * spbut,
                                            gpointer data);
+static void refreshbut_obwin_newgui_cbBM (GtkButton * but, gpointer data);
 static bool deleteobjectwin_newgui_cbBM (GtkWidget * widget, GdkEvent * ev,
                                          gpointer data);
 static void fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
@@ -1938,6 +1943,13 @@ make_obwin_newgui_BM (void)
     GtkWidget *wincommententry = gtk_entry_new ();
     gtk_box_pack_start (GTK_BOX (tophbox),
                         wincommententry, BOXEXPAND_BM, BOXFILL_BM, 2);
+    GtkWidget *refreshbut = newobw->obw_refreshbutton = //
+      gtk_button_new_from_icon_name ("view-refresh", GTK_ICON_SIZE_MENU);
+    g_signal_connect (refreshbut, "clicked", refreshbut_obwin_newgui_cbBM,
+                      newobw);
+    gtk_box_pack_start (GTK_BOX (tophbox), refreshbut, BOXNOEXPAND_BM,
+                        BOXNOFILL_BM, 2);
+
     GtkWidget *delaylabel = gtk_label_new (" delay:");
     gtk_box_pack_start (GTK_BOX (tophbox),
                         delaylabel, BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
@@ -2870,6 +2882,16 @@ spinrefresh_obwin_newgui_cbBM (GtkSpinButton * spbut, gpointer data)
   DBGPRINTF_BM ("spinrefresh_obwin_newgui_cbBM ending obw@%p", obw);
 }                               /* end spinrefresh_obwin_newgui_cbBM */
 
+
+void
+refreshbut_obwin_newgui_cbBM (GtkButton * but, gpointer data)
+{
+  assert (data != 0);
+  struct objectwindow_newgui_stBM *obw = data;
+  assert (GTK_BUTTON (obw->obw_refreshbutton) == but);
+  DBGPRINTF_BM ("refreshbut_obwin_newgui obw@%p", obw);
+  (void) refresh_obwin_newgui_cbBM (obw);
+}                               /* end refreshbut_obwin_newgui_cbBM */
 
 gboolean
 refresh_obwin_newgui_cbBM (gpointer data)
