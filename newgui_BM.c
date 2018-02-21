@@ -835,9 +835,8 @@ parsecommandbuf_newgui_BM (struct
               browserdepth_BM = (int) depthtok.tok_llong;
             }
           // ,nval <name> <value>
-          else
-            if (cmdtok.tok_kind == plex_NAMEDOBJ
-                && cmdtok.tok_namedobj == k_nval)
+          else if (cmdtok.tok_kind == plex_NAMEDOBJ
+                   && cmdtok.tok_namedobj == k_nval)
             {
               parstoken_tyBM vartok = parsertokenget_BM (pars,
                                                          (struct
@@ -898,9 +897,8 @@ parsecommandbuf_newgui_BM (struct
                 }
             }
           /// ,nhide <name>
-          else
-            if (cmdtok.tok_kind == plex_NAMEDOBJ
-                && cmdtok.tok_namedobj == k_nhide)
+          else if (cmdtok.tok_kind == plex_NAMEDOBJ
+                   && cmdtok.tok_namedobj == k_nhide)
             {
               parstoken_tyBM vartok = parsertokenget_BM (pars,
                                                          (struct
@@ -938,7 +936,14 @@ parsecommandbuf_newgui_BM (struct
                   log_end_message_BM ();
                 }
             }
-#warning should have a ,newobwin command and deal with general commands
+          /// ,newobwin
+          else if (cmdtok.tok_kind == plex_NAMEDOBJ
+                   && cmdtok.tok_namedobj == k_newobwin)
+            {
+              if (!nobuild)
+                newobwin_newgui_cbBM ();
+            }
+#warning should deal with general commands
           else
             parsererrorprintf_BM (pars,
                                   (struct
