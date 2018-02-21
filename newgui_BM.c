@@ -67,7 +67,7 @@ struct objectview_newgui_stBM
 };                              /* end struct objectview_newgui_stBM */
 
 static struct objectview_newgui_stBM *curobjview_newgui_BM;
-
+static void newobwin_newgui_cbBM (void);
 /// see https://specifications.freedesktop.org/icon-naming-spec/latest/
 
 
@@ -215,79 +215,50 @@ const struct parserops_stBM parsop_command_build_newgui_BM = {
     PARSOPMAGIC_BM,.parsop_serial =
     3,.parsop_nobuild = false,.parsop_error_rout = parserror_newguicmd_BM,
   ///
-  .parsop_expand_dollarobj_rout =
-    parsdollarobj_newguicmd_BM,.parsop_expand_dollarval_rout
-    =
-    parsdollarval_newguicmd_BM,.parsop_expand_newname_rout
-    =
-    parsmakenewname_newguicmd_BM,.parsop_expand_valexp_rout
-    =
-    parsvalexp_newguicmd_BM,.parsop_expand_objexp_rout
-    =
-    parsobjexp_newguicmd_BM,.parsop_expand_readmacro_rout
-    = parsreadmacroexp_newguicmd_BM,
+  .parsop_expand_dollarobj_rout = parsdollarobj_newguicmd_BM,   //
+  .parsop_expand_dollarval_rout = parsdollarval_newguicmd_BM,   //
+  .parsop_expand_newname_rout = parsmakenewname_newguicmd_BM,   //
+  .parsop_expand_valexp_rout = parsvalexp_newguicmd_BM, //
+  .parsop_expand_objexp_rout = parsobjexp_newguicmd_BM, //
+  .parsop_expand_readmacro_rout = parsreadmacroexp_newguicmd_BM,
   ///
-  .parsop_decorate_comment_sign_rout =
-    parscommentsign_guicmd_BM,.parsop_decorate_comment_inside_rout
-    =
-    parscommentinside_guicmd_BM,.parsop_decorate_delimiter_rout
-    =
-    parsdelim_guicmd_BM,.parsop_decorate_id_rout
-    =
-    parsid_guicmd_BM,.parsop_decorate_known_name_rout
-    =
-    parsknowname_guicmd_BM,.parsop_decorate_new_name_rout
-    =
-    parsnewname_guicmd_BM,.parsop_decorate_number_rout
-    =
-    parsnumber_guicmd_BM,.parsop_decorate_string_sign_rout
-    =
-    parsstringsign_guicmd_BM,.parsop_decorate_string_inside_rout
-    =
-    parsstringinside_guicmd_BM,.parsop_decorate_nesting_rout
-    =
-    parsnesting_guicmd_BM,.parsop_decorate_start_nesting_rout
-    = parsstartnesting_guicmd_BM,
+  .parsop_decorate_comment_sign_rout = parscommentsign_guicmd_BM,       //
+  .parsop_decorate_comment_inside_rout = parscommentinside_guicmd_BM,   //
+  .parsop_decorate_delimiter_rout = parsdelim_guicmd_BM,        //
+  .parsop_decorate_id_rout = parsid_guicmd_BM,  //
+  .parsop_decorate_known_name_rout = parsknowname_guicmd_BM,    //
+  .parsop_decorate_new_name_rout = parsnewname_guicmd_BM,       //
+  .parsop_decorate_number_rout = parsnumber_guicmd_BM,  //
+  .parsop_decorate_string_sign_rout = parsstringsign_guicmd_BM, //
+  .parsop_decorate_string_inside_rout = parsstringinside_guicmd_BM,     //
+  .parsop_decorate_nesting_rout = parsnesting_guicmd_BM,        //
+  .parsop_decorate_start_nesting_rout = parsstartnesting_guicmd_BM,
 };
 
 const struct parserops_stBM parsop_command_nobuild_newgui_BM = {
-  .parsop_magic =
-    PARSOPMAGIC_BM,.parsop_serial =
-    4,.parsop_nobuild = true,.parsop_error_rout = parserror_newguicmd_BM,
+  .parsop_magic = PARSOPMAGIC_BM,       //
+  .parsop_serial = 4,           //
+  .parsop_nobuild = true,       //
+  .parsop_error_rout = parserror_newguicmd_BM,
   ///
-  .parsop_expand_dollarobj_rout =
-    parsdollarobj_newguicmd_BM,.parsop_expand_dollarval_rout
-    =
-    parsdollarval_newguicmd_BM,.parsop_expand_newname_rout
-    =
-    parsmakenewname_newguicmd_BM,.parsop_expand_valexp_rout
-    =
-    parsvalexp_newguicmd_BM,.parsop_expand_objexp_rout
-    =
-    parsobjexp_newguicmd_BM,.parsop_expand_readmacro_rout
-    = parsreadmacroexp_newguicmd_BM,
+  .parsop_expand_dollarobj_rout = parsdollarobj_newguicmd_BM,   //
+  .parsop_expand_dollarval_rout = parsdollarval_newguicmd_BM,   //
+  .parsop_expand_newname_rout = parsmakenewname_newguicmd_BM,   //
+  .parsop_expand_valexp_rout = parsvalexp_newguicmd_BM, //
+  .parsop_expand_objexp_rout = parsobjexp_newguicmd_BM, //
+  .parsop_expand_readmacro_rout = parsreadmacroexp_newguicmd_BM,
   ///
-  .parsop_decorate_comment_sign_rout =
-    parscommentsign_guicmd_BM,.parsop_decorate_comment_inside_rout
-    =
-    parscommentinside_guicmd_BM,.parsop_decorate_delimiter_rout
-    =
-    parsdelim_guicmd_BM,.parsop_decorate_id_rout
-    =
-    parsid_guicmd_BM,.parsop_decorate_known_name_rout
-    =
-    parsknowname_guicmd_BM,.parsop_decorate_new_name_rout
-    =
-    parsnewname_guicmd_BM,.parsop_decorate_number_rout
-    =
-    parsnumber_guicmd_BM,.parsop_decorate_string_sign_rout
-    =
-    parsstringsign_guicmd_BM,.parsop_decorate_string_inside_rout
-    =
-    parsstringinside_guicmd_BM,.parsop_decorate_nesting_rout
-    =
-    parsnesting_guicmd_BM,.parsop_decorate_start_nesting_rout
-    = parsstartnesting_guicmd_BM,
+  .parsop_decorate_comment_sign_rout = parscommentsign_guicmd_BM,       //
+  .parsop_decorate_comment_inside_rout = parscommentinside_guicmd_BM,   //
+  .parsop_decorate_delimiter_rout = parsdelim_guicmd_BM,        //
+  .parsop_decorate_id_rout = parsid_guicmd_BM,  //
+  .parsop_decorate_known_name_rout = parsknowname_guicmd_BM,    //
+  .parsop_decorate_new_name_rout = parsnewname_guicmd_BM,       //
+  .parsop_decorate_number_rout = parsnumber_guicmd_BM,  //
+  .parsop_decorate_string_sign_rout = parsstringsign_guicmd_BM, //
+  .parsop_decorate_string_inside_rout = parsstringinside_guicmd_BM,     //
+  .parsop_decorate_nesting_rout = parsnesting_guicmd_BM,        //
+  .parsop_decorate_start_nesting_rout = parsstartnesting_guicmd_BM,
 };
 
 GtkWidget *
@@ -500,7 +471,17 @@ initialize_newgui_BM (const char *builderfile, const char *cssfile)
   GtkWidget *mainvbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
   gtk_container_add (GTK_CONTAINER (mainwin_BM), mainvbox);
   ///////////////
-  initialize_gui_menu_BM (mainvbox, bld);
+  GtkWidget *menubar = initialize_gui_menubar_BM (mainvbox, bld);
+  {
+    GtkWidget *newobwinmenu =
+      GTK_WIDGET (gtk_builder_get_object (bld, "objectnewobwin_id"));
+    assert (GTK_IS_WIDGET (newobwinmenu));
+    g_signal_connect (newobwinmenu, "activate", newobwin_newgui_cbBM, NULL);
+    GtkWidget *objectmenu =
+      GTK_WIDGET (gtk_builder_get_object (bld, "menuobject_id"));
+    assert (GTK_IS_WIDGET (objectmenu));
+    gtk_menu_shell_append (GTK_MENU_SHELL (menubar), objectmenu);
+  }
   GtkWidget *paned = gtk_paned_new (GTK_ORIENTATION_VERTICAL);
   gtk_paned_set_wide_handle (GTK_PANED (paned), true);
   gtk_paned_set_position (GTK_PANED (paned), 250);
@@ -1944,9 +1925,6 @@ make_obwin_newgui_BM (void)
   gtk_box_pack_start (GTK_BOX (tophbox),
                       newobw->obw_label, BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
   {
-    GtkWidget *wincommententry = gtk_entry_new ();
-    gtk_box_pack_start (GTK_BOX (tophbox),
-                        wincommententry, BOXEXPAND_BM, BOXFILL_BM, 2);
     GtkWidget *refreshbut = newobw->obw_refreshbutton = //
       gtk_button_new_from_icon_name ("view-refresh", GTK_ICON_SIZE_MENU);
     g_signal_connect (refreshbut, "clicked", refreshbut_obwin_newgui_cbBM,
@@ -2436,11 +2414,9 @@ fill_objectviewthing_BM (struct objectview_newgui_stBM *obv,
     GTK_BOX (upper ? obwin->obw_upperobjvbox : obwin->obw_lowerobjvbox);
   assert (inbox != NULL);
   gtk_box_pack_end (inbox, obth->obvt_frame, BOXEXPAND_BM, BOXFILL_BM, 2);
-#warning perhaps ordering of obvt_frame is wrong...
   // @@@ the lower box starts with a separator, so...
   gtk_box_reorder_child         //
-    (inbox, obth->obvt_frame,   //upper ? rk : (rk + 1)
-     rk);
+    (inbox, obth->obvt_frame, rk);
   obth->obvt_vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 2);
   gtk_container_add (GTK_CONTAINER (obth->obvt_frame), obth->obvt_vbox);
   GtkWidget *headb = obth->obvt_headb = gtk_header_bar_new ();
@@ -3224,3 +3200,16 @@ set_objectwindow_focus_BM (struct objectwindow_newgui_stBM *obw)
     }
   obwin_current_newgui_BM = obw;
 }                               /* end set_objectwindow_focus_BM  */
+
+
+void
+newobwin_newgui_cbBM (void)
+{
+  DBGPRINTF_BM ("newobwin_newgui start");
+  struct objectwindow_newgui_stBM *newobw = make_obwin_newgui_BM ();
+  set_objectwindow_focus_BM (newobw);
+  log_begin_message_BM ();
+  log_printf_message_BM ("new object window #%d\n",, newobw->obw_rank);
+  log_end_message_BM ();
+  DBGPRINTF_BM ("newobwin_newgui end newobw@%p", newobw);
+}                               /* end newobwin_newgui_cbBM */

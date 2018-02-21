@@ -17,7 +17,6 @@
           <object class='GtkMenuItem' id='appquit_id'>
             <property name='label'>_Quit</property>
 	    <property name='use-underline'>true</property>	    
-	    <!-- <signal name='activate' handler='quitaction_BM'/> -->
           </object>
         </child>
         <child>
@@ -50,6 +49,22 @@
         <child>
           <object class='GtkMenuItem' id='editpaste_id'>
             <property name='label'>_paste</property>
+	    <property name='use-underline'>true</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+
+
+  <!-- the object menu -->
+  <object class='GtkMenuItem' id='menuobject_id'>
+    <property name='label'>Object</property>
+    <child type='submenu'>
+      <object class='GtkMenu' id='objectsubmenu_id'>
+        <child>
+          <object class='GtkMenuItem' id='objectnewobwin_id'>
+            <property name='label'>new obj.win.</property>
 	    <property name='use-underline'>true</property>
           </object>
         </child>

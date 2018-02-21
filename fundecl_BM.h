@@ -772,7 +772,8 @@ extern void initialize_gui_BM (const char *builderfile, const char *cssfile);
 extern void initialize_newgui_BM (const char *builderfile,
                                   const char *cssfile);
 extern void initialize_gui_tags_BM (GtkBuilder * bld);
-extern void initialize_gui_menu_BM (GtkWidget * mainvbox, GtkBuilder * bld);
+extern GtkWidget *initialize_gui_menubar_BM (GtkWidget * mainvbox,
+                                             GtkBuilder * bld);
 extern GtkWidget *initialize_oldgui_command_scrollview_BM (void);
 extern GtkWidget *initialize_newgui_command_scrollview_BM (void);
 extern GtkWidget *initialize_log_scrollview_BM (void);

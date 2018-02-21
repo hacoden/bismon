@@ -4503,8 +4503,8 @@ initialize_gui_tags_BM (GtkBuilder * bld)
     FATAL_BM ("cannot find command_logtag");
 }                               /* end initialize_gui_tags_BM */
 
-void
-initialize_gui_menu_BM (GtkWidget * mainvbox, GtkBuilder * bld)
+GtkWidget *
+initialize_gui_menubar_BM (GtkWidget * mainvbox, GtkBuilder * bld)
 {
   GtkWidget *mainmenubar = gtk_menu_bar_new ();
   gtk_box_pack_start (GTK_BOX (mainvbox), mainmenubar,
@@ -4534,7 +4534,8 @@ initialize_gui_menu_BM (GtkWidget * mainvbox, GtkBuilder * bld)
   GtkWidget *sep1 = gtk_separator_new (GTK_ORIENTATION_HORIZONTAL);
   gtk_box_pack_start (GTK_BOX (mainvbox), sep1,
                       BOXNOEXPAND_BM, BOXNOFILL_BM, 2);
-}                               /* end initialize_gui_menu_BM */
+  return mainmenubar;
+}                               /* end initialize_gui_menubar_BM */
 
 
 GtkWidget *
@@ -4627,7 +4628,7 @@ initialize_gui_BM (const char *builderfile, const char *cssfile)
   GtkWidget *mainvbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 5);
   gtk_container_add (GTK_CONTAINER (mainwin_BM), mainvbox);
   ///////////////
-  initialize_gui_menu_BM (mainvbox, bld);
+  (void) initialize_gui_menubar_BM (mainvbox, bld);
   ///////////////
   GtkWidget *paned1 = gtk_paned_new (GTK_ORIENTATION_VERTICAL);
   gtk_paned_set_wide_handle (GTK_PANED (paned1), true);
