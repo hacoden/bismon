@@ -71,7 +71,7 @@ static struct objectview_newgui_stBM *curobjview_newgui_BM;
 /// see https://specifications.freedesktop.org/icon-naming-spec/latest/
 
 
-// an objectwindow
+// an objectwindow, we have few of them -a few dozens at most- 
 struct objectwindow_newgui_stBM
 {
   struct objectwindow_newgui_stBM *obw_prev;
@@ -83,7 +83,6 @@ struct objectwindow_newgui_stBM
   GtkWidget *obw_focustoggle;
   GtkWidget *obw_upperobjvbox;
   GtkWidget *obw_lowerobjvbox;
-#warning objectwindow should have a focus button
   int obw_rank;
   int obw_refreshperiod;
   guint obw_refreshid;
@@ -97,7 +96,7 @@ struct objectwindow_newgui_stBM
 static struct objectwindow_newgui_stBM *obwin_first_newgui_BM;
 static struct objectwindow_newgui_stBM *obwin_last_newgui_BM;
 struct objectwindow_newgui_stBM *obwin_current_newgui_BM;
-
+static void set_objectwindow_focus_BM (struct objectwindow_newgui_stBM *obw);
 static struct objectwindow_newgui_stBM *make_obwin_newgui_BM (void);
 static void spinrefresh_obwin_newgui_cbBM (GtkSpinButton * spbut,
                                            gpointer data);
@@ -579,7 +578,10 @@ initialize_newgui_BM (const char *builderfile, const char *cssfile)
   // perhaps run the GC twice a second
   g_timeout_add (500, guiperiodicgarbagecollection_BM, NULL);
   gtk_widget_show_all (GTK_WIDGET (mainwin_BM));
-  obwin_current_newgui_BM = make_obwin_newgui_BM ();
+  {
+    struct objectwindow_newgui_stBM *obw = make_obwin_newgui_BM ();
+    set_objectwindow_focus_BM (obw);
+  }
 }                               /* end initialize_newgui_BM */
 
 
@@ -3196,3 +3198,29 @@ populatepopup_objview_newgui_BM (GtkTextView * txview, GtkWidget * popup,
   }
   gtk_widget_show_all (popup);
 }                               /* end populatepopup_objview_newgui_BM */
+
+
+
+void
+set_objectwindow_focus_BM (struct objectwindow_newgui_stBM *obw)
+{
+  if (obw == obwin_current_newgui_BM)
+    return;
+  for (struct objectwindow_newgui_stBM * curobw = obwin_first_newgui_BM;
+       curobw != NULL; curobw = curobw->obw_next)
+    {
+      if (curobw != obw)
+        {
+          assert (curobw->obw_focustoggle != NULL);
+          gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON
+                                        (curobw->obw_focustoggle), false);
+        }
+    }
+  if (obw)
+    {
+      assert (obw->obw_focustoggle != NULL);
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (obw->obw_focustoggle),
+                                    true);
+    }
+  obwin_current_newgui_BM = obw;
+}                               /* end set_objectwindow_focus_BM  */
