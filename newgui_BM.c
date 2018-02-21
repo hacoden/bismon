@@ -3209,7 +3209,7 @@ newobwin_newgui_cbBM (void)
   struct objectwindow_newgui_stBM *newobw = make_obwin_newgui_BM ();
   set_objectwindow_focus_BM (newobw);
   log_begin_message_BM ();
-  log_printf_message_BM ("new object window #%d\n",, newobw->obw_rank);
+  log_printf_message_BM ("new object window #%d\n", newobw->obw_rank);
   log_end_message_BM ();
   DBGPRINTF_BM ("newobwin_newgui end newobw@%p", newobw);
 }                               /* end newobwin_newgui_cbBM */
