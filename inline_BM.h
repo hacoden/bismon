@@ -66,7 +66,7 @@ valtype_BM (const value_tyBM v)
   if (((uintptr_t) v & 3) == 0)
     {
       typedhead_tyBM *ht = (typedhead_tyBM *) v;
-      assert (ht->htyp != 0);
+      ASSERT_BM (ht->htyp != 0);
       return ht->htyp;
     }
   return tyNone_BM;
@@ -93,7 +93,7 @@ valclass_BM (const value_tyBM v)
   if (((uintptr_t) v & 3) == 0)
     {
       typedhead_tyBM *ht = (typedhead_tyBM *) v;
-      assert (ht->htyp != 0);
+      ASSERT_BM (ht->htyp != 0);
       int ty = ht->htyp;
       switch (ty)
         {
@@ -133,7 +133,7 @@ valhash_BM (const value_tyBM v)
         hash_tyBM hi = (i & 0x3fffffff) ^ (i % 132594613);
         if (hi == 0)
           hi = ((i % 594571) & 0xfffffff) + 17;
-        assert (hi != 0);
+        ASSERT_BM (hi != 0);
         return hi;
       }
     case tyString_BM:
@@ -213,7 +213,7 @@ hashid_BM (rawid_tyBM id)
   hash_tyBM h = (id.id_hi % 1073741939) ^ (id.id_lo % 596789351);
   if (h == 0)
     h = (id.id_hi & 0xffffff) + (id.id_lo & 0x3ffffff) + 17;
-  assert (h > 0);
+  ASSERT_BM (h > 0);
   return h;
 }                               /* end hashid_BM */
 
@@ -325,7 +325,7 @@ objlock_BM (objectval_tyBM * obj)
     return false;
   if (curfailurehandle_BM)
     {
-      assert (curfailurehandle_BM->failh_magic == FAILUREHANDLEMAGIC_BM);
+      ASSERT_BM (curfailurehandle_BM->failh_magic == FAILUREHANDLEMAGIC_BM);
       register_failock_BM (curfailurehandle_BM->failh_lockset, obj);
     }
   return true;
@@ -341,7 +341,7 @@ objunlock_BM (objectval_tyBM * obj)
     return false;
   if (curfailurehandle_BM)
     {
-      assert (curfailurehandle_BM->failh_magic == FAILUREHANDLEMAGIC_BM);
+      ASSERT_BM (curfailurehandle_BM->failh_magic == FAILUREHANDLEMAGIC_BM);
       unregister_failock_BM (curfailurehandle_BM->failh_lockset, obj);
     }
   return true;
@@ -356,7 +356,7 @@ objtrylock_BM (objectval_tyBM * obj)
     return false;
   if (curfailurehandle_BM)
     {
-      assert (curfailurehandle_BM->failh_magic == FAILUREHANDLEMAGIC_BM);
+      ASSERT_BM (curfailurehandle_BM->failh_magic == FAILUREHANDLEMAGIC_BM);
       register_failock_BM (curfailurehandle_BM->failh_lockset, obj);
     };
   return true;
@@ -375,8 +375,8 @@ objecthash_BM (const objectval_tyBM * pob)
   if (!isobject_BM ((const value_tyBM) pob))
     return 0;
   hash_tyBM h = ((typedhead_tyBM *) pob)->hash;
-  assert (h > 0);
-  assert (h == hashid_BM (pob->ob_id));
+  ASSERT_BM (h > 0);
+  ASSERT_BM (h == hashid_BM (pob->ob_id));
   return h;
 }                               /* end objecthash_BM */
 
@@ -554,9 +554,9 @@ objgetclassinfosuperclass_BM (const objectval_tyBM * obj)
     return NULL;
   struct classinfo_stBM *clinf =        //
     (struct classinfo_stBM *) (obj->ob_payl);
-  assert (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
   objectval_tyBM *superob = clinf->clinf_superclass;
-  assert (!superob || isobject_BM ((const value_tyBM) superob));
+  ASSERT_BM (!superob || isobject_BM ((const value_tyBM) superob));
   return superob;
 }                               /* end objgetclassinfosuperclass_BM */
 
@@ -581,11 +581,11 @@ objgetclassinfomethod_BM (const objectval_tyBM * obj,
     return NULL;
   struct classinfo_stBM *clinf =        //
     (struct classinfo_stBM *) (obj->ob_payl);
-  assert (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
   const closure_tyBM *clos = (const closure_tyBM *)     //
     assoc_getattr_BM (clinf->clinf_dictmeth,
                       obselector);
-  assert (!clos || isclosure_BM ((const value_tyBM) clos));
+  ASSERT_BM (!clos || isclosure_BM ((const value_tyBM) clos));
   return clos;
 }                               /* end objgetclassinfomethod_BM */
 
@@ -596,10 +596,10 @@ objgetclassinfosetofselectors_BM (const objectval_tyBM * obj)
     return NULL;
   struct classinfo_stBM *clinf =        //
     (struct classinfo_stBM *) (obj->ob_payl);
-  assert (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
   const setval_tyBM *set =      //
     assoc_setattrs_BM (clinf->clinf_dictmeth);
-  assert (!set || valtype_BM ((const value_tyBM) set) == tySet_BM);
+  ASSERT_BM (!set || valtype_BM ((const value_tyBM) set) == tySet_BM);
   return set;
 }                               /* end objgetclassinfosetofselectors_BM */
 
@@ -659,8 +659,8 @@ objectnamedcmp_BM (const objectval_tyBM * ob1, const objectval_tyBM * ob2)
     return -1;
   if (!ob2)
     return +1;
-  assert (isobject_BM ((const value_tyBM) ob1));
-  assert (isobject_BM ((const value_tyBM) ob2));
+  ASSERT_BM (isobject_BM ((const value_tyBM) ob1));
+  ASSERT_BM (isobject_BM ((const value_tyBM) ob2));
   const char *n1 = findobjectname_BM (ob1);
   const char *n2 = findobjectname_BM (ob2);
   if (n1 && n2)
@@ -822,7 +822,7 @@ objputhashsetpayload_BM (objectval_tyBM * obj, unsigned inisiz)
 {
   if (!isobject_BM (obj))
     return NULL;
-  assert (inisiz < MAXSIZE_BM);
+  ASSERT_BM (inisiz < MAXSIZE_BM);
   struct hashsetobj_stBM *hset = hashsetobj_grow_BM (NULL, inisiz);
   objputpayload_BM (obj, hset);
   return hset;
@@ -1069,7 +1069,7 @@ objparserpayload_BM (objectval_tyBM * obj)
   struct parser_stBM *pars = parsercast_BM (objpayload_BM (obj));
   if (!pars)
     return NULL;
-  assert (checkedparserowner_BM (pars) == obj);
+  ASSERT_BM (checkedparserowner_BM (pars) == obj);
   return pars;
 }                               /* end objparserpayload_BM */
 
@@ -1100,8 +1100,9 @@ parserrestline_BM (const struct parser_stBM *pars)
     return NULL;
   if (pars->pars_curbyte == NULL)
     return NULL;
-  assert (pars->pars_curbyte >= pars->pars_linebuf
-          && pars->pars_curbyte <= pars->pars_linebuf + pars->pars_linesiz);
+  ASSERT_BM (pars->pars_curbyte >= pars->pars_linebuf
+             && pars->pars_curbyte <=
+             pars->pars_linebuf + pars->pars_linesiz);
   return pars->pars_curbyte;
 }                               /* end parserrestline_BM */
 
@@ -1112,8 +1113,9 @@ parserunichar_BM (const struct parser_stBM * pars)
     return 0;
   if (!pars->pars_linebuf)
     return 0;
-  assert (pars->pars_curbyte >= pars->pars_linebuf
-          && pars->pars_curbyte <= pars->pars_linebuf + pars->pars_linesiz);
+  ASSERT_BM (pars->pars_curbyte >= pars->pars_linebuf
+             && pars->pars_curbyte <=
+             pars->pars_linebuf + pars->pars_linesiz);
 
   return g_utf8_get_char (pars->pars_curbyte);
 }                               /* end parserunichar_BM */
@@ -1125,8 +1127,9 @@ parsereol_BM (const struct parser_stBM * pars)
     return false;
   if (!pars->pars_linebuf)
     return true;
-  assert (pars->pars_curbyte >= pars->pars_linebuf
-          && pars->pars_curbyte <= pars->pars_linebuf + pars->pars_linesiz);
+  ASSERT_BM (pars->pars_curbyte >= pars->pars_linebuf
+             && pars->pars_curbyte <=
+             pars->pars_linebuf + pars->pars_linesiz);
 
   return pars->pars_curbyte >= pars->pars_linebuf + pars->pars_linesiz;
 }                               /* end parsereol_BM */

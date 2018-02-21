@@ -85,7 +85,7 @@ setobjectsofidprefixed_BM (const char *prefix)
   if (!p)
     return NULL;
   int bucknum = (prefix[1] - '0') * 62 + (p - b62digits);
-  assert (bucknum >= 0 && bucknum < MAXBUCKETS_BM);
+  ASSERT_BM (bucknum >= 0 && bucknum < MAXBUCKETS_BM);
   struct objbucket_stBM *curbuck = buckarr_BM[bucknum];
   if (!curbuck)
     return NULL;
@@ -102,8 +102,8 @@ setobjectsofidprefixed_BM (const char *prefix)
       char curidbuf[32];
       memset (curidbuf, 0, sizeof (curidbuf));
       idtocbuf32_BM (curob->ob_id, curidbuf);
-      assert (curidbuf[0] == '_'
-              && curidbuf[1] == prefix[1] && curidbuf[2] == prefix[2]);
+      ASSERT_BM (curidbuf[0] == '_'
+                 && curidbuf[1] == prefix[1] && curidbuf[2] == prefix[2]);
       if (!strncmp (curidbuf, prefix, prefixlen))
         {
           if (cnt >= siz)
@@ -141,8 +141,8 @@ findobjofid_BM (const rawid_tyBM id)
   if (!curbuck)
     return NULL;
   unsigned busiz = curbuck->bucksize;
-  assert (busiz >= 4 && busiz % 2 != 0 && busiz % 3 != 0);
-  assert (curbuck->buckcount < curbuck->bucksize);
+  ASSERT_BM (busiz >= 4 && busiz % 2 != 0 && busiz % 3 != 0);
+  ASSERT_BM (curbuck->buckcount < curbuck->bucksize);
   hash_tyBM h = hashid_BM (id);
   unsigned startix = h % busiz;
   for (unsigned ix = startix; ix < busiz; ix++)
@@ -171,13 +171,13 @@ findobjofid_BM (const rawid_tyBM id)
 static void
 addtobucket_BM (struct objbucket_stBM *buck, objectval_tyBM * ob)
 {
-  assert (buck != NULL);
-  assert (valtype_BM (ob) == tyObject_BM);
+  ASSERT_BM (buck != NULL);
+  ASSERT_BM (valtype_BM (ob) == tyObject_BM);
   hash_tyBM h = objecthash_BM (ob);
-  assert (h > 0);
+  ASSERT_BM (h > 0);
   unsigned busiz = buck->bucksize;
-  assert (busiz % 2 != 0 && busiz % 3 != 0 && busiz % 5 != 0);
-  assert (buck->buckcount < buck->bucksize);
+  ASSERT_BM (busiz % 2 != 0 && busiz % 3 != 0 && busiz % 5 != 0);
+  ASSERT_BM (buck->buckcount < buck->bucksize);
   unsigned startix = h % busiz;
   int pos = -1;
   for (unsigned ix = startix; ix < busiz; ix++)
@@ -225,7 +225,7 @@ addtobucket_BM (struct objbucket_stBM *buck, objectval_tyBM * ob)
 static void
 growobucket_BM (unsigned bucknum, unsigned gap)
 {
-  assert (bucknum < MAXBUCKETS_BM);
+  ASSERT_BM (bucknum < MAXBUCKETS_BM);
   struct objbucket_stBM *oldbuck = buckarr_BM[bucknum];
   unsigned oldsiz = oldbuck ? oldbuck->bucksize : 0;
   unsigned oldcnt = oldbuck ? oldbuck->buckcount : 0;
@@ -247,7 +247,7 @@ growobucket_BM (unsigned bucknum, unsigned gap)
       addtobucket_BM (newbuck, oldob);
     }
   free (oldbuck), oldbuck = NULL;
-  assert (newbuck->buckcount == oldcnt);
+  ASSERT_BM (newbuck->buckcount == oldcnt);
   buckarr_BM[bucknum] = newbuck;
 }                               /* end growobucket_BM */
 
@@ -268,7 +268,7 @@ makeobjofid_BM (const rawid_tyBM id)
     {
       growobucket_BM (bucknum, 6);
       curbuck = buckarr_BM[bucknum];
-      assert (curbuck);
+      ASSERT_BM (curbuck);
     }
   pob = allocgcty_BM (tyObject_BM, sizeof (objectval_tyBM));
   pob->ob_id = id;
@@ -282,8 +282,8 @@ makeobjofid_BM (const rawid_tyBM id)
 void
 objectgcdestroy_BM (struct garbcoll_stBM *gc, objectval_tyBM * obj)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) obj)->htyp == tyObject_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) obj)->htyp == tyObject_BM);
   // remove the object name
   forgetnamedobject_BM (obj);
   if (obj->ob_payl)
@@ -295,15 +295,15 @@ objectgcdestroy_BM (struct garbcoll_stBM *gc, objectval_tyBM * obj)
   obj->ob_rout = NULL;
   // should remove the object from its bucket
   const rawid_tyBM id = obj->ob_id;
-  assert (validid_BM (id));
+  ASSERT_BM (validid_BM (id));
   unsigned bucknum = bucknumserial63_BM (id.id_hi);
   struct objbucket_stBM *curbuck = buckarr_BM[bucknum];
-  assert (curbuck != NULL);
+  ASSERT_BM (curbuck != NULL);
   unsigned busiz = curbuck->bucksize;
   unsigned bucnt = curbuck->buckcount;
-  assert (bucnt < busiz);
+  ASSERT_BM (bucnt < busiz);
   hash_tyBM h = objecthash_BM (obj);
-  assert (h > 0);
+  ASSERT_BM (h > 0);
   unsigned startix = h % busiz;
   int pos = -1;
   for (unsigned ix = startix; ix < busiz && pos < 0; ix++)
@@ -322,7 +322,7 @@ objectgcdestroy_BM (struct garbcoll_stBM *gc, objectval_tyBM * obj)
       if (curob == obj)
         pos = (int) ix;
     };
-  assert (pos >= 0);
+  ASSERT_BM (pos >= 0);
   curbuck->buckobjs[pos] = EMPTYSLOTOB_BM;
   curbuck->buckcount--;
   memset (obj, 0, sizeof (*obj));
@@ -334,8 +334,8 @@ objectgcdestroy_BM (struct garbcoll_stBM *gc, objectval_tyBM * obj)
 void
 objectgckeep_BM (struct garbcoll_stBM *gc, objectval_tyBM * obj)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) obj)->htyp == tyObject_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) obj)->htyp == tyObject_BM);
   gc->gc_keptbytes += sizeof (*obj);
   gc->gc_nbkeptobjects++;
 }                               /* end objectgckeep_BM */
@@ -450,9 +450,9 @@ makeobj_BM (void)
 void
 objectinteriorgcmark_BM (struct garbcoll_stBM *gc, objectval_tyBM * obj)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (isobject_BM (obj));
-  assert (((typedhead_tyBM *) obj)->hgc == MARKGC_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (isobject_BM (obj));
+  ASSERT_BM (((typedhead_tyBM *) obj)->hgc == MARKGC_BM);
   if (obj->ob_class)
     gcobjmark_BM (gc, obj->ob_class);
   if (obj->ob_routaddr && obj->ob_sig)
@@ -478,7 +478,7 @@ hashsetobj_insert_BM (struct hashsetobj_stBM *hset,
     return false;
   unsigned alsiz = ((typedhead_tyBM *) hset)->rlen;
   unsigned ucnt = ((typedsize_tyBM *) hset)->size;
-  assert (ucnt < alsiz && alsiz > 3);
+  ASSERT_BM (ucnt < alsiz && alsiz > 3);
   hash_tyBM hob = objecthash_BM (obj);
   unsigned startix = hob % alsiz;
   int pos = -1;
@@ -578,7 +578,7 @@ hashsetobj_contains_BM (struct hashsetobj_stBM * hset,
     return false;
   unsigned alsiz = ((typedhead_tyBM *) hset)->rlen;
   unsigned ucnt = ((typedsize_tyBM *) hset)->size;
-  assert (ucnt < alsiz && alsiz > 3);
+  ASSERT_BM (ucnt < alsiz && alsiz > 3);
   hash_tyBM hob = objecthash_BM (obj);
   unsigned startix = hob % alsiz;
   for (unsigned ix = startix; ix < alsiz; ix++)
@@ -617,7 +617,7 @@ hashsetobj_add_BM (struct hashsetobj_stBM *hset, const objectval_tyBM * obj)
     return hset;
   unsigned alsiz = ((typedhead_tyBM *) hset)->rlen;
   unsigned ucnt = ((typedsize_tyBM *) hset)->size;
-  assert (ucnt < alsiz && alsiz > 3);
+  ASSERT_BM (ucnt < alsiz && alsiz > 3);
   if (4 * ucnt + 8 >= 3 * alsiz)
     {
       hset = hashsetobj_grow_BM (hset, ucnt / 64 + 4);
@@ -704,11 +704,11 @@ hashsetobj_to_set_BM (struct hashsetobj_stBM *hset)
       objectval_tyBM *curobj = hset->hashset_objs[ix];
       if (!curobj || curobj == HASHSETEMPTYSLOT_BM)
         continue;
-      assert (valtype_BM ((const value_tyBM) curobj) == tyObject_BM);
-      assert (elcnt < ucnt);
+      ASSERT_BM (valtype_BM ((const value_tyBM) curobj) == tyObject_BM);
+      ASSERT_BM (elcnt < ucnt);
       arr[elcnt++] = (const objectval_tyBM *) curobj;
     };
-  assert (elcnt == ucnt);
+  ASSERT_BM (elcnt == ucnt);
   const setval_tyBM *set = makeset_BM (arr, elcnt);
   if (arr != tinyarr)
     free (arr), arr = NULL;
@@ -719,8 +719,8 @@ hashsetobj_to_set_BM (struct hashsetobj_stBM *hset)
 void
 hashsetgcmark_BM (struct garbcoll_stBM *gc, struct hashsetobj_stBM *hset)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM ((const value_tyBM) hset) == typayl_hashsetobj_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) hset) == typayl_hashsetobj_BM);
   uint8_t oldmark = ((typedhead_tyBM *) hset)->hgc;
   if (oldmark)
     return;
@@ -734,19 +734,19 @@ hashsetgcmark_BM (struct garbcoll_stBM *gc, struct hashsetobj_stBM *hset)
       objectval_tyBM *curobj = hset->hashset_objs[ix];
       if (!curobj || curobj == HASHSETEMPTYSLOT_BM)
         continue;
-      assert (valtype_BM ((const value_tyBM) curobj) == tyObject_BM);
-      assert (elcnt < ucnt);
+      ASSERT_BM (valtype_BM ((const value_tyBM) curobj) == tyObject_BM);
+      ASSERT_BM (elcnt < ucnt);
       gcobjmark_BM (gc, curobj);
       elcnt++;
     };
-  assert (elcnt == ucnt);
+  ASSERT_BM (elcnt == ucnt);
 }                               /* end hashsetgcmark_BM */
 
 void
 hashsetgcdestroy_BM (struct garbcoll_stBM *gc, struct hashsetobj_stBM *hset)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) hset)->htyp == typayl_hashsetobj_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) hset)->htyp == typayl_hashsetobj_BM);
   unsigned alsiz = ((typedhead_tyBM *) hset)->rlen;
   memset (hset, 0, sizeof (*hset) + alsiz * sizeof (void *));
   free (hset);
@@ -756,10 +756,10 @@ hashsetgcdestroy_BM (struct garbcoll_stBM *gc, struct hashsetobj_stBM *hset)
 void
 hashsetgckeep_BM (struct garbcoll_stBM *gc, struct hashsetobj_stBM *hset)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) hset)->htyp == typayl_hashsetobj_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) hset)->htyp == typayl_hashsetobj_BM);
   unsigned alsiz = ((typedhead_tyBM *) hset)->rlen;
-  assert (alsiz < MAXSIZE_BM);
+  ASSERT_BM (alsiz < MAXSIZE_BM);
   gc->gc_keptbytes += sizeof (*hset) + alsiz * sizeof (void *);
 }                               /* end hashsetgckeep_BM */
 
@@ -767,23 +767,24 @@ hashsetgckeep_BM (struct garbcoll_stBM *gc, struct hashsetobj_stBM *hset)
 static void
 register_predefined_object_BM (objectval_tyBM * pob)
 {
-  assert (valtype_BM ((const value_tyBM) pob) == tyObject_BM);
-  assert (pob->ob_id.id_hi > 0 && pob->ob_id.id_lo > 0);
-  assert (findobjofid_BM (pob->ob_id) == NULL);
-  assert (((typedhead_tyBM *) pob)->hash == hashid_BM (pob->ob_id));
+  ASSERT_BM (valtype_BM ((const value_tyBM) pob) == tyObject_BM);
+  ASSERT_BM (pob->ob_id.id_hi > 0 && pob->ob_id.id_lo > 0);
+  ASSERT_BM (findobjofid_BM (pob->ob_id) == NULL);
+  ASSERT_BM (((typedhead_tyBM *) pob)->hash == hashid_BM (pob->ob_id));
   unsigned bucknum = bucknumserial63_BM (pob->ob_id.id_hi);
   growobucket_BM (bucknum, 4);
   struct objbucket_stBM *curbuck = buckarr_BM[bucknum];
-  assert (curbuck != NULL);
+  ASSERT_BM (curbuck != NULL);
   addtobucket_BM (curbuck, pob);
-  assert (curbuck->buckcount > 0 && curbuck->buckcount <= curbuck->bucksize);
-  assert (findobjofid_BM (pob->ob_id) == pob);
+  ASSERT_BM (curbuck->buckcount > 0
+             && curbuck->buckcount <= curbuck->bucksize);
+  ASSERT_BM (findobjofid_BM (pob->ob_id) == pob);
   hashset_predefined_objects_BM =       //
     hashsetobj_add_BM (hashset_predefined_objects_BM, pob);
   char idbuf[32];
   memset (idbuf, 0, sizeof (idbuf));
   idtocbuf32_BM (pob->ob_id, idbuf);
-  assert (idbuf[0] == '_' && isdigit (idbuf[1]));
+  ASSERT_BM (idbuf[0] == '_' && isdigit (idbuf[1]));
   char symbuf[48];
   memset (symbuf, 0, sizeof (symbuf));
   snprintf (symbuf, sizeof (symbuf),    //
@@ -807,16 +808,17 @@ initialize_predefined_objects_BM (void)
     hashsetobj_grow_BM (NULL, 2 * BM_NB_PREDEFINED + 50);
   //
 #define HAS_PREDEF_BM(Id,Hi,Lo,Hash)    {               \
-    assert(hashid_BM((rawid_tyBM){Hi,Lo})==Hash);	\
-    assert(equalid_BM(parse_rawid_BM(#Id,NULL),		\
+    ASSERT_BM (hashid_BM((rawid_tyBM){Hi,Lo})==Hash);	\
+    ASSERT_BM (equalid_BM(parse_rawid_BM(#Id,NULL),	\
 		      (rawid_tyBM){Hi,Lo}));		\
     register_predefined_object_BM(PREDEF_BM(Id)); };
   //
 #include "_bm_predef.h"
   //
   fflush (NULL);
-  assert (findobjofid_BM (parse_rawid_BM ("_01h86SAfOfg_1q2oMegGRwW", NULL))
-          == BMP_comment);
+  ASSERT_BM (findobjofid_BM
+             (parse_rawid_BM ("_01h86SAfOfg_1q2oMegGRwW", NULL)) ==
+             BMP_comment);
 }                               /* end initialize_predefined_objects_BM */
 
 const setval_tyBM *
@@ -829,11 +831,12 @@ setpredefinedobjects_BM (void)
 void
 gcmarkpredefinedobjects_BM (struct garbcoll_stBM *gc)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM (hashset_predefined_objects_BM) == typayl_hashsetobj_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (valtype_BM (hashset_predefined_objects_BM) ==
+             typayl_hashsetobj_BM);
   // clear the mark of statically allocated predefined
 #define HAS_PREDEF_BM(Id,Hi,Lo,Hash) {					\
-    assert (valtype_BM(&predefdata##Id##_BM) == tyObject_BM);		\
+    ASSERT_BM (valtype_BM(&predefdata##Id##_BM) == tyObject_BM);		\
     if (predefdata##Id##_BM.ob_space == PredefSp_BM)			\
       ((typedhead_tyBM*)&predefdata##Id##_BM)->hgc = CLEARMGC_BM;	\
   }
@@ -845,7 +848,7 @@ gcmarkpredefinedobjects_BM (struct garbcoll_stBM *gc)
 void
 gcmarkconstants_BM (struct garbcoll_stBM *gc)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
   for (int kix = 0; kix < bmnbconsts; kix++)
     {
       if (*(bmconstaddrs[kix]))
@@ -858,13 +861,13 @@ objputspacenum_BM (objectval_tyBM * obj, unsigned spanum)
 {
   if (!isobject_BM ((const value_tyBM) obj))
     return;
-  assert (spanum < LASTSPACE__BM);
+  ASSERT_BM (spanum < LASTSPACE__BM);
   unsigned oldspanum = obj->ob_space;
   if (oldspanum == spanum)
     return;
   if (oldspanum == PredefSp_BM)
     {
-      assert (hashsetobj_contains_BM (hashset_predefined_objects_BM, obj));
+      ASSERT_BM (hashsetobj_contains_BM (hashset_predefined_objects_BM, obj));
       hashset_predefined_objects_BM =   //
         hashsetobj_remove_BM (hashset_predefined_objects_BM, obj);
     };
@@ -929,8 +932,8 @@ void
 classinfogcmark_BM (struct garbcoll_stBM *gc, struct classinfo_stBM *clinf,
                     int depth)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
   uint8_t oldmark = ((typedhead_tyBM *) clinf)->hgc;
   if (oldmark)
     return;
@@ -945,8 +948,8 @@ classinfogcmark_BM (struct garbcoll_stBM *gc, struct classinfo_stBM *clinf,
 void
 classinfogcdestroy_BM (struct garbcoll_stBM *gc, struct classinfo_stBM *clinf)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
   memset (clinf, 0, sizeof (*clinf));
   free (clinf);
   gc->gc_freedbytes += sizeof (*clinf);
@@ -955,8 +958,8 @@ classinfogcdestroy_BM (struct garbcoll_stBM *gc, struct classinfo_stBM *clinf)
 void
 classinfogckeep_BM (struct garbcoll_stBM *gc, struct classinfo_stBM *clinf)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
   gc->gc_keptbytes += sizeof (*clinf);
 }                               /* end classinfogckeep_BM */
 
@@ -989,7 +992,7 @@ objclassinfoputmethod_BM (objectval_tyBM * obj, objectval_tyBM * obselector,
     return;
   struct classinfo_stBM *clinf =        //
     (struct classinfo_stBM *) (obj->ob_payl);
-  assert (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
   clinf->clinf_dictmeth =       //
     assoc_addattr_BM (clinf->clinf_dictmeth, obselector, (value_tyBM) clos);
 }                               /* end objclassinfoputmethod_BM */
@@ -1006,7 +1009,7 @@ objclassinforemovemethod_BM (objectval_tyBM * obj,
     return;
   struct classinfo_stBM *clinf =        //
     (struct classinfo_stBM *) (obj->ob_payl);
-  assert (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) clinf) == typayl_classinfo_BM);
   clinf->clinf_dictmeth =       //
     assoc_removeattr_BM (clinf->clinf_dictmeth, obselector);
 }                               /* end objclassinforemovemethod_BM */
@@ -1047,12 +1050,12 @@ valfindmethod_BM (const value_tyBM recv, const objectval_tyBM * obselector)
         return NULL;
       if (loopcnt > MAXDEPTHMETHOD_BM)
         return NULL;
-      assert (isobject_BM (obclass));
+      ASSERT_BM (isobject_BM (obclass));
       const closure_tyBM *mclos =
         objgetclassinfomethod_BM (obclass, obselector);
       if (mclos)
         {
-          assert (isclosure_BM ((const value_tyBM) mclos));
+          ASSERT_BM (isclosure_BM ((const value_tyBM) mclos));
           return mclos;
         };
       if (obclass == BMP_value)
@@ -1074,7 +1077,7 @@ send0_BM (const value_tyBM recv, const objectval_tyBM * obselector,
   const closure_tyBM *mclos = valfindmethod_BM (recv, obselector);
   if (!mclos)
     return NULL;
-  assert (isclosure_BM ((const value_tyBM) mclos));
+  ASSERT_BM (isclosure_BM ((const value_tyBM) mclos));
   return apply1_BM (mclos, stkf, recv);
 }                               /* end send0_BM */
 
@@ -1088,7 +1091,7 @@ send1_BM (const value_tyBM recv, const objectval_tyBM * obselector,
   const closure_tyBM *mclos = valfindmethod_BM (recv, obselector);
   if (!mclos)
     return NULL;
-  assert (isclosure_BM ((const value_tyBM) mclos));
+  ASSERT_BM (isclosure_BM ((const value_tyBM) mclos));
   return apply2_BM (mclos, stkf, recv, arg1);
 }                               /* end send1_BM */
 
@@ -1103,7 +1106,7 @@ send2_BM (const value_tyBM recv, const objectval_tyBM * obselector,
   const closure_tyBM *mclos = valfindmethod_BM (recv, obselector);
   if (!mclos)
     return NULL;
-  assert (isclosure_BM ((const value_tyBM) mclos));
+  ASSERT_BM (isclosure_BM ((const value_tyBM) mclos));
   return apply3_BM (mclos, stkf, recv, arg1, arg2);
 }                               /* end send2_BM */
 
@@ -1118,7 +1121,7 @@ send3_BM (const value_tyBM recv, const objectval_tyBM * obselector,
   const closure_tyBM *mclos = valfindmethod_BM (recv, obselector);
   if (!mclos)
     return NULL;
-  assert (isclosure_BM ((const value_tyBM) mclos));
+  ASSERT_BM (isclosure_BM ((const value_tyBM) mclos));
   return apply4_BM (mclos, stkf, recv, arg1, arg2, arg3);
 }                               /* end send3_BM */
 
@@ -1133,7 +1136,7 @@ send4_BM (const value_tyBM recv, const objectval_tyBM * obselector,
   const closure_tyBM *mclos = valfindmethod_BM (recv, obselector);
   if (!mclos)
     return NULL;
-  assert (isclosure_BM ((const value_tyBM) mclos));
+  ASSERT_BM (isclosure_BM ((const value_tyBM) mclos));
   return apply5_BM (mclos, stkf, recv, arg1, arg2, arg3, arg4);
 }                               /* end send4_BM */
 
@@ -1149,7 +1152,7 @@ send5_BM (const value_tyBM recv, const objectval_tyBM * obselector,
   const closure_tyBM *mclos = valfindmethod_BM (recv, obselector);
   if (!mclos)
     return NULL;
-  assert (isclosure_BM ((const value_tyBM) mclos));
+  ASSERT_BM (isclosure_BM ((const value_tyBM) mclos));
   return apply6_BM (mclos, stkf, recv, arg1, arg2, arg3, arg4, arg5);
 }                               /* end send5_BM */
 
@@ -1165,7 +1168,7 @@ send6_BM (const value_tyBM recv, const objectval_tyBM * obselector,
   const closure_tyBM *mclos = valfindmethod_BM (recv, obselector);
   if (!mclos)
     return NULL;
-  assert (isclosure_BM ((const value_tyBM) mclos));
+  ASSERT_BM (isclosure_BM ((const value_tyBM) mclos));
   return apply7_BM (mclos, stkf, recv, arg1, arg2, arg3, arg4, arg5, arg6);
 }                               /* end send6_BM */
 
@@ -1181,7 +1184,7 @@ send7_BM (const value_tyBM recv, const objectval_tyBM * obselector,
   const closure_tyBM *mclos = valfindmethod_BM (recv, obselector);
   if (!mclos)
     return NULL;
-  assert (isclosure_BM ((const value_tyBM) mclos));
+  ASSERT_BM (isclosure_BM ((const value_tyBM) mclos));
   return apply8_BM (mclos, stkf, recv, arg1, arg2, arg3, arg4, arg5, arg6,
                     arg7);
 }                               /* end send7_BM */
@@ -1199,7 +1202,7 @@ send8_BM (const value_tyBM recv, const objectval_tyBM * obselector,
   const closure_tyBM *mclos = valfindmethod_BM (recv, obselector);
   if (!mclos)
     return NULL;
-  assert (isclosure_BM ((const value_tyBM) mclos));
+  ASSERT_BM (isclosure_BM ((const value_tyBM) mclos));
   return apply9_BM (mclos, stkf, recv, arg1, arg2, arg3, arg4, arg5, arg6,
                     arg7, arg8);
 }                               /* end send8_BM */
@@ -1210,7 +1213,7 @@ run_agenda_tasklet_BM (objectval_tyBM * obtk, struct failurelockset_stBM *flh)
 {
   if (!isobject_BM (obtk))      // should never happen
     FATAL_BM ("bad tasklet object @%p", obtk);
-  assert (flh != NULL);
+  ASSERT_BM (flh != NULL);
   LOCALFRAME_BM ( /*prev: */ NULL, /*descr: */ NULL,
                  objectval_tyBM * obtk;
                  value_tyBM failres;);

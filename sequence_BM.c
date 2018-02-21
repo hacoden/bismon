@@ -19,7 +19,7 @@ maketuple_BM (objectval_tyBM ** arr, unsigned rawsiz)
     sizeof (tupleval_tyBM)      //
     + ((siz > 0)                //
        ? (prime_above_BM (siz - 1) * sizeof (objectval_tyBM *)) : 0);
-  assert (tupsiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
+  ASSERT_BM (tupsiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
   tupleval_tyBM *tup =          //
     allocgcty_BM (tyTuple_BM, tupsiz);
   unsigned cnt = 0;
@@ -40,7 +40,7 @@ maketuple_BM (objectval_tyBM ** arr, unsigned rawsiz)
   hash_tyBM h = h1 ^ h2;
   if (!h)                       /* so h1 == h2 */
     h = (h1 & 0xffffff) + (h2 % 138571) + 3 * (siz & 0xffff) + 35;
-  assert (h > 0);
+  ASSERT_BM (h > 0);
   ((typedsize_tyBM *) tup)->size = siz;
   ((typedhead_tyBM *) tup)->hash = h;
   return tup;
@@ -49,16 +49,16 @@ maketuple_BM (objectval_tyBM ** arr, unsigned rawsiz)
 void
 tuplegcdestroy_BM (struct garbcoll_stBM *gc, tupleval_tyBM * tup)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) tup)->htyp == tyTuple_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) tup)->htyp == tyTuple_BM);
   unsigned siz = ((typedsize_tyBM *) tup)->size;
-  assert (siz < MAXSIZE_BM);
+  ASSERT_BM (siz < MAXSIZE_BM);
   unsigned long tupsiz = sizeof (tupleval_tyBM) + ((siz > 0)    //
                                                    ? (prime_above_BM (siz - 1)
                                                       *
                                                       sizeof (objectval_tyBM
                                                               *)) : 0);
-  assert (tupsiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
+  ASSERT_BM (tupsiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
   memset (tup, 0, sizeof (*tup) + siz * sizeof (void *));
   free (tup);
   gc->gc_freedbytes += tupsiz;
@@ -67,16 +67,16 @@ tuplegcdestroy_BM (struct garbcoll_stBM *gc, tupleval_tyBM * tup)
 void
 tuplegckeep_BM (struct garbcoll_stBM *gc, tupleval_tyBM * tup)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) tup)->htyp == tyTuple_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) tup)->htyp == tyTuple_BM);
   unsigned siz = ((typedsize_tyBM *) tup)->size;
-  assert (siz < MAXSIZE_BM);
+  ASSERT_BM (siz < MAXSIZE_BM);
   unsigned long tupsiz = sizeof (tupleval_tyBM) + ((siz > 0)    //
                                                    ? (prime_above_BM (siz - 1)
                                                       *
                                                       sizeof (objectval_tyBM
                                                               *)) : 0);
-  assert (tupsiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
+  ASSERT_BM (tupsiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
   gc->gc_keptbytes += tupsiz;
 }                               /* end tuplegckeep_BM */
 
@@ -108,8 +108,8 @@ tuplecompnth_BM (const tupleval_tyBM * tup, int rk)
 void *
 tuplegcproc_BM (struct garbcoll_stBM *gc, tupleval_tyBM * tup)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM ((const value_tyBM) tup) == tyTuple_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) tup) == tyTuple_BM);
 #warning tuplegcproc_BM should forward
   uint8_t oldmark = ((typedhead_tyBM *) tup)->hgc;
   if (oldmark)
@@ -153,7 +153,7 @@ makeset_BM (const objectval_tyBM ** arr, unsigned rawsiz)
   for (unsigned ix = 0; ix < rawsiz; ix++)
     if (arr[ix])
       tmparr[cnt++] = arr[ix];
-  assert (cnt == siz);
+  ASSERT_BM (cnt == siz);
   sortobjarr_BM ((const objectval_tyBM **) tmparr, siz);
   int nbdup = 0;
   setval_tyBM *set = NULL;
@@ -162,14 +162,14 @@ makeset_BM (const objectval_tyBM ** arr, unsigned rawsiz)
       nbdup++;
   if (nbdup > 0)
     {
-      assert (nbdup < (int) siz);
+      ASSERT_BM (nbdup < (int) siz);
       unsigned dupsiz = siz;
       siz = dupsiz - nbdup;
-      assert (siz < MAXSIZE_BM);
+      ASSERT_BM (siz < MAXSIZE_BM);
       unsigned long setsiz = sizeof (setval_tyBM) +     //
         ((siz > 0)
          ? ((prime_above_BM (siz - 1) * sizeof (objectval_tyBM *))) : 0);
-      assert (setsiz < ((4L * MAXSIZE_BM) / 3 + 5L) * sizeof (void *));
+      ASSERT_BM (setsiz < ((4L * MAXSIZE_BM) / 3 + 5L) * sizeof (void *));
       set =                     //
         allocgcty_BM (tySet_BM, setsiz);
       set->seq_objs[0] = tmparr[0];
@@ -179,15 +179,15 @@ makeset_BM (const objectval_tyBM ** arr, unsigned rawsiz)
           if (tmparr[dix] != set->seq_objs[cnt - 1])
             set->seq_objs[cnt++] = tmparr[dix];
         }
-      assert (cnt == siz);
+      ASSERT_BM (cnt == siz);
     }
   else                          // nbdup == 0
     {
-      assert (siz < MAXSIZE_BM);
+      ASSERT_BM (siz < MAXSIZE_BM);
       unsigned long setsiz = sizeof (setval_tyBM) +     //
         ((siz > 0)
          ? ((prime_above_BM (siz - 1) * sizeof (objectval_tyBM *))) : 0);
-      assert (setsiz < ((4L * MAXSIZE_BM) / 3 + 5L) * sizeof (void *));
+      ASSERT_BM (setsiz < ((4L * MAXSIZE_BM) / 3 + 5L) * sizeof (void *));
       set =                     //
         allocgcty_BM (tySet_BM, setsiz);
       memcpy (set->seq_objs, tmparr, siz * sizeof (objectval_tyBM *));
@@ -209,7 +209,7 @@ makeset_BM (const objectval_tyBM ** arr, unsigned rawsiz)
   h = h1 ^ (h2 * 31 - siz);
   if (!h)
     h = (h1 & 0xffffff) + 3 * (h2 % 138599) + 11 * (siz & 0xffff) + 59;
-  assert (h > 0);
+  ASSERT_BM (h > 0);
   ((typedhead_tyBM *) set)->hash = h;
   return set;
 }                               /* end makeset_BM */
@@ -217,14 +217,14 @@ makeset_BM (const objectval_tyBM ** arr, unsigned rawsiz)
 void
 setgcdestroy_BM (struct garbcoll_stBM *gc, setval_tyBM * set)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) set)->htyp == tySet_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) set)->htyp == tySet_BM);
   unsigned siz = ((typedsize_tyBM *) set)->size;
-  assert (siz < MAXSIZE_BM);
+  ASSERT_BM (siz < MAXSIZE_BM);
   unsigned long setsiz = sizeof (setval_tyBM) + //
     ((siz > 0)
      ? ((prime_above_BM (siz - 1) * sizeof (objectval_tyBM *))) : 0);
-  assert (setsiz < ((4L * MAXSIZE_BM) / 3 + 5L) * sizeof (void *));
+  ASSERT_BM (setsiz < ((4L * MAXSIZE_BM) / 3 + 5L) * sizeof (void *));
   memset (set, 0, sizeof (*set) + siz * sizeof (void *));
   free (set);
   gc->gc_freedbytes += setsiz;
@@ -233,14 +233,14 @@ setgcdestroy_BM (struct garbcoll_stBM *gc, setval_tyBM * set)
 void
 setgckeep_BM (struct garbcoll_stBM *gc, setval_tyBM * set)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) set)->htyp == tySet_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) set)->htyp == tySet_BM);
   unsigned siz = ((typedsize_tyBM *) set)->size;
-  assert (siz < MAXSIZE_BM);
+  ASSERT_BM (siz < MAXSIZE_BM);
   unsigned long setsiz = sizeof (setval_tyBM) + //
     ((siz > 0)
      ? ((prime_above_BM (siz - 1) * sizeof (objectval_tyBM *))) : 0);
-  assert (setsiz < ((4L * MAXSIZE_BM) / 3 + 5L) * sizeof (void *));
+  ASSERT_BM (setsiz < ((4L * MAXSIZE_BM) / 3 + 5L) * sizeof (void *));
   gc->gc_keptbytes += setsiz;
 }                               /* end setgckeep_BM */
 
@@ -256,7 +256,8 @@ setelemindex_BM (const setval_tyBM * setv, const objectval_tyBM * obelem)
     {
       md = (lo + hi) / 2;
       const objectval_tyBM *mdob = setv->seq_objs[md];
-      assert (mdob != NULL && ((typedhead_tyBM *) mdob)->htyp == tyObject_BM);
+      ASSERT_BM (mdob != NULL
+                 && ((typedhead_tyBM *) mdob)->htyp == tyObject_BM);
       if (obelem == mdob)
         return true;
       int cmp = objectcmp_BM (obelem, mdob);
@@ -264,14 +265,15 @@ setelemindex_BM (const setval_tyBM * setv, const objectval_tyBM * obelem)
         hi = md;
       else
         {
-          assert (cmp > 0);
+          ASSERT_BM (cmp > 0);
           lo = md;
         }
     };
   for (md = lo; md < hi; md++)
     {
       const objectval_tyBM *mdob = setv->seq_objs[md];
-      assert (mdob != NULL && ((typedhead_tyBM *) mdob)->htyp == tyObject_BM);
+      ASSERT_BM (mdob != NULL
+                 && ((typedhead_tyBM *) mdob)->htyp == tyObject_BM);
       if (obelem == mdob)
         return md;
     }
@@ -325,8 +327,8 @@ sequencenthcomp_BM (const seqobval_tyBM * sq, int rk)
 void *
 setgcproc_BM (struct garbcoll_stBM *gc, setval_tyBM * set)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM ((const value_tyBM) set) == tySet_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) set) == tySet_BM);
 #warning setgcproc_BM should sometimes forward
   uint8_t oldmark = ((typedhead_tyBM *) set)->hgc;
   if (oldmark)
@@ -365,7 +367,7 @@ datavect_grow_BM (struct datavectval_stBM *dvec, unsigned gap)
     FATAL_BM ("too big datavect %ld", siz);
   unsigned long vecsiz =
     sizeof (struct datavectval_stBM) + siz * sizeof (void *);
-  assert (vecsiz < ((4L * MAXSIZE_BM / 3) + 5L) * sizeof (void *));
+  ASSERT_BM (vecsiz < ((4L * MAXSIZE_BM / 3) + 5L) * sizeof (void *));
   struct datavectval_stBM *newdvec =    //
     allocgcty_BM (typayl_vectval_BM, vecsiz);
   ((typedhead_tyBM *) newdvec)->rlen = siz;
@@ -377,13 +379,13 @@ datavect_grow_BM (struct datavectval_stBM *dvec, unsigned gap)
 void
 datavectgcdestroy_BM (struct garbcoll_stBM *gc, struct datavectval_stBM *dvec)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) dvec)->htyp == typayl_vectval_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) dvec)->htyp == typayl_vectval_BM);
   unsigned siz = ((typedhead_tyBM *) dvec)->rlen;
-  assert (siz < MAXSIZE_BM);
+  ASSERT_BM (siz < MAXSIZE_BM);
   unsigned long vecsiz =
     sizeof (struct datavectval_stBM) + siz * sizeof (void *);
-  assert (vecsiz < ((4L * MAXSIZE_BM / 3) + 5L) * sizeof (void *));
+  ASSERT_BM (vecsiz < ((4L * MAXSIZE_BM / 3) + 5L) * sizeof (void *));
   memset (dvec, 0, sizeof (*dvec) + siz * sizeof (void *));
   free (dvec);
   gc->gc_freedbytes += vecsiz;
@@ -393,13 +395,13 @@ datavectgcdestroy_BM (struct garbcoll_stBM *gc, struct datavectval_stBM *dvec)
 void
 datavectgckeep_BM (struct garbcoll_stBM *gc, struct datavectval_stBM *dvec)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) dvec)->htyp == typayl_vectval_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) dvec)->htyp == typayl_vectval_BM);
   unsigned siz = ((typedhead_tyBM *) dvec)->rlen;
-  assert (siz < MAXSIZE_BM);
+  ASSERT_BM (siz < MAXSIZE_BM);
   unsigned long vecsiz =
     sizeof (struct datavectval_stBM) + siz * sizeof (void *);
-  assert (vecsiz < ((4L * MAXSIZE_BM / 3) + 5L) * sizeof (void *));
+  ASSERT_BM (vecsiz < ((4L * MAXSIZE_BM / 3) + 5L) * sizeof (void *));
   gc->gc_keptbytes += vecsiz;
 }                               /* end datavectgckeep_BM */
 
@@ -425,7 +427,7 @@ datavect_reserve_BM (struct datavectval_stBM *dvec, unsigned gap)
   if (siz > MAXSIZE_BM)
     FATAL_BM ("too big datavect %ld", siz);
   unsigned long vecsiz = sizeof (*dvec) + siz * sizeof (void *);
-  assert (vecsiz < ((4L * MAXSIZE_BM / 3) + 5L) * sizeof (void *));
+  ASSERT_BM (vecsiz < ((4L * MAXSIZE_BM / 3) + 5L) * sizeof (void *));
   struct datavectval_stBM *newdvec =    //
     allocgcty_BM (typayl_vectval_BM, vecsiz);
   ((typedhead_tyBM *) newdvec)->rlen = siz;
@@ -589,8 +591,8 @@ void *
 datavectgcproc_BM (struct garbcoll_stBM *gc,
                    struct datavectval_stBM *dvec, int depth)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM ((const value_tyBM) dvec) == typayl_vectval_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) dvec) == typayl_vectval_BM);
   uint8_t oldmark = ((typedhead_tyBM *) dvec)->hgc;
   if (oldmark)
     return dvec;
@@ -598,7 +600,7 @@ datavectgcproc_BM (struct garbcoll_stBM *gc,
   gc->gc_nbmarks++;
   unsigned dlen = ((typedhead_tyBM *) dvec)->rlen;
   unsigned dcnt = ((typedsize_tyBM *) dvec)->size;
-  assert (dcnt <= dlen);
+  ASSERT_BM (dcnt <= dlen);
   for (unsigned ix = 0; ix < dcnt; ix++)
     VALUEGCPROC_BM (gc, dvec->vec_data[ix], depth + 1);
   return dvec;

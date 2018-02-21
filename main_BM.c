@@ -118,7 +118,7 @@ run_command_bm (const gchar * optname
                 __attribute__ ((unused)), const gchar * val, gpointer data
                 __attribute__ ((unused)), GError ** perr)
 {
-  assert (val != NULL);
+  ASSERT_BM (val != NULL);
   fprintf (stderr, "running command: %s\n", val);
   int ok = system (val);
   if (ok == 0)
@@ -133,7 +133,7 @@ add_predef_bm (const gchar * optname __attribute__ ((unused)),
                gpointer data __attribute__ ((unused)),
                GError ** perr __attribute__ ((unused)))
 {
-  assert (val != NULL);
+  ASSERT_BM (val != NULL);
   if (!validname_BM (val))
     FATAL_BM ("invalid predef name %s", val);
   if (nb_added_predef_bm >= MAXADDEDPREDEF_BM)

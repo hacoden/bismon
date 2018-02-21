@@ -17,8 +17,8 @@ makelist_BM (void)
 void
 listgcdestroy_BM (struct garbcoll_stBM *gc, struct listtop_stBM *lis)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) lis)->htyp == typayl_listtop_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) lis)->htyp == typayl_listtop_BM);
   size_t frsiz = 0;
   struct listlink_stBM *curl = lis->list_first;
   unsigned linkscnt = 0;
@@ -43,10 +43,10 @@ listgcdestroy_BM (struct garbcoll_stBM *gc, struct listtop_stBM *lis)
 void
 listgckeep_BM (struct garbcoll_stBM *gc, struct listtop_stBM *lis)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) lis)->htyp == typayl_listtop_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) lis)->htyp == typayl_listtop_BM);
   unsigned nblinks = lis->list_nblinks;
-  assert (nblinks < MAXSIZE_BM);
+  ASSERT_BM (nblinks < MAXSIZE_BM);
   gc->gc_keptbytes +=           //
     sizeof (*lis) + nblinks * sizeof (struct listlink_stBM);
 }                               /* end listgckeep_BM */
@@ -86,9 +86,9 @@ listappend_BM (struct listtop_stBM *lis, value_tyBM val)
   struct listlink_stBM *lastl = lis->list_last;
   if (!lastl)
     {
-      assert (lis->list_first == NULL);
-      assert (lis->list_nblinks == 0);
-      assert (((typedhead_tyBM *) lis)->rlen == 0);
+      ASSERT_BM (lis->list_first == NULL);
+      ASSERT_BM (lis->list_nblinks == 0);
+      ASSERT_BM (((typedhead_tyBM *) lis)->rlen == 0);
       struct listlink_stBM *newl =      //
         malloc (sizeof (struct listlink_stBM));
       if (!newl)
@@ -110,7 +110,7 @@ listappend_BM (struct listtop_stBM *lis, value_tyBM val)
           lvals[cntl++] = v;
         }
     };
-  assert (cntl > 0);
+  ASSERT_BM (cntl > 0);
   if (cntl < LINKSIZE_BM)
     {
       lvals[cntl++] = val;
@@ -141,9 +141,9 @@ listprepend_BM (struct listtop_stBM *lis, value_tyBM val)
   struct listlink_stBM *firstl = lis->list_first;
   if (!firstl)
     {
-      assert (lis->list_last == NULL);
-      assert (lis->list_nblinks == 0);
-      assert (((typedhead_tyBM *) lis)->rlen == 0);
+      ASSERT_BM (lis->list_last == NULL);
+      ASSERT_BM (lis->list_nblinks == 0);
+      ASSERT_BM (((typedhead_tyBM *) lis)->rlen == 0);
       struct listlink_stBM *newl =      //
         malloc (sizeof (struct listlink_stBM));
       if (!newl)
@@ -166,7 +166,7 @@ listprepend_BM (struct listtop_stBM *lis, value_tyBM val)
           lvals[cntl++] = v;
         }
     };
-  assert (cntl > 1);
+  ASSERT_BM (cntl > 1);
   if (cntl <= LINKSIZE_BM)
     {
       memcpy (firstl->link_mems, lvals, LINKSIZE_BM * sizeof (value_tyBM));
@@ -193,7 +193,7 @@ listpopfirst_BM (struct listtop_stBM *lis)
   struct listlink_stBM *firstl = lis->list_first;
   if (!firstl)
     return;
-  assert (((typedhead_tyBM *) lis)->rlen > 0);
+  ASSERT_BM (((typedhead_tyBM *) lis)->rlen > 0);
   unsigned cntl = 0;
   value_tyBM lvals[LINKSIZE_BM + 1] = { };
   for (unsigned ix = 0; ix < LINKSIZE_BM; ix++)
@@ -240,7 +240,7 @@ listpoplast_BM (struct listtop_stBM *lis)
   struct listlink_stBM *lastl = lis->list_last;
   if (!lastl)
     return;
-  assert (((typedhead_tyBM *) lis)->rlen > 0);
+  ASSERT_BM (((typedhead_tyBM *) lis)->rlen > 0);
   unsigned cntl = 0;
   value_tyBM lvals[LINKSIZE_BM] = { };
   for (unsigned ix = 0; ix < LINKSIZE_BM; ix++)
@@ -258,7 +258,7 @@ listpoplast_BM (struct listtop_stBM *lis)
     }
   else if (lis->list_first == lastl)
     {
-      assert (lis->list_nblinks == 1);
+      ASSERT_BM (lis->list_nblinks == 1);
       memset (lastl, 0, sizeof (struct listlink_stBM));
       free (lastl);
       lis->list_first = lis->list_last = NULL;
@@ -300,7 +300,7 @@ list_to_node_BM (const struct listtop_stBM *lis,
       if (nblinks++ > MAXSIZE_BM)
         FATAL_BM ("too many %u links, cnt=%u", nblinks, cnt);
     }
-  assert (nblinks == lis->list_nblinks);
+  ASSERT_BM (nblinks == lis->list_nblinks);
   if (cnt > MAXSIZE_BM)
     FATAL_BM ("too huge list %u", cnt);
   value_tyBM *valarr = calloc (prime_above_BM (cnt + 1), sizeof (void *));
@@ -318,7 +318,7 @@ list_to_node_BM (const struct listtop_stBM *lis,
             valarr[vacnt++] = val;
         }
     }
-  assert (vacnt == cnt);
+  ASSERT_BM (vacnt == cnt);
   const node_tyBM *nod = makenode_BM (connobj, cnt, valarr);
   memset (valarr, 0, cnt * sizeof (void *));
   free (valarr), valarr = NULL;
@@ -348,14 +348,14 @@ list_to_tuple_BM (const struct listtop_stBM *lis)
           const value_tyBM val = link->link_mems[ix];
           if (valtype_BM (val) == tyObject_BM)
             {
-              assert (cnt < len);
+              ASSERT_BM (cnt < len);
               arr[cnt++] = (objectval_tyBM *) val;
             }
         }
       if (nblinks++ > MAXSIZE_BM)
         FATAL_BM ("too many %u links, cnt=%u", nblinks, cnt);
     }
-  assert (nblinks == lis->list_nblinks);
+  ASSERT_BM (nblinks == lis->list_nblinks);
   if (cnt > MAXSIZE_BM)
     FATAL_BM ("too huge list %u", cnt);
   tup = maketuple_BM (arr, cnt);
@@ -367,8 +367,8 @@ list_to_tuple_BM (const struct listtop_stBM *lis)
 void
 listgcmark_BM (struct garbcoll_stBM *gc, struct listtop_stBM *lis, int depth)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM ((const value_tyBM) lis) == typayl_listtop_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) lis) == typayl_listtop_BM);
   uint8_t oldmark = ((typedhead_tyBM *) lis)->hgc;
   if (oldmark)
     return;
@@ -388,5 +388,5 @@ listgcmark_BM (struct garbcoll_stBM *gc, struct listtop_stBM *lis, int depth)
         };
       nblinks++;
     }
-  assert (nblinks == lis->list_nblinks);
+  ASSERT_BM (nblinks == lis->list_nblinks);
 }                               /* end listgcmark_BM  */

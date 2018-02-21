@@ -68,6 +68,14 @@
 
 #define FATAL_BM(Fmt,...) FATAL_AT_BM(__FILE__,__LINE__,Fmt,##__VA_ARGS__)
 
+#ifndef NDEBUG
+#define ASSERT_BM(Cond) do { if (!(Cond)) FATAL_AT_BM (__FILE__,__LINE__,\
+	     "ASSERT failure: %s (in %s)", \
+	     #Cond, __PRETTY_FUNCTION__); } while(0)
+#else
+#define ASSERT_BM(Cond) do { if (false && !(Cond)) abort(); } while(0)
+#endif /* ASSERT_BM */
+
 #define LOCALFRAME_BM(Prev,Descr,...) struct                    \
   { struct stackframe_stBM __frame; __VA_ARGS__; } _ =          \
     { .__frame = {.stkfram_pA=                                  \
@@ -86,10 +94,10 @@
 #define LOCALGETFUNV_ATLIN_BIS_BM(Lin,Funv) do {			\
   struct stackframe_stBM*prevfram_##Lin					\
     = _.__frame.stkfram_prev;						\
-  assert (prevfram_##Lin						\
+  ASSERT_BM (prevfram_##Lin						\
 	  && ((typedhead_tyBM *)prevfram_##Lin)->htyp			\
 	  == typayl_StackFrame_BM);					\
-  assert (isclosure_BM ((value_tyBM)prevfram_##Lin->stkfram_callfun)	\
+  ASSERT_BM (isclosure_BM ((value_tyBM)prevfram_##Lin->stkfram_callfun)	\
 	  || isobject_BM ((value_tyBM)prevfram_##Lin->stkfram_callfun)); \
   Funv = (void*)prevfram_##Lin->stkfram_callfun;			\
  } while(0)
@@ -99,7 +107,7 @@
 #define LOCALRETURN_ATLIN_BIS_BM(Lin,Res) do {		\
   struct stackframe_stBM*prevfram_##Lin			\
     = _.__frame.stkfram_prev;				\
-  assert (prevfram_##Lin				\
+  ASSERT_BM (prevfram_##Lin				\
 	  && ((typedhead_tyBM *)prevfram_##Lin)->htyp	\
 	  == typayl_StackFrame_BM);			\
   prevfram_##Lin->stkfram_callfun = NULL;		\
@@ -111,7 +119,7 @@
 #define LOCALJUSTRETURN_ATLIN_BIS_BM(Lin) do {		\
   struct stackframe_stBM*prevfram_##Lin			\
     = _.__frame.stkfram_prev;				\
-  assert (prevfram_##Lin				\
+  ASSERT_BM (prevfram_##Lin				\
 	  && ((typedhead_tyBM *)prevfram_##Lin)->htyp	\
 	  == typayl_StackFrame_BM);			\
   prevfram_##Lin->stkfram_callclos = NULL;		\

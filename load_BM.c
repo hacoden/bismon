@@ -6,9 +6,9 @@ struct loader_stBM *firstloader_BM;
 void
 loadergcmark_BM (struct garbcoll_stBM *gc, struct loader_stBM *ld)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM ((const value_tyBM) ld) == typayl_loader_BM);
-  assert (ld->ld_magic == LOADERMAGIC_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) ld) == typayl_loader_BM);
+  ASSERT_BM (ld->ld_magic == LOADERMAGIC_BM);
   EXTENDEDGCPROC_BM (gc, ld->ld_objhset, 0);
   EXTENDEDGCPROC_BM (gc, ld->ld_modhset, 0);
   EXTENDEDGCPROC_BM (gc, ld->ld_todolist, 0);
@@ -17,9 +17,9 @@ loadergcmark_BM (struct garbcoll_stBM *gc, struct loader_stBM *ld)
 void
 loadergcdestroy_BM (struct garbcoll_stBM *gc, struct loader_stBM *ld)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM ((const value_tyBM) ld) == typayl_loader_BM);
-  assert (ld->ld_magic == LOADERMAGIC_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) ld) == typayl_loader_BM);
+  ASSERT_BM (ld->ld_magic == LOADERMAGIC_BM);
   fprintf (stderr, "loadergcdestroy_BM called ld @%p\n", (void *) ld);
   memset (ld, 0, sizeof (*ld));
   free (ld);
@@ -29,9 +29,9 @@ loadergcdestroy_BM (struct garbcoll_stBM *gc, struct loader_stBM *ld)
 void
 loadergckeep_BM (struct garbcoll_stBM *gc, struct loader_stBM *ld)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM ((const value_tyBM) ld) == typayl_loader_BM);
-  assert (ld->ld_magic == LOADERMAGIC_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) ld) == typayl_loader_BM);
+  ASSERT_BM (ld->ld_magic == LOADERMAGIC_BM);
   fprintf (stderr, "loadergckeep_BM called ld @%p\n", (void *) ld);
   gc->gc_keptbytes += sizeof (struct loader_stBM);
 }                               /* end loadergckeep_BM */
@@ -99,7 +99,7 @@ load_initial_BM (const char *ldirpath)
             }
           else
             FATAL_BM ("asprintf failure (%m)");
-          assert (patharr[0] == NULL);
+          ASSERT_BM (patharr[0] == NULL);
           patharr[0] = buf;
         }
     }
@@ -193,10 +193,10 @@ load_addtodo_BM (const closure_tyBM * clos)
 static void
 load_first_pass_BM (struct loader_stBM *ld, int ix)
 {
-  assert (ld && ld->ld_magic == LOADERMAGIC_BM);
-  assert (ix >= 0 && ix <= (int) ld->ld_maxnum);
+  ASSERT_BM (ld && ld->ld_magic == LOADERMAGIC_BM);
+  ASSERT_BM (ix >= 0 && ix <= (int) ld->ld_maxnum);
   char *curldpath = ld->ld_storepatharr[ix];
-  assert (curldpath != NULL);
+  ASSERT_BM (curldpath != NULL);
   size_t linsiz = 256;
   char *linbuf = malloc (linsiz);
   if (!linbuf)
@@ -333,12 +333,12 @@ load_modif_class_BM (struct loader_stBM *ld, int ix,
                      struct stackframe_stBM *parstkfrm,
                      struct parser_stBM *ldpars, objectval_tyBM * argcurldobj)
 {
-  assert (ld && ld->ld_magic == LOADERMAGIC_BM);
-  assert (ix >= 0 && ix <= (int) ld->ld_maxnum);
+  ASSERT_BM (ld && ld->ld_magic == LOADERMAGIC_BM);
+  ASSERT_BM (ix >= 0 && ix <= (int) ld->ld_maxnum);
   char *curldpath = ld->ld_storepatharr[ix];
-  assert (curldpath != NULL);
-  assert (ldpars != NULL);
-  assert (isobject_BM (argcurldobj));
+  ASSERT_BM (curldpath != NULL);
+  ASSERT_BM (ldpars != NULL);
+  ASSERT_BM (isobject_BM (argcurldobj));
   LOCALFRAME_BM (parstkfrm, NULL,       //
                  struct parser_stBM *ldparser;  //
                  objectval_tyBM * curldobj;     //
@@ -404,12 +404,12 @@ load_modif_name_BM (struct loader_stBM *ld, int ix,
                     struct stackframe_stBM *parstkfrm,
                     struct parser_stBM *ldpars, objectval_tyBM * argcurldobj)
 {
-  assert (ld && ld->ld_magic == LOADERMAGIC_BM);
-  assert (ix >= 0 && ix <= (int) ld->ld_maxnum);
+  ASSERT_BM (ld && ld->ld_magic == LOADERMAGIC_BM);
+  ASSERT_BM (ix >= 0 && ix <= (int) ld->ld_maxnum);
   char *curldpath = ld->ld_storepatharr[ix];
-  assert (curldpath != NULL);
-  assert (ldpars != NULL);
-  assert (isobject_BM (argcurldobj));
+  ASSERT_BM (curldpath != NULL);
+  ASSERT_BM (ldpars != NULL);
+  ASSERT_BM (isobject_BM (argcurldobj));
   LOCALFRAME_BM (parstkfrm, NULL,       //
                  struct parser_stBM *ldparser;  //
                  objectval_tyBM * curldobj;     //
@@ -444,7 +444,7 @@ load_modif_name_BM (struct loader_stBM *ld, int ix,
     parsererrorprintf_BM (ldpars, (struct stackframe_stBM *) &_, lineno,
                           colpos,
                           "expecting cname or namedobj after !~name (~");
-  assert (namestr != NULL);
+  ASSERT_BM (namestr != NULL);
   const char *oldname = findobjectname_BM (_.curldobj);
   if (oldname && strcmp (oldname, namestr))
     {
@@ -470,12 +470,12 @@ load_modif_value_BM (struct loader_stBM *ld, int ix,
                      struct stackframe_stBM *parstkfrm,
                      struct parser_stBM *ldpars, objectval_tyBM * argcurldobj)
 {
-  assert (ld && ld->ld_magic == LOADERMAGIC_BM);
-  assert (ix >= 0 && ix <= (int) ld->ld_maxnum);
+  ASSERT_BM (ld && ld->ld_magic == LOADERMAGIC_BM);
+  ASSERT_BM (ix >= 0 && ix <= (int) ld->ld_maxnum);
   char *curldpath = ld->ld_storepatharr[ix];
-  assert (curldpath != NULL);
-  assert (ldpars != NULL);
-  assert (isobject_BM (argcurldobj));
+  ASSERT_BM (curldpath != NULL);
+  ASSERT_BM (ldpars != NULL);
+  ASSERT_BM (isobject_BM (argcurldobj));
   LOCALFRAME_BM (parstkfrm, NULL,       //
                  struct parser_stBM *ldparser;  //
                  objectval_tyBM * curldobj;     //
@@ -515,12 +515,12 @@ load_modif_todo_BM (struct loader_stBM *ld, int ix,
                     struct stackframe_stBM *parstkfrm,
                     struct parser_stBM *ldpars, objectval_tyBM * argcurldobj)
 {
-  assert (ld && ld->ld_magic == LOADERMAGIC_BM);
-  assert (ix >= 0 && ix <= (int) ld->ld_maxnum);
+  ASSERT_BM (ld && ld->ld_magic == LOADERMAGIC_BM);
+  ASSERT_BM (ix >= 0 && ix <= (int) ld->ld_maxnum);
   char *curldpath = ld->ld_storepatharr[ix];
-  assert (curldpath != NULL);
-  assert (ldpars != NULL);
-  assert (isobject_BM (argcurldobj));
+  ASSERT_BM (curldpath != NULL);
+  ASSERT_BM (ldpars != NULL);
+  ASSERT_BM (isobject_BM (argcurldobj));
   LOCALFRAME_BM (parstkfrm, NULL,       //
                  struct parser_stBM *ldparser;  //
                  objectval_tyBM * curldobj;     //
@@ -635,9 +635,9 @@ load_postpone_modif_BM (struct loader_stBM *ld, int ix,
                  value_tyBM datav;      //
                  const closure_tyBM * clos;
     );
-  assert (ld && ld->ld_magic == LOADERMAGIC_BM);
-  assert (ix >= 0 && ix <= (int) ld->ld_maxnum);
-  assert (data != NULL);
+  ASSERT_BM (ld && ld->ld_magic == LOADERMAGIC_BM);
+  ASSERT_BM (ix >= 0 && ix <= (int) ld->ld_maxnum);
+  ASSERT_BM (data != NULL);
   unsigned lineno = parserlineno_BM (ldpars);
   unsigned colpos = parsercolpos_BM (ldpars);
   _.ld = ld;
@@ -670,10 +670,10 @@ static void
 load_second_pass_BM (struct loader_stBM *ld, int ix,
                      struct stackframe_stBM *parstkfrm)
 {
-  assert (ld && ld->ld_magic == LOADERMAGIC_BM);
-  assert (ix >= 0 && ix <= (int) ld->ld_maxnum);
+  ASSERT_BM (ld && ld->ld_magic == LOADERMAGIC_BM);
+  ASSERT_BM (ix >= 0 && ix <= (int) ld->ld_maxnum);
   char *curldpath = ld->ld_storepatharr[ix];
-  assert (curldpath != NULL);
+  ASSERT_BM (curldpath != NULL);
   FILE *fil = fopen (curldpath, "r");
   if (!fil)
     FATAL_BM ("failed to fopen %s (%m)", curldpath);
@@ -689,7 +689,7 @@ load_second_pass_BM (struct loader_stBM *ld, int ix,
     );
   _.ldparsownob = makeobj_BM ();
   struct parser_stBM *ldpars = makeparser_of_file_BM (fil, _.ldparsownob);
-  assert (ldpars != NULL);
+  ASSERT_BM (ldpars != NULL);
   ld->ld_parsarr[ix] = ldpars;
   ldpars->pars_path = ld->ld_storepatharr[ix];
   long nbdirectives = 0;
@@ -1015,8 +1015,8 @@ load_second_pass_BM (struct loader_stBM *ld, int ix,
 void
 doload_BM (struct stackframe_stBM *_parentframe, struct loader_stBM *ld)
 {
-  assert (ld && ld->ld_magic == LOADERMAGIC_BM);
-  assert (_parentframe != NULL);
+  ASSERT_BM (ld && ld->ld_magic == LOADERMAGIC_BM);
+  ASSERT_BM (_parentframe != NULL);
   LOCALFRAME_BM (_parentframe, NULL, value_tyBM firsttodo;
     );
   /// run the first pass to create every object
@@ -1029,7 +1029,7 @@ doload_BM (struct stackframe_stBM *_parentframe, struct loader_stBM *ld)
   for (int kix = 0; kix < bmnbconsts; kix++)
     {
       const char *kidstr = bmconstidstrings[kix];
-      assert (kidstr != NULL && kidstr[0] == '_');
+      ASSERT_BM (kidstr != NULL && kidstr[0] == '_');
       rawid_tyBM kid = parse_rawid_BM (kidstr, NULL);
       objectval_tyBM *kobj = findobjofid_BM (kid);
       if (!kobj)
@@ -1048,7 +1048,7 @@ doload_BM (struct stackframe_stBM *_parentframe, struct loader_stBM *ld)
   while (islist_BM (ld->ld_todolist) && listlength_BM (ld->ld_todolist) > 0)
     {
       _.firsttodo = listfirst_BM (ld->ld_todolist);
-      assert (isclosure_BM (_.firsttodo) || isobject_BM (_.firsttodo));
+      ASSERT_BM (isclosure_BM (_.firsttodo) || isobject_BM (_.firsttodo));
       listpopfirst_BM (ld->ld_todolist);
       apply0_BM ((value_tyBM) (_.firsttodo), (struct stackframe_stBM *) &_);
       todocnt++;
@@ -1103,13 +1103,13 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
   LOCALGETFUNV_BM (_.cclos);
   WEAKASSERT_BM (isclosure_BM (_.cclos)
                  && closurewidth_BM ((value_tyBM) _.cclos) >= closix__LAST);
-  assert (firstloader_BM != NULL);
+  ASSERT_BM (firstloader_BM != NULL);
   // clos0 is ix
   WEAKASSERT_BM (istaggedint_BM
                  (closurenthson_BM ((const value_tyBM) _.cclos, closix_ix)));
   unsigned ix =
     getint_BM (closurenthson_BM ((const value_tyBM) _.cclos, closix_ix));
-  assert (ix < firstloader_BM->ld_maxnum);
+  ASSERT_BM (ix < firstloader_BM->ld_maxnum);
   // clos1 is lineno
   WEAKASSERT_BM (istaggedint_BM
                  (closurenthson_BM
@@ -1130,7 +1130,7 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
   // clos4 is data (cname or named object)
   _.data = closurenthson_BM ((const value_tyBM) _.cclos, closix_data);
   struct parser_stBM *ldpars = firstloader_BM->ld_parsarr[ix];
-  assert (isparser_BM (ldpars));
+  ASSERT_BM (isparser_BM (ldpars));
   if (isobject_BM (_.data))
     {
       char idbuf[32];

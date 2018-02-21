@@ -12,11 +12,11 @@ const value_tyBM arg1,
 const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4,
 const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
-  assert (istaggedint_BM (arg1));       // the integer to dump
+  ASSERT_BM (istaggedint_BM (arg1));    // the integer to dump
   // arg2 is the bufob
   // arg3 is the obdumper
   // arg4 is the depth
-  assert (istaggedint_BM (arg4));
+  ASSERT_BM (istaggedint_BM (arg4));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  value_tyBM recv;
                  objectval_tyBM * bufob; objectval_tyBM * dumpob;
@@ -45,10 +45,10 @@ const value_tyBM arg1,
 const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4,
 const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
-  assert (isset_BM (arg1));     // the set to dump
+  ASSERT_BM (isset_BM (arg1));  // the set to dump
   // arg2 is the bufob
   // arg3 is the obdump
-  assert (istaggedint_BM (arg4));
+  ASSERT_BM (istaggedint_BM (arg4));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const setval_tyBM * recv; objectval_tyBM * dumpob;
                  objectval_tyBM * bufob; value_tyBM depthv;
@@ -93,10 +93,10 @@ const value_tyBM arg1,
 const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4,
 const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
-  assert (istuple_BM (arg1));   // the tuple to dump
+  ASSERT_BM (istuple_BM (arg1));        // the tuple to dump
   // arg2 is the bufob
   // arg3 is the obdump
-  assert (istaggedint_BM (arg4));
+  ASSERT_BM (istaggedint_BM (arg4));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const tupleval_tyBM * recv; objectval_tyBM * bufob;
                  objectval_tyBM * dumpob; value_tyBM depthv;
@@ -141,10 +141,10 @@ const value_tyBM arg1,
 const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4,
 const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
-  assert (isnode_BM (arg1));    // the node to dump
+  ASSERT_BM (isnode_BM (arg1)); // the node to dump
   // arg2 is the bufob
   // arg3 is the obdumper
-  assert (istaggedint_BM (arg4));
+  ASSERT_BM (istaggedint_BM (arg4));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const node_tyBM * recv;
                  objectval_tyBM * dumpob; objectval_tyBM * bufob;
@@ -199,9 +199,9 @@ const value_tyBM arg1,
 const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4,
 const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
-  assert (isclosure_BM (arg1)); // the closure to dump
+  ASSERT_BM (isclosure_BM (arg1));      // the closure to dump
   // arg2 is the bufob
-  assert (istaggedint_BM (arg4));
+  ASSERT_BM (istaggedint_BM (arg4));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const closure_tyBM * recv;
                  objectval_tyBM * dumpob; objectval_tyBM * bufob;
@@ -259,10 +259,10 @@ const value_tyBM arg1,
 const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4,
 const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
-  assert (isstring_BM (arg1));  // the string to dump
+  ASSERT_BM (isstring_BM (arg1));       // the string to dump
   // arg2 is the bufob
   // arg3 is the dumpob
-  assert (istaggedint_BM (arg4));
+  ASSERT_BM (istaggedint_BM (arg4));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const stringval_tyBM * recv;
                  objectval_tyBM * dumpob; objectval_tyBM * bufob;
@@ -276,7 +276,7 @@ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
   WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
   _.depthv = arg4;
   unsigned depth = getint_BM (_.depthv);
-  assert (depth < MAXDEPTHMETHOD_BM);
+  ASSERT_BM (depth < MAXDEPTHMETHOD_BM);
   unsigned bsiz = lenstring_BM (_.recv);
   const char *bstr = bytstring_BM (_.recv);
   objstrbufferprintf_BM (_.bufob, "\t\"");
@@ -344,14 +344,14 @@ ROUTINEOBJNAME_BM (_4EBQMvthjcP_2OiZxZviSQc)    // dump_scan°class
                  const setval_tyBM * selset; const objectval_tyBM * cursel;
                  value_tyBM curmeth;
     );
-  assert (isobject_BM (arg1));
+  ASSERT_BM (isobject_BM (arg1));
   _.recv = arg1;
   // arg2 is the dumpob
   _.dumpob = objectcast_BM (arg2);
   WEAKASSERT_BM (obdumpgetdumper_BM (_.dumpob) != NULL);
   WEAKASSERT_BM (objhasclassinfo_BM (_.recv));
-  assert (arg3 == NULL);
-  assert (restargs_ == NULL);
+  ASSERT_BM (arg3 == NULL);
+  ASSERT_BM (restargs_ == NULL);
   _.supercl = objgetclassinfosuperclass_BM ((const value_tyBM) _.recv);
   _.selset = objgetclassinfosetofselectors_BM ((const value_tyBM) _.recv);
   obdumpscanobj_BM (_.dumpob, _.supercl);
@@ -363,7 +363,7 @@ ROUTINEOBJNAME_BM (_4EBQMvthjcP_2OiZxZviSQc)    // dump_scan°class
       if (!obdumpobjisdumpable_BM (_.dumpob, _.cursel))
         continue;
       _.curmeth = (value_tyBM) objgetclassinfomethod_BM (_.recv, _.cursel);
-      assert (isclosure_BM (_.curmeth));
+      ASSERT_BM (isclosure_BM (_.curmeth));
       obdumpscanvalue_BM (_.dumpob, _.curmeth, 0);
     }
   LOCALRETURN_BM ((value_tyBM) _.recv);
@@ -387,13 +387,13 @@ ROUTINEOBJNAME_BM (_67IapmpeTLU_8MQKtlK8iAD)    // dump_data°class
                  const setval_tyBM * selset; const objectval_tyBM * cursel;
                  value_tyBM curmeth;
     );
-  assert (isobject_BM (arg1));
+  ASSERT_BM (isobject_BM (arg1));
   _.recv = arg1;
   _.dumpob = objectcast_BM (arg2);
   WEAKASSERT_BM (obdumpgetdumper_BM (_.dumpob) != NULL);
   _.bufob = objectcast_BM (arg3);
   WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
-  assert (restargs_ == NULL);
+  ASSERT_BM (restargs_ == NULL);
   _.supercl = objgetclassinfosuperclass_BM ((const value_tyBM) _.recv);
   if (!_.supercl)
     _.supercl = BMP_object;
@@ -423,7 +423,7 @@ ROUTINEOBJNAME_BM (_67IapmpeTLU_8MQKtlK8iAD)    // dump_data°class
       if (!obdumpobjisdumpable_BM (_.dumpob, _.cursel))
         continue;
       _.curmeth = (value_tyBM) objgetclassinfomethod_BM (_.recv, _.cursel);
-      assert (isclosure_BM (_.curmeth));
+      ASSERT_BM (isclosure_BM (_.curmeth));
       if (!obdumpvalisdumpable_BM (_.dumpob, _.curmeth))
         continue;
       char selidbuf[32];
@@ -468,8 +468,8 @@ ROUTINEOBJNAME_BM (_4DvEF1tVGFD_6VVLpFn6FPW)    //  dump_scan°hset_object
   WEAKASSERT_BM (valtype_BM (arg2) == typayl_dumper_BM);
   extendedval_tyBM payl = objpayload_BM (_.recv);
   WEAKASSERT_BM (valtype_BM (payl) == typayl_hashsetobj_BM);
-  assert (arg3 == NULL);
-  assert (restargs_ == NULL);
+  ASSERT_BM (arg3 == NULL);
+  ASSERT_BM (restargs_ == NULL);
   _.setv = hashsetobj_to_set_BM (payl);
   obdumpscanvalue_BM (_.dumpob, (value_tyBM) _.setv, 0);
   LOCALRETURN_BM ((value_tyBM) _.recv);
@@ -488,7 +488,7 @@ ROUTINEOBJNAME_BM (_7GMLV81ntO3_4NHTv7fCL0A)    // dump_data°hset_object
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   objectval_tyBM *k_dump_value = BMK_1FEnnpEkGdI_5DAcVDL5XHG;
-  assert (k_dump_value != NULL);
+  ASSERT_BM (k_dump_value != NULL);
   objectval_tyBM *k_put = BMK_9pvzBeIKHXF_8YDPCrQ6OEK;
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv;
@@ -504,8 +504,8 @@ ROUTINEOBJNAME_BM (_7GMLV81ntO3_4NHTv7fCL0A)    // dump_data°hset_object
   WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
   WEAKASSERT_BM (restargs_ == NULL);
   WEAKASSERT_BM (valtype_BM (objpayload_BM (_.recv)) == typayl_hashsetobj_BM);
-  assert (arg3 == NULL);
-  assert (restargs_ == NULL);
+  ASSERT_BM (arg3 == NULL);
+  ASSERT_BM (restargs_ == NULL);
   _.setv = hashsetobj_to_set_BM (objpayload_BM (_.recv));
   objstrbufferprintf_BM (_.bufob, "!~ todo (~\t");
   objstrbuffermoreindent_BM (_.bufob);
@@ -758,9 +758,9 @@ ROUTINEOBJNAME_BM (_99PsYq2Nw3w_9q4BJNeQ6Re)    //  dump_scan°vector_object
   WEAKASSERT_BM (valtype_BM (arg2) == typayl_dumper_BM);
   extendedval_tyBM payl = objpayload_BM (_.recv);
   WEAKASSERT_BM (valtype_BM (payl) == typayl_vectval_BM);
-  assert (arg3 == NULL);
+  ASSERT_BM (arg3 == NULL);
 #warning incomplete  dump_scan°vector_object _99PsYq2Nw3w_9q4BJNeQ6Re
-  assert (restargs_ == NULL);
+  ASSERT_BM (restargs_ == NULL);
   LOCALRETURN_BM ((value_tyBM) _.recv);
 }                               /* end dump_scan°vector_object ROUTINE _99PsYq2Nw3w_9q4BJNeQ6Re */
 
@@ -776,9 +776,9 @@ ROUTINEOBJNAME_BM (_0y90r6nyAYP_2MmfH2V00B1)    // dump_data°vector_object
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   objectval_tyBM *k_dump_value = BMK_1FEnnpEkGdI_5DAcVDL5XHG;
-  assert (k_dump_value != NULL);
+  ASSERT_BM (k_dump_value != NULL);
   objectval_tyBM *k_put = BMK_9pvzBeIKHXF_8YDPCrQ6OEK;
-  assert (k_put != NULL);
+  ASSERT_BM (k_put != NULL);
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv;
                  objectval_tyBM * dumpob; objectval_tyBM * bufob;
@@ -792,8 +792,8 @@ ROUTINEOBJNAME_BM (_0y90r6nyAYP_2MmfH2V00B1)    // dump_data°vector_object
   WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
   WEAKASSERT_BM (restargs_ == NULL);
   WEAKASSERT_BM (valtype_BM (objpayload_BM (_.recv)) == typayl_vectval_BM);
-  assert (arg3 == NULL);
-  assert (restargs_ == NULL);
+  ASSERT_BM (arg3 == NULL);
+  ASSERT_BM (restargs_ == NULL);
   /**
   objstrbufferprintf_BM (_.bufob, "!~ todo (~\t");
   objstrbuffermoreindent_BM (_.bufob);
@@ -838,8 +838,8 @@ ROUTINEOBJNAME_BM (_8MU0cEcpEYN_5SVe0jrv36o)    //  dump_scan°assoc_object
   anyassoc_tyBM *assoc = assoccast_BM (objpayload_BM (_.recv));
   if (!assoc)
     LOCALRETURN_BM (NULL);
-  assert (arg3 == NULL);
-  assert (restargs == NULL);
+  ASSERT_BM (arg3 == NULL);
+  ASSERT_BM (restargs == NULL);
   _.setv = assoc_setattrs_BM (assoc);
   obdumpscanvalue_BM (_.dumpob, (const value_tyBM) _.setv, 0);
   unsigned nbattr = setcardinal_BM (_.setv);
@@ -878,11 +878,11 @@ ROUTINEOBJNAME_BM (_9EytjXNb76D_1ZP3iSk9cuu)    // dump_data°assoc_object
   _.bufob = objectcast_BM (arg3);
   WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
   WEAKASSERT_BM (restargs == NULL);
-  assert (restargs == NULL);
+  ASSERT_BM (restargs == NULL);
   objectval_tyBM *k_dump_value = BMK_1FEnnpEkGdI_5DAcVDL5XHG;
-  assert (k_dump_value != NULL);
+  ASSERT_BM (k_dump_value != NULL);
   objectval_tyBM *k_put = BMK_9pvzBeIKHXF_8YDPCrQ6OEK;
-  assert (k_put != NULL);
+  ASSERT_BM (k_put != NULL);
   WEAKASSERT_BM (isobject_BM ((value_tyBM) _.recv));
   WEAKASSERT_BM (isassoc_BM (objpayload_BM (_.recv)));
   anyassoc_tyBM *assoc = assoccast_BM (objpayload_BM (_.recv));
@@ -1065,9 +1065,9 @@ const value_tyBM arg1,
 const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4,
 const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
-  assert (isobject_BM (arg1));  // the object to dump
+  ASSERT_BM (isobject_BM (arg1));       // the object to dump
   // arg2 is the bufob
-  assert (istaggedint_BM (arg4));
+  ASSERT_BM (istaggedint_BM (arg4));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv; objectval_tyBM * bufob;
                  value_tyBM depthv; objectval_tyBM * dumpob;
@@ -1110,13 +1110,13 @@ value_tyBM ROUTINEOBJNAME_BM (_6PmxiZR9WBe_13DwWExCALl) (struct stackframe_stBM 
                  value_tyBM closv;
                  value_tyBM resuv;
     );
-  assert (isobject_BM (arg1));
+  ASSERT_BM (isobject_BM (arg1));
   _.recv = arg1;
   WEAKASSERT_BM (obdumpgetdumper_BM (arg2) != NULL);
   _.dumpob = arg2;
   WEAKASSERT_BM (objhasstrbuffer_BM (arg3));
   _.bufob = arg3;
-  assert (restargs_ == NULL);
+  ASSERT_BM (restargs_ == NULL);
   _.closv = objgetattr_BM (_.recv, BMP_dump_data);
   if (isclosure_BM (_.closv))
     {
@@ -1143,13 +1143,13 @@ __attribute__ ((unused)), const quasinode_tyBM * restargs_ __attribute__ ((unuse
                  objectval_tyBM * dumpob; objectval_tyBM * bufob;
                  value_tyBM obval;
     );
-  assert (isobject_BM (arg1));
+  ASSERT_BM (isobject_BM (arg1));
   _.recv = arg1;
   WEAKASSERT_BM (obdumpgetdumper_BM (arg2) != NULL);
   _.dumpob = arg2;
   _.bufob = objectcast_BM (arg3);
   WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
-  assert (restargs_ == NULL);
+  ASSERT_BM (restargs_ == NULL);
   _.obval = objpayload_BM (_.recv);
   int tyval = valtype_BM (_.obval);
   if (tyval >= type_FIRST_BM && tyval <= type_LASTREAL_BM)
@@ -1183,12 +1183,12 @@ __attribute__ ((unused)), const quasinode_tyBM * restargs_ __attribute__ ((unuse
                  const objectval_tyBM * recv; objectval_tyBM * dumpob;
                  value_tyBM obval;
     );
-  assert (isobject_BM (arg1));
+  ASSERT_BM (isobject_BM (arg1));
   _.recv = arg1;
   WEAKASSERT_BM (obdumpgetdumper_BM (arg2) != NULL);
   _.dumpob = arg2;
-  assert (arg3 == NULL);
-  assert (restargs_ == NULL);
+  ASSERT_BM (arg3 == NULL);
+  ASSERT_BM (restargs_ == NULL);
   _.obval = objpayload_BM (_.recv);
   int tyval = valtype_BM (_.obval);
   if (tyval >= type_FIRST_BM && tyval <= type_LASTREAL_BM)
@@ -1226,8 +1226,8 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
   LOCALGETFUNV_BM (_.clos);
   if (!isclosure_BM ((const value_tyBM) _.clos))
     FATAL_BM ("todo_send _9mdRnBqdqf5_9UvgSFA7wIY non-closure called");
-  assert (isclosure_BM ((const value_tyBM) _.clos)
-          && closurewidth_BM ((const value_tyBM) _.clos) >= closix__REST);
+  ASSERT_BM (isclosure_BM ((const value_tyBM) _.clos)
+             && closurewidth_BM ((const value_tyBM) _.clos) >= closix__REST);
   unsigned wclos = closurewidth_BM ((const value_tyBM) _.clos);
   _.ldobj =
     objectcast_BM (closurenthson_BM
@@ -1358,12 +1358,12 @@ cmpnamedpredef_BM (const void *p1, const void *p2)
 {
   const objectval_tyBM *ob1 = *(const objectval_tyBM **) p1;
   const objectval_tyBM *ob2 = *(const objectval_tyBM **) p2;
-  assert (ob1 != NULL);
-  assert (ob2 != NULL);
+  ASSERT_BM (ob1 != NULL);
+  ASSERT_BM (ob2 != NULL);
   const char *n1 = findobjectname_BM (ob1);
   const char *n2 = findobjectname_BM (ob2);
-  assert (n1 != NULL);
-  assert (n2 != NULL);
+  ASSERT_BM (n1 != NULL);
+  ASSERT_BM (n2 != NULL);
   return strcmp (n1, n2);
 }                               /* end cmpnamedpredef_BM */
 
@@ -1401,7 +1401,7 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
   _.prsbufob = makeobj_BM ();
   objputstrbuffer_BM (_.prsbufob, 512 * 1024);
   _.filnamv = closurenthson_BM (_.cclos, closix_filnamv);
-  assert (isstring_BM ((const value_tyBM) _.filnamv));
+  ASSERT_BM (isstring_BM ((const value_tyBM) _.filnamv));
   const char *basepath = bytstring_BM (_.filnamv);
   objstrbufferprintf_BM (_.prsbufob,
                          "// generated file for predefined %s\n", basepath);
@@ -1460,7 +1460,7 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
       if (nix % 5 == 0)
         objstrbufferprintf_BM (_.prsbufob, "\n");
       const char *n = findobjectname_BM (_.curpredef);
-      assert (n != NULL);
+      ASSERT_BM (n != NULL);
       char idbuf[32];
       memset (idbuf, 0, sizeof (idbuf));
       rawid_tyBM curid = objid_BM (_.curpredef);
@@ -1484,7 +1484,7 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
       if (nix % 5 == 0)
         objstrbufferprintf_BM (_.prsbufob, "\n");
       const char *n = findobjectname_BM (_.curpredef);
-      assert (n != NULL);
+      ASSERT_BM (n != NULL);
       char idbuf[32];
       memset (idbuf, 0, sizeof (idbuf));
       rawid_tyBM curid = objid_BM (_.curpredef);
@@ -1548,7 +1548,7 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
   objputstrbuffer_BM (_.prsbufob, 256 * 1024);
   _.filnamv = closurenthson_BM (_.cclosv, closix_filnamv);
   _.nodglobv = nodeglobalnames_BM (BMP_node);
-  assert (isstring_BM ((const value_tyBM) _.filnamv));
+  ASSERT_BM (isstring_BM ((const value_tyBM) _.filnamv));
   const char *basepath = bytstring_BM (_.filnamv);
   objstrbufferprintf_BM (_.prsbufob,
                          "// generated file for globals %s\n", basepath);
@@ -1564,7 +1564,7 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
       _.curglobname =           //
         (const stringval_tyBM *) nodenthson_BM ((const value_tyBM) _.nodglobv,
                                                 gix);
-      assert (isstring_BM ((const value_tyBM) _.curglobname));
+      ASSERT_BM (isstring_BM ((const value_tyBM) _.curglobname));
       objstrbufferprintf_BM (_.prsbufob, "HAS_GLOBAL_BM(%s)\n",
                              bytstring_BM (_.curglobname));
     };
@@ -2050,8 +2050,8 @@ ROUTINEOBJNAME_BM (_60NdV04Lel2_5FSZVWKbSL7)    //
     );
   _.recv = arg1;
   _.nval = arg2;
-  assert (isobject_BM (_.recv));
-  assert (!objectisinstance_BM (_.recv, BMP_class));
+  ASSERT_BM (isobject_BM (_.recv));
+  ASSERT_BM (!objectisinstance_BM (_.recv, BMP_class));
   objputpayload_BM (_.recv, _.nval);
   objtouchnow_BM (_.recv);
   LOCALRETURN_BM (_.recv);
@@ -2080,7 +2080,7 @@ ROUTINEOBJNAME_BM (_50d65bJypCN_6IJeVtssx9I)    //
   _.recv = arg1;
   objectval_tyBM *k_prepare_routine = NULL;
   objectval_tyBM *k_prepared_routines = NULL;
-  assert (isobject_BM (_.recv));
+  ASSERT_BM (isobject_BM (_.recv));
   DBGPRINTF_BM
     ("@@generate_module°basiclo*module _50d65bJypCN_6IJeVtssx9I recv=%s\n"
      "... is a %s\n",
@@ -2183,7 +2183,7 @@ ROUTINEOBJNAME_BM (_5DyG7xVcxRI_1Ckpbj7b3QK)    //
                  objectval_tyBM * dumpob; objectval_tyBM * bufob;
                  value_tyBM res;
     );
-  assert (isobject_BM (arg1));
+  ASSERT_BM (isobject_BM (arg1));
   _.obmod = arg1;
   WEAKASSERT_BM (obdumpgetdumper_BM (arg2) != NULL);
   _.dumpob = arg2;
@@ -3274,7 +3274,7 @@ ROUTINEOBJNAME_BM (_42gEKfF4qca_6gGwxSFC1FO)    //
                 " lineno=%d colpos=%d nodwidth=%u", lineno, colpos, nodwidth);
 
   const objectval_tyBM *closconn = closureconn_BM ((const value_tyBM) _.clos);
-  assert (closconn != NULL);
+  ASSERT_BM (closconn != NULL);
   WEAKASSERT_BM (closurewidth_BM ((const value_tyBM) _.clos) >= closix__LAST);
   objectval_tyBM *clos_curcexp =        //
     objectcast_BM (closurenthson_BM ((const value_tyBM) _.clos,
@@ -3431,7 +3431,7 @@ ROUTINEOBJNAME_BM (_42gEKfF4qca_6gGwxSFC1FO)    //
   for (int ix = startix + nbresults + nbargs; ix < (int) nodwidth; ix++)
     {
       _.curson = nodenthson_BM ((const value_tyBM) _.rnodv, ix);
-      assert (isobject_BM (_.curson));
+      ASSERT_BM (isobject_BM (_.curson));
       objappendcomp_BM (_.resobj, _.curson);
     }
   objputclass_BM (_.resobj, _.resclass);

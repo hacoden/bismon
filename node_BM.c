@@ -18,7 +18,7 @@ makeclosure_BM (const objectval_tyBM * connob, unsigned nbval,
   unsigned long closiz =
     sizeof (closure_tyBM)
     + ((cnt > 0) ? (prime_above_BM (cnt - 1) * sizeof (value_tyBM)) : 0);
-  assert (closiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
+  ASSERT_BM (closiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
   closure_tyBM *clos =          //
     allocgcty_BM (tyClosure_BM, closiz);
   hash_tyBM h1 = objecthash_BM (connob);
@@ -42,7 +42,7 @@ makeclosure_BM (const objectval_tyBM * connob, unsigned nbval,
   hash_tyBM h = h1 ^ h2;
   if (!h)
     h = (11 * (h1 & 0xfffff) + (h2 % 38611)) + (newcnt & 0xf) + 13;
-  assert (h > 0);
+  ASSERT_BM (h > 0);
   ((typedhead_tyBM *) clos)->hash = h;
   return clos;
 }                               /* end makeclosure_BM */
@@ -70,7 +70,7 @@ makeclosurevar_BM (const objectval_tyBM * connob, ...)
   va_start (args, connob);
   while ((curv = va_arg (args, value_tyBM)) != NULL)
     {
-      assert (cnt < nbsons);
+      ASSERT_BM (cnt < nbsons);
       arr[cnt++] = curv;
     }
   va_end (args);
@@ -84,30 +84,30 @@ makeclosurevar_BM (const objectval_tyBM * connob, ...)
 void
 closuregcdestroy_BM (struct garbcoll_stBM *gc, closure_tyBM * clos)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) clos)->htyp == tyClosure_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) clos)->htyp == tyClosure_BM);
   unsigned siz = ((typedsize_tyBM *) clos)->size;
-  assert (siz < MAXSIZE_BM);
+  ASSERT_BM (siz < MAXSIZE_BM);
   memset (clos, 0, sizeof (*clos) + siz * sizeof (void *));
   free (clos), clos = NULL;
   unsigned long closiz =
     sizeof (*clos)
     + ((siz > 0) ? (prime_above_BM (siz - 1) * sizeof (value_tyBM)) : 0);
-  assert (closiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
+  ASSERT_BM (closiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
   gc->gc_freedbytes += closiz;
 }                               /* end closuregcdestroy_BM */
 
 void
 closuregckeep_BM (struct garbcoll_stBM *gc, closure_tyBM * clos)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) clos)->htyp == tyClosure_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) clos)->htyp == tyClosure_BM);
   unsigned siz = ((typedsize_tyBM *) clos)->size;
-  assert (siz < MAXSIZE_BM);
+  ASSERT_BM (siz < MAXSIZE_BM);
   unsigned long closiz =
     sizeof (*clos)
     + ((siz > 0) ? (prime_above_BM (siz - 1) * sizeof (value_tyBM)) : 0);
-  assert (closiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
+  ASSERT_BM (closiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
   gc->gc_keptbytes += closiz;
 }                               /* end closuregckeep_BM */
 
@@ -115,8 +115,8 @@ closuregckeep_BM (struct garbcoll_stBM *gc, closure_tyBM * clos)
 void *
 closuregcproc_BM (struct garbcoll_stBM *gc, closure_tyBM * clos, int depth)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM ((const value_tyBM) clos) == tyClosure_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) clos) == tyClosure_BM);
 #warning closuregcproc_BM should forward when needed
   uint8_t oldmark = ((typedhead_tyBM *) clos)->hgc;
   if (oldmark)
@@ -151,7 +151,7 @@ makenode_BM (const objectval_tyBM * connob, unsigned nbval,
   unsigned long nodsiz =
     sizeof (node_tyBM)
     + ((cnt > 0) ? (prime_above_BM (cnt - 1) * sizeof (value_tyBM)) : 0);
-  assert (nodsiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
+  ASSERT_BM (nodsiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
   closure_tyBM *node =          //
     allocgcty_BM (tyNode_BM, nodsiz);
   hash_tyBM h1 = objecthash_BM (connob);
@@ -175,7 +175,7 @@ makenode_BM (const objectval_tyBM * connob, unsigned nbval,
   hash_tyBM h = h1 ^ h2;
   if (!h)                       /* so h1 == h2 */
     h = (17 * (h1 & 0x1fffff) + 3 * (h2 % 21503)) + (newcnt & 0xf) + 120;
-  assert (h > 0);
+  ASSERT_BM (h > 0);
   ((typedhead_tyBM *) node)->hash = h;
   return node;
 }                               /* end makenode_BM */
@@ -204,7 +204,7 @@ makenodevar_BM (const objectval_tyBM * connob, ...)
   va_start (args, connob);
   while ((curv = va_arg (args, value_tyBM)) != NULL)
     {
-      assert (cnt < nbsons);
+      ASSERT_BM (cnt < nbsons);
       arr[cnt++] = curv;
     }
   va_end (args);
@@ -218,14 +218,14 @@ makenodevar_BM (const objectval_tyBM * connob, ...)
 void
 nodegcdestroy_BM (struct garbcoll_stBM *gc, node_tyBM * nod)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) nod)->htyp == tyNode_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) nod)->htyp == tyNode_BM);
   unsigned siz = ((typedsize_tyBM *) nod)->size;
-  assert (siz < MAXSIZE_BM);
+  ASSERT_BM (siz < MAXSIZE_BM);
   unsigned long nodsiz =
     sizeof (*nod) + ((siz > 0)
                      ? (prime_above_BM (siz - 1) * sizeof (value_tyBM)) : 0);
-  assert (nodsiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
+  ASSERT_BM (nodsiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
   memset (nod, 0, sizeof (*nod) + siz * sizeof (void *));
   free (nod);
   gc->gc_freedbytes += nodsiz;
@@ -235,14 +235,14 @@ nodegcdestroy_BM (struct garbcoll_stBM *gc, node_tyBM * nod)
 void
 nodegckeep_BM (struct garbcoll_stBM *gc, node_tyBM * nod)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) nod)->htyp == tyNode_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) nod)->htyp == tyNode_BM);
   unsigned siz = ((typedsize_tyBM *) nod)->size;
-  assert (siz < MAXSIZE_BM);
+  ASSERT_BM (siz < MAXSIZE_BM);
   unsigned long nodsiz =
     sizeof (*nod) + ((siz > 0)
                      ? (prime_above_BM (siz - 1) * sizeof (value_tyBM)) : 0);
-  assert (nodsiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
+  ASSERT_BM (nodsiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
   gc->gc_keptbytes += nodsiz;
 }                               /* end nodegckeep_BM */
 
@@ -251,8 +251,8 @@ nodegckeep_BM (struct garbcoll_stBM *gc, node_tyBM * nod)
 void *
 nodegcproc_BM (struct garbcoll_stBM *gc, node_tyBM * nod, int depth)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (valtype_BM ((const value_tyBM) nod) == tyNode_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) nod) == tyNode_BM);
 #warning nodegcproc_BM should forward when needed
   uint8_t oldmark = ((typedhead_tyBM *) nod)->hgc;
   if (oldmark)
@@ -270,8 +270,8 @@ void *
 quasinodegcproc_BM (struct garbcoll_stBM *gc, quasinode_tyBM * qnod,
                     int depth)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (istree_BM (qnod));
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (istree_BM (qnod));
   /// on purpose, don't mark me
   gcobjmark_BM (gc, qnod->nodt_conn);
   unsigned size = ((typedsize_tyBM *) qnod)->size;
@@ -284,12 +284,12 @@ quasinodegcproc_BM (struct garbcoll_stBM *gc, quasinode_tyBM * qnod,
 value_tyBM
 apply0_BM (const value_tyBM funv, struct stackframe_stBM * stkf)
 {
-  assert (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
+  ASSERT_BM (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
   objrout_sigBM *rout = NULL;
   if (isclosure_BM (funv))
     {
       const objectval_tyBM *connob = ((closure_tyBM *) funv)->nodt_conn;
-      assert (isobject_BM ((const value_tyBM) connob));
+      ASSERT_BM (isobject_BM ((const value_tyBM) connob));
       rout = (objrout_sigBM *) objroutaddr_BM (connob, BMP_function_sig);
     }
   else if (isobject_BM (funv))
@@ -307,12 +307,12 @@ value_tyBM
 apply1_BM (const value_tyBM funv, struct stackframe_stBM * stkf,
            const value_tyBM arg1)
 {
-  assert (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
+  ASSERT_BM (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
   objrout_sigBM *rout = NULL;
   if (isclosure_BM (funv))
     {
       const objectval_tyBM *connob = ((closure_tyBM *) funv)->nodt_conn;
-      assert (isobject_BM ((const value_tyBM) connob));
+      ASSERT_BM (isobject_BM ((const value_tyBM) connob));
       rout = (objrout_sigBM *) objroutaddr_BM (connob, BMP_function_sig);
     }
   else if (isobject_BM (funv))
@@ -330,12 +330,12 @@ value_tyBM
 apply2_BM (const value_tyBM funv, struct stackframe_stBM * stkf,
            const value_tyBM arg1, const value_tyBM arg2)
 {
-  assert (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
+  ASSERT_BM (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
   objrout_sigBM *rout = NULL;
   if (isclosure_BM (funv))
     {
       const objectval_tyBM *connob = ((closure_tyBM *) funv)->nodt_conn;
-      assert (isobject_BM ((const value_tyBM) connob));
+      ASSERT_BM (isobject_BM ((const value_tyBM) connob));
       rout = (objrout_sigBM *) objroutaddr_BM (connob, BMP_function_sig);
     }
   else if (isobject_BM (funv))
@@ -354,12 +354,12 @@ apply3_BM (const value_tyBM funv, struct stackframe_stBM * stkf,
            const value_tyBM arg1, const value_tyBM arg2,
            const value_tyBM arg3)
 {
-  assert (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
+  ASSERT_BM (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
   objrout_sigBM *rout = NULL;
   if (isclosure_BM (funv))
     {
       const objectval_tyBM *connob = ((closure_tyBM *) funv)->nodt_conn;
-      assert (isobject_BM ((const value_tyBM) connob));
+      ASSERT_BM (isobject_BM ((const value_tyBM) connob));
       rout = (objrout_sigBM *) objroutaddr_BM (connob, BMP_function_sig);
     }
   else if (isobject_BM (funv))
@@ -378,12 +378,12 @@ apply4_BM (const value_tyBM funv, struct stackframe_stBM * stkf,
            const value_tyBM arg1, const value_tyBM arg2,
            const value_tyBM arg3, const value_tyBM arg4)
 {
-  assert (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
+  ASSERT_BM (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
   objrout_sigBM *rout = NULL;
   if (isclosure_BM (funv))
     {
       const objectval_tyBM *connob = ((closure_tyBM *) funv)->nodt_conn;
-      assert (isobject_BM ((const value_tyBM) connob));
+      ASSERT_BM (isobject_BM ((const value_tyBM) connob));
       rout = (objrout_sigBM *) objroutaddr_BM (connob, BMP_function_sig);
     }
   else if (isobject_BM (funv))
@@ -403,12 +403,12 @@ apply5_BM (const value_tyBM funv, struct stackframe_stBM * stkf,
            const value_tyBM arg3, const value_tyBM arg4,
            const value_tyBM arg5)
 {
-  assert (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
+  ASSERT_BM (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
   objrout_sigBM *rout = NULL;
   if (isclosure_BM (funv))
     {
       const objectval_tyBM *connob = ((closure_tyBM *) funv)->nodt_conn;
-      assert (isobject_BM ((const value_tyBM) connob));
+      ASSERT_BM (isobject_BM ((const value_tyBM) connob));
       rout = (objrout_sigBM *) objroutaddr_BM (connob, BMP_function_sig);
     }
   else if (isobject_BM (funv))
@@ -431,12 +431,12 @@ apply6_BM (const value_tyBM funv, struct stackframe_stBM *stkf,
            const value_tyBM arg3, const value_tyBM arg4,
            const value_tyBM arg5, const value_tyBM arg6)
 {
-  assert (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
+  ASSERT_BM (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
   objrout_sigBM *rout = NULL;
   if (isclosure_BM (funv))
     {
       const objectval_tyBM *connob = ((closure_tyBM *) funv)->nodt_conn;
-      assert (isobject_BM ((const value_tyBM) connob));
+      ASSERT_BM (isobject_BM ((const value_tyBM) connob));
       rout = (objrout_sigBM *) objroutaddr_BM (connob, BMP_function_sig);
     }
   else if (isobject_BM (funv))
@@ -461,12 +461,12 @@ apply7_BM (const value_tyBM funv, struct stackframe_stBM *stkf,
            const value_tyBM arg5, const value_tyBM arg6,
            const value_tyBM arg7)
 {
-  assert (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
+  ASSERT_BM (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
   objrout_sigBM *rout = NULL;
   if (isclosure_BM (funv))
     {
       const objectval_tyBM *connob = ((closure_tyBM *) funv)->nodt_conn;
-      assert (isobject_BM ((const value_tyBM) connob));
+      ASSERT_BM (isobject_BM ((const value_tyBM) connob));
       rout = (objrout_sigBM *) objroutaddr_BM (connob, BMP_function_sig);
     }
   else if (isobject_BM (funv))
@@ -492,12 +492,12 @@ apply8_BM (const value_tyBM funv, struct stackframe_stBM *stkf,
            const value_tyBM arg5, const value_tyBM arg6,
            const value_tyBM arg7, const value_tyBM arg8)
 {
-  assert (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
+  ASSERT_BM (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
   objrout_sigBM *rout = NULL;
   if (isclosure_BM (funv))
     {
       const objectval_tyBM *connob = ((closure_tyBM *) funv)->nodt_conn;
-      assert (isobject_BM ((const value_tyBM) connob));
+      ASSERT_BM (isobject_BM ((const value_tyBM) connob));
       rout = (objrout_sigBM *) objroutaddr_BM (connob, BMP_function_sig);
     }
   else if (isobject_BM (funv))
@@ -525,12 +525,12 @@ apply9_BM (const value_tyBM funv, struct stackframe_stBM *stkf,
            const value_tyBM arg7, const value_tyBM arg8,
            const value_tyBM arg9)
 {
-  assert (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
+  ASSERT_BM (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
   objrout_sigBM *rout = NULL;
   if (isclosure_BM (funv))
     {
       const objectval_tyBM *connob = ((closure_tyBM *) funv)->nodt_conn;
-      assert (isobject_BM ((const value_tyBM) connob));
+      ASSERT_BM (isobject_BM ((const value_tyBM) connob));
       rout = (objrout_sigBM *) objroutaddr_BM (connob, BMP_function_sig);
     }
   else if (isobject_BM (funv))
@@ -559,12 +559,12 @@ applyvar_BM (const value_tyBM funv, struct stackframe_stBM *stkf,
     return NULL;
   if (nbargs > 0 && !argarr)
     return NULL;
-  assert (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
+  ASSERT_BM (stkf && ((typedhead_tyBM *) stkf)->htyp == typayl_StackFrame_BM);
   objrout_sigBM *rout = NULL;
   if (isclosure_BM (funv))
     {
       const objectval_tyBM *connob = ((closure_tyBM *) funv)->nodt_conn;
-      assert (isobject_BM ((const value_tyBM) connob));
+      ASSERT_BM (isobject_BM ((const value_tyBM) connob));
       rout = (objrout_sigBM *) objroutaddr_BM (connob, BMP_function_sig);
     }
   else if (isobject_BM (funv))

@@ -13,7 +13,7 @@ stringhash_BM (const char *cstr)
 {
   if (!cstr)
     return 0;
-  assert (g_utf8_validate (cstr, -1, NULL));
+  ASSERT_BM (g_utf8_validate (cstr, -1, NULL));
   long ll = strlen (cstr);
   if (ll >= MAXSIZE_BM)
     FATAL_BM ("too long string %ld", ll);
@@ -70,7 +70,7 @@ stringhashlen_BM (const char *cstr, long len)
     return 0;
   if (len < 0)
     len = strlen (cstr);
-  assert (g_utf8_validate (cstr, len, NULL));
+  ASSERT_BM (g_utf8_validate (cstr, len, NULL));
   if (len >= MAXSIZE_BM)
     FATAL_BM ("too long string %ld", len);
   int l = len;
@@ -154,7 +154,7 @@ makestringlen_BM (const char *cstr, long len)
     FATAL_BM ("makestringlen invalid string");
   hash_tyBM h = stringhashlen_BM (cstr, len);
   unsigned long strsiz = sizeof (stringval_tyBM) + (len | 0xf) + 1;
-  assert (strsiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
+  ASSERT_BM (strsiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
   stringval_tyBM *strv = allocgcty_BM (tyString_BM, strsiz);
   ((typedhead_tyBM *) strv)->hash = h;
   ((typedsize_tyBM *) strv)->size = len;
@@ -165,8 +165,8 @@ makestringlen_BM (const char *cstr, long len)
 void *
 stringgcproc_BM (struct garbcoll_stBM *gc, stringval_tyBM * str)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) str)->htyp == tyString_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) str)->htyp == tyString_BM);
   ((typedhead_tyBM *) str)->hgc = MARKGC_BM;
 #warning stringgcproc_BM should forward when needed
   gc->gc_nbmarks++;
@@ -176,12 +176,12 @@ stringgcproc_BM (struct garbcoll_stBM *gc, stringval_tyBM * str)
 void
 stringgcdestroy_BM (struct garbcoll_stBM *gc, stringval_tyBM * str)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) str)->htyp == tyString_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) str)->htyp == tyString_BM);
   long sll = ((typedsize_tyBM *) str)->size;
-  assert (sll < MAXSIZE_BM);
+  ASSERT_BM (sll < MAXSIZE_BM);
   unsigned long strsiz = sizeof (stringval_tyBM) + (sll | 0xf) + 1;
-  assert (strsiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
+  ASSERT_BM (strsiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
   memset (str, 0, sizeof (*str) + sll);
   free (str);
   gc->gc_freedbytes += strsiz;
@@ -191,12 +191,12 @@ stringgcdestroy_BM (struct garbcoll_stBM *gc, stringval_tyBM * str)
 void
 stringgckeep_BM (struct garbcoll_stBM *gc, stringval_tyBM * str)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) str)->htyp == tyString_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) str)->htyp == tyString_BM);
   long sll = ((typedsize_tyBM *) str)->size;
-  assert (sll < MAXSIZE_BM);
+  ASSERT_BM (sll < MAXSIZE_BM);
   unsigned long strsiz = sizeof (stringval_tyBM) + (sll | 0xf) + 1;
-  assert (strsiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
+  ASSERT_BM (strsiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
   gc->gc_keptbytes += strsiz;
 }                               /* end stringgckeep_BM */
 
@@ -309,27 +309,27 @@ void
 strbuffergcmark_BM (struct garbcoll_stBM *gc, struct strbuffer_stBM *sbuf,
                     int depth __attribute__ ((unused)))
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) sbuf)->htyp == typayl_strbuffer_BM);
-  assert (sbuf->sbuf_dbuf);
-  assert (sbuf->sbuf_size > 0);
-  assert (sbuf->sbuf_curp >= sbuf->sbuf_dbuf
-          && sbuf->sbuf_curp < sbuf->sbuf_dbuf + sbuf->sbuf_size);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) sbuf)->htyp == typayl_strbuffer_BM);
+  ASSERT_BM (sbuf->sbuf_dbuf);
+  ASSERT_BM (sbuf->sbuf_size > 0);
+  ASSERT_BM (sbuf->sbuf_curp >= sbuf->sbuf_dbuf
+             && sbuf->sbuf_curp < sbuf->sbuf_dbuf + sbuf->sbuf_size);
 }                               /* end  strbuffergcmark_BM */
 
 
 void
 strbuffergcdestroy_BM (struct garbcoll_stBM *gc, struct strbuffer_stBM *sbuf)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) sbuf)->htyp == typayl_strbuffer_BM);
-  assert (sbuf->sbuf_dbuf);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) sbuf)->htyp == typayl_strbuffer_BM);
+  ASSERT_BM (sbuf->sbuf_dbuf);
   size_t siz = sbuf->sbuf_size;
-  assert (siz > 0 && siz < MAXSIZE_BM);
+  ASSERT_BM (siz > 0 && siz < MAXSIZE_BM);
   unsigned long sbusiz = sizeof (*sbuf) + siz;
-  assert (sbusiz < ((4L * MAXSIZE_BM) / 3 + 5L) * sizeof (void *));
-  assert (sbuf->sbuf_curp >= sbuf->sbuf_dbuf
-          && sbuf->sbuf_curp < sbuf->sbuf_dbuf + sbuf->sbuf_size);
+  ASSERT_BM (sbusiz < ((4L * MAXSIZE_BM) / 3 + 5L) * sizeof (void *));
+  ASSERT_BM (sbuf->sbuf_curp >= sbuf->sbuf_dbuf
+             && sbuf->sbuf_curp < sbuf->sbuf_dbuf + sbuf->sbuf_size);
   free (sbuf->sbuf_dbuf);
   gc->gc_freedbytes += sbusiz;
   memset (sbuf, 0, sizeof (*sbuf));
@@ -340,16 +340,16 @@ strbuffergcdestroy_BM (struct garbcoll_stBM *gc, struct strbuffer_stBM *sbuf)
 void
 strbuffergckeep_BM (struct garbcoll_stBM *gc, struct strbuffer_stBM *sbuf)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) sbuf)->htyp == typayl_strbuffer_BM);
-  assert (sbuf->sbuf_dbuf);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) sbuf)->htyp == typayl_strbuffer_BM);
+  ASSERT_BM (sbuf->sbuf_dbuf);
   size_t siz = sbuf->sbuf_size;
-  assert (siz > 0 && siz < MAXSIZE_BM);
-  assert (siz > 0 && siz < MAXSIZE_BM);
+  ASSERT_BM (siz > 0 && siz < MAXSIZE_BM);
+  ASSERT_BM (siz > 0 && siz < MAXSIZE_BM);
   unsigned long sbusiz = sizeof (*sbuf) + siz;
-  assert (sbusiz < ((4L * MAXSIZE_BM) / 3 + 5L) * sizeof (void *));
-  assert (sbuf->sbuf_curp >= sbuf->sbuf_dbuf
-          && sbuf->sbuf_curp < sbuf->sbuf_dbuf + siz);
+  ASSERT_BM (sbusiz < ((4L * MAXSIZE_BM) / 3 + 5L) * sizeof (void *));
+  ASSERT_BM (sbuf->sbuf_curp >= sbuf->sbuf_dbuf
+             && sbuf->sbuf_curp < sbuf->sbuf_dbuf + siz);
   gc->gc_keptbytes += sbusiz;
 }                               /* end strbuffergckeep_BM */
 
@@ -397,10 +397,10 @@ objstrbufferreserve_BM (objectval_tyBM * obj, unsigned gap)
   struct strbuffer_stBM *sbuf = objgetstrbufferpayload_BM (obj);
   if (!sbuf)
     return;
-  assert (sbuf->sbuf_dbuf);
-  assert (sbuf->sbuf_size > 0);
-  assert (sbuf->sbuf_curp >= sbuf->sbuf_dbuf
-          && sbuf->sbuf_curp < sbuf->sbuf_dbuf + sbuf->sbuf_size);
+  ASSERT_BM (sbuf->sbuf_dbuf);
+  ASSERT_BM (sbuf->sbuf_size > 0);
+  ASSERT_BM (sbuf->sbuf_curp >= sbuf->sbuf_dbuf
+             && sbuf->sbuf_curp < sbuf->sbuf_dbuf + sbuf->sbuf_size);
   size_t siz = sbuf->sbuf_size;
   unsigned used = sbuf->sbuf_curp - sbuf->sbuf_dbuf;
   if (siz > 2048 && used + gap < siz / 2)
@@ -470,9 +470,9 @@ objstrbufferlength_BM (const objectval_tyBM * obj)
     objgetstrbufferpayload_BM ((objectval_tyBM *) obj);
   if (!sbuf)
     return 0;
-  assert (sbuf->sbuf_size < MAXSIZE_BM);
-  assert (sbuf->sbuf_curp >= sbuf->sbuf_dbuf
-          && sbuf->sbuf_curp < sbuf->sbuf_dbuf + sbuf->sbuf_size);
+  ASSERT_BM (sbuf->sbuf_size < MAXSIZE_BM);
+  ASSERT_BM (sbuf->sbuf_curp >= sbuf->sbuf_dbuf
+             && sbuf->sbuf_curp < sbuf->sbuf_dbuf + sbuf->sbuf_size);
   return sbuf->sbuf_curp - sbuf->sbuf_dbuf;
 }                               /* end objstrbufferlength_BM */
 
@@ -514,12 +514,12 @@ objstrbufferunsafeappendcstr_BM (objectval_tyBM * obj, const char *cstr)
   if (!sbuf)
     return;
   size_t len = strlen (cstr);
-  assert (sbuf->sbuf_dbuf);
+  ASSERT_BM (sbuf->sbuf_dbuf);
   size_t siz = sbuf->sbuf_size;
   unsigned maxsiz = ((typedhead_tyBM *) sbuf)->rlen;
-  assert (siz > 0);
-  assert (sbuf->sbuf_curp >= sbuf->sbuf_dbuf
-          && sbuf->sbuf_curp < sbuf->sbuf_dbuf + sbuf->sbuf_size);
+  ASSERT_BM (siz > 0);
+  ASSERT_BM (sbuf->sbuf_curp >= sbuf->sbuf_dbuf
+             && sbuf->sbuf_curp < sbuf->sbuf_dbuf + sbuf->sbuf_size);
   if (sbuf->sbuf_curp + len + 3 >= sbuf->sbuf_dbuf + sbuf->sbuf_size)
     objstrbufferreserve_BM (obj, len + 2);
   int nloffset = -1;
@@ -774,12 +774,12 @@ objstrbufferwritetofile_BM (objectval_tyBM * obj, const char *filepath)
   struct strbuffer_stBM *sbuf = objgetstrbufferpayload_BM (obj);
   if (!sbuf)
     return;
-  assert (sbuf->sbuf_dbuf);
+  ASSERT_BM (sbuf->sbuf_dbuf);
   size_t siz = sbuf->sbuf_size;
   unsigned maxsiz = ((typedhead_tyBM *) sbuf)->rlen;
-  assert (siz > 0 && siz <= maxsiz);
-  assert (sbuf->sbuf_curp >= sbuf->sbuf_dbuf
-          && sbuf->sbuf_curp < sbuf->sbuf_dbuf + sbuf->sbuf_size);
+  ASSERT_BM (siz > 0 && siz <= maxsiz);
+  ASSERT_BM (sbuf->sbuf_curp >= sbuf->sbuf_dbuf
+             && sbuf->sbuf_curp < sbuf->sbuf_dbuf + sbuf->sbuf_size);
   unsigned len = sbuf->sbuf_curp - sbuf->sbuf_dbuf;
   FILE *oldfil = fopen (filepath, "r");
   bool samefile = (oldfil != NULL);

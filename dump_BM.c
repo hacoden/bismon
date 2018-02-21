@@ -4,8 +4,8 @@
 void
 dumpgcmark_BM (struct garbcoll_stBM *gc, struct dumper_stBM *du)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) du)->htyp == typayl_dumper_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) du)->htyp == typayl_dumper_BM);
   gcobjmark_BM (gc, (value_tyBM) du->dump_object);
   VALUEGCPROC_BM (gc, du->dump_dir, 0);
   EXTENDEDGCPROC_BM (gc, du->dump_hset, 0);
@@ -16,16 +16,16 @@ dumpgcmark_BM (struct garbcoll_stBM *gc, struct dumper_stBM *du)
 void
 dumpgcdestroy_BM (struct garbcoll_stBM *gc, struct dumper_stBM *du)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) du)->htyp == typayl_dumper_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) du)->htyp == typayl_dumper_BM);
 }                               /* end dumpgcdestroy_BM */
 
 
 void
 dumpgckeep_BM (struct garbcoll_stBM *gc, struct dumper_stBM *du)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (((typedhead_tyBM *) du)->htyp == typayl_dumper_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) du)->htyp == typayl_dumper_BM);
 }                               /* end dumpgckeep_BM */
 
 bool
@@ -180,7 +180,7 @@ dump_run_todo_BM (struct dumper_stBM *du, struct stackframe_stBM *stkf)
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const closure_tyBM * curclo;
     );
-  assert (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
   while (listlength_BM (du->dump_todolist) > 0)
     {
       _.curclo = listfirst_BM (du->dump_todolist);
@@ -207,8 +207,8 @@ dump_scan_object_content_BM (struct dumper_stBM *du,
                  const objectval_tyBM * curattrobj;
                  value_tyBM curval;
     );
-  assert (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
-  assert (valtype_BM ((const value_tyBM) objarg) == tyObject_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) objarg) == tyObject_BM);
   _.obdump = du->dump_object;
   _.curobj = (objectval_tyBM *) objarg;
   objlock_BM (_.curobj);
@@ -224,7 +224,7 @@ dump_scan_object_content_BM (struct dumper_stBM *du,
   _.curattrobj = NULL;
   _.setattrs = objsetattrs_BM ((objectval_tyBM *) _.curobj);
   unsigned nbattrs = objnbattrs_BM ((objectval_tyBM *) _.curobj);
-  assert (nbattrs == setcardinal_BM (_.setattrs));
+  ASSERT_BM (nbattrs == setcardinal_BM (_.setattrs));
   for (int ix = 0; ix < (int) nbattrs; ix++)
     {
       _.curattrobj = setelemnth_BM (_.setattrs, ix);
@@ -266,7 +266,7 @@ dump_scan_pass_BM (struct dumper_stBM *du, struct stackframe_stBM *stkf)
                  const objectval_tyBM * curobj;
                  objectval_tyBM * obdump;
     );
-  assert (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
   _.obdump = du->dump_object;
   _.predefset = setpredefinedobjects_BM ();
   _.globalset = setglobalobjects_BM ();
@@ -302,7 +302,7 @@ dump_emit_pass_BM (struct dumper_stBM *du, struct stackframe_stBM *stkf)
                  objectval_tyBM * curhsetob;
                  objectval_tyBM * hsetspacob[LASTSPACE__BM];
     );
-  assert (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
   for (unsigned spix = PredefSp_BM; spix < LASTSPACE__BM; spix++)
     {
       _.curhsetob = makeobj_BM ();
@@ -310,7 +310,7 @@ dump_emit_pass_BM (struct dumper_stBM *du, struct stackframe_stBM *stkf)
       _.hsetspacob[spix] = _.curhsetob;
     };
   struct hashsetobj_stBM *dhset = du->dump_hset;
-  assert (valtype_BM ((const value_tyBM) dhset) == typayl_hashsetobj_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) dhset) == typayl_hashsetobj_BM);
   {
     unsigned alsiz = ((typedhead_tyBM *) dhset)->rlen;
     for (unsigned ix = 0; ix < alsiz; ix++)
@@ -320,10 +320,10 @@ dump_emit_pass_BM (struct dumper_stBM *du, struct stackframe_stBM *stkf)
           continue;
         _.curobj = curduob;
         int cursp = objspacenum_BM (curduob);
-        assert (cursp >= PredefSp_BM && cursp < LASTSPACE__BM);
+        ASSERT_BM (cursp >= PredefSp_BM && cursp < LASTSPACE__BM);
         struct hashsetobj_stBM *curhset =
           objhashsetpayload_BM ((objectval_tyBM *) _.hsetspacob[cursp]);
-        assert (curhset != NULL);
+        ASSERT_BM (curhset != NULL);
         curhset = hashsetobj_add_BM (curhset, curduob);
         objputpayload_BM ((objectval_tyBM *) _.hsetspacob[cursp], curhset);
       }
@@ -363,8 +363,8 @@ void
 dump_emit_space_BM (struct dumper_stBM *du, unsigned spix,
                     objectval_tyBM * hspob, struct stackframe_stBM *stkf)
 {
-  assert (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
-  assert (spix >= PredefSp_BM && spix < LASTSPACE__BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
+  ASSERT_BM (spix >= PredefSp_BM && spix < LASTSPACE__BM);
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  objectval_tyBM * modhsetob;
                  objectval_tyBM * hspob;
@@ -379,7 +379,7 @@ dump_emit_space_BM (struct dumper_stBM *du, unsigned spix,
   FILE *spfil = NULL;
   _.hspob = hspob;
   struct hashsetobj_stBM *hspa = objhashsetpayload_BM (hspob);
-  assert (valtype_BM ((const value_tyBM) hspa) == typayl_hashsetobj_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) hspa) == typayl_hashsetobj_BM);
   _.setobjs = hashsetobj_to_set_BM (hspa);
   char randidbuf[32];
   memset (randidbuf, 0, sizeof (randidbuf));
@@ -404,7 +404,7 @@ dump_emit_space_BM (struct dumper_stBM *du, unsigned spix,
   for (unsigned obix = 0; obix < nbobj; obix++)
     {
       _.curobj = setelemnth_BM (_.setobjs, obix);
-      assert (_.curobj != NULL);
+      ASSERT_BM (_.curobj != NULL);
       objlock_BM (_.curobj);
       if (_.curobj->ob_rout)
         {
@@ -440,7 +440,7 @@ dump_emit_space_BM (struct dumper_stBM *du, unsigned spix,
     {
       char curmodid[32] = "";
       _.modobj = setelemnth_BM (_.setmodules, mix);
-      assert (_.modobj);
+      ASSERT_BM (_.modobj);
       idtocbuf32_BM (objid_BM (_.modobj), curmodid);
       fprintf (spfil, "!^%s\n", curmodid);
     };
@@ -452,14 +452,14 @@ dump_emit_space_BM (struct dumper_stBM *du, unsigned spix,
   for (unsigned obix = 0; obix < nbobj; obix++)
     {
       _.curobj = setelemnth_BM (_.setobjs, obix);
-      assert (isobject_BM ((const value_tyBM) _.curobj));
+      ASSERT_BM (isobject_BM ((const value_tyBM) _.curobj));
       objarr[obix] = _.curobj;
     };
   sortnamedobjarr_BM (objarr, nbobj);
   for (unsigned obix = 0; obix < nbobj; obix++)
     {
       _.curobj = objarr[obix];
-      assert (_.curobj != NULL);
+      ASSERT_BM (_.curobj != NULL);
       dump_emit_object_BM (du, _.curobj, spfil,
                            (struct stackframe_stBM *) &_);
       if (obix % 64 == 0 && obix > 0)
@@ -480,9 +480,9 @@ dump_emit_object_BM (struct dumper_stBM *du, const objectval_tyBM * curobj,
                      FILE * spfil, struct stackframe_stBM *stkf)
 {
 
-  assert (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
-  assert (valtype_BM ((const value_tyBM) curobj) == tyObject_BM);
-  assert (spfil != NULL);
+  ASSERT_BM (valtype_BM ((const value_tyBM) du) == typayl_dumper_BM);
+  ASSERT_BM (valtype_BM ((const value_tyBM) curobj) == tyObject_BM);
+  ASSERT_BM (spfil != NULL);
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  objectval_tyBM * dumpob;       //
                  objectval_tyBM * curobj;       //

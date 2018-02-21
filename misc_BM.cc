@@ -25,8 +25,8 @@ struct StrcmpLess_BM
 {
   inline bool operator() (const char*s1, const char*s2) const
   {
-    assert (s1 != nullptr);
-    assert (s2 != nullptr);
+    ASSERT_BM (s1 != nullptr);
+    ASSERT_BM (s2 != nullptr);
     return strcmp(s1,s2)<0;
   }
 };				// end StrcmpLess_BM
@@ -36,8 +36,8 @@ struct ValStringLess_BM
 {
   inline bool operator() ( stringval_tyBM*vs1,  stringval_tyBM*vs2) const
   {
-    assert (valtype_BM((const value_tyBM)vs1) == tyString_BM);
-    assert (valtype_BM((const value_tyBM)vs2) == tyString_BM);
+    ASSERT_BM (valtype_BM((const value_tyBM)vs1) == tyString_BM);
+    ASSERT_BM (valtype_BM((const value_tyBM)vs2) == tyString_BM);
     return strcmp(vs1->strv_bytes,vs2->strv_bytes)<0;
   }
 };				// end ValStringLess_BM
@@ -88,7 +88,7 @@ struct failurelockset_stBM
   {
     for (objectval_tyBM* ob : flhobjset)
       {
-        assert (valtype_BM(ob) == tyObject_BM);
+        ASSERT_BM (valtype_BM(ob) == tyObject_BM);
         pthread_mutex_unlock(&ob->ob_mutex);
       }
   }
@@ -136,13 +136,13 @@ validname_BM (const char *nam)
 static void
 add_predefined_name_BM (const char *name, objectval_tyBM * obj)
 {
-  assert (validname_BM (name));
-  assert (isobject_BM (obj));
+  ASSERT_BM (validname_BM (name));
+  ASSERT_BM (isobject_BM (obj));
   char *dupname = strdup (name);
   if (!dupname)
     FATAL_BM ("strdup %s failed (%m)", name);
-  assert (namemap_BM.find(name) == namemap_BM.end());
-  assert (objhashtable_BM.find(obj) == objhashtable_BM.end());
+  ASSERT_BM (namemap_BM.find(name) == namemap_BM.end());
+  ASSERT_BM (objhashtable_BM.find(obj) == objhashtable_BM.end());
   namemap_BM.insert({dupname,obj});
   objhashtable_BM.insert({obj,dupname});
 }                               /* end add_predefined_name_BM */
@@ -215,7 +215,7 @@ forgetnamedobject_BM (const objectval_tyBM * obj)
     return false;
   const char* nam = itob->second;
   auto itn = namemap_BM.find(nam);
-  assert (itn != namemap_BM.end() && itn->second == obj);
+  ASSERT_BM (itn != namemap_BM.end() && itn->second == obj);
   objhashtable_BM.erase(itob);
   namemap_BM.erase(itn);
   free ((void*)nam);
@@ -231,9 +231,9 @@ forgetnamestring_BM (const char *nam)
   if (itn == namemap_BM.end())
     return false;
   objectval_tyBM* ob = itn->second;
-  assert (isobject_BM(ob));
+  ASSERT_BM (isobject_BM(ob));
   auto itob = objhashtable_BM.find(ob);
-  assert (itob != objhashtable_BM.end());
+  ASSERT_BM (itob != objhashtable_BM.end());
   const char*dupnam = itob->second;
   objhashtable_BM.erase(itob);
   namemap_BM.erase(itn);
@@ -250,7 +250,7 @@ setofnamedobjects_BM (void)
   for (auto itn: namemap_BM)
     {
       const objectval_tyBM* ob = itn.second;
-      assert (isobject_BM((const value_tyBM)ob));
+      ASSERT_BM (isobject_BM((const value_tyBM)ob));
       vectobj.push_back(ob);
     };
   return makeset_BM(vectobj.data(), vectobj.size());
@@ -270,7 +270,7 @@ setofprefixednamedobjects_BM (const char*prefix)
       int cmp = strncmp(itn->first, prefix, prefixlen);
       if (cmp) break;
       const objectval_tyBM* ob = itn->second;
-      assert (isobject_BM((const value_tyBM)ob));
+      ASSERT_BM (isobject_BM((const value_tyBM)ob));
       vectobj.push_back(ob);
     }
   return makeset_BM(vectobj.data(), vectobj.size());
@@ -287,7 +287,7 @@ setofmatchednamedobjects_BM(const char*fnmatcher)
   for (auto itn : namemap_BM)
     {
       const objectval_tyBM* ob = itn.second;
-      assert (isobject_BM((const value_tyBM)ob));
+      ASSERT_BM (isobject_BM((const value_tyBM)ob));
       if (!fnmatch(allcases?(fnmatcher+1):fnmatcher, itn.first,
                    allcases ? (FNM_EXTMATCH | FNM_CASEFOLD)
                    : FNM_EXTMATCH))
@@ -358,7 +358,7 @@ static std::map<std::string, objectval_tyBM**> mapglobals_BM;
 void initialize_globals_BM(void)
 {
 #define HAS_GLOBAL_BM(Gnam) do {		\
-  assert (mapglobals_BM.find(#Gnam)		\
+  ASSERT_BM (mapglobals_BM.find(#Gnam)		\
 	  == mapglobals_BM.end());		\
   mapglobals_BM[#Gnam] = &GLOBAL_BM(Gnam);	\
 } while(0);
@@ -368,7 +368,7 @@ void initialize_globals_BM(void)
 void
 gcmarkglobals_BM(struct garbcoll_stBM*gc)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
   for (auto it: mapglobals_BM)
     if (it.second && *it.second)
       gcobjmark_BM(gc, *it.second);
@@ -474,7 +474,7 @@ openmoduleforloader_BM(const rawid_tyBM modid,struct loader_stBM*ld, struct  sta
   modulemap_BM.insert({modid,ModuleData_BM{.mod_id=modid, .mod_dlh=dlh, .mod_obj=objmod}});
   if (ld)
     {
-      assert (ld->ld_magic == LOADERMAGIC_BM);
+      ASSERT_BM (ld->ld_magic == LOADERMAGIC_BM);
       ld->ld_modhset = hashsetobj_add_BM(ld->ld_modhset, objmod);
       value_tyBM closargs[2] = {NULL,NULL};
       closargs[0] = objmod;
@@ -516,8 +516,8 @@ void
 dictgcmark_BM(struct garbcoll_stBM *gc, struct dict_stBM*dict,
               int depth)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (isdict_BM (dict));
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (isdict_BM (dict));
   uint8_t oldmark = ((typedhead_tyBM *) dict)->hgc;
   if (oldmark)
     return;
@@ -533,8 +533,8 @@ dictgcmark_BM(struct garbcoll_stBM *gc, struct dict_stBM*dict,
 
 void dictgcdestroy_BM (struct garbcoll_stBM *gc, struct dict_stBM*dict)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (isdict_BM (dict));
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (isdict_BM (dict));
   auto& dicm = *(dictmap_claBM*)dict->dict_data;
   size_t siz = dicm.size();
   dicm.clear();
@@ -547,8 +547,8 @@ void dictgcdestroy_BM (struct garbcoll_stBM *gc, struct dict_stBM*dict)
 
 void dictgckeep_BM (struct garbcoll_stBM *gc, struct dict_stBM*dict)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (isdict_BM (dict));
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (isdict_BM (dict));
   auto& dicm = *(dictmap_claBM*)dict->dict_data;
   size_t siz = dicm.size();
   gc->gc_keptbytes += sizeof(*dict) + siz*2*sizeof(void*);
@@ -706,7 +706,7 @@ cmd_clear_parens_BM(void)
 void
 cmd_add_parens_BM (struct parenoffset_stBM*par)
 {
-  assert (par != nullptr);
+  ASSERT_BM (par != nullptr);
   cmd_openmap_BM.insert({par->paroff_open,*par});
   cmd_closemap_BM.insert({par->paroff_close,*par});
 } // end cmd_add_parens_BM
@@ -767,7 +767,7 @@ static std::mutex deferqmtx_BM;
 void
 gcmarkdefergtk_BM(struct garbcoll_stBM*gc)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
   std::lock_guard<std::mutex> _g(deferqmtx_BM);
   for (auto itd : deferdeque_BM)
     {
@@ -992,8 +992,8 @@ start_agenda_work_threads_BM (int nbjobs)
   DBGPRINTF_BM("start_agenda_work_threads start nbjobs=%d", nbjobs);
   atomic_init(&threadinfo_stBM::ti_countendedthreads, 0);
   atomic_init(&threadinfo_stBM::ti_nbworkthreads, 0);
-  assert (pthread_self() == mainthreadid_BM);
-  assert (nbjobs >= MINNBWORKJOBS_BM && nbjobs <= MAXNBWORKJOBS_BM);
+  ASSERT_BM (pthread_self() == mainthreadid_BM);
+  ASSERT_BM (nbjobs >= MINNBWORKJOBS_BM && nbjobs <= MAXNBWORKJOBS_BM);
   atomic_store(&threadinfo_stBM::ti_nbworkthreads, nbjobs);
   for (int tix=1; tix<=nbjobs; tix++)
     {
@@ -1053,7 +1053,7 @@ agenda_notify_BM(void)
 void
 agenda_suspend_for_gc_BM (void)
 {
-  assert(curthreadinfo_BM == nullptr);
+  ASSERT_BM (curthreadinfo_BM == nullptr);
   atomic_store(&threadinfo_stBM::ti_needgc, true);
   threadinfo_stBM::ti_agendacondv.notify_all();
   bool alldoinggc = false;
@@ -1087,7 +1087,7 @@ agenda_suspend_for_gc_BM (void)
 void
 agenda_continue_after_gc_BM(void)
 {
-  assert(curthreadinfo_BM == nullptr);
+  ASSERT_BM (curthreadinfo_BM == nullptr);
   int nbwth = atomic_load(&threadinfo_stBM::ti_nbworkthreads);
   atomic_store(&threadinfo_stBM::ti_needgc, false);
   {
@@ -1154,7 +1154,7 @@ threadinfo_stBM::thread_run(const int tix)
           };
         if (taqu)
           {
-            assert (!taqu->empty());
+            ASSERT_BM (!taqu->empty());
             taskob = taqu->front();
             taqu->pop_front();
             ti_task_hmap.erase(taskob);
@@ -1228,7 +1228,7 @@ agenda_nb_work_jobs_BM (void)
 void
 gcmarkagenda_BM (struct garbcoll_stBM *gc)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
   std::lock_guard<std::mutex> _gu(threadinfo_stBM::ti_agendamtx);
   for (objectval_tyBM*tkob : threadinfo_stBM::ti_taskque_veryhigh)
     gcobjmark_BM (gc, tkob);
@@ -1252,7 +1252,7 @@ agenda_add_very_high_priority_tasklet_front_BM (objectval_tyBM * obtk)
     {
       std::deque<objectval_tyBM*>* tq = it->second;
       bool r = threadinfo_stBM::remove_from_taskque(obtk, *tq);
-      assert (r);
+      ASSERT_BM (r);
     }
   threadinfo_stBM::ti_taskque_veryhigh.push_front(obtk);
   threadinfo_stBM::ti_task_hmap.insert({obtk, & threadinfo_stBM::ti_taskque_veryhigh});
@@ -1269,7 +1269,7 @@ agenda_add_very_high_priority_tasklet_back_BM (objectval_tyBM *obtk)
     {
       std::deque<objectval_tyBM*>* tq = it->second;
       bool r = threadinfo_stBM::remove_from_taskque(obtk, *tq);
-      assert (r);
+      ASSERT_BM (r);
     }
   threadinfo_stBM::ti_taskque_veryhigh.push_back(obtk);
   threadinfo_stBM::ti_task_hmap.insert({obtk, & threadinfo_stBM::ti_taskque_veryhigh});
@@ -1288,7 +1288,7 @@ agenda_add_high_priority_tasklet_front_BM (objectval_tyBM * obtk)
     {
       std::deque<objectval_tyBM*>* tq = it->second;
       bool r = threadinfo_stBM::remove_from_taskque(obtk, *tq);
-      assert (r);
+      ASSERT_BM (r);
     }
   threadinfo_stBM::ti_taskque_high.push_front(obtk);
   threadinfo_stBM::ti_task_hmap.insert({obtk, & threadinfo_stBM::ti_taskque_high});
@@ -1305,7 +1305,7 @@ agenda_add_high_priority_tasklet_back_BM (objectval_tyBM *obtk)
     {
       std::deque<objectval_tyBM*>* tq = it->second;
       bool r = threadinfo_stBM::remove_from_taskque(obtk, *tq);
-      assert (r);
+      ASSERT_BM (r);
     }
   threadinfo_stBM::ti_taskque_high.push_back(obtk);
   threadinfo_stBM::ti_task_hmap.insert({obtk, & threadinfo_stBM::ti_taskque_high});
@@ -1323,7 +1323,7 @@ agenda_add_low_priority_tasklet_front_BM (objectval_tyBM * obtk)
     {
       std::deque<objectval_tyBM*>* tq = it->second;
       bool r = threadinfo_stBM::remove_from_taskque(obtk, *tq);
-      assert (r);
+      ASSERT_BM (r);
     }
   threadinfo_stBM::ti_taskque_low.push_front(obtk);
   threadinfo_stBM::ti_task_hmap.insert({obtk, & threadinfo_stBM::ti_taskque_low});
@@ -1340,7 +1340,7 @@ agenda_add_low_priority_tasklet_back_BM (objectval_tyBM *obtk)
     {
       std::deque<objectval_tyBM*>* tq = it->second;
       bool r = threadinfo_stBM::remove_from_taskque(obtk, *tq);
-      assert (r);
+      ASSERT_BM (r);
     }
   threadinfo_stBM::ti_taskque_low.push_back(obtk);
   threadinfo_stBM::ti_task_hmap.insert({obtk, & threadinfo_stBM::ti_taskque_low});
@@ -1358,7 +1358,7 @@ agenda_add_very_low_priority_tasklet_front_BM (objectval_tyBM * obtk)
     {
       std::deque<objectval_tyBM*>* tq = it->second;
       bool r = threadinfo_stBM::remove_from_taskque(obtk, *tq);
-      assert (r);
+      ASSERT_BM (r);
     }
   threadinfo_stBM::ti_taskque_verylow.push_front(obtk);
   threadinfo_stBM::ti_task_hmap.insert({obtk, & threadinfo_stBM::ti_taskque_verylow});
@@ -1375,7 +1375,7 @@ agenda_add_very_low_priority_tasklet_back_BM (objectval_tyBM *obtk)
     {
       std::deque<objectval_tyBM*>* tq = it->second;
       bool r = threadinfo_stBM::remove_from_taskque(obtk, *tq);
-      assert (r);
+      ASSERT_BM (r);
     }
   threadinfo_stBM::ti_taskque_verylow.push_back(obtk);
   threadinfo_stBM::ti_task_hmap.insert({obtk, & threadinfo_stBM::ti_taskque_verylow});
@@ -1393,7 +1393,7 @@ agenda_remove_tasklet_BM (objectval_tyBM *obtk)
     {
       std::deque<objectval_tyBM*>* tq = it->second;
       bool r = threadinfo_stBM::remove_from_taskque(obtk, *tq);
-      assert (r);
+      ASSERT_BM (r);
       return true;
     }
   return false;
@@ -1424,7 +1424,7 @@ threadinfo_stBM::tuple_from_taskque(std::deque<objectval_tyBM*>& taskque)
   long count=0;
   for (objectval_tyBM*tob : taskque)
     {
-      assert (count<nbtasks);
+      ASSERT_BM (count<nbtasks);
       arr[count++] = tob;
     };
   res = maketuple_BM(arr, nbtasks);
@@ -1502,15 +1502,15 @@ agenda_get_tuples_BM(value_tyBM*pveryhightup, value_tyBM*phightup,  value_tyBM*p
 void
 register_failock_BM(struct failurelockset_stBM*flh, objectval_tyBM*ob)
 {
-  assert (flh != nullptr);
-  assert (isobject_BM(ob));
+  ASSERT_BM (flh != nullptr);
+  ASSERT_BM (isobject_BM(ob));
   flh->flhobjset.insert(ob);
 } // end register_failock_BM
 
 void
 unregister_failock_BM(struct failurelockset_stBM*flh, objectval_tyBM* ob)
 {
-  assert (flh != nullptr);
-  assert (isobject_BM(ob));
+  ASSERT_BM (flh != nullptr);
+  ASSERT_BM (isobject_BM(ob));
   flh->flhobjset.erase(ob);
 } // end unregister_failock_BM

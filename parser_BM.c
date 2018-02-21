@@ -111,8 +111,8 @@ makeparser_memopen_BM (const char *filemem, long size, objectval_tyBM * ownob)
 void
 parsergcmark_BM (struct garbcoll_stBM *gc, struct parser_stBM *pars)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (isparser_BM (pars));
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (isparser_BM (pars));
   uint8_t oldmark = ((typedhead_tyBM *) pars)->hgc;
   if (oldmark)
     return;
@@ -128,7 +128,7 @@ void
 parsergcdestroy_BM (struct garbcoll_stBM *gc, struct parser_stBM *pars)
 {
   unsigned long parsiz = sizeof (*pars);
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
   if (pars->pars_filemem)
     {
       pars->pars_filemem = NULL;
@@ -159,7 +159,7 @@ parsergcdestroy_BM (struct garbcoll_stBM *gc, struct parser_stBM *pars)
 void
 parsergckeep_BM (struct garbcoll_stBM *gc, struct parser_stBM *pars)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
   unsigned long parsiz = sizeof (*pars);
   if (pars->pars_filemem)
     parsiz += pars->pars_filesize;
@@ -167,7 +167,7 @@ parsergckeep_BM (struct garbcoll_stBM *gc, struct parser_stBM *pars)
     parsiz += pars->pars_linesiz;
   if (pars->pars_file)
     parsiz += sizeof (FILE);
-  assert (parsiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
+  ASSERT_BM (parsiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
   gc->gc_keptbytes += parsiz;
 }                               /* end parsergckeep_BM */
 
@@ -308,7 +308,7 @@ parsererrorprintf_BM (struct parser_stBM *pars, struct stackframe_stBM *stkf,
   const struct parserops_stBM *parsops = pars->pars_ops;
   if (parsops)
     {
-      assert (parsops->parsop_magic == PARSOPMAGIC_BM);
+      ASSERT_BM (parsops->parsop_magic == PARSOPMAGIC_BM);
       if (parsops && parsops->parsop_error_rout)
         parsops->parsop_error_rout (pars, stkf, line, col, buf);
     };
@@ -324,7 +324,7 @@ parserskipspaces_BM (struct parser_stBM *pars, struct stackframe_stBM *stkf)
   if (!isparser_BM (pars))
     return;
   const struct parserops_stBM *parsops = pars->pars_ops;
-  assert (!parsops || parsops->parsop_magic == PARSOPMAGIC_BM);
+  ASSERT_BM (!parsops || parsops->parsop_magic == PARSOPMAGIC_BM);
   for (;;)
     {
       const char *restlines = parserrestline_BM (pars);
@@ -399,8 +399,8 @@ parserskipspaces_BM (struct parser_stBM *pars, struct stackframe_stBM *stkf)
 void
 gctokenmark_BM (struct garbcoll_stBM *gc, struct parstoken_stBM *tok)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
-  assert (tok != NULL);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (tok != NULL);
   switch (tok->tok_kind)
     {
     case plex__NONE:
@@ -431,16 +431,16 @@ static unsigned
 parse_plain_cord_BM (struct parser_stBM *pars, FILE * memfil,
                      struct stackframe_stBM *stkf)
 {
-  assert (isparser_BM (pars));
-  assert (memfil != NULL);
+  ASSERT_BM (isparser_BM (pars));
+  ASSERT_BM (memfil != NULL);
   const struct parserops_stBM *parsop = pars->pars_ops;
   const char *restlin = parserrestline_BM (pars);
-  assert (restlin && *restlin == '"');
+  ASSERT_BM (restlin && *restlin == '"');
   if (pars->pars_debug)
     DBGPRINTF_BM ("parseplaincord start L%dC%d restlin@%p:%s",
                   pars->pars_lineno, pars->pars_colpos, restlin, restlin);
   // pars->pars_colpos is the column of restlin
-  assert (!parsop || parsop->parsop_magic == PARSOPMAGIC_BM);
+  ASSERT_BM (!parsop || parsop->parsop_magic == PARSOPMAGIC_BM);
   if (parsop && parsop->parsop_decorate_string_sign_rout)
     parsop->parsop_decorate_string_sign_rout (pars, pars->pars_lineno,
                                               pars->pars_colpos, 1);
@@ -707,16 +707,16 @@ static unsigned
 parse_raw_cord_BM (struct parser_stBM *pars, const char *run, FILE * memfil,
                    struct stackframe_stBM *stkf)
 {
-  assert (isparser_BM (pars));
-  assert (memfil != NULL);
+  ASSERT_BM (isparser_BM (pars));
+  ASSERT_BM (memfil != NULL);
   char endrunbuf[RUNLEN_BM + 8] = "";
   unsigned runlen = strlen (run);
-  assert (runlen <= RUNLEN_BM);
+  ASSERT_BM (runlen <= RUNLEN_BM);
   unsigned nbc = 0;
   const char *restlin = parserrestline_BM (pars);
-  assert (restlin && restlin[0] == '/' && restlin[1] == '"'
-          && !strncmp (restlin + 2, run, runlen)
-          && restlin[runlen + 3] == '(');
+  ASSERT_BM (restlin && restlin[0] == '/' && restlin[1] == '"'
+             && !strncmp (restlin + 2, run, runlen)
+             && restlin[runlen + 3] == '(');
   const char *curstart = restlin + runlen + 4;
   snprintf (endrunbuf, sizeof (endrunbuf), ")%s\"/", run);
   for (;;)
@@ -742,7 +742,7 @@ parse_raw_cord_BM (struct parser_stBM *pars, const char *run, FILE * memfil,
                                   pars->pars_colpos, "unterminated raw cord");
           restlin = parserrestline_BM (pars);
           curstart = restlin;
-          assert (restlin != NULL);
+          ASSERT_BM (restlin != NULL);
           continue;
         }
     };
@@ -756,7 +756,7 @@ parse_cords_BM (struct parser_stBM *pars, struct stackframe_stBM *stkf)
   if (!isparser_BM ((const value_tyBM) pars))
     return NULL;
   const struct parserops_stBM *parsops = pars->pars_ops;
-  assert (!parsops || parsops->parsop_magic == PARSOPMAGIC_BM);
+  ASSERT_BM (!parsops || parsops->parsop_magic == PARSOPMAGIC_BM);
   bool nobuild = parsops && parsops->parsop_nobuild;
   parserskipspaces_BM (pars, stkf);
   const char *restlin = parserrestline_BM (pars);
@@ -840,11 +840,11 @@ parse_cords_BM (struct parser_stBM *pars, struct stackframe_stBM *stkf)
 parstoken_tyBM
 parsertokenget_BM (struct parser_stBM * pars, struct stackframe_stBM * stkf)
 {
-  assert (strlen ("€") == EUROBYTELEN_BM);
+  ASSERT_BM (strlen ("€") == EUROBYTELEN_BM);
   if (!isparser_BM ((const value_tyBM) pars))
     return EMPTY_TOKEN_BM;
   const struct parserops_stBM *parsop = pars->pars_ops;
-  assert (!parsop || parsop->parsop_magic == PARSOPMAGIC_BM);
+  ASSERT_BM (!parsop || parsop->parsop_magic == PARSOPMAGIC_BM);
   bool nobuild = parsop && parsop->parsop_nobuild;
   const char *restlin = NULL;
 again:
@@ -905,7 +905,7 @@ again:
       rawid_tyBM id = parse_rawid_BM (restlin, &endid);
       if (id.id_hi != 0 && endid != NULL && endid > restlin)
         {
-          assert (endid == restlin + IDLEN_BM);
+          ASSERT_BM (endid == restlin + IDLEN_BM);
           if (parsop && parsop->parsop_decorate_id_rout)
             parsop->parsop_decorate_id_rout     //
               (pars, pars->pars_lineno, pars->pars_colpos, IDLEN_BM);
@@ -1161,7 +1161,7 @@ parsergetobject_BM (struct parser_stBM * pars,
     FATAL_BM ("missing pgotobj");
   LOCALFRAME_BM (prevstkf, NULL, const objectval_tyBM * resobj);
   const struct parserops_stBM *parsops = pars->pars_ops;
-  assert (!parsops || parsops->parsop_magic == PARSOPMAGIC_BM);
+  ASSERT_BM (!parsops || parsops->parsop_magic == PARSOPMAGIC_BM);
   bool nobuild = parsops && parsops->parsop_nobuild;
   parserskipspaces_BM (pars, (struct stackframe_stBM *) &_);
   unsigned lineno = parserlineno_BM (pars);
@@ -1175,7 +1175,7 @@ parsergetobject_BM (struct parser_stBM * pars,
     goto failure;
   else if (tok.tok_kind == plex_NAMEDOBJ)
     {
-      assert (tok.tok_namedobj != NULL);
+      ASSERT_BM (tok.tok_namedobj != NULL);
       *pgotobj = true;
       return tok.tok_namedobj;
     }
@@ -1213,7 +1213,7 @@ parsergetobject_BM (struct parser_stBM * pars,
         parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
       if (vartok.tok_kind == plex_NAMEDOBJ)
         {
-          assert (varlineno == lineno);
+          ASSERT_BM (varlineno == lineno);
           _.resobj =            //
             parsops->parsop_expand_dollarobj_rout
             (pars, varlineno, tok.tok_col,
@@ -1350,7 +1350,7 @@ parsergetvalue_BM (struct parser_stBM *pars,
   if (!pgotval)
     FATAL_BM ("missing pgotval");
   const struct parserops_stBM *parsops = pars->pars_ops;
-  assert (!parsops || parsops->parsop_magic == PARSOPMAGIC_BM);
+  ASSERT_BM (!parsops || parsops->parsop_magic == PARSOPMAGIC_BM);
   bool nobuild = parsops && parsops->parsop_nobuild;
 #define TINYARGSNUM_BM 8
   LOCALFRAME_BM                 //
@@ -1928,7 +1928,7 @@ parsergetvalue_BM (struct parser_stBM *pars,
         parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
       if (vartok.tok_kind == plex_NAMEDOBJ)
         {
-          assert (tok.tok_line == vartok.tok_line);
+          ASSERT_BM (tok.tok_line == vartok.tok_line);
           _.resval = (value_tyBM) parsops->parsop_expand_dollarval_rout //
             (pars, tok.tok_line, tok.tok_col,
              (const value_tyBM)
@@ -1936,7 +1936,7 @@ parsergetvalue_BM (struct parser_stBM *pars,
         }
       else if (vartok.tok_kind == plex_CNAME)
         {
-          assert (tok.tok_line == vartok.tok_line);
+          ASSERT_BM (tok.tok_line == vartok.tok_line);
           _.resval = (value_tyBM) parsops->parsop_expand_dollarval_rout //
             (pars, tok.tok_line, vartok.tok_col,
              (const value_tyBM)
@@ -1966,7 +1966,7 @@ parsergetvalue_BM (struct parser_stBM *pars,
         parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
       if (vartok.tok_kind == plex_NAMEDOBJ)
         {
-          assert (varlineno == lineno);
+          ASSERT_BM (varlineno == lineno);
           _.resval = (value_tyBM) parsops->parsop_expand_dollarobj_rout //
             (pars, tok.tok_line, tok.tok_col,
              (const value_tyBM)
@@ -2099,7 +2099,7 @@ parsergetunary_BM (struct parser_stBM * pars,
      value_tyBM resval; objectval_tyBM * uconnobj; objectval_tyBM * parsob;
     );
   _.parsob = checkedparserowner_BM (pars);
-  assert (isobject_BM (unaryconn));
+  ASSERT_BM (isobject_BM (unaryconn));
   _.uconnobj = unaryconn;
 #warning unimplemented parsergetunary_BM
   parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno,
@@ -2119,7 +2119,7 @@ parsergetchunk_BM (struct parser_stBM *pars,
   if (!pgotchunk)
     FATAL_BM ("missing pgotchunk");
   const struct parserops_stBM *parsops = pars->pars_ops;
-  assert (!parsops || parsops->parsop_magic == PARSOPMAGIC_BM);
+  ASSERT_BM (!parsops || parsops->parsop_magic == PARSOPMAGIC_BM);
   unsigned startlineno = parserlineno_BM (pars);
   unsigned startcolpos = parsercolpos_BM (pars);
   bool nobuild = parsops && parsops->parsop_nobuild;

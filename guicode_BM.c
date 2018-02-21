@@ -14,8 +14,8 @@ ROUTINEOBJNAME_BM (_23ViGouPnAg_15P5mpG9x3d)    //
  const value_tyBM arg4 __attribute__ ((unused)),        //
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
-  assert (isobject_BM (arg1));
-  assert (istaggedint_BM (arg2));
+  ASSERT_BM (isobject_BM (arg1));
+  ASSERT_BM (istaggedint_BM (arg2));
   GtkTextBuffer *brobuf = gtk_text_iter_get_buffer (&browserit_BM);
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * objbrows;
@@ -201,15 +201,15 @@ ROUTINEOBJNAME_BM (_0BAnB0xjs23_0WEOCOi5Nbe)    //
   if (!isobject_BM (arg1))
     FATAL_BM
       ("non-object for method to browse_value for object-s _0BAnB0xjs23_0WEOCOi5Nbe");
-  assert (istaggedint_BM (arg2));
-  assert (istaggedint_BM (arg3));
+  ASSERT_BM (istaggedint_BM (arg2));
+  ASSERT_BM (istaggedint_BM (arg3));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * objbrows;);
   _.objbrows = (const objectval_tyBM *) arg1;
   int maxdepth = getint_BM (arg2);
-  assert (maxdepth > 0);
+  ASSERT_BM (maxdepth > 0);
   int curdepth = getint_BM (arg3);
-  //  assert (curdepth <= maxdepth);
+  //  ASSERT_BM (curdepth <= maxdepth);
   const char *objnam = findobjectname_BM (_.objbrows);
   GtkTextBuffer *brobuf = gtk_text_iter_get_buffer (&browserit_BM);
   char idbuf[32];
@@ -263,8 +263,8 @@ ROUTINEOBJNAME_BM (_09DxyieS5Wz_7pkad4F88FA)    //
       ("non-object for method to browse_data for class-s _09DxyieS5Wz_7pkad4F88FA");
   _.objbrows = (const objectval_tyBM *) arg1;
   int depth = getint_BM (arg2);
-  assert (isobject_BM ((const value_tyBM) _.objbrows));
-  assert (objhasclassinfo_BM (_.objbrows));
+  ASSERT_BM (isobject_BM ((const value_tyBM) _.objbrows));
+  ASSERT_BM (objhasclassinfo_BM (_.objbrows));
   _.setsel = objgetclassinfosetofselectors_BM (_.objbrows);
   _.supercla = objgetclassinfosuperclass_BM (_.objbrows);
   unsigned nbmeth = setcardinal_BM (_.setsel);
@@ -343,8 +343,8 @@ ROUTINEOBJNAME_BM (_0B1PYH9bN34_3RZdP24AVyt)    //
   if (!istuple_BM (arg1))
     FATAL_BM
       ("non-tuple for  method to browse_value for tuple-s _0BAnB0xjs23_0WEOCOi5Nb");
-  assert (istaggedint_BM (arg2));
-  assert (istaggedint_BM (arg3));
+  ASSERT_BM (istaggedint_BM (arg2));
+  ASSERT_BM (istaggedint_BM (arg3));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const tupleval_tyBM * tupbrows;
                  const objectval_tyBM * objbrows;);
@@ -352,7 +352,7 @@ ROUTINEOBJNAME_BM (_0B1PYH9bN34_3RZdP24AVyt)    //
   int maxdepth = getint_BM (arg2);
   int curdepth = getint_BM (arg3);
   int oboff = browse_show_start_offset_BM ();
-  assert (curdepth <= maxdepth);
+  ASSERT_BM (curdepth <= maxdepth);
   int openoff = gtk_text_iter_get_offset (&browserit_BM) - oboff;
   GtkTextBuffer *brobuf = gtk_text_iter_get_buffer (&browserit_BM);
   gtk_text_buffer_insert_with_tags (brobuf, &browserit_BM,      //
@@ -405,8 +405,8 @@ ROUTINEOBJNAME_BM (_3rne4qbpnV9_0pywzeJp3Qr)    //
   if (!isset_BM (arg1))
     FATAL_BM
       ("non-set for  method to browse_value for set-s _3rne4qbpnV9_0pywzeJp3Qr");
-  assert (istaggedint_BM (arg2));
-  assert (istaggedint_BM (arg3));
+  ASSERT_BM (istaggedint_BM (arg2));
+  ASSERT_BM (istaggedint_BM (arg3));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const setval_tyBM * setbrows;
                  const objectval_tyBM * objbrows;);
@@ -414,7 +414,7 @@ ROUTINEOBJNAME_BM (_3rne4qbpnV9_0pywzeJp3Qr)    //
   unsigned setcard = setcardinal_BM (_.setbrows);
   int maxdepth = getint_BM (arg2);
   int curdepth = getint_BM (arg3);
-  assert (curdepth <= maxdepth);
+  ASSERT_BM (curdepth <= maxdepth);
   int oboff = browse_show_start_offset_BM ();
   int openoff = gtk_text_iter_get_offset (&browserit_BM) - oboff;
   GtkTextBuffer *brobuf = gtk_text_iter_get_buffer (&browserit_BM);
@@ -479,8 +479,8 @@ ROUTINEOBJNAME_BM (_0HBMCM5CeLn_7L5YEV2jO7Y)    //
   if (!istaggedint_BM (arg1))
     FATAL_BM
       ("non-int for method to browse_value for int-s _0HBMCM5CeLn_7L5YEV2jO7Y");
-  assert (istaggedint_BM (arg2));
-  assert (istaggedint_BM (arg3));
+  ASSERT_BM (istaggedint_BM (arg2));
+  ASSERT_BM (istaggedint_BM (arg3));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
     );
   intptr_t i = getint_BM (arg1);
@@ -510,14 +510,14 @@ ROUTINEOBJNAME_BM (_63ZPkXUI2Uv_6Cp3qmh6Uud)    //
   if (!isstring_BM (arg1))
     FATAL_BM
       ("non-string for method to browse_value for string-s _63ZPkXUI2Uv_6Cp3qmh6Uud");
-  assert (istaggedint_BM (arg2));
-  assert (istaggedint_BM (arg3));
+  ASSERT_BM (istaggedint_BM (arg2));
+  ASSERT_BM (istaggedint_BM (arg3));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const stringval_tyBM * strbrows;);
   _.strbrows = arg1;
   int maxdepth = getint_BM (arg2);
   int curdepth = getint_BM (arg3);
-  assert (curdepth <= maxdepth);
+  ASSERT_BM (curdepth <= maxdepth);
   unsigned l = lenstring_BM (_.strbrows);
   const char *str = bytstring_BM (_.strbrows);
   if (l >= WANTEDLINEWIDTH_BM / 2)
@@ -646,18 +646,18 @@ ROUTINEOBJNAME_BM (_7fJKfG4SN0U_1QTu5J832xg)    //
   if (!isnode_BM (arg1))
     FATAL_BM
       ("non-node for method to browse_value for node-s _7fJKfG4SN0U_1QTu5J832xg");
-  assert (istaggedint_BM (arg2));
-  assert (istaggedint_BM (arg3));
+  ASSERT_BM (istaggedint_BM (arg2));
+  ASSERT_BM (istaggedint_BM (arg3));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const node_tyBM * nodbrows;
                  const objectval_tyBM * connob; value_tyBM curson;);
   _.nodbrows = arg1;
   int maxdepth = getint_BM (arg2);
   int curdepth = getint_BM (arg3);
-  assert (curdepth <= maxdepth);
+  ASSERT_BM (curdepth <= maxdepth);
   unsigned nw = nodewidth_BM ((const value_tyBM) _.nodbrows);
   _.connob = nodeconn_BM ((const value_tyBM) _.nodbrows);
-  assert (isobject_BM ((const value_tyBM) _.connob));
+  ASSERT_BM (isobject_BM ((const value_tyBM) _.connob));
   int oboff = browse_show_start_offset_BM ();
   GtkTextBuffer *brobuf = gtk_text_iter_get_buffer (&browserit_BM);
   int xtraoff = gtk_text_iter_get_offset (&browserit_BM) - oboff;
@@ -717,18 +717,18 @@ ROUTINEOBJNAME_BM (_7CohjJ9tkfZ_4UMAIZCgwac)    //
   if (!isclosure_BM (arg1))
     FATAL_BM
       ("non-closure for method to browse_value for closure-s _7CohjJ9tkfZ_4UMAIZCgwac");
-  assert (istaggedint_BM (arg2));
-  assert (istaggedint_BM (arg3));
+  ASSERT_BM (istaggedint_BM (arg2));
+  ASSERT_BM (istaggedint_BM (arg3));
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const closure_tyBM * clobrows;
                  const objectval_tyBM * connob; value_tyBM curson;);
   _.clobrows = arg1;
   int maxdepth = getint_BM (arg2);
   int curdepth = getint_BM (arg3);
-  assert (curdepth <= maxdepth);
+  ASSERT_BM (curdepth <= maxdepth);
   unsigned cw = closurewidth_BM ((const value_tyBM) _.clobrows);
   _.connob = closureconn_BM ((const value_tyBM) _.clobrows);
-  assert (isobject_BM ((const value_tyBM) _.connob));
+  ASSERT_BM (isobject_BM ((const value_tyBM) _.connob));
   int oboff = browse_show_start_offset_BM ();
   int xtraoff = gtk_text_iter_get_offset (&browserit_BM) - oboff;
   GtkTextBuffer *brobuf = gtk_text_iter_get_buffer (&browserit_BM);
@@ -790,7 +790,7 @@ ROUTINEOBJNAME_BM (_9zpvXnTuDeB_2B7ZiBtN8fA)    //
       ("non-object for method to browse_data for basiclo_function-s _9zpvXnTuDeB_2B7ZiBtN8fA");
   _.objbrows = (const objectval_tyBM *) arg1;
   int depth = getint_BM (arg2);
-  assert (isobject_BM ((const value_tyBM) _.objbrows));
+  ASSERT_BM (isobject_BM ((const value_tyBM) _.objbrows));
   _.curval = objpayload_BM (_.objbrows);
   int tyval = valtype_BM (_.curval);
   GtkTextBuffer *brobuf = gtk_text_iter_get_buffer (&browserit_BM);
@@ -834,7 +834,7 @@ ROUTINEOBJNAME_BM (_4IshjBIv6ol_5korHKUIjeK)    //
     FATAL_BM ("non-object for method to browse_data for hset_object");
   _.objbrows = (const objectval_tyBM *) arg1;
   int depth = getint_BM (arg2);
-  assert (isobject_BM ((const value_tyBM) _.objbrows));
+  ASSERT_BM (isobject_BM ((const value_tyBM) _.objbrows));
   GtkTextBuffer *brobuf = gtk_text_iter_get_buffer (&browserit_BM);
   _.curval = objpayload_BM (_.objbrows);
   if (!_.curval)
@@ -881,7 +881,7 @@ ROUTINEOBJNAME_BM (_5KWAjUEGiiq_2B6rbvkCcgc)    //
       ("non-object for method to browse_data for any object _5KWAjUEGiiq_2B6rbvkCcgc");
   _.objbrows = (const objectval_tyBM *) arg1;
   int depth = getint_BM (arg2);
-  assert (isobject_BM ((const value_tyBM) _.objbrows));
+  ASSERT_BM (isobject_BM ((const value_tyBM) _.objbrows));
 #warning should be improved
   _.curval = objpayload_BM (_.objbrows);
   int tyval = valtype_BM (_.curval);
@@ -930,7 +930,7 @@ ROUTINEOBJNAME_BM (_5KWAjUEGiiq_2B6rbvkCcgc)    //
                                             &browserit_BM, vcommbuf, -1,
                                             miscomm_brotag_BM, NULL);
           _.setk = assoc_setattrs_BM (assoc);
-          assert (nbkeys == setcardinal_BM (_.setk));
+          ASSERT_BM (nbkeys == setcardinal_BM (_.setk));
           const objectval_tyBM *tinyarr[TINYSIZE_BM] = {
           };
           const objectval_tyBM **arr = (nbkeys < TINYSIZE_BM) ? tinyarr //

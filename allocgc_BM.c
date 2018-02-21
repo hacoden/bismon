@@ -32,7 +32,7 @@ void *
 allocgcty_BM (unsigned type, size_t sz)
 {
   pthread_mutex_lock (&allocationmutex_BM);
-  assert (allocationvec_vBM != NULL);
+  ASSERT_BM (allocationvec_vBM != NULL);
   unsigned long alloc_size = allocationvec_vBM->al_size;
   unsigned long alloc_nb = allocationvec_vBM->al_nb;
   if (alloc_nb + 3 >= alloc_size)
@@ -50,8 +50,8 @@ allocgcty_BM (unsigned type, size_t sz)
       free (allocationvec_vBM), allocationvec_vBM = new_allocvec;
       atomic_store (&want_garbage_collection_BM, true);
     }
-  assert (sz > sizeof (typedhead_tyBM));
-  assert (sz < MAXSIZE_BM * sizeof (double));
+  ASSERT_BM (sz > sizeof (typedhead_tyBM));
+  ASSERT_BM (sz < MAXSIZE_BM * sizeof (double));
   typedhead_tyBM *newzon = malloc (sz);
   if (!newzon)
     FATAL_BM ("failed fresh GC allocation of new zone %zd bytes (%m)", sz);
@@ -69,7 +69,7 @@ allocgcty_BM (unsigned type, size_t sz)
 void *
 valuegcproc_BM (struct garbcoll_stBM *gc, value_tyBM val, int depth)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
   if (!val)
     return NULL;
   if (depth >= MAXDEPTHGC_BM)
@@ -114,7 +114,7 @@ valuegcproc_BM (struct garbcoll_stBM *gc, value_tyBM val, int depth)
 void *
 extendedgcproc_BM (struct garbcoll_stBM *gc, extendedval_tyBM xval, int depth)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
   if (!xval)
     return NULL;
   if (depth >= MAXDEPTHGC_BM)
@@ -189,13 +189,13 @@ extendedgcproc_BM (struct garbcoll_stBM *gc, extendedval_tyBM xval, int depth)
 void
 valgcdestroy_BM (struct garbcoll_stBM *gc, value_tyBM val)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
   if (!val)
     return;
   int ty = valtype_BM (val);
   if (!ty || ty == tyInt_BM)
     return;
-  assert (((typedhead_tyBM *) val)->hgc == CLEARMGC_BM);
+  ASSERT_BM (((typedhead_tyBM *) val)->hgc == CLEARMGC_BM);
   switch (ty)
     {
     case tyString_BM:
@@ -319,7 +319,7 @@ typestring_BM (int ty)
 void
 deleteobjectpayload_BM (objectval_tyBM * obj, extendedval_tyBM payl)
 {
-  assert (isobject_BM (obj));
+  ASSERT_BM (isobject_BM (obj));
   if (!payl)
     return;
   int ty = valtype_BM (payl);
@@ -366,13 +366,13 @@ deleteobjectpayload_BM (objectval_tyBM * obj, extendedval_tyBM payl)
 void
 valgckeep_BM (struct garbcoll_stBM *gc, value_tyBM val)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
   if (!val)
     return;
   int ty = valtype_BM (val);
   if (!ty || ty == tyInt_BM)
     return;
-  assert (((typedhead_tyBM *) val)->hgc == MARKGC_BM);
+  ASSERT_BM (((typedhead_tyBM *) val)->hgc == MARKGC_BM);
   switch (ty)
     {
     case tyString_BM:
@@ -436,7 +436,7 @@ valgckeep_BM (struct garbcoll_stBM *gc, value_tyBM val)
 void
 gcobjmark_BM (struct garbcoll_stBM *gc, objectval_tyBM * obj)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
   if (valtype_BM ((const value_tyBM) obj) != tyObject_BM)
     FATAL_BM ("gcobjmark bad obj@%p", obj);
   uint8_t oldmark = ((typedhead_tyBM *) obj)->hgc;
@@ -444,9 +444,9 @@ gcobjmark_BM (struct garbcoll_stBM *gc, objectval_tyBM * obj)
     return;
   ((typedhead_tyBM *) obj)->hgc = MARKGC_BM;
   gc->gc_nbmarks++;
-  assert (!hashsetobj_contains_BM (gc->gc_hset, obj));
+  ASSERT_BM (!hashsetobj_contains_BM (gc->gc_hset, obj));
   gc->gc_hset = hashsetobj_add_BM (gc->gc_hset, obj);
-  assert (islist_BM (gc->gc_scanlist));
+  ASSERT_BM (islist_BM (gc->gc_scanlist));
   listappend_BM (gc->gc_scanlist, obj);
 }                               /* end gcobjmark_BM */
 
@@ -454,7 +454,7 @@ void
 gcframemark_BM (struct garbcoll_stBM *gc, struct stackframe_stBM *stkfram,
                 int depth)
 {
-  assert (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
   if (depth >= MAXDEPTHGC_BM)
     FATAL_BM ("too deep %u gcframemark", depth);
   unsigned framcnt = 0;
@@ -499,7 +499,7 @@ full_garbage_collection_BM (struct stackframe_stBM *stkfram)
 {
   DBGPRINTF_BM ("start full_garbage_collection_BM stkfram@%p tid#%ld",
                 (void *) stkfram, (long) gettid_BM ());
-  assert (pthread_self () == mainthreadid_BM);
+  ASSERT_BM (pthread_self () == mainthreadid_BM);
   int nbj = agenda_nb_work_jobs_BM ();
   DBGPRINTF_BM ("full_garbage_collection_BM nbj=%d", nbj);
   if (nbj > 0)
@@ -513,13 +513,13 @@ full_garbage_collection_BM (struct stackframe_stBM *stkfram)
   GCdata.gc_magic = GCMAGIC_BM;
   GCdata.gc_startelapsedtime = elapsedtime_BM ();
   GCdata.gc_startcputime = cputime_BM ();
-  assert (allocationvec_vBM != NULL);
+  ASSERT_BM (allocationvec_vBM != NULL);
   countgc_BM++;
   unsigned long alsiz = allocationvec_vBM->al_size;
   unsigned long alcnt = allocationvec_vBM->al_nb;
   unsigned long oldnbval = 0;
-  assert (alcnt <= alsiz);
-  assert (alcnt > 0);
+  ASSERT_BM (alcnt <= alsiz);
+  ASSERT_BM (alcnt > 0);
   for (unsigned long ix = 0; ix < alcnt; ix++)
     {
       typedhead_tyBM *curp = allocationvec_vBM->al_ptr[ix];
@@ -531,7 +531,7 @@ full_garbage_collection_BM (struct stackframe_stBM *stkfram)
           FATAL_BM ("corrupted allocated#%ld @%p (htyp %d)", ix, curp,
                     (int) (curp->htyp));
         };
-      assert (curp->htyp >= type_FIRST_BM && curp->htyp <= typayl_LAST_BM);
+      ASSERT_BM (curp->htyp >= type_FIRST_BM && curp->htyp <= typayl_LAST_BM);
       curp->hgc = CLEARMGC_BM;
       oldnbval++;
     }
@@ -553,7 +553,7 @@ full_garbage_collection_BM (struct stackframe_stBM *stkfram)
     {
       value_tyBM firstv = listfirst_BM (GCdata.gc_scanlist);
       listpopfirst_BM (GCdata.gc_scanlist);
-      assert (isobject_BM (firstv));
+      ASSERT_BM (isobject_BM (firstv));
       objectinteriorgcmark_BM (&GCdata, (objectval_tyBM *) firstv);
       nbobjscan++;
     }
@@ -564,7 +564,7 @@ full_garbage_collection_BM (struct stackframe_stBM *stkfram)
       typedhead_tyBM *curp = allocationvec_vBM->al_ptr[ix];
       if (!curp)
         continue;
-      assert (curp->htyp >= type_FIRST_BM && curp->htyp <= typayl_LAST_BM);
+      ASSERT_BM (curp->htyp >= type_FIRST_BM && curp->htyp <= typayl_LAST_BM);
       if (curp->hgc == CLEARMGC_BM)
         {
           allocationvec_vBM->al_ptr[ix] = NULL;
@@ -573,7 +573,7 @@ full_garbage_collection_BM (struct stackframe_stBM *stkfram)
         }
       else
         {
-          assert (curp->hgc == MARKGC_BM);
+          ASSERT_BM (curp->hgc == MARKGC_BM);
           valgckeep_BM (&GCdata, (value_tyBM) curp);
           nbalive++;
         }
@@ -592,7 +592,7 @@ full_garbage_collection_BM (struct stackframe_stBM *stkfram)
       typedhead_tyBM *curp = allocationvec_vBM->al_ptr[ix];
       if (!curp)
         continue;
-      assert (curp->htyp >= type_FIRST_BM && curp->htyp <= typayl_LAST_BM);
+      ASSERT_BM (curp->htyp >= type_FIRST_BM && curp->htyp <= typayl_LAST_BM);
       newallvec->al_ptr[newcntall++] = curp;
       allocationvec_vBM->al_ptr[ix] = NULL;
     }
@@ -689,8 +689,8 @@ full_garbage_collection_BM (struct stackframe_stBM *stkfram)
   last_gctime_BM = clocktime_BM (CLOCK_REALTIME);
   if (fil != stderr)
     {
-      assert (gui_is_running_BM);
-      assert (buf != NULL);
+      ASSERT_BM (gui_is_running_BM);
+      ASSERT_BM (buf != NULL);
       fputs (buf, stderr);
       gui_gc_message_BM (buf);
       fclose (fil);
