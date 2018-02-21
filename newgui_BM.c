@@ -750,8 +750,7 @@ parsecommandbuf_newgui_BM (struct
     return;
   LOCALFRAME_BM ( /*prev: */ stkf,
                  /*descr: */ NULL,
-                 value_tyBM val;
-                 const stringval_tyBM * astrv;
+                 value_tyBM val; const stringval_tyBM * astrv;
                  objectval_tyBM * obj; objectval_tyBM * cmdobj;
                  const stringval_tyBM * name; const stringval_tyBM * result;
                  objectval_tyBM * parsob;);
@@ -2367,11 +2366,11 @@ void
       char *labstr = labstr_object_in_obwin_newgui_BM (obw,
                                                        _.obj,
                                                        _.shobsel);
-      fill_objectviewbuffer_BM (newobv, (struct stackframe_stBM *) &_);
       fill_objectviewthing_BM (newobv, labstr,
                                true, (struct stackframe_stBM *) &_);
       fill_objectviewthing_BM (newobv, labstr,
                                false, (struct stackframe_stBM *) &_);
+      fill_objectviewbuffer_BM (newobv, (struct stackframe_stBM *) &_);
       ASSERT_BM (newobv->obv_upper.obvt_frame != NULL);
       ASSERT_BM (newobv->obv_lower.obvt_frame != NULL);
       g_free (labstr), labstr = NULL;
