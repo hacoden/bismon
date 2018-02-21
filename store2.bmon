@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 228 objects
+// for 229 objects
 // with 0 modules
 
 
@@ -1141,6 +1141,17 @@ _7T9OwSFlgov_0wVJaK1eZbn |=object|
 !@ 1511768164.86
 !$_7T9OwSFlgov_0wVJaK1eZbn |=object|
 !)_8dLpuaNoSGN_2tdmkpINCsu
+
+
+
+!(_2RSvTcyvQA6_3Np1v2eZIww |=newobwin|
+!~ name (~ newobwin
+~)
+!@ 1519207663.89
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "command to make a new objectwindow"
+!)_2RSvTcyvQA6_3Np1v2eZIww
 
 
 

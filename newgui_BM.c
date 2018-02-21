@@ -770,6 +770,7 @@ parsecommandbuf_newgui_BM (struct
   objectval_tyBM *k_nval = BMK_5xGpTXhdqX1_1aVTq1TZOXX;
   objectval_tyBM *k_depth = BMK_17YdW6dWrBA_2mn4QmBjMNs;
   objectval_tyBM *k_nhide = BMK_5mgZTJ64WH9_4r2XC8eZmW7;
+  objectval_tyBM *k_newobwin = BMK_2RSvTcyvQA6_3Np1v2eZIww;
   _.parsob = checkedparserowner_BM (pars);
   const struct parserops_stBM *parsops = pars->pars_ops;
   assert (parsops && parsops->parsop_magic == PARSOPMAGIC_BM);
