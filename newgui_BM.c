@@ -750,8 +750,9 @@ parsecommandbuf_newgui_BM (struct
     return;
   LOCALFRAME_BM ( /*prev: */ stkf,
                  /*descr: */ NULL,
-                 value_tyBM val; const stringval_tyBM * astrv;
-                 objectval_tyBM * obj; objectval_tyBM * cmdobj;
+                 value_tyBM val;
+                 const stringval_tyBM * astrv; objectval_tyBM * obj;
+                 objectval_tyBM * cmdobj; value_tyBM cmdhandler, cmdarity;
                  const stringval_tyBM * name; const stringval_tyBM * result;
                  objectval_tyBM * parsob;);
   if (browserdepth_BM < 2)
@@ -771,6 +772,8 @@ parsecommandbuf_newgui_BM (struct
   objectval_tyBM *k_depth = BMK_17YdW6dWrBA_2mn4QmBjMNs;
   objectval_tyBM *k_nhide = BMK_5mgZTJ64WH9_4r2XC8eZmW7;
   objectval_tyBM *k_newobwin = BMK_2RSvTcyvQA6_3Np1v2eZIww;
+  objectval_tyBM *k_command_arity = BMK_0NnNXZqWvmz_1ucZGX0YPu1;
+  objectval_tyBM *k_command_handler = BMK_0xbmmxnN8E8_0ZuEqJmqMNH;
   _.parsob = checkedparserowner_BM (pars);
   const struct parserops_stBM *parsops = pars->pars_ops;
   ASSERT_BM (parsops && parsops->parsop_magic == PARSOPMAGIC_BM);
@@ -949,14 +952,27 @@ parsecommandbuf_newgui_BM (struct
             {
               _.cmdobj = cmdtok.tok_namedobj;
               ASSERT_BM (isobject_BM (_.cmdobj));
-            }
+              {
+                objlock_BM (_.cmdobj);
+                _.cmdhandler = objgetattr_BM (_.cmdobj, k_command_handler);
+                _.cmdarity = objgetattr_BM (_.cmdobj, k_command_arity);
+                objunlock_BM (_.cmdobj);
+              }
+              if (!isclosure_BM (_.cmdhandler))
+                parsererrorprintf_BM (pars,
+                                      (struct stackframe_stBM *) &_,
+                                      cmdtok.tok_line,
+                                      cmdtok.tok_col,
+                                      "command %s has no handler",
+                                      objectdbg_BM (_.cmdobj));
 #warning should deal with general commands
+
+            }
           //
           else
             parsererrorprintf_BM (pars,
-                                  (struct
-                                   stackframe_stBM *)
-                                  &_, cmdtok.tok_line,
+                                  (struct stackframe_stBM *) &_,
+                                  cmdtok.tok_line,
                                   cmdtok.tok_col, "invalid command");
         }
       //start of object?
