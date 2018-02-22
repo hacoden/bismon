@@ -393,7 +393,7 @@ objectdbg_BM (const objectval_tyBM * obj)
   const char *n = findobjectname_BM (obj);
   if (n)
     return n;
-  static char idbuf[32];
+  static thread_local char idbuf[32];
   memset (idbuf, 0, sizeof (idbuf));
   idtocbuf32_BM (obj->ob_id, idbuf);
   return idbuf;
@@ -410,7 +410,7 @@ objectdbg1_BM (const objectval_tyBM * obj)
   const char *n = findobjectname_BM (obj);
   if (n)
     return n;
-  static char idbuf[32];
+  static thread_local char idbuf[32];
   memset (idbuf, 0, sizeof (idbuf));
   idtocbuf32_BM (obj->ob_id, idbuf);
   return idbuf;
@@ -427,7 +427,7 @@ objectdbg2_BM (const objectval_tyBM * obj)
   const char *n = findobjectname_BM (obj);
   if (n)
     return n;
-  static char idbuf[32];
+  static thread_local char idbuf[32];
   memset (idbuf, 0, sizeof (idbuf));
   idtocbuf32_BM (obj->ob_id, idbuf);
   return idbuf;
