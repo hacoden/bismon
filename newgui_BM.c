@@ -168,6 +168,8 @@ static parser_expand_newname_sigBM parsmakenewname_newguicmd_BM;
 
 // expand readmacro-s
 static parser_expand_readmacro_sigBM parsreadmacroexp_newguicmd_BM;
+// accept unary-s
+static parser_accept_unary_sigBM parsacceptunary_newguicmd_BM;
 
 static parser_error_sigBM parserror_newguicmd_BM;
 
@@ -220,7 +222,8 @@ const struct parserops_stBM parsop_command_build_newgui_BM = {
   .parsop_expand_newname_rout = parsmakenewname_newguicmd_BM,   //
   .parsop_expand_valexp_rout = parsvalexp_newguicmd_BM, //
   .parsop_expand_objexp_rout = parsobjexp_newguicmd_BM, //
-  .parsop_expand_readmacro_rout = parsreadmacroexp_newguicmd_BM,
+  .parsop_expand_readmacro_rout = parsreadmacroexp_newguicmd_BM,        //
+  .parsop_accept_unary_rout = parsacceptunary_newguicmd_BM,     //
   ///
   .parsop_decorate_comment_sign_rout = parscommentsign_guicmd_BM,       //
   .parsop_decorate_comment_inside_rout = parscommentinside_guicmd_BM,   //
@@ -246,7 +249,8 @@ const struct parserops_stBM parsop_command_nobuild_newgui_BM = {
   .parsop_expand_newname_rout = parsmakenewname_newguicmd_BM,   //
   .parsop_expand_valexp_rout = parsvalexp_newguicmd_BM, //
   .parsop_expand_objexp_rout = parsobjexp_newguicmd_BM, //
-  .parsop_expand_readmacro_rout = parsreadmacroexp_newguicmd_BM,
+  .parsop_expand_readmacro_rout = parsreadmacroexp_newguicmd_BM,        //
+  .parsop_accept_unary_rout = parsacceptunary_newguicmd_BM,     //
   ///
   .parsop_decorate_comment_sign_rout = parscommentsign_guicmd_BM,       //
   .parsop_decorate_comment_inside_rout = parscommentinside_guicmd_BM,   //
@@ -1952,12 +1956,31 @@ value_tyBM parsreadmacroexp_newguicmd_BM
   return _.resval;
 }                               /* end parsreadmacroexp_newguicmd_BM */
 
+
+/// accept unary operations
+bool
+  parsacceptunary_newguicmd_BM
+  (struct parser_stBM * pars, unsigned lineno, unsigned colpos, int depth,
+   objectval_tyBM * unconnob, struct stackframe_stBM * stkf)
+{
+  LOCALFRAME_BM ( /*prev: */ stkf,
+                 /*descr: */ NULL,
+                 objectval_tyBM * unconnob;
+                 objectval_tyBM * parsob;
+    );
+  _.parsob = checkedparserowner_BM (pars);
+  ASSERT_BM (_.parsob != NULL);
+  _.unconnob = unconnob;
+  DBGPRINTF_BM ("parsacceptunary_newguicmd unconnob=%s L%uC%u d%d",
+                objectdbg_BM (_.unconnob), lineno, colpos, depth);
+  return true;
+}                               /* end parsacceptunary_newguicmd_BM */
+
+
 void
-parserror_newguicmd_BM (struct parser_stBM
-                        *pars,
-                        struct
-                        stackframe_stBM
-                        *stkf, unsigned lineno, unsigned colpos, char *msg)
+parserror_newguicmd_BM (struct parser_stBM *pars,
+                        struct stackframe_stBM *stkf,
+                        unsigned lineno, unsigned colpos, char *msg)
 {
   LOCALFRAME_BM ( /*prev: */ stkf,
                  /*descr: */ NULL,

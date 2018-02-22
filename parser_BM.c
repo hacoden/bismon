@@ -2096,16 +2096,41 @@ parsergetunary_BM (struct parser_stBM * pars,
 {
   LOCALFRAME_BM                 //
     (prevstkf, NULL,            //
-     value_tyBM resval; objectval_tyBM * uconnobj; objectval_tyBM * parsob;
+     value_tyBM resval;
+     value_tyBM arg; objectval_tyBM * uconnobj; objectval_tyBM * parsob;
     );
   _.parsob = checkedparserowner_BM (pars);
+  const struct parserops_stBM *parsops = pars->pars_ops;
+  ASSERT_BM (parsops && parsops->parsop_magic == PARSOPMAGIC_BM);
+  ASSERT_BM (parsops->parsop_accept_unary_rout);
   ASSERT_BM (isobject_BM (unaryconn));
+  ASSERT_BM (pgotval != NULL);
   _.uconnobj = unaryconn;
-#warning unimplemented parsergetunary_BM
-  parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno,
-                        colpos, "unimplemented parsergetunary_BM %s",
-                        objectdbg_BM (unaryconn));
-
+  if (parsops->parsop_accept_unary_rout
+      (pars, lineno, colpos, depth, unaryconn, (struct stackframe_stBM *) &_))
+    {
+      bool gotarg = false;
+      DBGPRINTF_BM ("parsergetunary_BM uconnobj %s before parsing arg",
+                    objectdbg_BM (_.uconnobj));
+      _.arg =
+        parsergetvalue_BM (pars, (struct stackframe_stBM *) &_, depth + 1,
+                           &gotarg);
+      if (!gotarg)
+        parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno,
+                              colpos, "missing argument for unary %s",
+                              objectdbg_BM (unaryconn));
+      DBGPRINTF_BM ("parsergetunary_BM uconnobj %s",
+                    objectdbg_BM (_.uconnobj));
+      _.resval = makenode_BM (_.uconnobj, 1, &_.arg);
+      *pgotval = true;
+      LOCALRETURN_BM (_.resval);
+    }
+  else
+    parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno,
+                          colpos, "failed parsergetunary_BM %s",
+                          objectdbg_BM (unaryconn));
+  *pgotval = false;
+  LOCALRETURN_BM (NULL);
 }                               /* end parsergetunary_BM */
 
 
