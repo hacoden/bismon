@@ -748,9 +748,16 @@ parsecommandbuf_newgui_BM (struct
 {
   if (!isparser_BM (pars))
     return;
+  objectval_tyBM *k_nval = BMK_5xGpTXhdqX1_1aVTq1TZOXX;
+  objectval_tyBM *k_depth = BMK_17YdW6dWrBA_2mn4QmBjMNs;
+  objectval_tyBM *k_nhide = BMK_5mgZTJ64WH9_4r2XC8eZmW7;
+  objectval_tyBM *k_newobwin = BMK_2RSvTcyvQA6_3Np1v2eZIww;
+  objectval_tyBM *k_command_arity = BMK_0NnNXZqWvmz_1ucZGX0YPu1;
+  objectval_tyBM *k_command_handler = BMK_0xbmmxnN8E8_0ZuEqJmqMNH;
   LOCALFRAME_BM ( /*prev: */ stkf,
                  /*descr: */ NULL,
                  value_tyBM val;
+                 value_tyBM cmdargs[TINYSIZE_BM];
                  const stringval_tyBM * astrv; objectval_tyBM * obj;
                  objectval_tyBM * cmdobj; value_tyBM cmdhandler, cmdarity;
                  const stringval_tyBM * name; const stringval_tyBM * result;
@@ -760,20 +767,14 @@ parsecommandbuf_newgui_BM (struct
   else if (browserdepth_BM > BROWSE_MAXDEPTH_NEWGUI_BM)
     browserdepth_BM = BROWSE_MAXDEPTH_NEWGUI_BM;
   if (!astrval_bm
-      || !isstring_BM ((value_tyBM)
-                       astrval_bm) || strcmp (bytstring_BM (astrval_bm), "a"))
+      || !isstring_BM ((value_tyBM) astrval_bm)
+      || strcmp (bytstring_BM (astrval_bm), "a"))
     {
       _.astrv = makestring_BM ("a");
       astrval_bm = _.astrv;
     }
   else
     _.astrv = astrval_bm;
-  objectval_tyBM *k_nval = BMK_5xGpTXhdqX1_1aVTq1TZOXX;
-  objectval_tyBM *k_depth = BMK_17YdW6dWrBA_2mn4QmBjMNs;
-  objectval_tyBM *k_nhide = BMK_5mgZTJ64WH9_4r2XC8eZmW7;
-  objectval_tyBM *k_newobwin = BMK_2RSvTcyvQA6_3Np1v2eZIww;
-  objectval_tyBM *k_command_arity = BMK_0NnNXZqWvmz_1ucZGX0YPu1;
-  objectval_tyBM *k_command_handler = BMK_0xbmmxnN8E8_0ZuEqJmqMNH;
   _.parsob = checkedparserowner_BM (pars);
   const struct parserops_stBM *parsops = pars->pars_ops;
   ASSERT_BM (parsops && parsops->parsop_magic == PARSOPMAGIC_BM);
@@ -786,12 +787,11 @@ parsecommandbuf_newgui_BM (struct
       _.cmdobj = NULL;
       _.result = NULL;
       _.val = NULL;
+      memset (_.cmdargs, 0, sizeof (_.cmdargs));
       parserskipspaces_BM (pars, (struct stackframe_stBM *) &_);
       if (nbloop++ > MAXSIZE_BM / 32)
         parsererrorprintf_BM (pars,
-                              (struct
-                               stackframe_stBM
-                               *) &_,
+                              (struct stackframe_stBM *) &_,
                               pars->pars_lineno,
                               pars->pars_colpos, "too many %d loops", nbloop);
       if (parserendoffile_BM (pars))
@@ -819,19 +819,15 @@ parsecommandbuf_newgui_BM (struct
                                                            &_);
               if (depthtok.tok_kind != plex_LLONG)
                 parsererrorprintf_BM (pars,
-                                      (struct
-                                       stackframe_stBM
-                                       *)
-                                      &_,
+                                      (struct stackframe_stBM *) &_,
                                       cmdtok.tok_line,
                                       cmdtok.tok_col,
                                       ",depth not followed by number");
               if (depthtok.tok_llong < 2
                   || depthtok.tok_llong > BROWSE_MAXDEPTH_NEWGUI_BM)
                 parsererrorprintf_BM (pars,
-                                      (struct
-                                       stackframe_stBM *)
-                                      &_, cmdtok.tok_line,
+                                      (struct stackframe_stBM *) &_,
+                                      cmdtok.tok_line,
                                       cmdtok.tok_col,
                                       "bad ,depth %lld, should be between 2 and %d",
                                       depthtok.tok_llong,
@@ -842,10 +838,9 @@ parsecommandbuf_newgui_BM (struct
           else if (cmdtok.tok_kind == plex_NAMEDOBJ
                    && cmdtok.tok_namedobj == k_nval)
             {
-              parstoken_tyBM vartok = parsertokenget_BM (pars,
-                                                         (struct
-                                                          stackframe_stBM *)
-                                                         &_);
+              parstoken_tyBM vartok =   //
+                parsertokenget_BM (pars,
+                                   (struct stackframe_stBM *) &_);
               if (vartok.tok_kind == plex_NAMEDOBJ)
                 _.name =
                   makestring_BM (findobjectname_BM (vartok.tok_namedobj));
@@ -853,9 +848,8 @@ parsecommandbuf_newgui_BM (struct
                 _.name = vartok.tok_cname;
               else
                 parsererrorprintf_BM (pars,
-                                      (struct
-                                       stackframe_stBM *)
-                                      &_, cmdtok.tok_line,
+                                      (struct stackframe_stBM *) &_,
+                                      cmdtok.tok_line,
                                       cmdtok.tok_col,
                                       "name expected after ,nval");
               bool gotval = false;
@@ -864,9 +858,7 @@ parsecommandbuf_newgui_BM (struct
                                    (struct stackframe_stBM *) &_, 0, &gotval);
               if (!gotval)
                 parsererrorprintf_BM (pars,
-                                      (struct
-                                       stackframe_stBM
-                                       *) &_,
+                                      (struct stackframe_stBM *) &_,
                                       cmdtok.tok_line,
                                       cmdtok.tok_col,
                                       "value expected after ,nval %s",
@@ -878,8 +870,8 @@ parsecommandbuf_newgui_BM (struct
                       browse_named_value_newgui_BM (_.name,
                                                     _.val,
                                                     browserdepth_BM,
-                                                    (struct
-                                                     stackframe_stBM *) &_);
+                                                    (struct stackframe_stBM *)
+                                                    &_);
                       log_begin_message_BM ();
                       log_printf_message_BM
                         ("show value named %s at depth %d",
@@ -888,10 +880,9 @@ parsecommandbuf_newgui_BM (struct
                     }
                   else
                     {
-                      hide_named_value_newgui_BM (bytstring_BM
-                                                  (_.name),
-                                                  (struct
-                                                   stackframe_stBM *) &_);
+                      hide_named_value_newgui_BM
+                        (bytstring_BM (_.name),
+                         (struct stackframe_stBM *) &_);
                       log_begin_message_BM ();
                       log_printf_message_BM
                         ("forgot value named %s", bytstring_BM (_.name));
@@ -904,10 +895,9 @@ parsecommandbuf_newgui_BM (struct
           else if (cmdtok.tok_kind == plex_NAMEDOBJ
                    && cmdtok.tok_namedobj == k_nhide)
             {
-              parstoken_tyBM vartok = parsertokenget_BM (pars,
-                                                         (struct
-                                                          stackframe_stBM *)
-                                                         &_);
+              parstoken_tyBM vartok =   //
+                parsertokenget_BM (pars,
+                                   (struct stackframe_stBM *) &_);
               if (vartok.tok_kind == plex_NAMEDOBJ)
                 _.name =
                   makestring_BM (findobjectname_BM (vartok.tok_namedobj));
@@ -915,18 +905,15 @@ parsecommandbuf_newgui_BM (struct
                 _.name = vartok.tok_cname;
               else
                 parsererrorprintf_BM (pars,
-                                      (struct
-                                       stackframe_stBM *)
-                                      &_, cmdtok.tok_line,
+                                      (struct stackframe_stBM *) &_,
+                                      cmdtok.tok_line,
                                       cmdtok.tok_col,
                                       "name expected after ,nhide");
               if (!nobuild)
                 {
                   if (index_named_value_newgui_BM (bytstring_BM (_.name)) < 0)
                     parsererrorprintf_BM (pars,
-                                          (struct
-                                           stackframe_stBM
-                                           *) &_,
+                                          (struct stackframe_stBM *) &_,
                                           cmdtok.tok_line,
                                           cmdtok.tok_col,
                                           ",nhide %s : unknown name",
@@ -950,12 +937,15 @@ parsecommandbuf_newgui_BM (struct
           /// general commands
           else if (cmdtok.tok_kind == plex_NAMEDOBJ)
             {
+              int arity = -1;
               _.cmdobj = cmdtok.tok_namedobj;
               ASSERT_BM (isobject_BM (_.cmdobj));
               {
                 objlock_BM (_.cmdobj);
                 _.cmdhandler = objgetattr_BM (_.cmdobj, k_command_handler);
                 _.cmdarity = objgetattr_BM (_.cmdobj, k_command_arity);
+                if (istaggedint_BM (_.cmdarity))
+                  arity = getint_BM (_.cmdarity);
                 objunlock_BM (_.cmdobj);
               }
               if (!isclosure_BM (_.cmdhandler))
@@ -965,6 +955,74 @@ parsecommandbuf_newgui_BM (struct
                                       cmdtok.tok_col,
                                       "command %s has no handler",
                                       objectdbg_BM (_.cmdobj));
+              if (arity > TINYSIZE_BM)
+                parsererrorprintf_BM (pars,
+                                      (struct stackframe_stBM *) &_,
+                                      cmdtok.tok_line,
+                                      cmdtok.tok_col,
+                                      "command %s has too big arity %d",
+                                      objectdbg_BM (_.cmdobj), arity);
+              int argcnt = 0;
+              parstoken_tyBM cmdtok =   //
+                parsertokenget_BM (pars,
+                                   (struct stackframe_stBM *) &_);
+              if (cmdtok.tok_kind == plex_DELIM
+                  && cmdtok.tok_delim == delim_leftparen)
+                {
+		  bool doneargs = false;
+                  while (!doneargs)
+                    {
+                      bool gotarg = false;
+                      if (argcnt >= TINYSIZE_BM)
+                        parsererrorprintf_BM (pars,
+                                              (struct stackframe_stBM *) &_,
+                                              cmdtok.tok_line,
+                                              cmdtok.tok_col,
+                                              "command %s has too many (%d) arguments",
+                                              objectdbg_BM (_.cmdobj),
+                                              argcnt);
+                      _.cmdargs[argcnt] =
+                        parsergetvalue_BM (pars,
+                                           (struct stackframe_stBM *) &_, 0,
+                                           &gotarg);
+                      if (!gotarg)
+                        {
+                          parstoken_tyBM endtok =       //
+                            parsertokenget_BM (pars,
+                                               (struct stackframe_stBM *) &_);
+                          if (endtok.tok_kind == plex_DELIM
+                              && endtok.tok_delim == delim_rightparen)
+                            {
+                              parsnesting_guicmd_BM (pars, 0,
+                                                     delim_leftparen,
+                                                     cmdtok.tok_line,
+                                                     cmdtok.tok_col,
+                                                     delim_rightparen,
+                                                     endtok.tok_line,
+                                                     endtok.tok_col);
+			      doneargs = true;
+                            }
+                          else
+                            parsererrorprintf_BM (pars,
+                                                  (struct stackframe_stBM *)  &_,
+						  cmdtok.tok_line,
+                                                  cmdtok.tok_col,
+                                                  "bad argument %d for command %s",
+                                                  argcnt,
+                                                  objectdbg_BM (_.cmdobj));
+                        }
+                    }
+                }
+              else if (arity >= 0)
+                {
+                }
+              else
+                parsererrorprintf_BM (pars,
+                                      (struct stackframe_stBM *) &_,
+                                      cmdtok.tok_line,
+                                      cmdtok.tok_col,
+                                      "command %s not followed by leftparen",
+                                      objectdbg_BM (_.cmdobj), arity);
 #warning should deal with general commands
 
             }
@@ -984,25 +1042,22 @@ parsecommandbuf_newgui_BM (struct
             parsergetobject_BM (pars,
                                 (struct stackframe_stBM *) &_, 0, &gotobj);
           if (!gotobj)
-            parsererrorprintf_BM (pars,
-                                  (struct
-                                   stackframe_stBM
-                                   *) &_,
-                                  curlineno, curcolpos, "invalid object");
+            parsererrorprintf_BM
+              (pars,
+               (struct stackframe_stBM *) &_,
+               curlineno, curcolpos, "invalid object");
           if (!obwin_current_newgui_BM)
             parsererrorprintf_BM (pars,
-                                  (struct
-                                   stackframe_stBM *)
-                                  &_, curlineno,
+                                  (struct stackframe_stBM *) &_,
+                                  curlineno,
                                   curcolpos,
                                   "no current object window to show object");
           if (!nobuild)
             {
               if (!_.obj)
                 parsererrorprintf_BM (pars,
-                                      (struct
-                                       stackframe_stBM *)
-                                      &_, curlineno, curcolpos, "no object");
+                                      (struct stackframe_stBM *) &_,
+                                      curlineno, curcolpos, "no object");
               int depth = browserdepth_BM;
               DBGPRINTF_BM
                 ("should browse obj %s depth %d in obwin#%d",
@@ -1031,9 +1086,7 @@ parsecommandbuf_newgui_BM (struct
                                (struct stackframe_stBM *) &_, 0, &gotval);
           if (!gotval)
             parsererrorprintf_BM (pars,
-                                  (struct
-                                   stackframe_stBM
-                                   *) &_,
+                                  (struct stackframe_stBM *) &_,
                                   curlineno, curcolpos, "invalid value");
           if (!nobuild)
             {
@@ -1056,9 +1109,8 @@ parsecommandbuf_newgui_BM (struct
         }
       else if (tok.tok_kind == plex__NONE)
         parsererrorprintf_BM (pars,
-                              (struct
-                               stackframe_stBM *)
-                              &_, curlineno, curcolpos, "invalid token");
+                              (struct stackframe_stBM *) &_,
+                              curlineno, curcolpos, "invalid token");
     }
 }                               /* end parsecommandbuf_newgui_BM */
 
