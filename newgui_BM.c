@@ -962,14 +962,15 @@ parsecommandbuf_newgui_BM (struct
                                       cmdtok.tok_col,
                                       "command %s has too big arity %d",
                                       objectdbg_BM (_.cmdobj), arity);
-              int argcnt = 0;
+              int argcnt = -1;
               parstoken_tyBM cmdtok =   //
                 parsertokenget_BM (pars,
                                    (struct stackframe_stBM *) &_);
               if (cmdtok.tok_kind == plex_DELIM
                   && cmdtok.tok_delim == delim_leftparen)
                 {
-		  bool doneargs = false;
+                  bool doneargs = false;
+                  argcnt = 0;
                   while (!doneargs)
                     {
                       bool gotarg = false;
@@ -1000,12 +1001,12 @@ parsecommandbuf_newgui_BM (struct
                                                      delim_rightparen,
                                                      endtok.tok_line,
                                                      endtok.tok_col);
-			      doneargs = true;
+                              doneargs = true;
                             }
                           else
                             parsererrorprintf_BM (pars,
-                                                  (struct stackframe_stBM *)  &_,
-						  cmdtok.tok_line,
+                                                  (struct stackframe_stBM *)
+                                                  &_, cmdtok.tok_line,
                                                   cmdtok.tok_col,
                                                   "bad argument %d for command %s",
                                                   argcnt,
@@ -1015,6 +1016,23 @@ parsecommandbuf_newgui_BM (struct
                 }
               else if (arity >= 0)
                 {
+                  for (int argix = 0; argix < arity; argix++)
+                    {
+                      bool gotarg = false;
+                      _.cmdargs[argix] =
+                        parsergetvalue_BM (pars,
+                                           (struct stackframe_stBM *) &_, 0,
+                                           &gotarg);
+                      if (!gotarg)
+                        parsererrorprintf_BM (pars,
+                                              (struct stackframe_stBM *) &_,
+                                              cmdtok.tok_line,
+                                              cmdtok.tok_col,
+                                              "missing argument %d for command %s",
+                                              argix, objectdbg_BM (_.cmdobj));
+
+                    }
+                  argcnt = arity;
                 }
               else
                 parsererrorprintf_BM (pars,
@@ -1023,7 +1041,20 @@ parsecommandbuf_newgui_BM (struct
                                       cmdtok.tok_col,
                                       "command %s not followed by leftparen",
                                       objectdbg_BM (_.cmdobj), arity);
-#warning should deal with general commands
+              ASSERT_BM (argcnt >= 0 && argcnt < TINYSIZE_BM);
+              if (!nobuild)
+                {
+                  _.result = applyvar_BM (_.cmdhandler,
+                                          (struct stackframe_stBM *) &_,
+                                          argcnt, _.cmdargs);
+                  if (!_.result)
+                    parsererrorprintf_BM (pars,
+                                          (struct stackframe_stBM *) &_,
+                                          cmdtok.tok_line,
+                                          cmdtok.tok_col,
+                                          "failed to run command %s",
+                                          objectdbg_BM (_.cmdobj), arity);
+                }
 
             }
           //
