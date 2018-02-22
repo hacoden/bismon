@@ -2048,6 +2048,8 @@ parsergetvalue_BM (struct parser_stBM *pars,
       _.resval =
         parsergetunary_BM (pars, (struct stackframe_stBM *) &_, lineno,
                            colpos, depth + 1, BMP_exclam, &gotunary);
+      *pgotval = gotunary;
+      return (objectval_tyBM *) _.resval;
     }
   /// parse  ? <val>
   else if (tok.tok_kind == plex_DELIM
@@ -2058,6 +2060,8 @@ parsergetvalue_BM (struct parser_stBM *pars,
       _.resval =
         parsergetunary_BM (pars, (struct stackframe_stBM *) &_, lineno,
                            colpos, depth + 1, BMP_question, &gotunary);
+      *pgotval = gotunary;
+      return (objectval_tyBM *) _.resval;
     }
   /// parse  = <val>
   else if (tok.tok_kind == plex_DELIM
@@ -2068,6 +2072,8 @@ parsergetvalue_BM (struct parser_stBM *pars,
       _.resval =
         parsergetunary_BM (pars, (struct stackframe_stBM *) &_, lineno,
                            colpos, depth + 1, BMP_equal, &gotunary);
+      *pgotval = gotunary;
+      return (objectval_tyBM *) _.resval;
     }
   /// parse  : <val>
   else if (tok.tok_kind == plex_DELIM
@@ -2078,6 +2084,8 @@ parsergetvalue_BM (struct parser_stBM *pars,
       _.resval =
         parsergetunary_BM (pars, (struct stackframe_stBM *) &_, lineno,
                            colpos, depth + 1, BMP_colon, &gotunary);
+      *pgotval = gotunary;
+      return (objectval_tyBM *) _.resval;
     }
   //////
 failure:
