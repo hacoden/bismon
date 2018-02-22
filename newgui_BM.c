@@ -832,7 +832,14 @@ parsecommandbuf_newgui_BM (struct
                                       "bad ,depth %lld, should be between 2 and %d",
                                       depthtok.tok_llong,
                                       BROWSE_MAXDEPTH_NEWGUI_BM);
-              browserdepth_BM = (int) depthtok.tok_llong;
+              if (!nobuild)
+                {
+                  browserdepth_BM = (int) depthtok.tok_llong;
+                  log_begin_message_BM ();
+                  log_printf_message_BM ("default depth becomes %d",
+                                         browserdepth_BM);
+                  log_end_message_BM ();
+                }
             }
           // ,nval <name> <value>
           else if (cmdtok.tok_kind == plex_NAMEDOBJ
@@ -1054,6 +1061,11 @@ parsecommandbuf_newgui_BM (struct
                                           cmdtok.tok_col,
                                           "failed to run command %s",
                                           objectdbg_BM (_.cmdobj), arity);
+                  log_begin_message_BM ();
+                  log_puts_message_BM ("successful command ");
+                  log_object_message_BM (_.cmdobj);
+                  log_puts_message_BM (".");
+                  log_end_message_BM ();
                 }
 
             }
