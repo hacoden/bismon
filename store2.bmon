@@ -1,15 +1,19 @@
 // generated file store2.bmon
-// for 232 objects
+// for 233 objects
 // with 0 modules
 
 
 !(_1dzZlwqKdLH_8HjkBsL9Mar |=add|
 !~ name (~ add
 ~)
-!@ 1513087629.40
+!@ 1519398696.61
 !$_7T9OwSFlgov_0wVJaK1eZbn |=object|
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "selector to add something"
+!: _0xbmmxnN8E8_0ZuEqJmqMNH |=command_handler|
+ % _5v5ChlG1IYh_1Pv87MZJFPl ()
+!: _0NnNXZqWvmz_1ucZGX0YPu1 |=command_arity|
+ 2
 !)_1dzZlwqKdLH_8HjkBsL9Mar
 
 
@@ -2345,6 +2349,16 @@ _36MhHxakHKT_1ZzV5Xoj5LX
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "method to dump_value a node"
 !)_5v30KC0IMxx_53ZzXprJTM6
+
+
+
+!(_5v5ChlG1IYh_1Pv87MZJFPl
+!|*
+!@ 1519398723.27
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "commandhandler for add"
+!)_5v5ChlG1IYh_1Pv87MZJFPl
 
 
 

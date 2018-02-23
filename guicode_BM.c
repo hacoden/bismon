@@ -1121,3 +1121,45 @@ ROUTINEOBJNAME_BM (_1Xc5XJ7S5r7_3nYIzlf2XAw)    //
     }
   LOCALRETURN_BM (NULL);
 }                               /* end  command handler for put _1Xc5XJ7S5r7_3nYIzlf2XAw */
+
+
+/// command handler for add
+extern objrout_sigBM ROUTINEOBJNAME_BM (_5v5ChlG1IYh_1Pv87MZJFPl);
+value_tyBM
+ROUTINEOBJNAME_BM (_5v5ChlG1IYh_1Pv87MZJFPl)    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // the reciever
+ const value_tyBM arg2,         // the comp
+ const value_tyBM arg3_ __attribute__ ((unused)),        
+ const value_tyBM arg4_ __attribute__ ((unused)),        // 
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
+{
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+		  objectval_tyBM * recv; 
+		  value_tyBM compv;
+		  );
+  ASSERT_BM (pthread_self () == mainthreadid_BM);
+  objectval_tyBM *k_failure_non_object = BMK_6yWldsq3Rmk_01WqTfwSIDV;
+  if (!isobject_BM (arg1))
+    {
+      FAILURE_BM (__LINE__, k_failure_non_object,
+                  (struct stackframe_stBM *) &_);
+    }
+  _.recv = arg1;
+  _.compv = arg2;
+  DBGPRINTF_BM ("commandhandler°add recv=%s compv=%s",
+                objectdbg_BM (_.recv),
+                debug_outstr_value_BM
+                (_.compv, (struct stackframe_stBM *) &_, 0));
+  int oblen = 0;
+  objlock_BM (_.recv);
+  objappendcomp_BM (_.recv, _.compv);
+  oblen = objnbcomps_BM(_.recv);
+  objunlock_BM (_.recv);
+  log_begin_message_BM ();
+  log_puts_message_BM ("In object ");
+  log_object_message_BM (objectcast_BM (_.recv));
+  log_printf_message_BM (" added component#%d.", oblen);
+  log_end_message_BM ();
+  LOCALRETURN_BM (_.recv);
+} /* end commandhandler°add _5v5ChlG1IYh_1Pv87MZJFPl */
