@@ -1171,8 +1171,8 @@ ROUTINEOBJNAME_BM (_0zf6nSKwSlU_6Cv3LMh1MmV)    //
 (struct stackframe_stBM * stkf, //
  const value_tyBM arg1,         // the reciever
  const value_tyBM arg2,         // the attr or index
- const value_tyBM arg3_ __attribute__ ((unused)),         // 
- const value_tyBM arg4_ __attribute__ ((unused)),        // 
+ const value_tyBM arg3_ __attribute__ ((unused)),       // 
+ const value_tyBM arg4_ __attribute__ ((unused)),       // 
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
@@ -1191,9 +1191,7 @@ ROUTINEOBJNAME_BM (_0zf6nSKwSlU_6Cv3LMh1MmV)    //
   DBGPRINTF_BM ("commandhandler°remove recv=%s attv=%s",
                 objectdbg_BM (_.recv),
                 debug_outstr_value_BM
-                (_.attv,
-                 (struct stackframe_stBM *) &_,
-                 0));
+                (_.attv, (struct stackframe_stBM *) &_, 0));
   if (isobject_BM (_.attv))
     {
       objlock_BM (_.recv);
@@ -1234,4 +1232,38 @@ ROUTINEOBJNAME_BM (_0zf6nSKwSlU_6Cv3LMh1MmV)    //
                   (struct stackframe_stBM *) &_);
     }
   LOCALRETURN_BM (NULL);
-}                               /* end  command handler for remove_0zf6nSKwSlU_6Cv3LMh1MmV  */
+}                               /* end  command handler for remove _0zf6nSKwSlU_6Cv3LMh1MmV  */
+
+
+/// command handler for init_class
+extern objrout_sigBM ROUTINEOBJNAME_BM (_797zacMjvvt_3I2uxNJRfdq);
+value_tyBM
+ROUTINEOBJNAME_BM (_797zacMjvvt_3I2uxNJRfdq)    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // the reciever
+ const value_tyBM arg2,         // the superclass
+ const value_tyBM arg3_ __attribute__ ((unused)),       //
+ const value_tyBM arg4_ __attribute__ ((unused)),       // 
+ const quasinode_tyBM * restargs __attribute__ ((unused)))
+{
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 objectval_tyBM * recv; objectval_tyBM * superob;
+    );
+}                               /* end commandhandler°init_class _797zacMjvvt_3I2uxNJRfdq  */
+
+/// command handler for put_method
+extern objrout_sigBM ROUTINEOBJNAME_BM (_9QuovXgtk9K_17pMbAD0XmX);
+value_tyBM
+ROUTINEOBJNAME_BM (_9QuovXgtk9K_17pMbAD0XmX)    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // the reciever
+ const value_tyBM arg2,         // the selector
+ const value_tyBM arg3,         // the closure
+ const value_tyBM arg4_ __attribute__ ((unused)),       // 
+ const quasinode_tyBM * restargs __attribute__ ((unused)))
+{
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 objectval_tyBM * recv; objectval_tyBM * obselv;
+                 value_tyBM closv;
+    );
+}                               /* end commandhandler°put_method _9QuovXgtk9K_17pMbAD0XmX */
