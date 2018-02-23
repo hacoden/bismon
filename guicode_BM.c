@@ -1163,3 +1163,75 @@ ROUTINEOBJNAME_BM (_5v5ChlG1IYh_1Pv87MZJFPl)    //
   log_end_message_BM ();
   LOCALRETURN_BM (_.recv);
 }                               /* end commandhandler°add _5v5ChlG1IYh_1Pv87MZJFPl */
+
+/// command handler for remove
+extern objrout_sigBM ROUTINEOBJNAME_BM (_0zf6nSKwSlU_6Cv3LMh1MmV);
+value_tyBM
+ROUTINEOBJNAME_BM (_0zf6nSKwSlU_6Cv3LMh1MmV)    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // the reciever
+ const value_tyBM arg2,         // the attr or index
+ const value_tyBM arg3_ __attribute__ ((unused)),         // 
+ const value_tyBM arg4_ __attribute__ ((unused)),        // 
+ const quasinode_tyBM * restargs __attribute__ ((unused)))
+{
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 objectval_tyBM * recv; value_tyBM attv;
+    );
+  ASSERT_BM (pthread_self () == mainthreadid_BM);
+  objectval_tyBM *k_failure_non_object = BMK_6yWldsq3Rmk_01WqTfwSIDV;
+  objectval_tyBM *k_failure_bad_attribute = BMK_4GumRf8w4jT_6lfDDJ5Y3TH;
+  if (!isobject_BM (arg1))
+    {
+      FAILURE_BM (__LINE__, k_failure_non_object,
+                  (struct stackframe_stBM *) &_);
+    }
+  _.recv = arg1;
+  _.attv = arg2;
+  DBGPRINTF_BM ("commandhandler°remove recv=%s attv=%s",
+                objectdbg_BM (_.recv),
+                debug_outstr_value_BM
+                (_.attv,
+                 (struct stackframe_stBM *) &_,
+                 0));
+  if (isobject_BM (_.attv))
+    {
+      objlock_BM (_.recv);
+      objremoveattr_BM (_.recv, _.attv);
+      objunlock_BM (_.recv);
+      log_begin_message_BM ();
+      log_puts_message_BM ("In object ");
+      log_object_message_BM (objectcast_BM (_.recv));
+      log_puts_message_BM (" remove attribute ");
+      log_object_message_BM (objectcast_BM (_.attv));
+      log_puts_message_BM (".");
+      log_end_message_BM ();
+      LOCALRETURN_BM (_.recv);
+    }
+//- else if (istaggedint_BM (_.attv))
+//-   {
+//-     int attix = getint_BM (_.attv);
+//-     objlock_BM (_.recv);
+//-     objputcomp_BM (_.recv, attix, _.compv);
+//-     objunlock_BM (_.recv);
+//-     log_begin_message_BM ();
+//-     log_puts_message_BM ("In object ");
+//-     log_object_message_BM (objectcast_BM (_.recv));
+//-     log_printf_message_BM (" remove component#%d.", attix);
+//-     log_end_message_BM ();
+//-     LOCALRETURN_BM (_.recv);
+//-   }
+  else
+    {
+      log_begin_message_BM ();
+      log_puts_message_BM ("In object ");
+      log_object_message_BM (objectcast_BM (_.recv));
+      log_printf_message_BM
+        (" bad attribute %s to remove.",
+         debug_outstr_value_BM (_.attv, (struct stackframe_stBM *) &_, 0));
+      log_end_message_BM ();
+      FAILURE_BM (__LINE__, k_failure_bad_attribute,
+                  (struct stackframe_stBM *) &_);
+    }
+  LOCALRETURN_BM (NULL);
+}                               /* end  command handler for remove_0zf6nSKwSlU_6Cv3LMh1MmV  */

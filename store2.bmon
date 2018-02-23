@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 233 objects
+// for 234 objects
 // with 0 modules
 
 
@@ -1466,8 +1466,12 @@ _2mYaTh9kH4I_7ENiXcymRmy |=set|
 !(_3OWP1zOtxz2_9uAVt50SUZO |=remove|
 !~ name (~ remove
 ~)
-!@ 1507975307.97
+!@ 1519399495.52
 !$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _0xbmmxnN8E8_0ZuEqJmqMNH |=command_handler|
+ % _0zf6nSKwSlU_6Cv3LMh1MmV ()
+!: _0NnNXZqWvmz_1ucZGX0YPu1 |=command_arity|
+ 2
 !)_3OWP1zOtxz2_9uAVt50SUZO
 
 
@@ -1896,11 +1900,22 @@ _7XasLoEUKwe_9upxyFeheD5
 
 
 !(_0y90r6nyAYP_2MmfH2V00B1
+!|*
 !@ 1514270578.35
 !$_2Ir1i8qnrA4_3jSkierlc5z |=basiclo_function|
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "routine dump_data\u00b0vector_object"
 !)_0y90r6nyAYP_2MmfH2V00B1
+
+
+
+!(_0zf6nSKwSlU_6Cv3LMh1MmV
+!|*
+!@ 1519399522.12
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "routine for commandhandler\u00b0remove"
+!)_0zf6nSKwSlU_6Cv3LMh1MmV
 
 
 
