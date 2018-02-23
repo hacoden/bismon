@@ -1084,6 +1084,7 @@ ROUTINEOBJNAME_BM (_1Xc5XJ7S5r7_3nYIzlf2XAw)    //
         objputattr_BM (_.recv, _.attv, _.compv);
       else
         objremoveattr_BM (_.recv, _.attv);
+      objtouchnow_BM (_.recv);
       objunlock_BM (_.recv);
       log_begin_message_BM ();
       log_puts_message_BM ("In object ");
@@ -1099,6 +1100,7 @@ ROUTINEOBJNAME_BM (_1Xc5XJ7S5r7_3nYIzlf2XAw)    //
       int attix = getint_BM (_.attv);
       objlock_BM (_.recv);
       objputcomp_BM (_.recv, attix, _.compv);
+      objtouchnow_BM (_.recv);
       objunlock_BM (_.recv);
       log_begin_message_BM ();
       log_puts_message_BM ("In object ");
@@ -1154,6 +1156,7 @@ ROUTINEOBJNAME_BM (_5v5ChlG1IYh_1Pv87MZJFPl)    //
   int oblen = 0;
   objlock_BM (_.recv);
   objappendcomp_BM (_.recv, _.compv);
+  objtouchnow_BM (_.recv);
   oblen = objnbcomps_BM (_.recv);
   objunlock_BM (_.recv);
   log_begin_message_BM ();
@@ -1196,6 +1199,7 @@ ROUTINEOBJNAME_BM (_0zf6nSKwSlU_6Cv3LMh1MmV)    //
     {
       objlock_BM (_.recv);
       objremoveattr_BM (_.recv, _.attv);
+      objtouchnow_BM (_.recv);
       objunlock_BM (_.recv);
       log_begin_message_BM ();
       log_puts_message_BM ("In object ");
@@ -1249,7 +1253,49 @@ ROUTINEOBJNAME_BM (_797zacMjvvt_3I2uxNJRfdq)    //
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  objectval_tyBM * recv; objectval_tyBM * superob;
     );
+  objectval_tyBM *k_failure_non_object = BMK_6yWldsq3Rmk_01WqTfwSIDV;
+  objectval_tyBM *k_failure_bad_attribute = BMK_4GumRf8w4jT_6lfDDJ5Y3TH;
+  objectval_tyBM *k_failure_bad_class = BMK_797zacMjvvt_3I2uxNJRfdq;
+  ASSERT_BM (pthread_self () == mainthreadid_BM);
+  if (!isobject_BM (arg1))
+    {
+      FAILURE_BM (__LINE__, k_failure_non_object,
+                  (struct stackframe_stBM *) &_);
+    }
+  if (!isobject_BM (arg2))
+    {
+      FAILURE_BM (__LINE__, k_failure_bad_class,
+                  (struct stackframe_stBM *) &_);
+    };
+  _.recv = (objectval_tyBM *) arg1;
+  _.superob = (objectval_tyBM *) arg2;
+  bool badsuper = false;
+  {
+    objlock_BM (_.superob);
+    if (objclass_BM (_.superob) != BMP_class)
+      badsuper = true;
+    objunlock_BM (_.superob);
+  }
+  if (badsuper)
+    {
+      FAILURE_BM (__LINE__, k_failure_bad_class,
+                  (struct stackframe_stBM *) &_);
+    };
+  objlock_BM (_.recv);
+  objputclass_BM (_.recv, BMP_class);
+  objputclassinfo_BM (_.recv, _.superob);
+  objtouchnow_BM (_.recv);
+  objunlock_BM (_.recv);
+  log_begin_message_BM ();
+  log_puts_message_BM ("Object ");
+  log_object_message_BM (objectcast_BM (_.recv));
+  log_puts_message_BM (" made class of super ");
+  log_object_message_BM (_.superob);
+  log_puts_message_BM (".");
+  log_end_message_BM ();
+  LOCALRETURN_BM (_.recv);
 }                               /* end commandhandler°init_class _797zacMjvvt_3I2uxNJRfdq  */
+
 
 /// command handler for put_method
 extern objrout_sigBM ROUTINEOBJNAME_BM (_9QuovXgtk9K_17pMbAD0XmX);
@@ -1266,4 +1312,8 @@ ROUTINEOBJNAME_BM (_9QuovXgtk9K_17pMbAD0XmX)    //
                  objectval_tyBM * recv; objectval_tyBM * obselv;
                  value_tyBM closv;
     );
+  objectval_tyBM *k_failure_non_object = BMK_6yWldsq3Rmk_01WqTfwSIDV;
+  objectval_tyBM *k_failure_bad_class = BMK_797zacMjvvt_3I2uxNJRfdq;
+  objectval_tyBM *k_failure_bad_closure = BMK_373gFe8m21E_47xzvCGxpI9;
+  objectval_tyBM *k_failure_bad_selector = BMK_9KxVIxneLrM_8xLQNri9PmJ;
 }                               /* end commandhandler°put_method _9QuovXgtk9K_17pMbAD0XmX */
