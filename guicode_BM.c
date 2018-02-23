@@ -1064,5 +1064,18 @@ ROUTINEOBJNAME_BM (_1Xc5XJ7S5r7_3nYIzlf2XAw)    //
       FAILURE_BM (__LINE__, _.reasonv, (struct stackframe_stBM *) &_);
     }
   _.recv = arg1;
+  _.attv = arg2;
+  _.compv = arg3;
+  DBGPRINTF_BM("commandhandler°put recv=%s attv=%s compv=%s",
+	       objectdbg_BM(_.recv),
+	       debug_outstr_value_BM
+	       (_.attv,
+		(struct stackframe_stBM*)&_,
+		0),
+	       debug_outstr_value_BM
+	       (_.compv,
+		(struct stackframe_stBM*)&_,
+		0)
+	       );
   LOCALRETURN_BM (NULL);
 }                               /* end  command handler for put _1Xc5XJ7S5r7_3nYIzlf2XAw */
