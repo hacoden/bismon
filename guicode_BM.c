@@ -1130,14 +1130,14 @@ ROUTINEOBJNAME_BM (_5v5ChlG1IYh_1Pv87MZJFPl)    //
 (struct stackframe_stBM * stkf, //
  const value_tyBM arg1,         // the reciever
  const value_tyBM arg2,         // the comp
- const value_tyBM arg3_ __attribute__ ((unused)),        
- const value_tyBM arg4_ __attribute__ ((unused)),        // 
+ const value_tyBM arg3_ __attribute__ ((unused)),       //
+ const value_tyBM arg4_ __attribute__ ((unused)),       // 
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-		  objectval_tyBM * recv; 
-		  value_tyBM compv;
-		  );
+                 objectval_tyBM * recv;
+                 value_tyBM compv;
+    );
   ASSERT_BM (pthread_self () == mainthreadid_BM);
   objectval_tyBM *k_failure_non_object = BMK_6yWldsq3Rmk_01WqTfwSIDV;
   if (!isobject_BM (arg1))
@@ -1154,7 +1154,7 @@ ROUTINEOBJNAME_BM (_5v5ChlG1IYh_1Pv87MZJFPl)    //
   int oblen = 0;
   objlock_BM (_.recv);
   objappendcomp_BM (_.recv, _.compv);
-  oblen = objnbcomps_BM(_.recv);
+  oblen = objnbcomps_BM (_.recv);
   objunlock_BM (_.recv);
   log_begin_message_BM ();
   log_puts_message_BM ("In object ");
@@ -1162,4 +1162,4 @@ ROUTINEOBJNAME_BM (_5v5ChlG1IYh_1Pv87MZJFPl)    //
   log_printf_message_BM (" added component#%d.", oblen);
   log_end_message_BM ();
   LOCALRETURN_BM (_.recv);
-} /* end commandhandler°add _5v5ChlG1IYh_1Pv87MZJFPl */
+}                               /* end commandhandler°add _5v5ChlG1IYh_1Pv87MZJFPl */
