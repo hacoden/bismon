@@ -1042,6 +1042,10 @@ ROUTINEOBJNAME_BM (_5KWAjUEGiiq_2B6rbvkCcgc)    //
   LOCALRETURN_BM (_.objbrows);
 }                               /* end  browse_data for any object with extended value_5KWAjUEGiiq_2B6rbvkCcgc  */
 
+
+
+////////////////////////////////////////////////////////////////
+
 /// command handler for put
 extern objrout_sigBM ROUTINEOBJNAME_BM (_1Xc5XJ7S5r7_3nYIzlf2XAw);
 value_tyBM
@@ -1058,7 +1062,6 @@ ROUTINEOBJNAME_BM (_1Xc5XJ7S5r7_3nYIzlf2XAw)    //
                  value_tyBM compv;
                  value_tyBM reasonv;
     );
-  ASSERT_BM (pthread_self () == mainthreadid_BM);
   objectval_tyBM *k_failure_non_object = BMK_6yWldsq3Rmk_01WqTfwSIDV;
   objectval_tyBM *k_failure_bad_attribute = BMK_4GumRf8w4jT_6lfDDJ5Y3TH;
   if (!isobject_BM (arg1))
@@ -1086,13 +1089,16 @@ ROUTINEOBJNAME_BM (_1Xc5XJ7S5r7_3nYIzlf2XAw)    //
         objremoveattr_BM (_.recv, _.attv);
       objtouchnow_BM (_.recv);
       objunlock_BM (_.recv);
-      log_begin_message_BM ();
-      log_puts_message_BM ("In object ");
-      log_object_message_BM (objectcast_BM (_.recv));
-      log_puts_message_BM (" put attribute ");
-      log_object_message_BM (objectcast_BM (_.attv));
-      log_puts_message_BM (".");
-      log_end_message_BM ();
+      if (pthread_self () == mainthreadid_BM)
+        {
+          log_begin_message_BM ();
+          log_puts_message_BM ("In object ");
+          log_object_message_BM (objectcast_BM (_.recv));
+          log_puts_message_BM (" put attribute ");
+          log_object_message_BM (objectcast_BM (_.attv));
+          log_puts_message_BM (".");
+          log_end_message_BM ();
+        }
       LOCALRETURN_BM (_.recv);
     }
   else if (istaggedint_BM (_.attv))
@@ -1102,22 +1108,29 @@ ROUTINEOBJNAME_BM (_1Xc5XJ7S5r7_3nYIzlf2XAw)    //
       objputcomp_BM (_.recv, attix, _.compv);
       objtouchnow_BM (_.recv);
       objunlock_BM (_.recv);
-      log_begin_message_BM ();
-      log_puts_message_BM ("In object ");
-      log_object_message_BM (objectcast_BM (_.recv));
-      log_printf_message_BM (" put component#%d.", attix);
-      log_end_message_BM ();
+      if (pthread_self () == mainthreadid_BM)
+        {
+          log_begin_message_BM ();
+          log_puts_message_BM ("In object ");
+          log_object_message_BM (objectcast_BM (_.recv));
+          log_printf_message_BM (" put component#%d.", attix);
+          log_end_message_BM ();
+        }
       LOCALRETURN_BM (_.recv);
     }
   else
     {
-      log_begin_message_BM ();
-      log_puts_message_BM ("In object ");
-      log_object_message_BM (objectcast_BM (_.recv));
-      log_printf_message_BM
-        (" bad attribute %s to put.",
-         debug_outstr_value_BM (_.attv, (struct stackframe_stBM *) &_, 0));
-      log_end_message_BM ();
+      if (pthread_self () == mainthreadid_BM)
+        {
+          log_begin_message_BM ();
+          log_puts_message_BM ("In object ");
+          log_object_message_BM (objectcast_BM (_.recv));
+          log_printf_message_BM
+            (" bad attribute %s to put.",
+             debug_outstr_value_BM (_.attv, (struct stackframe_stBM *) &_,
+                                    0));
+          log_end_message_BM ();
+        }
       FAILURE_BM (__LINE__, k_failure_bad_attribute,
                   (struct stackframe_stBM *) &_);
     }
@@ -1181,7 +1194,6 @@ ROUTINEOBJNAME_BM (_0zf6nSKwSlU_6Cv3LMh1MmV)    //
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  objectval_tyBM * recv; value_tyBM attv;
     );
-  ASSERT_BM (pthread_self () == mainthreadid_BM);
   objectval_tyBM *k_failure_non_object = BMK_6yWldsq3Rmk_01WqTfwSIDV;
   objectval_tyBM *k_failure_bad_attribute = BMK_4GumRf8w4jT_6lfDDJ5Y3TH;
   if (!isobject_BM (arg1))
@@ -1201,13 +1213,16 @@ ROUTINEOBJNAME_BM (_0zf6nSKwSlU_6Cv3LMh1MmV)    //
       objremoveattr_BM (_.recv, _.attv);
       objtouchnow_BM (_.recv);
       objunlock_BM (_.recv);
-      log_begin_message_BM ();
-      log_puts_message_BM ("In object ");
-      log_object_message_BM (objectcast_BM (_.recv));
-      log_puts_message_BM (" remove attribute ");
-      log_object_message_BM (objectcast_BM (_.attv));
-      log_puts_message_BM (".");
-      log_end_message_BM ();
+      if (pthread_self () == mainthreadid_BM)
+        {
+          log_begin_message_BM ();
+          log_puts_message_BM ("In object ");
+          log_object_message_BM (objectcast_BM (_.recv));
+          log_puts_message_BM (" remove attribute ");
+          log_object_message_BM (objectcast_BM (_.attv));
+          log_puts_message_BM (".");
+          log_end_message_BM ();
+        }
       LOCALRETURN_BM (_.recv);
     }
 //- else if (istaggedint_BM (_.attv))
@@ -1225,13 +1240,17 @@ ROUTINEOBJNAME_BM (_0zf6nSKwSlU_6Cv3LMh1MmV)    //
 //-   }
   else
     {
-      log_begin_message_BM ();
-      log_puts_message_BM ("In object ");
-      log_object_message_BM (objectcast_BM (_.recv));
-      log_printf_message_BM
-        (" bad attribute %s to remove.",
-         debug_outstr_value_BM (_.attv, (struct stackframe_stBM *) &_, 0));
-      log_end_message_BM ();
+      if (pthread_self () == mainthreadid_BM)
+        {
+          log_begin_message_BM ();
+          log_puts_message_BM ("In object ");
+          log_object_message_BM (objectcast_BM (_.recv));
+          log_printf_message_BM
+            (" bad attribute %s to remove.",
+             debug_outstr_value_BM (_.attv, (struct stackframe_stBM *) &_,
+                                    0));
+          log_end_message_BM ();
+        }
       FAILURE_BM (__LINE__, k_failure_bad_attribute,
                   (struct stackframe_stBM *) &_);
     }
@@ -1286,13 +1305,16 @@ ROUTINEOBJNAME_BM (_797zacMjvvt_3I2uxNJRfdq)    //
   objputclassinfo_BM (_.recv, _.superob);
   objtouchnow_BM (_.recv);
   objunlock_BM (_.recv);
-  log_begin_message_BM ();
-  log_puts_message_BM ("Object ");
-  log_object_message_BM (objectcast_BM (_.recv));
-  log_puts_message_BM (" made class of super ");
-  log_object_message_BM (_.superob);
-  log_puts_message_BM (".");
-  log_end_message_BM ();
+  if (pthread_self () == mainthreadid_BM)
+    {
+      log_begin_message_BM ();
+      log_puts_message_BM ("Object ");
+      log_object_message_BM (objectcast_BM (_.recv));
+      log_puts_message_BM (" made class of super ");
+      log_object_message_BM (_.superob);
+      log_puts_message_BM (".");
+      log_end_message_BM ();
+    }
   LOCALRETURN_BM (_.recv);
 }                               /* end commandhandler°init_class _797zacMjvvt_3I2uxNJRfdq  */
 
@@ -1316,4 +1338,66 @@ ROUTINEOBJNAME_BM (_9QuovXgtk9K_17pMbAD0XmX)    //
   objectval_tyBM *k_failure_bad_class = BMK_797zacMjvvt_3I2uxNJRfdq;
   objectval_tyBM *k_failure_bad_closure = BMK_373gFe8m21E_47xzvCGxpI9;
   objectval_tyBM *k_failure_bad_selector = BMK_9KxVIxneLrM_8xLQNri9PmJ;
+  ASSERT_BM (pthread_self () == mainthreadid_BM);
+  if (!isobject_BM (arg1))
+    {
+      FAILURE_BM (__LINE__, k_failure_non_object,
+                  (struct stackframe_stBM *) &_);
+    }
+  _.recv = (objectval_tyBM *) arg1;
+  if (!isobject_BM (arg2))
+    {
+      FAILURE_BM (__LINE__, k_failure_bad_selector,
+                  (struct stackframe_stBM *) &_);
+    }
+  _.obselv = arg2;
+  if (arg3 && !isclosure_BM (arg3))
+    {
+      FAILURE_BM (__LINE__, k_failure_bad_closure,
+                  (struct stackframe_stBM *) &_);
+    }
+  _.closv = arg3;
+  bool badclass = false;
+  char *actword = NULL;
+  objlock_BM (_.recv);
+  if (objhasclassinfo_BM (_.recv))
+    {
+      if (_.closv)
+        {
+          objclassinfoputmethod_BM (_.recv, _.obselv, _.closv);
+          actword = "put";
+        }
+      else
+        {
+          objclassinforemovemethod_BM (_.recv, _.obselv);
+          actword = "remove";
+        }
+    }
+  else
+    badclass = true;
+  objunlock_BM (_.recv);
+  if (badclass)
+    {
+      if (pthread_self () == mainthreadid_BM)
+        {
+          log_begin_message_BM ();
+          log_puts_message_BM ("Object ");
+          log_object_message_BM (objectcast_BM (_.recv));
+          log_puts_message_BM (" is not a class.");
+          log_end_message_BM ();
+        }
+      FAILURE_BM (__LINE__, k_failure_bad_class,
+                  (struct stackframe_stBM *) &_);
+    }
+  if (pthread_self () == mainthreadid_BM)
+    {
+      log_begin_message_BM ();
+      log_puts_message_BM ("In object ");
+      log_object_message_BM (objectcast_BM (_.recv));
+      log_printf_message_BM (" did %s method for ", actword);
+      log_object_message_BM (objectcast_BM (_.obselv));
+      log_puts_message_BM (".");
+      log_end_message_BM ();
+    }
+  LOCALRETURN_BM (_.recv);
 }                               /* end commandhandler°put_method _9QuovXgtk9K_17pMbAD0XmX */
