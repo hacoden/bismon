@@ -1058,24 +1058,67 @@ ROUTINEOBJNAME_BM (_1Xc5XJ7S5r7_3nYIzlf2XAw)    //
                  value_tyBM compv;
                  value_tyBM reasonv;
     );
+  ASSERT_BM (pthread_self () == mainthreadid_BM);
+  objectval_tyBM *k_failure_non_object = BMK_6yWldsq3Rmk_01WqTfwSIDV;
+  objectval_tyBM *k_failure_bad_attribute = BMK_4GumRf8w4jT_6lfDDJ5Y3TH;
 #warning incomplete  command handler for put
   if (!isobject_BM (arg1))
     {
-      FAILURE_BM (__LINE__, _.reasonv, (struct stackframe_stBM *) &_);
+      FAILURE_BM (__LINE__, k_failure_non_object,
+                  (struct stackframe_stBM *) &_);
     }
   _.recv = arg1;
   _.attv = arg2;
   _.compv = arg3;
-  DBGPRINTF_BM("commandhandler°put recv=%s attv=%s compv=%s",
-	       objectdbg_BM(_.recv),
-	       debug_outstr_value_BM
-	       (_.attv,
-		(struct stackframe_stBM*)&_,
-		0),
-	       debug_outstr_value_BM
-	       (_.compv,
-		(struct stackframe_stBM*)&_,
-		0)
-	       );
+  DBGPRINTF_BM ("commandhandler°put recv=%s attv=%s compv=%s",
+                objectdbg_BM (_.recv),
+                debug_outstr_value_BM
+                (_.attv,
+                 (struct stackframe_stBM *) &_,
+                 0),
+                debug_outstr_value_BM
+                (_.compv, (struct stackframe_stBM *) &_, 0));
+  if (isobject_BM (_.attv))
+    {
+      objlock_BM (_.recv);
+      if (_.compv)
+        objputattr_BM (_.recv, _.attv, _.compv);
+      else
+        objremoveattr_BM (_.recv, _.attv);
+      objunlock_BM (_.recv);
+      log_begin_message_BM ();
+      log_puts_message_BM ("In object ");
+      log_object_message_BM (objectcast_BM (_.recv));
+      log_puts_message_BM (" put attribute ");
+      log_object_message_BM (objectcast_BM (_.attv));
+      log_puts_message_BM (".");
+      log_end_message_BM ();
+      LOCALRETURN_BM (_.recv);
+    }
+  else if (istaggedint_BM (_.attv))
+    {
+      int attix = getint_BM (_.attv);
+      objlock_BM (_.recv);
+      objputcomp_BM (_.recv, attix, _.compv);
+      objunlock_BM (_.recv);
+      log_begin_message_BM ();
+      log_puts_message_BM ("In object ");
+      log_object_message_BM (objectcast_BM (_.recv));
+      log_printf_message_BM (" put component#%d.", attix);
+      log_end_message_BM ();
+      LOCALRETURN_BM (_.recv);
+    }
+  else
+    {
+      log_begin_message_BM ();
+      log_puts_message_BM ("In object ");
+      log_object_message_BM (objectcast_BM (_.recv));
+      log_printf_message_BM
+        (" bad attribute %s to put.",
+         debug_outstr_value_BM (_.attv, (struct stackframe_stBM *) &_, 0));
+      log_end_message_BM ();
+      FAILURE_BM (__LINE__, k_failure_bad_attribute,
+                  (struct stackframe_stBM *) &_);
+    }
   LOCALRETURN_BM (NULL);
 }                               /* end  command handler for put _1Xc5XJ7S5r7_3nYIzlf2XAw */

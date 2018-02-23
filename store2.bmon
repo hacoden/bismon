@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 230 objects
+// for 232 objects
 // with 0 modules
 
 
@@ -846,6 +846,24 @@ _6QdXYI1ivTg_8NnpdDMRQK5 ])
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "in c_enum or c_union or c_struct gives the super-stuff"
 !)_2bqFfs5OYL2_0HRi4lcgFcu
+
+
+
+!(_4GumRf8w4jT_6lfDDJ5Y3TH |=failure_bad_attribute|
+!~ name (~ failure_bad_attribute
+~)
+!@ 1519395689.35
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!)_4GumRf8w4jT_6lfDDJ5Y3TH
+
+
+
+!(_6yWldsq3Rmk_01WqTfwSIDV |=failure_non_object|
+!~ name (~ failure_non_object
+~)
+!@ 1519395689.35
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!)_6yWldsq3Rmk_01WqTfwSIDV
 
 
 
