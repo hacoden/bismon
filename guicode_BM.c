@@ -1061,7 +1061,6 @@ ROUTINEOBJNAME_BM (_1Xc5XJ7S5r7_3nYIzlf2XAw)    //
   ASSERT_BM (pthread_self () == mainthreadid_BM);
   objectval_tyBM *k_failure_non_object = BMK_6yWldsq3Rmk_01WqTfwSIDV;
   objectval_tyBM *k_failure_bad_attribute = BMK_4GumRf8w4jT_6lfDDJ5Y3TH;
-#warning incomplete  command handler for put
   if (!isobject_BM (arg1))
     {
       FAILURE_BM (__LINE__, k_failure_non_object,
