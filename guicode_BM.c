@@ -1041,3 +1041,28 @@ ROUTINEOBJNAME_BM (_5KWAjUEGiiq_2B6rbvkCcgc)    //
   gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
   LOCALRETURN_BM (_.objbrows);
 }                               /* end  browse_data for any object with extended value_5KWAjUEGiiq_2B6rbvkCcgc  */
+
+/// command handler for put
+extern objrout_sigBM ROUTINEOBJNAME_BM (_1Xc5XJ7S5r7_3nYIzlf2XAw);
+value_tyBM
+ROUTINEOBJNAME_BM (_1Xc5XJ7S5r7_3nYIzlf2XAw)    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // the reciever
+ const value_tyBM arg2,         // the attr or index
+ const value_tyBM arg3,         // the comp
+ const value_tyBM arg4 __attribute__ ((unused)),        // 
+ const quasinode_tyBM * restargs __attribute__ ((unused)))
+{
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
+                 objectval_tyBM * recv; value_tyBM attv;
+                 value_tyBM compv;
+                 value_tyBM reasonv;
+    );
+#warning incomplete  command handler for put
+  if (!isobject_BM (arg1))
+    {
+      FAILURE_BM (__LINE__, _.reasonv, (struct stackframe_stBM *) &_);
+    }
+  _.recv = arg1;
+  LOCALRETURN_BM (NULL);
+}                               /* end  command handler for put _1Xc5XJ7S5r7_3nYIzlf2XAw */

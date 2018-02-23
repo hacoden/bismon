@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 229 objects
+// for 230 objects
 // with 0 modules
 
 
@@ -1391,6 +1391,10 @@ _2mYaTh9kH4I_7ENiXcymRmy |=set|
 ~)
 !@ 1507975261.64
 !$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _0xbmmxnN8E8_0ZuEqJmqMNH |=command_handler|
+ % _1Xc5XJ7S5r7_3nYIzlf2XAw ()
+!: _0NnNXZqWvmz_1ucZGX0YPu1 |=command_arity|
+ 3
 !)_9pvzBeIKHXF_8YDPCrQ6OEK
 
 
@@ -2017,6 +2021,16 @@ _0EfjiBTrXEo_3ppwTZ0M7xf |=foreach_in_tuple|
 !# 1
 !& _5mfKaUSS5M3_7TkY2bYFtdL
 !)_1UM3ERNWFgo_6pqkY9UiIDv
+
+
+
+!(_1Xc5XJ7S5r7_3nYIzlf2XAw
+!|*
+!@ 1519379771.22
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "command handler for put"
+!)_1Xc5XJ7S5r7_3nYIzlf2XAw
 
 
 
