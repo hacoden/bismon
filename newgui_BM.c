@@ -966,6 +966,8 @@ parsecommandbuf_newgui_BM (struct
                                       cmdtok.tok_col,
                                       "command %s has no handler",
                                       objectdbg_BM (_.cmdobj));
+              DBGPRINTF_BM ("parsecommandbuf_newgui command %s arity %d",
+                            objectdbg_BM (_.cmdobj), arity);
               if (arity > TINYSIZE_BM)
                 parsererrorprintf_BM (pars,
                                       (struct stackframe_stBM *) &_,
@@ -1023,10 +1025,17 @@ parsecommandbuf_newgui_BM (struct
                                                   argcnt,
                                                   objectdbg_BM (_.cmdobj));
                         }
+                      DBGPRINTF_BM ("parsecommandbuf_newgui argcnt#%d arg=%s",
+                                    argcnt,
+                                    debug_outstr_value_BM (_.cmdargs[argcnt],
+                                                           (struct
+                                                            stackframe_stBM *)
+                                                           &_, 0));
                     }
                 }
               else if (arity >= 0)
                 {
+                  parserseek_BM (pars, cmdtok.tok_line, cmdtok.tok_col);
                   for (int argix = 0; argix < arity; argix++)
                     {
                       bool gotarg = false;
@@ -1041,7 +1050,11 @@ parsecommandbuf_newgui_BM (struct
                                               cmdtok.tok_col,
                                               "missing argument %d for command %s",
                                               argix, objectdbg_BM (_.cmdobj));
-
+                      DBGPRINTF_BM ("parsecommandbuf_newgui argix#%d arg=%s",
+                                    argix,
+                                    debug_outstr_value_BM
+                                    (_.cmdargs[argix],
+                                     (struct stackframe_stBM *) &_, 0));
                     }
                   argcnt = arity;
                 }
