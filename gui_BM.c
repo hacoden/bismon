@@ -4068,8 +4068,27 @@ keyrelcompletionmenucmd_cbBM (GtkWidget * w, GdkEventKey * evk, gpointer data)
   GdkModifierType modmask = gtk_accelerator_get_default_mod_mask ();
   bool withctrl = (evk->state & modmask) == GDK_CONTROL_MASK;
   bool withshift = (evk->state & modmask) == GDK_SHIFT_MASK;
-  DBGPRINTF_BM ("keyrelcompletionmenucmd keyval %#x ctrl %s shift %s",
-                evk->keyval, withctrl ? "yes" : "no",
+  char keybuf[32];
+  memset (keybuf, 0, sizeof (keybuf));
+  if (evk->keyval >= GDK_KEY_0 && evk->keyval <= GDK_KEY_9)
+    snprintf (keybuf, sizeof (keybuf), "KEY_%d", evk->keyval - GDK_KEY_0);
+  else if (evk->keyval >= GDK_KEY_KP_0 && evk->keyval <= GDK_KEY_KP_9)
+    snprintf (keybuf, sizeof (keybuf), "KEY_KP_%d",
+              evk->keyval - GDK_KEY_KP_0);
+  else if (evk->keyval >= GDK_KEY_A && GDK_KEY_Z)
+    snprintf (keybuf, sizeof (keybuf), "KEY_%c (up)",
+              'A' + (evk->keyval - GDK_KEY_A));
+  else if (evk->keyval >= GDK_KEY_a && GDK_KEY_z)
+    snprintf (keybuf, sizeof (keybuf), "KEY_%c (lo)",
+              'a' + (evk->keyval - GDK_KEY_a));
+  else if (evk->keyval == GDK_KEY_Tab)
+    strcpy (keybuf, "KEY_Tab");
+  else if (evk->keyval == GDK_KEY_Multi_key)
+    strcpy (keybuf, "KEY_Multi_key");
+  else
+    snprintf (keybuf, sizeof (keybuf), "key %d", evk->keyval);
+  DBGPRINTF_BM ("keyrelcompletionmenucmd keyval %#x %s ctrl %s shift %s",
+                evk->keyval, keybuf, withctrl ? "yes" : "no",
                 withshift ? "yes" : "no");
   return FALSE;                 /* propagate the event */
 }                               /* end keyrelcompletionmenucmd_cbBM */
