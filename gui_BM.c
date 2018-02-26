@@ -3701,6 +3701,9 @@ timeoutrestoreopacitycmd_BM (gpointer data __attribute__ ((unused)))
 static void replacecompletionbyidcmd_BM (GtkMenuItem * mit, gpointer data);
 static void replacecompletionbynamecmd_BM (GtkMenuItem * mit, gpointer data);
 static void stopcompletionmenucmd_BM (GtkMenuItem * mit, gpointer data);
+static gboolean keyrelcompletionmenucmd_cbBM (GtkWidget * w, GdkEventKey * ev,
+                                              gpointer data);
+
 void
 tabautocomplete_gui_cmd_BM (void)
 {
@@ -3948,12 +3951,14 @@ tabautocomplete_gui_cmd_BM (void)
                             complcommonprefix_BM);
             };
         }
-      gtk_widget_show_all (complmenu);
       g_signal_connect (complmenu, "cancel",
                         G_CALLBACK (stopcompletionmenucmd_BM), "*Cancelled*");
       g_signal_connect (complmenu, "deactivate",
                         G_CALLBACK (stopcompletionmenucmd_BM),
                         "*Deactivated*");
+      g_signal_connect (complmenu, "key-release-event",
+                        G_CALLBACK (keyrelcompletionmenucmd_cbBM), NULL);
+      gtk_widget_show_all (complmenu);
       gtk_menu_popup_at_pointer (GTK_MENU (complmenu), NULL);
       gtk_main ();
       gtk_widget_destroy (complmenu);
@@ -4054,6 +4059,20 @@ stopcompletionmenucmd_BM (GtkMenuItem * mit
   gtk_main_quit ();
 }                               /* end stopcompletionmenucmd_BM */
 
+gboolean
+keyrelcompletionmenucmd_cbBM (GtkWidget * w, GdkEventKey * evk, gpointer data)
+{
+  ASSERT_BM (GTK_IS_MENU (w));
+  ASSERT_BM (evk != NULL);
+  ASSERT_BM (data == 0);
+  GdkModifierType modmask = gtk_accelerator_get_default_mod_mask ();
+  bool withctrl = (evk->state & modmask) == GDK_CONTROL_MASK;
+  bool withshift = (evk->state & modmask) == GDK_SHIFT_MASK;
+  DBGPRINTF_BM ("keyrelcompletionmenucmd keyval %#x ctrl %s shift %s",
+                evk->keyval, withctrl ? "yes" : "no",
+                withshift ? "yes" : "no");
+  return FALSE;                 /* propagate the event */
+}                               /* end keyrelcompletionmenucmd_cbBM */
 
 
 /// called by run_then_keep_command_BM & run_then_erase_command_BM
