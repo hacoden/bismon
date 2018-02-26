@@ -3888,8 +3888,8 @@ tabautocomplete_gui_cmd_BM (void)
               if (ix < MAXFUNCTIONKEY_BM)
                 markup =
                   g_markup_printf_escaped
-                  ("<tt><b>%s</b>%s</tt> <i>(F%d)</i>", cidprefix,
-                   cidbuf + idwidth, ix + 1);
+                  ("<tt><b>%s</b>%s</tt> <small><i>(F%d)</i></small>",
+                   cidprefix, cidbuf + idwidth, ix + 1);
               else
                 markup = g_markup_printf_escaped ("<tt><b>%s</b>%s</tt>",
                                                   cidprefix,
@@ -3949,7 +3949,7 @@ tabautocomplete_gui_cmd_BM (void)
               ASSERT_BM (elix >= 0);
               const char *obname = findobjectname_BM (curob);
               ASSERT_BM (obname != NULL);
-              unsigned obnamelen = strlen (obnamelen);
+              unsigned obnamelen = strlen (obname);
               ASSERT_BM (obnamelen > 0);
               char *obprefix = calloc (1 + ((obnamelen + 1) | 7), 1);
               if (!obprefix)
@@ -3963,10 +3963,10 @@ tabautocomplete_gui_cmd_BM (void)
               GtkWidget *mlab = gtk_bin_get_child (GTK_BIN (mit));
               char *markup = NULL;
               if (obix < MAXFUNCTIONKEY_BM)
-                markup = g_markup_printf_escaped ("<b>%s</b>%s <i>(F%d)</i>",
-                                                  obprefix,
-                                                  obname + prefwidth,
-                                                  obix + 1);
+                markup =
+                  g_markup_printf_escaped
+                  ("<b>%s</b>%s <small><i>(F%d)</i></small>", obprefix,
+                   obname + prefwidth, obix + 1);
               else
                 markup = g_markup_printf_escaped ("<b>%s</b>%s",
                                                   obprefix,
@@ -3996,8 +3996,8 @@ tabautocomplete_gui_cmd_BM (void)
               DBGPRINTF_BM ("complcommonprefix_BM=%s byname",
                             complcommonprefix_BM);
             };
-	  if (arr != tinyarr)
-	    free(arr), arr = NULL;
+          if (arr != tinyarr)
+            free (arr), arr = NULL;
         }
       g_signal_connect (complmenu, "cancel",
                         G_CALLBACK (stopcompletionmenucmd_BM), "*Cancelled*");
