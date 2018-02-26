@@ -3808,8 +3808,22 @@ tabautocomplete_gui_cmd_BM (void)
     goto failure;
   unsigned nbcompl = setcardinal_BM (complsetv);
   DBGPRINTF_BM
-    ("tabautocompletecmd_BM nbcompl=%d endname@%p curstr@%p begname@%p: '%s'",
-     nbcompl, endname, curstr, begname, begname);
+    ("tabautocompletecmd nbcompl=%d endname@%p curstr@%p begname@%p: '%s' gotid %s",
+     nbcompl, endname, curstr, begname, begname, gotid ? "true" : "false");
+  for (int cix = 0; cix < (int) nbcompl; cix++)
+    {
+      const objectval_tyBM *curobcomp = setelemnth_BM (complsetv, cix);
+      if (gotid)
+        {
+          char cidbuf[32];
+          memset (cidbuf, 0, sizeof (cidbuf));
+          idtocbuf32_BM (objid_BM (curobcomp), cidbuf);
+          DBGPRINTF_BM ("tabautocompletecmd cix#%d obid %s", cix, cidbuf);
+        }
+      else
+        DBGPRINTF_BM ("tabautocompletecmd cix#%d obj %s",
+                      cix, objectdbg_BM (curobcomp));
+    }
   if (nbcompl == 0)
     goto failure;
   else if (nbcompl == 1)
