@@ -101,7 +101,7 @@ static void browserblinkstart_BM (void);
 
 
 /// the completion set - should be a GC root
-const setval_tyBM *complsetcmd_BM;
+const seqobval_tyBM *complseqcmd_BM;
 /// begin and end offset for completion replacement
 int compbegoffcmd_BM, compendoffcmd_BM;
 char *complcommonprefix_BM;
@@ -297,8 +297,8 @@ gcmarkoldgui_BM (struct garbcoll_stBM *gc)
           VALUEGCPROC_BM (gc, browsedval_BM[ix].brow_name, 0);
         }
     }
-  if (complsetcmd_BM)
-    VALUEGCPROC_BM (gc, complsetcmd_BM, 0);
+  if (complseqcmd_BM)
+    VALUEGCPROC_BM (gc, complseqcmd_BM, 0);
 }                               /* end gcmarkoldgui_BM */
 
 
@@ -3859,7 +3859,7 @@ tabautocomplete_gui_cmd_BM (void)
   else
     {
       ASSERT_BM (nbcompl > 1);
-      complsetcmd_BM = complsetv;
+      complseqcmd_BM = complsetv;
       GtkWidget *complmenu = gtk_menu_new ();
       GtkTextIter begwit = cursit;
       GtkTextIter endwit = cursit;
@@ -3941,12 +3941,11 @@ tabautocomplete_gui_cmd_BM (void)
           for (unsigned ix = 0; ix < nbcompl; ix++)
             arr[ix] = setelemnth_BM (complsetv, ix);
           sortnamedobjarr_BM (arr, nbcompl);
+          complseqcmd_BM = maketuple_BM (arr, nbcompl);
           for (unsigned obix = 0; obix < nbcompl; obix++)
             {
               const objectval_tyBM *curob = arr[obix];
               ASSERT_BM (isobject_BM ((const value_tyBM) curob));
-              int elix = setelemindex_BM (complsetv, curob);
-              ASSERT_BM (elix >= 0);
               const char *obname = findobjectname_BM (curob);
               ASSERT_BM (obname != NULL);
               unsigned obnamelen = strlen (obname);
@@ -3976,7 +3975,7 @@ tabautocomplete_gui_cmd_BM (void)
               gtk_menu_shell_append (GTK_MENU_SHELL (complmenu), mit);
               g_signal_connect (mit, "activate",
                                 G_CALLBACK (replacecompletionbynamecmd_BM),
-                                (gpointer) (intptr_t) elix);
+                                (gpointer) (intptr_t) obix);
             }
           const objectval_tyBM *firstnamedob = arr[0];
           const objectval_tyBM *lastnamedob = arr[nbcompl - 1];
@@ -4011,7 +4010,7 @@ tabautocomplete_gui_cmd_BM (void)
       gtk_menu_popup_at_pointer (GTK_MENU (complmenu), NULL);
       gtk_main ();
       gtk_widget_destroy (complmenu);
-      complsetcmd_BM = NULL;
+      complseqcmd_BM = NULL;
       compbegoffcmd_BM = -1;
       compendoffcmd_BM = -1;
       free (complcommonprefix_BM), complcommonprefix_BM = NULL;
@@ -4039,9 +4038,9 @@ replacecompletionbyidcmd_BM (GtkMenuItem * mit
                              __attribute__ ((unused)), gpointer data)
 {
   unsigned ix = (unsigned) (intptr_t) data;
-  ASSERT_BM (isset_BM ((const value_tyBM) complsetcmd_BM));
-  ASSERT_BM (ix < setcardinal_BM (complsetcmd_BM));
-  const objectval_tyBM *ob = setelemnth_BM (complsetcmd_BM, ix);
+  ASSERT_BM (issequence_BM ((const value_tyBM) complseqcmd_BM));
+  ASSERT_BM (ix < sequencesize_BM (complseqcmd_BM));
+  const objectval_tyBM *ob = sequencenthcomp_BM (complseqcmd_BM, ix);
   ASSERT_BM (isobject_BM ((const value_tyBM) ob));
   char idbuf[32];
   memset (idbuf, 0, sizeof (idbuf));
@@ -4064,9 +4063,9 @@ replacecompletionbynamecmd_BM (GtkMenuItem * mit
                                __attribute__ ((unused)), gpointer data)
 {
   unsigned ix = (unsigned) (intptr_t) data;
-  ASSERT_BM (isset_BM ((const value_tyBM) complsetcmd_BM));
-  ASSERT_BM (ix < setcardinal_BM (complsetcmd_BM));
-  const objectval_tyBM *ob = setelemnth_BM (complsetcmd_BM, ix);
+  ASSERT_BM (issequence_BM ((const value_tyBM) complseqcmd_BM));
+  ASSERT_BM (ix < sequencesize_BM (complseqcmd_BM));
+  const objectval_tyBM *ob = sequencenthcomp_BM (complseqcmd_BM, ix);
   ASSERT_BM (isobject_BM ((const value_tyBM) ob));
   const char *obname = findobjectname_BM (ob);
   ASSERT_BM (obname != NULL);
@@ -4088,7 +4087,7 @@ stopcompletionmenucmd_BM (GtkMenuItem * mit
                           __attribute__ ((unused)),
                           gpointer data __attribute__ ((unused)))
 {
-  ASSERT_BM (isset_BM ((const value_tyBM) complsetcmd_BM));
+  ASSERT_BM (issequence_BM ((const value_tyBM) complseqcmd_BM));
   if (complcommonprefix_BM)
     {
       DBGPRINTF_BM

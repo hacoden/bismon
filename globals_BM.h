@@ -123,7 +123,7 @@ extern struct parenoffset_stBM browserblinkparens_BM;   /// offsets are absolute
 ////////////////
 extern int commandnumber_BM;
 /// the completion set - should be a GC root
-extern const setval_tyBM *complsetcmd_BM;
+extern const seqobval_tyBM *complseqcmd_BM;
 /// begin and end offset for completion replacement
 extern int compbegoffcmd_BM, compendoffcmd_BM;
 

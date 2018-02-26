@@ -308,7 +308,7 @@ void
 gcmarknewgui_BM (struct garbcoll_stBM *gc)
 {
   ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
-  // mark the browsedobj_BM browsedval_stBM & complsetcmd_BM
+  // mark the browsedobj_BM browsedval_stBM & complseqcmd_BM
   gcmarkoldgui_BM (gc);
   VALUEGCPROC_BM (gc, astrval_bm, 0);
   for (struct objectwindow_newgui_stBM *
