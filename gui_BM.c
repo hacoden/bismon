@@ -3704,6 +3704,9 @@ static void stopcompletionmenucmd_BM (GtkMenuItem * mit, gpointer data);
 static gboolean keyrelcompletionmenucmd_cbBM (GtkWidget * w, GdkEventKey * ev,
                                               gpointer data);
 
+
+
+#define MAXFUNCTIONKEY_BM 12
 void
 tabautocomplete_gui_cmd_BM (void)
 {
@@ -3864,16 +3867,35 @@ tabautocomplete_gui_cmd_BM (void)
       gtk_text_iter_backward_chars (&begwit, curstr - begname);
       compbegoffcmd_BM = gtk_text_iter_get_offset (&begwit);
       compendoffcmd_BM = gtk_text_iter_get_offset (&endwit);
+      unsigned gotwidth = endname - begname;
       if (gotid)
         {                       /* complete by id */
           for (unsigned ix = 0; ix < nbcompl; ix++)
             {
               char cidbuf[32];
               memset (cidbuf, 0, sizeof (cidbuf));
+              char cidprefix[32];
+              memset (cidprefix, 0, sizeof (cidprefix));
               const objectval_tyBM *obcomp = setelemnth_BM (complsetv, ix);
               ASSERT_BM (isobject_BM ((const value_tyBM) obcomp));
               idtocbuf32_BM (objid_BM (obcomp), cidbuf);
-              GtkWidget *mit = gtk_menu_item_new_with_label (cidbuf);
+              unsigned idwidth =
+                gotwidth < strlen (cidbuf) ? gotwidth : strlen (cidbuf);
+              strncpy (cidprefix, cidbuf, idwidth);
+              GtkWidget *mit = gtk_menu_item_new_with_label ("?");
+              GtkWidget *mlab = gtk_bin_get_child (GTK_BIN (mit));
+              char *markup = NULL;
+              if (ix < MAXFUNCTIONKEY_BM)
+                markup =
+                  g_markup_printf_escaped
+                  ("<tt><b>%s</b>%s</tt> <i>(F%d)</i>", cidprefix,
+                   cidbuf + idwidth, ix + 1);
+              else
+                markup = g_markup_printf_escaped ("<tt><b>%s</b>%s</tt>",
+                                                  cidprefix,
+                                                  cidbuf + idwidth);
+              gtk_label_set_markup (GTK_LABEL (mlab), markup);
+              g_free (markup), markup = NULL;
               gtk_menu_shell_append (GTK_MENU_SHELL (complmenu), mit);
               g_signal_connect (mit, "activate",
                                 G_CALLBACK (replacecompletionbyidcmd_BM),
@@ -3906,6 +3928,7 @@ tabautocomplete_gui_cmd_BM (void)
         }
       else
         {                       /* complete by name */
+          unsigned gotwidth = endname - begname;
           const objectval_tyBM *tinyarr[TINYSIZE_BM] = {
           };
           const objectval_tyBM **arr =
@@ -3926,7 +3949,30 @@ tabautocomplete_gui_cmd_BM (void)
               ASSERT_BM (elix >= 0);
               const char *obname = findobjectname_BM (curob);
               ASSERT_BM (obname != NULL);
-              GtkWidget *mit = gtk_menu_item_new_with_label (obname);
+              unsigned obnamelen = strlen (obnamelen);
+              ASSERT_BM (obnamelen > 0);
+              char *obprefix = calloc (1 + ((obnamelen + 1) | 7), 1);
+              if (!obprefix)
+                FATAL_BM ("failed to calloc obprefix (obnamelen=%u)",
+                          obnamelen);
+              unsigned prefwidth = gotwidth;
+              if (prefwidth > obnamelen)
+                prefwidth = obnamelen;
+              strncpy (obprefix, obname, prefwidth);
+              GtkWidget *mit = gtk_menu_item_new_with_label ("!");
+              GtkWidget *mlab = gtk_bin_get_child (GTK_BIN (mit));
+              char *markup = NULL;
+              if (obix < MAXFUNCTIONKEY_BM)
+                markup = g_markup_printf_escaped ("<b>%s</b>%s <i>(F%d)</i>",
+                                                  obprefix,
+                                                  obname + prefwidth,
+                                                  obix + 1);
+              else
+                markup = g_markup_printf_escaped ("<b>%s</b>%s",
+                                                  obprefix,
+                                                  obname + prefwidth);
+              gtk_label_set_markup (GTK_LABEL (mlab), markup);
+              g_free (markup), markup = NULL;
               gtk_menu_shell_append (GTK_MENU_SHELL (complmenu), mit);
               g_signal_connect (mit, "activate",
                                 G_CALLBACK (replacecompletionbynamecmd_BM),
@@ -3950,12 +3996,15 @@ tabautocomplete_gui_cmd_BM (void)
               DBGPRINTF_BM ("complcommonprefix_BM=%s byname",
                             complcommonprefix_BM);
             };
+	  if (arr != tinyarr)
+	    free(arr), arr = NULL;
         }
       g_signal_connect (complmenu, "cancel",
                         G_CALLBACK (stopcompletionmenucmd_BM), "*Cancelled*");
       g_signal_connect (complmenu, "deactivate",
                         G_CALLBACK (stopcompletionmenucmd_BM),
                         "*Deactivated*");
+#warning we probably should pass a copy of the arr to keyrelcompletionmenucmd_cbBM
       g_signal_connect (complmenu, "key-release-event",
                         G_CALLBACK (keyrelcompletionmenucmd_cbBM), NULL);
       gtk_widget_show_all (complmenu);
@@ -4075,10 +4124,13 @@ keyrelcompletionmenucmd_cbBM (GtkWidget * w, GdkEventKey * evk, gpointer data)
   else if (evk->keyval >= GDK_KEY_KP_0 && evk->keyval <= GDK_KEY_KP_9)
     snprintf (keybuf, sizeof (keybuf), "KEY_KP_%d",
               evk->keyval - GDK_KEY_KP_0);
-  else if (evk->keyval >= GDK_KEY_A && GDK_KEY_Z)
+  else if (evk->keyval >= GDK_KEY_F1 && evk->keyval <= GDK_KEY_F35)
+    snprintf (keybuf, sizeof (keybuf), "KEY_F%d",
+              1 + (evk->keyval - GDK_KEY_F1));
+  else if (evk->keyval >= GDK_KEY_A && evk->keyval <= GDK_KEY_Z)
     snprintf (keybuf, sizeof (keybuf), "KEY_%c (up)",
               'A' + (evk->keyval - GDK_KEY_A));
-  else if (evk->keyval >= GDK_KEY_a && GDK_KEY_z)
+  else if (evk->keyval >= GDK_KEY_a && evk->keyval <= GDK_KEY_z)
     snprintf (keybuf, sizeof (keybuf), "KEY_%c (lo)",
               'a' + (evk->keyval - GDK_KEY_a));
   else if (evk->keyval == GDK_KEY_Tab)
