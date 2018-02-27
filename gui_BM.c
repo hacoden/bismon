@@ -4101,7 +4101,16 @@ replacecompletionbyprefixcmd_BM (void)
 {
   DBGPRINTF_BM ("replacecompletionbyprefixcmd_BM complcommonprefix=%s",
                 complcommonprefix_BM);
-#warning replacecompletionbyprefixcmd_BM incomplete
+  GtkTextIter begwit = EMPTY_TEXT_ITER_BM;
+  GtkTextIter endwit = EMPTY_TEXT_ITER_BM;
+  gtk_text_buffer_get_iter_at_offset (commandbuf_BM, &begwit,
+                                      compbegoffcmd_BM);
+  gtk_text_buffer_get_iter_at_offset (commandbuf_BM, &endwit,
+                                      compendoffcmd_BM);
+  gtk_text_buffer_delete (commandbuf_BM, &begwit, &endwit);
+  gtk_text_buffer_insert (commandbuf_BM, &begwit, complcommonprefix_BM, -1);
+  gtk_text_buffer_place_cursor (commandbuf_BM, &begwit);
+  gtk_main_quit ();
 }                               /* end replacecompletionbyprefixcmd_BM */
 
 
