@@ -1326,7 +1326,7 @@ parsertokenstartvalue_BM (struct parser_stBM * pars, parstoken_tyBM tok)
       || (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_exclam && parsops && parsops->parsop_accept_unary_rout)  // ! ...
       || (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_question && parsops && parsops->parsop_accept_unary_rout)        // ? ...
       || (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_equal && parsops && parsops->parsop_accept_unary_rout)   // = ...
-      || (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_colon && parsops && parsops->parsop_accept_unary_rout)   // : ...
+      || (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_colon)   // : object son
     )
     return true;
   return false;
@@ -1828,6 +1828,32 @@ parsergetvalue_BM (struct parser_stBM *pars,
       return _.resval;
     }
   //
+  // parse unary nodes:  : object son
+  else if (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_colon)
+    {
+      int nodlin = tok.tok_line;
+      int nodcol = tok.tok_col;
+      bool gotconnobj = false;
+      _.connobj =               //
+        parsergetobject_BM (pars, (struct stackframe_stBM *) &_,        //
+                            depth + 1, &gotconnobj);
+      if (!gotconnobj)
+        parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,      //
+                              "missing connective object of node after :");
+      bool gotson = false;
+      _.sonval =                //
+        parsergetvalue_BM (pars, (struct stackframe_stBM *) &_, //
+                           depth + 1, &gotson);
+      if (!gotson)
+        parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,      //
+                              "missing unary son of node after : %s",
+                              objectdbg_BM (_.connobj));
+      if (!nobuild)
+        _.resval = (value_tyBM) makenode_BM (_.connobj, 1, &_.sonval);
+      *pgotval = true;
+      return _.resval;
+    }
+  //
   // parse read-macro expansion: ^ object ( arguments ... )
   else if (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_caret)
     {
@@ -2072,18 +2098,6 @@ parsergetvalue_BM (struct parser_stBM *pars,
       _.resval =
         parsergetunary_BM (pars, (struct stackframe_stBM *) &_, lineno,
                            colpos, depth + 1, BMP_equal, &gotunary);
-      *pgotval = gotunary;
-      return (objectval_tyBM *) _.resval;
-    }
-  /// parse  : <val>
-  else if (tok.tok_kind == plex_DELIM
-           && tok.tok_delim == delim_colon
-           && parsops && parsops->parsop_accept_unary_rout)
-    {
-      bool gotunary = false;
-      _.resval =
-        parsergetunary_BM (pars, (struct stackframe_stBM *) &_, lineno,
-                           colpos, depth + 1, BMP_colon, &gotunary);
       *pgotval = gotunary;
       return (objectval_tyBM *) _.resval;
     }
