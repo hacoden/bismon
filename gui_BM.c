@@ -3991,9 +3991,10 @@ tabautocomplete_gui_cmd_BM (void)
           int comlen = 0;
           for (int ix = 0; firstobname[ix] && lastobname[ix]; ix++)
             if (firstobname[ix] != lastobname[ix])
-              break;
-            else
-              comlen = ix;
+              {
+                comlen = ix;
+                break;
+              };
           if (comlen > 3)
             {
               complcommonprefix_BM = strndup (firstobname, comlen);
