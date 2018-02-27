@@ -535,7 +535,7 @@ rungui_BM (bool newgui, int nbjobs)
                 nbjobs);
   gtk_main ();
   DBGPRINTF_BM
-    ("rungui %s nbjobs %d before stopagendawork tid#%ld elapsed %.3f s",
+    ("rungui %s nbjobs %d after gtkmain before stopagendawork tid#%ld elapsed %.3f s",
      newgui ? "new" : "old", nbjobs, (long) gettid_BM (), elapsedtime_BM ());
   stop_agenda_work_threads_BM ();
   DBGPRINTF_BM ("rungui %s nbjobs %d after stopagendawork elapsed %.3f s",
