@@ -105,6 +105,7 @@ const seqobval_tyBM *complseqcmd_BM;
 /// begin and end offset for completion replacement
 int compbegoffcmd_BM, compendoffcmd_BM;
 char *complcommonprefix_BM;
+bool complbyid_BM;
 
 // browse the named value
 static void browse_named_value_gui_BM (const stringval_tyBM * namev,
@@ -3778,7 +3779,7 @@ tabautocomplete_gui_cmd_BM (void)
   if (isdigit (begname[0]))
     goto failure;
   const setval_tyBM *complsetv = NULL;
-  bool gotid = false;
+  complbyid_BM = false;
   if (endname >= begname + 3 && begname[0] == '_'
       && isdigit (begname[1]) && isalnum (begname[2])
       && endname < begname + 31)
@@ -3786,7 +3787,7 @@ tabautocomplete_gui_cmd_BM (void)
       char widbuf[32];
       memset (widbuf, 0, sizeof (widbuf));
       memcpy (widbuf, begname, endname - begname);
-      gotid = true;
+      complbyid_BM = true;
       DBGPRINTF_BM ("tabautocompletecmd_BM widbuf=%s", widbuf);
       complsetv = setobjectsofidprefixed_BM (widbuf);
     }
@@ -3794,7 +3795,7 @@ tabautocomplete_gui_cmd_BM (void)
     {
       char tinyprefix[40];
       memset (tinyprefix, 0, sizeof (tinyprefix));
-      gotid = false;
+      complbyid_BM = false;
       char *prefix = tinyprefix;
       if (endname < begname + sizeof (tinyprefix) - 1)
         strncpy (tinyprefix, begname, endname - begname);
@@ -3814,12 +3815,13 @@ tabautocomplete_gui_cmd_BM (void)
     goto failure;
   unsigned nbcompl = setcardinal_BM (complsetv);
   DBGPRINTF_BM
-    ("tabautocompletecmd nbcompl=%d endname@%p curstr@%p begname@%p: '%s' gotid %s",
-     nbcompl, endname, curstr, begname, begname, gotid ? "true" : "false");
+    ("tabautocompletecmd nbcompl=%d endname@%p curstr@%p begname@%p: '%s' complbyid %s",
+     nbcompl, endname, curstr, begname, begname,
+     complbyid_BM ? "true" : "false");
   for (int cix = 0; cix < (int) nbcompl; cix++)
     {
       const objectval_tyBM *curobcomp = setelemnth_BM (complsetv, cix);
-      if (gotid)
+      if (complbyid_BM)
         {
           char cidbuf[32];
           memset (cidbuf, 0, sizeof (cidbuf));
@@ -3840,7 +3842,7 @@ tabautocomplete_gui_cmd_BM (void)
       const char *complword = NULL;
       const objectval_tyBM *obcomp = setelemnth_BM (complsetv, 0);
       ASSERT_BM (isobject_BM ((const value_tyBM) obcomp));
-      if (gotid)
+      if (complbyid_BM)
         {
           idtocbuf32_BM (objid_BM (obcomp), cidbuf);
           complword = cidbuf;
@@ -3868,7 +3870,7 @@ tabautocomplete_gui_cmd_BM (void)
       compbegoffcmd_BM = gtk_text_iter_get_offset (&begwit);
       compendoffcmd_BM = gtk_text_iter_get_offset (&endwit);
       unsigned gotwidth = endname - begname;
-      if (gotid)
+      if (complbyid_BM)
         {                       /* complete by id */
           for (unsigned ix = 0; ix < nbcompl; ix++)
             {
@@ -4003,7 +4005,6 @@ tabautocomplete_gui_cmd_BM (void)
       g_signal_connect (complmenu, "deactivate",
                         G_CALLBACK (stopcompletionmenucmd_BM),
                         "*Deactivated*");
-#warning we probably should pass a copy of the arr to keyrelcompletionmenucmd_cbBM
       g_signal_connect (complmenu, "key-release-event",
                         G_CALLBACK (keyrelcompletionmenucmd_cbBM), NULL);
       gtk_widget_show_all (complmenu);
@@ -4136,11 +4137,26 @@ keyrelcompletionmenucmd_cbBM (GtkWidget * w, GdkEventKey * evk, gpointer data)
     strcpy (keybuf, "KEY_Tab");
   else if (evk->keyval == GDK_KEY_Multi_key)
     strcpy (keybuf, "KEY_Multi_key");
+  else if (evk->keyval == GDK_KEY_space)
+    strcpy (keybuf, "KEY_space");
   else
     snprintf (keybuf, sizeof (keybuf), "key %d", evk->keyval);
   DBGPRINTF_BM ("keyrelcompletionmenucmd keyval %#x %s ctrl %s shift %s",
                 evk->keyval, keybuf, withctrl ? "yes" : "no",
                 withshift ? "yes" : "no");
+  if (evk->keyval >= GDK_KEY_F1 && evk->keyval <= GDK_KEY_F12)
+    {
+      int keyix = evk->keyval - GDK_KEY_F1;
+      if (complbyid_BM)
+        replacecompletionbyidcmd_BM (NULL, keyix);
+      else
+        replacecompletionbynamecmd_BM (NULL, keyix);
+      return TRUE;              // don't propagate the event
+    }
+  else if (evk->keyval == GDK_KEY_space)
+    {
+#warning should replace completion by its complcommonprefix_BM
+    }
   return FALSE;                 /* propagate the event */
 }                               /* end keyrelcompletionmenucmd_cbBM */
 
