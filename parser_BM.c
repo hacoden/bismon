@@ -2077,7 +2077,7 @@ parsergetvalue_BM (struct parser_stBM *pars,
     }
   /// parse  : <val>
   else if (tok.tok_kind == plex_DELIM
-           && tok.tok_delim == delim_equal
+           && tok.tok_delim == delim_colon
            && parsops && parsops->parsop_accept_unary_rout)
     {
       bool gotunary = false;
