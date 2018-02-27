@@ -23,40 +23,57 @@ ROUTINEOBJNAME_BM (_23ViGouPnAg_15P5mpG9x3d)    //
                  value_tyBM curval;);
   _.objbrows = (const objectval_tyBM *) arg1;
   int depth = getint_BM (arg2);
+  char objbroid[32];
+  memset (objbroid, 0, sizeof (objbroid));
+  idtocbuf32_BM (objid_BM (_.objbrows), objbroid);
+  char *objbroname = findobjectname_BM (_.objbrows);
+  gtk_text_buffer_insert_with_tags (brobuf, &browserit_BM,
+                                    "|", -1, miscomm_brotag_BM, NULL);
+  if (objbroname)
+    {
+      gtk_text_buffer_insert_with_tags (brobuf, &browserit_BM,
+                                        objbroname, -1, objname_brotag_BM,
+                                        miscomm_brotag_BM, NULL);
+      gtk_text_buffer_insert_with_tags (brobuf, &browserit_BM, " = ", -1,
+                                        miscomm_brotag_BM, NULL);
+    }
+  gtk_text_buffer_insert_with_tags (brobuf, &browserit_BM,
+                                    objbroid, -1, objid_brotag_BM,
+                                    objrefcomm_brotag_BM, NULL);
+  gtk_text_buffer_insert_with_tags (brobuf, &browserit_BM, "\n ", -1,
+                                    miscomm_brotag_BM, NULL);
   ///
   //// show hi&lo id and hash
-  {
-    Dl_info di = { };
-    if (_.objbrows->ob_rout
-        && dladdr (_.objbrows->ob_rout, &di) && di.dli_fname && di.dli_sname)
-      {
-        char *commbuf = NULL;
-        asprintf (&commbuf,
-                  "|id:%lld,%lld; h:%d\n ... µ%s;%s @%p|",
-                  (long long) _.objbrows->ob_id.id_hi,
-                  (long long) _.objbrows->ob_id.id_lo,
-                  objecthash_BM (_.objbrows),
-                  di.dli_fname, di.dli_sname, (void *) _.objbrows->ob_rout);
-        if (commbuf)
-          gtk_text_buffer_insert_with_tags (brobuf, &browserit_BM,
-                                            commbuf, -1, miscomm_brotag_BM,
-                                            NULL);
-        free (commbuf), commbuf = NULL;
-      }
-    else
-      {
-        char idcomm[128];
-        memset (idcomm, 0, sizeof (idcomm));
-        snprintf (idcomm, sizeof (idcomm), "|id:%lld,%lld; h:%d|",
-                  (long long) _.objbrows->ob_id.id_hi,
-                  (long long) _.objbrows->ob_id.id_lo,
-                  objecthash_BM (_.objbrows));
-        gtk_text_buffer_insert_with_tags (brobuf, &browserit_BM,
-                                          idcomm, -1, miscomm_brotag_BM,
-                                          NULL);
-      }
-    gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
-  }
+  Dl_info di = { };
+  if (_.objbrows->ob_rout
+      && dladdr (_.objbrows->ob_rout, &di) && di.dli_fname && di.dli_sname)
+    {
+      char *commbuf = NULL;
+      asprintf (&commbuf,
+                "id:%lld,%lld; h:%d\n ... µ%s;%s @%p|",
+                (long long) _.objbrows->ob_id.id_hi,
+                (long long) _.objbrows->ob_id.id_lo,
+                objecthash_BM (_.objbrows),
+                di.dli_fname, di.dli_sname, (void *) _.objbrows->ob_rout);
+      if (!commbuf)
+        FATAL_BM ("asprintf failure in browse_in_object]object");
+
+      gtk_text_buffer_insert_with_tags (brobuf, &browserit_BM,
+                                        commbuf, -1, miscomm_brotag_BM, NULL);
+      free (commbuf), commbuf = NULL;
+    }
+  else
+    {
+      char idcomm[128];
+      memset (idcomm, 0, sizeof (idcomm));
+      snprintf (idcomm, sizeof (idcomm), "id:%lld,%lld; h:%d|",
+                (long long) _.objbrows->ob_id.id_hi,
+                (long long) _.objbrows->ob_id.id_lo,
+                objecthash_BM (_.objbrows));
+      gtk_text_buffer_insert_with_tags (brobuf, &browserit_BM,
+                                        idcomm, -1, miscomm_brotag_BM, NULL);
+    }
+  gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
   ///
   //// show mtime & space
   {
