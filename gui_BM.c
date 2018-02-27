@@ -3701,6 +3701,7 @@ timeoutrestoreopacitycmd_BM (gpointer data __attribute__ ((unused)))
 
 static void replacecompletionbyidcmd_BM (GtkMenuItem * mit, gpointer data);
 static void replacecompletionbynamecmd_BM (GtkMenuItem * mit, gpointer data);
+static void replacecompletionbyprefixcmd_BM (void);
 static void stopcompletionmenucmd_BM (GtkMenuItem * mit, gpointer data);
 static gboolean keyrelcompletionmenucmd_cbBM (GtkWidget * w, GdkEventKey * ev,
                                               gpointer data);
@@ -3923,8 +3924,9 @@ tabautocomplete_gui_cmd_BM (void)
             if (strlen (commoncidbuf) > 3)
               {
                 complcommonprefix_BM = strdup (commoncidbuf);
-                DBGPRINTF_BM ("complcommonprefix_BM=%s byid",
-                              complcommonprefix_BM);
+                DBGPRINTF_BM
+                  ("tabautocompletecmd complcommonprefix_BM=%s byid",
+                   complcommonprefix_BM);
               }
           }
         }
@@ -3983,8 +3985,9 @@ tabautocomplete_gui_cmd_BM (void)
           const objectval_tyBM *lastnamedob = arr[nbcompl - 1];
           const char *firstobname = findobjectname_BM (firstnamedob);
           const char *lastobname = findobjectname_BM (lastnamedob);
-          DBGPRINTF_BM ("firstobname=%s lastobname=%s nbcompl=%d",
-                        firstobname, lastobname, nbcompl);
+          DBGPRINTF_BM
+            ("tabautocompletecmd firstobname=%s lastobname=%s nbcompl=%d",
+             firstobname, lastobname, nbcompl);
           int comlen = 0;
           for (int ix = 0; firstobname[ix] && lastobname[ix]; ix++)
             if (firstobname[ix] != lastobname[ix])
@@ -3994,22 +3997,30 @@ tabautocomplete_gui_cmd_BM (void)
           if (comlen > 3)
             {
               complcommonprefix_BM = strndup (firstobname, comlen);
-              DBGPRINTF_BM ("complcommonprefix_BM=%s byname",
-                            complcommonprefix_BM);
+              DBGPRINTF_BM
+                ("tabautocompletecmd complcommonprefix_BM=%s byname",
+                 complcommonprefix_BM);
             };
           if (arr != tinyarr)
             free (arr), arr = NULL;
         }
-      g_signal_connect (complmenu, "cancel",
-                        G_CALLBACK (stopcompletionmenucmd_BM), "*Cancelled*");
-      g_signal_connect (complmenu, "deactivate",
-                        G_CALLBACK (stopcompletionmenucmd_BM),
-                        "*Deactivated*");
+      gulong cancelhdlid = g_signal_connect (complmenu, "cancel",
+                                             G_CALLBACK
+                                             (stopcompletionmenucmd_BM),
+                                             "*Cancelled*");
+      gulong deacthdlid = g_signal_connect (complmenu, "deactivate",
+                                            G_CALLBACK
+                                            (stopcompletionmenucmd_BM),
+                                            "*Deactivated*");
       g_signal_connect (complmenu, "key-release-event",
                         G_CALLBACK (keyrelcompletionmenucmd_cbBM), NULL);
       gtk_widget_show_all (complmenu);
       gtk_menu_popup_at_pointer (GTK_MENU (complmenu), NULL);
+      DBGPRINTF_BM ("tabautocompletecmd before gtk_main");
       gtk_main ();
+      DBGPRINTF_BM ("tabautocompletecmd after gtk_main");
+      g_signal_handler_disconnect (complmenu, cancelhdlid);
+      g_signal_handler_disconnect (complmenu, deacthdlid);
       gtk_widget_destroy (complmenu);
       complseqcmd_BM = NULL;
       compbegoffcmd_BM = -1;
@@ -4017,8 +4028,10 @@ tabautocomplete_gui_cmd_BM (void)
       free (complcommonprefix_BM), complcommonprefix_BM = NULL;
     }
   free ((char *) curlin);
+  DBGPRINTF_BM ("tabautocompletecmd end");
   return;
 failure:
+  DBGPRINTF_BM ("tabautocompletecmd failure");
   // fail completion by beeping and blinking the commandview_BM
   {
     GdkWindow *dwin = gtk_widget_get_parent_window (commandview_BM);
@@ -4084,6 +4097,15 @@ replacecompletionbynamecmd_BM (GtkMenuItem * mit
 }                               /* end replacecompletionbynamecmd_BM */
 
 void
+replacecompletionbyprefixcmd_BM (void)
+{
+  DBGPRINTF_BM ("replacecompletionbyprefixcmd_BM complcommonprefix=%s",
+                complcommonprefix_BM);
+#warning replacecompletionbyprefixcmd_BM incomplete
+}                               /* end replacecompletionbyprefixcmd_BM */
+
+
+void
 stopcompletionmenucmd_BM (GtkMenuItem * mit
                           __attribute__ ((unused)),
                           gpointer data __attribute__ ((unused)))
@@ -4105,6 +4127,8 @@ stopcompletionmenucmd_BM (GtkMenuItem * mit
                               -1);
       gtk_text_buffer_place_cursor (commandbuf_BM, &begwit);
     }
+  else
+    DBGPRINTF_BM ("stopcompletionmenucmd without complcommonprefix_BM");
   gtk_main_quit ();
 }                               /* end stopcompletionmenucmd_BM */
 
@@ -4155,11 +4179,15 @@ keyrelcompletionmenucmd_cbBM (GtkWidget * w, GdkEventKey * evk, gpointer data)
     }
   else if (evk->keyval == GDK_KEY_space)
     {
-#warning should replace completion by its complcommonprefix_BM
+      replacecompletionbyprefixcmd_BM ();
+      return TRUE;              // don't propagate the event
     }
   return FALSE;                 /* propagate the event */
 }                               /* end keyrelcompletionmenucmd_cbBM */
 
+
+
+////////////////
 
 /// called by run_then_keep_command_BM & run_then_erase_command_BM
 void
