@@ -237,7 +237,8 @@
                 <property name="name">miscomm_brotag</property>
                 <property name="font">Arial Regular</property>
                 <property name="scale">0.90</property>
-                <property name="foreground">cadetblue</property>
+                <property name="foreground">cadetblue4</property>
+                <property name="background">lightivory</property>
             </object>
         </child>
       <!-- epilogue_brotag for epilogue -->
