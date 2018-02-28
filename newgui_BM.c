@@ -1505,6 +1505,19 @@ parsobjexp_newguicmd_BM (struct parser_stBM
               (pars,
                (struct stackframe_stBM *) &_,
                tok.tok_line, tok.tok_col, "missing value after !: in object");
+          if (!nobuild)
+            {
+              objlock_BM (_.obj);
+              objputattr_BM (_.obj, _.obattr, _.val);
+              log_begin_message_BM ();
+              log_puts_message_BM ("put into to ");
+              log_object_message_BM (_.obj);
+              log_puts_message_BM (" attribute ");
+              log_object_message_BM (_.obattr);
+              log_end_message_BM ();
+              objtouchnow_BM (_.obj);
+              objunlock_BM (_.obj);
+            }
         }
       //
 #warning parsobjexp_newguicmd_BM incomplete, should handle !: etc...
