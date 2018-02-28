@@ -288,8 +288,9 @@ load_first_pass_BM (struct loader_stBM *ld, int ix)
                   curloadedobj->ob_rout = ad;
                   curloadedobj->ob_sig = BMP_function_sig;
                   nbrout++;
-                  printf ("forced %d-th routine %s of function_sig for %s in file %s\n",
-                          nbrout, symbuf, curldidbuf32, curldpath);
+                  printf
+                    ("forced %d-th routine %s of function_sig for %s in file %s\n",
+                     nbrout, symbuf, curldidbuf32, curldpath);
                 }
             }
           curloadedobj = NULL;
