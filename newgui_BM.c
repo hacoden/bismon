@@ -1304,20 +1304,180 @@ parsobjexp_newguicmd_BM (struct parser_stBM
                  /*descr: */ NULL,
                  objectval_tyBM * obj;
                  const stringval_tyBM * namev; objectval_tyBM * oldnamedob;
-                 value_tyBM val;);
+                 value_tyBM val;
+                 value_tyBM comp;);
   ASSERT_BM (isparser_BM (pars));
   parserskipspaces_BM (pars, (struct stackframe_stBM *) &_);
   unsigned oblineno = parserlineno_BM (pars);
   unsigned obcolpos = parsercolpos_BM (pars);
-  parsererrorprintf_BM (pars,
-                        (struct
-                         stackframe_stBM *)
-                        &_, oblineno,
-                        obcolpos,
-                        "unimplemented parsobjexp_newguicmd for $(...)");
-#warning parsobjexp_newguicmd_BM unimplemented
+  bool gotobj = false;
+  struct parstoken_stBM tok =
+    parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
+  // * <name> to create a new (userE) named object
+  // !* <name> to create a new (global) named object
+  if (tok.tok_kind == plex_DELIM
+      && (tok.tok_delim == delim_exclamstar || tok.tok_delim == delim_star))
+    {
+      bool isglobal = (tok.tok_delim == delim_exclamstar);
+      tok = parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
+      if (tok.tok_kind == plex_CNAME)
+        {
+          _.namev = tok.tok_cname;
+        }
+      else if (tok.tok_kind == plex_NAMEDOBJ)
+        {
+          _.oldnamedob = tok.tok_namedobj;
+        }
+      else
+        parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, oblineno,
+                              obcolpos,
+                              "expecting name after * or !* in $[...]");
+      gotobj = true;
+      if (!nobuild)
+        {
+          if (_.namev)
+            {
+              _.obj = makeobj_BM ();
+              objtouchnow_BM (_.obj);
+              objputspacenum_BM (_.obj, isglobal ? GlobalSp_BM : UserEsp_BM);
+              registername_BM (_.obj, bytstring_BM (_.namev));
+              log_begin_message_BM ();
+              log_puts_message_BM (isglobal
+                                   ? "created global named object "
+                                   : "created userE named object ");
+              log_object_message_BM (_.obj);
+              log_end_message_BM ();
+            }
+          else if (_.oldnamedob)
+            {
+              _.obj = _.oldnamedob;
+              log_begin_message_BM ();
+              log_puts_message_BM ("reusing named object ");
+              log_object_message_BM (_.obj);
+              log_end_message_BM ();
+            }
+          else
+            parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
+                                  oblineno, obcolpos,
+                                  "expecting some name after * or !* in $[...]");
+        }
+    }
+  // : to create a new transient anonymous object
+  else if (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_colon)
+    {
+      gotobj = true;
+      if (!nobuild)
+        {
+          _.obj = makeobj_BM ();
+          objtouchnow_BM (_.obj);
+          objputspacenum_BM (_.obj, TransientSp_BM);
+          log_begin_message_BM ();
+          log_puts_message_BM ("created transient anonymous object ");
+          log_object_message_BM (_.obj);
+          log_end_message_BM ();
+        }
+    }
+  // ~ to create a new global anonymous object
+  else if (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_tilde)
+    {
+      gotobj = true;
+      if (!nobuild)
+        {
+          _.obj = makeobj_BM ();
+          objtouchnow_BM (_.obj);
+          objputspacenum_BM (_.obj, GlobalSp_BM);
+          log_begin_message_BM ();
+          log_puts_message_BM ("created global anonymous object ");
+          log_object_message_BM (_.obj);
+          log_end_message_BM ();
+        }
+    }
+  // % to create a new (userE) anonymous object
+  else if (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_percent)
+    {
+      gotobj = true;
+      if (!nobuild)
+        {
+          _.obj = makeobj_BM ();
+          objtouchnow_BM (_.obj);
+          objputspacenum_BM (_.obj, UserEsp_BM);
+          log_begin_message_BM ();
+          log_puts_message_BM ("created userE anonymous object ");
+          log_object_message_BM (_.obj);
+          log_end_message_BM ();
+        }
+    }
+  else if (parsertokenstartobject_BM (pars, tok))
+    {
+      parserseek_BM (pars, oblineno, obcolpos);
+      gotobj = false;
+      _.obj =                   //
+        parsergetobject_BM (pars,
+                            (struct stackframe_stBM *) &_,
+                            depth + 1, &gotobj);
+      if (!gotobj)
+        parsererrorprintf_BM (pars,
+                              (struct stackframe_stBM *) &_,
+                              oblineno, obcolpos, "bad object inside $[...]");
+    }
+  else
+    parsererrorprintf_BM (pars,
+                          (struct stackframe_stBM *) &_,
+                          oblineno, obcolpos, "bad object start in $[...]");
+  DBGPRINTF_BM ("parsobjexp_newguicmd L%dC%d obj %s", lineno, colpos,
+                objectdbg_BM (_.obj));
+  for (;;)
+    {
+      tok = parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
+      //
+      // unterminated object
+      if (tok.tok_kind == plex__NONE)
+        parsererrorprintf_BM
+          (pars,
+           (struct stackframe_stBM *) &_,
+           oblineno, obcolpos, "unterminated object start in $[...]");
+      //
+      // end of objectexpr
+      else if (tok.tok_kind == plex_DELIM
+               && tok.tok_delim == delim_rightbracket)
+        {
+          LOCALRETURN_BM (_.obj);
+        }
+      //
+      // !& <comp>   # append a component to target object
+      else if (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_exclamand)
+        {
+          if (!nobuild && !isobject_BM (_.obj))
+            parsererrorprintf_BM
+              (pars,
+               (struct stackframe_stBM *) &_,
+               tok.tok_line, tok.tok_col, "missing target for !& in object");
+          bool gotval = false;
+          _.comp = parsergetvalue_BM (pars,     //
+                                      (struct stackframe_stBM *) &_,    //
+                                      depth + 1, &gotval);
+          if (!gotval)
+            parsererrorprintf_BM
+              (pars,
+               (struct stackframe_stBM *) &_,
+               tok.tok_line, tok.tok_col, "missing value after !& in object");
+          if (!nobuild)
+            {
+              objappendcomp_BM (_.obj, _.comp);
+              log_begin_message_BM ();
+              log_puts_message_BM ("appended to ");
+              log_object_message_BM (_.obj);
+              log_puts_message_BM (".");
+              log_end_message_BM ();
+              objtouchnow_BM (_.obj);
+            }
+        }                       // end !&
+      //
+#warning parsobjexp_newguicmd_BM incomplete, should handle !: etc...
+    };
   return NULL;
 }                               /* end parsobjexp_newguicmd_BM */
+
 
 
 static int
