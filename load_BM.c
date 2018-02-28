@@ -272,6 +272,26 @@ load_first_pass_BM (struct loader_stBM *ld, int ix)
           else
             FATAL_BM ("invalid end-of-object line %s in file %s:%d",
                       linbuf, curldpath, lincnt);
+          // load a function_sig if it exists
+          if (curloadedobj && !curloadedobj->ob_rout)
+            {
+              char curldidbuf32[32] = "";
+              idtocbuf32_BM (curloadedobj->ob_id, curldidbuf32);
+              char symbuf[48];
+              memset (symbuf, 0, sizeof (symbuf));
+              snprintf (symbuf, sizeof (symbuf),        //
+                        ROUTINEOBJPREFIX_BM "%s" ROUTINESUFFIX_BM,
+                        curldidbuf32);
+              void *ad = dlsym (dlprog_BM, symbuf);
+              if (ad)
+                {
+                  curloadedobj->ob_rout = ad;
+                  curloadedobj->ob_sig = BMP_function_sig;
+                  nbrout++;
+                  printf ("forced %d-th routine %s of function_sig for %s in file %s\n",
+                          nbrout, symbuf, curldidbuf32, curldpath);
+                }
+            }
           curloadedobj = NULL;
         }
       //
