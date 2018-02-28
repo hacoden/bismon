@@ -1302,7 +1302,7 @@ parsobjexp_newguicmd_BM (struct parser_stBM
   bool nobuild = parsops && parsops->parsop_nobuild;
   LOCALFRAME_BM ( /*prev: */ stkf,
                  /*descr: */ NULL,
-                 objectval_tyBM * obj;
+                 objectval_tyBM * obj; objectval_tyBM * obattr;
                  const stringval_tyBM * namev; objectval_tyBM * oldnamedob;
                  value_tyBM val;
                  value_tyBM comp;);
@@ -1463,6 +1463,7 @@ parsobjexp_newguicmd_BM (struct parser_stBM
                tok.tok_line, tok.tok_col, "missing value after !& in object");
           if (!nobuild)
             {
+              objlock_BM (_.obj);
               objappendcomp_BM (_.obj, _.comp);
               log_begin_message_BM ();
               log_puts_message_BM ("appended to ");
@@ -1470,8 +1471,41 @@ parsobjexp_newguicmd_BM (struct parser_stBM
               log_puts_message_BM (".");
               log_end_message_BM ();
               objtouchnow_BM (_.obj);
+              objunlock_BM (_.obj);
             }
         }                       // end !&
+      //
+      // !: <obattr> <val>  # put an attribute in target object
+      else if (tok.tok_kind == plex_DELIM
+               && tok.tok_delim == delim_exclamcolon)
+        {
+          if (!nobuild && !isobject_BM (_.obj))
+            parsererrorprintf_BM
+              (pars,
+               (struct stackframe_stBM *) &_,
+               tok.tok_line, tok.tok_col, "missing target for !: in object");
+          bool gotobattr = false;
+          _.obattr =
+            parsergetobject_BM (pars,
+                                (struct stackframe_stBM *) &_, depth + 1,
+                                &gotobattr);
+          if (!gotobattr)
+            parsererrorprintf_BM
+              (pars,
+               (struct stackframe_stBM *) &_,
+               tok.tok_line, tok.tok_col,
+               "missing attribute after !: in object");
+          bool gotval = false;
+          _.val =
+            parsergetvalue_BM (pars,
+                               (struct stackframe_stBM *) &_, depth + 1,
+                               &gotval);
+          if (!gotval)
+            parsererrorprintf_BM
+              (pars,
+               (struct stackframe_stBM *) &_,
+               tok.tok_line, tok.tok_col, "missing value after !: in object");
+        }
       //
 #warning parsobjexp_newguicmd_BM incomplete, should handle !: etc...
     };
