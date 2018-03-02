@@ -4,7 +4,7 @@
     BM_makeconst: a program to scan and collect BMK_<digit> constant names
     for example BMK_0eMGYofuNVh_8ZP2mXdhtHO is the 'in' predefined constant
 
-    Copyright (C) 2017 Basile Starynkevitch
+    Copyright (C) 2017 - 2018 Basile Starynkevitch
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -55,11 +55,16 @@ int parse_cfile(const char*path, std::set<std::string>& bmconstset, bool verbose
           pos=line.find("BMK_", pos);
           if (pos<0)
             break;
-          /// ignore BMK_ if following a letter, digit or undersocre
-          if (pos>0 && (isalnum(line[pos-1]) || line[pos-1]=='_')) continue;
           size_t startpos = pos+4;
-          /// ignore BMK_ not followed by digit
-          if (startpos >= linesize || !isdigit(line[startpos])) continue;
+          /// ignore BMK_ if following a letter, digit or underscore,
+          /// or if not followed by digit
+          if (pos>0 && ((isalnum(line[pos-1]) || line[pos-1]=='_')
+                        || (startpos >= linesize || !isdigit(line[startpos]))))
+            {
+              while (pos>0 && pos<(ssize_t)linesize && (isalnum(line[pos])||line[pos]=='_'))
+                pos++;
+              continue;
+            };
           int badpos = -1;
           int ix = -1;
           const char*badmsg = nullptr;
