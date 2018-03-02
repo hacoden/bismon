@@ -1202,4 +1202,31 @@ garbage_collect_if_wanted_BM (struct stackframe_stBM *stkf)
     full_garbage_collection_BM (stkf);
 }                               /* end garbage_collect_if_wanted_BM */
 
+
+////////////////
+value_tyBM
+sendvar_BM (const value_tyBM recv, const objectval_tyBM * obselector, struct stackframe_stBM *stkf, unsigned nbargs,    // no more than MAXAPPLYARGS_BM-1
+            const value_tyBM * argarr)
+{
+  extern value_tyBM sendtinyvar_BM (const value_tyBM recv,
+                                    const objectval_tyBM * obselector,
+                                    struct stackframe_stBM *stkf,
+                                    unsigned nbargs,
+                                    const value_tyBM * argarr);
+  extern value_tyBM sendmanyvar_BM (const value_tyBM recv,
+                                    const objectval_tyBM * obselector,
+                                    struct stackframe_stBM *stkf,
+                                    unsigned nbargs,
+                                    const value_tyBM * argarr);
+
+  if (!isobject_BM ((value_tyBM) obselector))
+    return NULL;
+  if (nbargs < TINYSIZE_BM)
+    return sendtinyvar_BM (recv, obselector, stkf, nbargs, argarr);
+  else if (nbargs < MAXAPPLYARGS_BM)
+    return sendmanyvar_BM (recv, obselector, stkf, nbargs, argarr);
+  else
+    FATAL_BM ("too many arguments %d for sendmanyvar_BM %s",
+              nbargs, objectdbg_BM (obselector));
+}                               /* end sendvar_BM */
 #endif /*INLINE_BM_INCLUDED */

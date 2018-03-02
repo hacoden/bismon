@@ -1208,6 +1208,49 @@ send8_BM (const value_tyBM recv, const objectval_tyBM * obselector,
 }                               /* end send8_BM */
 
 
+value_tyBM
+sendtinyvar_BM (const value_tyBM recv,
+                const objectval_tyBM * obselector,
+                struct stackframe_stBM * stkf,
+                unsigned nbargs, const value_tyBM * argarr)
+{
+  value_tyBM locargs[TINYSIZE_BM + 1];
+  if (!isobject_BM ((const value_tyBM) obselector))
+    return NULL;
+  const closure_tyBM *mclos = valfindmethod_BM (recv, obselector);
+  if (!mclos)
+    return NULL;
+  ASSERT_BM (isclosure_BM ((const value_tyBM) mclos));
+  ASSERT_BM (nbargs <= TINYSIZE_BM);
+  memset (locargs, 0, (nbargs + 1) * sizeof (value_tyBM));
+  locargs[0] = recv;
+  if (nbargs > 0)
+    memcpy (locargs + 1, argarr, nbargs * sizeof (value_tyBM));
+  return applyvar_BM (mclos, stkf, nbargs + 1, locargs);
+}                               /* end sendtinyvar_BM */
+
+value_tyBM
+sendmanyvar_BM (const value_tyBM recv,
+                const objectval_tyBM * obselector,
+                struct stackframe_stBM * stkf,
+                unsigned nbargs, const value_tyBM * argarr)
+{
+  value_tyBM locargs[MAXAPPLYARGS_BM];
+  if (!isobject_BM ((const value_tyBM) obselector))
+    return NULL;
+  const closure_tyBM *mclos = valfindmethod_BM (recv, obselector);
+  if (!mclos)
+    return NULL;
+  ASSERT_BM (isclosure_BM ((const value_tyBM) mclos));
+  ASSERT_BM (nbargs < MAXAPPLYARGS_BM);
+  memset (locargs, 0, (nbargs + 1) * sizeof (value_tyBM));
+  locargs[0] = recv;
+  if (nbargs > 0)
+    memcpy (locargs + 1, argarr, nbargs * sizeof (value_tyBM));
+  return applyvar_BM (mclos, stkf, nbargs + 1, locargs);
+}                               /* end sendmanyvar_BM */
+
+
 void
 run_agenda_tasklet_BM (objectval_tyBM * obtk, struct failurelockset_stBM *flh)
 {
