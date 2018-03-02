@@ -1478,9 +1478,8 @@ parsobjexp_newguicmd_BM (struct parser_stBM
                                  " const value_tyBM arg3, //\n"
                                  " const value_tyBM arg4, //\n"
                                  " const quasinode_tyBM* restargs_ __attribute__((unused)))\n"
-                                 "{\n" "  LOCALFRAME_BM (stkf, /*descr ");
-          log_object_message_BM (_.obj);
-          log_printf_message_BM ("::*/ BMK_%s,\n"
+                                 "{\n"
+                                 "  LOCALFRAME_BM (stkf, /*descr:*/ BMK%s,\n"
                                  "   value_tyBM resultv;\n" "  );\n",
                                  objidbuf);
           log_printf_message_BM ("#warning unimplemented ");
@@ -1501,6 +1500,8 @@ parsobjexp_newguicmd_BM (struct parser_stBM
             gtk_text_buffer_get_end_iter (logbuf_BM, &endit);
             gtk_text_buffer_apply_tag (logbuf_BM, code_logtag_BM,
                                        &begit, &endit);
+            gtk_text_iter_backward_char (&endit);
+            gtk_text_buffer_select_range (logbuf_BM, &begit, &endit);
           }
           log_puts_message_BM ("\n");
           if (!_.obj->ob_rout && !_.obj->ob_sig)
