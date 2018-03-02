@@ -1303,7 +1303,8 @@ parsobjexp_newguicmd_BM (struct parser_stBM
   bool nobuild = parsops && parsops->parsop_nobuild;
   LOCALFRAME_BM ( /*prev: */ stkf,
                  /*descr: */ NULL,
-                 objectval_tyBM * obj; objectval_tyBM * obattr;
+                 objectval_tyBM * obj;
+                 objectval_tyBM * obattr; objectval_tyBM * obclass;
                  objectval_tyBM * obsel; const stringval_tyBM * namev;
                  objectval_tyBM * oldnamedob; value_tyBM val; value_tyBM comp;
                  value_tyBM tinyargsarr[TINYARGSNUM_BM];);
@@ -1547,6 +1548,97 @@ parsobjexp_newguicmd_BM (struct parser_stBM
               log_end_message_BM ();
               objtouchnow_BM (_.obj);
               objunlock_BM (_.obj);
+            }
+        }
+      //
+      // !$ <obclass> # set the class of object
+      else if (tok.tok_kind == plex_DELIM
+               && tok.tok_delim == delim_exclamdollar)
+        {
+          bool gotclass = false;
+          _.obclass = parsergetobject_BM (pars, //
+                                          (struct stackframe_stBM *) &_,        //
+                                          depth + 1, &gotclass);
+          if (!gotclass)
+            parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno,
+                                  colpos, "missing class after !$");
+          if (!nobuild)
+            {
+              objectval_tyBM *k_basiclo_function =
+                BMK_2Ir1i8qnrA4_3jSkierlc5z;
+              objlock_BM (_.obj);
+              objputclass_BM (_.obj, _.obclass);
+              log_begin_message_BM ();
+              log_puts_message_BM ("put class ");
+              log_object_message_BM (_.obclass);
+              log_puts_message_BM (" in object ");
+              log_object_message_BM (_.obj);
+              log_puts_message_BM (".");
+              log_end_message_BM ();
+              objtouchnow_BM (_.obj);
+              objunlock_BM (_.obj);
+              if (_.obclass == k_basiclo_function)
+                {
+                  log_begin_message_BM ();
+                  log_puts_message_BM ("\n");
+                  gint codestartoff = 0;
+                  {
+                    GtkTextIter it = EMPTY_TEXT_ITER_BM;
+                    gtk_text_buffer_get_end_iter (logbuf_BM, &it);
+                    codestartoff = gtk_text_iter_get_offset (&it);
+                  }
+                  log_puts_message_BM ("\n");
+                  log_puts_message_BM ("// possible code for ");
+                  log_object_message_BM (_.obj);
+                  log_printf_message_BM ("\n\n"
+                                         "extern objrout_sigBM ROUTINEOBJNAME_BM (");
+                  log_object_message_BM (_.obj);
+                  log_printf_message_BM (");\n\n"
+                                         "value_tyBM\n"
+                                         "ROUTINEOBJNAME_BM (");
+                  log_object_message_BM (_.obj);
+                  log_printf_message_BM (")\n"
+                                         "(struct stackframe_stBM* stkf, //\n"
+                                         " const value_tyBM arg1, //\n"
+                                         " const value_tyBM arg2, //\n"
+                                         " const value_tyBM arg3, //\n"
+                                         " const value_tyBM arg4, //\n"
+                                         " const quasinode_tyBM* restargs __attribute__((unused)))\n"
+                                         "{\n"
+                                         "  LOCALFRAME_BM (stkf, /*descr ");
+                  log_object_message_BM (_.obj);
+                  log_printf_message_BM ("::*/ NULL,\n"
+                                         "   value_tyBM resultv;\n" "  );\n");
+                  log_printf_message_BM ("#warning unimplemented ");
+                  log_object_message_BM (_.obj);
+                  log_printf_message_BM (" routine\n");
+                  log_printf_message_BM
+                    ("  WEAKASSERT_BM(false && \"unimplemented ");
+                  log_object_message_BM (_.obj);
+                  log_printf_message_BM (" routine\");\n");
+                  log_printf_message_BM ("  LOCALRETURN_BM(_.resultv);\n");
+                  log_printf_message_BM ("} /* end routine ");
+                  log_object_message_BM (_.obj);
+                  log_printf_message_BM ("*/\n\n");
+                  {
+                    GtkTextIter begit = EMPTY_TEXT_ITER_BM;
+                    GtkTextIter endit = EMPTY_TEXT_ITER_BM;
+                    gtk_text_buffer_get_iter_at_offset (logbuf_BM, &begit,
+                                                        codestartoff);
+                    gtk_text_buffer_get_end_iter (logbuf_BM, &endit);
+                    gtk_text_buffer_apply_tag (logbuf_BM, code_logtag_BM,
+                                               &begit, &endit);
+                  }
+                  log_puts_message_BM ("\n");
+                  if (!_.obj->ob_rout && !_.obj->ob_sig)
+                    {
+                      _.obj->ob_sig = BMP_function_sig;
+                      _.obj->ob_rout = objrout_placeholder_BM;
+                      log_printf_message_BM ("** added placeholder for ");
+                      log_object_message_BM (_.obj);
+                    }
+                  log_end_message_BM ();
+                };
             }
         }
       //
