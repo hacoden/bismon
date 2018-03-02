@@ -1290,6 +1290,7 @@ parsvalexp_newguicmd_BM (struct parser_stBM
 }                               /* end parsvalexp_newguicmd_BM */
 
 
+#define TINYARGSNUM_BM 9
 // parse inside $[...]
 const objectval_tyBM *
 parsobjexp_newguicmd_BM (struct parser_stBM
@@ -1302,10 +1303,11 @@ parsobjexp_newguicmd_BM (struct parser_stBM
   bool nobuild = parsops && parsops->parsop_nobuild;
   LOCALFRAME_BM ( /*prev: */ stkf,
                  /*descr: */ NULL,
-                 objectval_tyBM * obj; objectval_tyBM * obattr;
-                 const stringval_tyBM * namev; objectval_tyBM * oldnamedob;
-                 value_tyBM val;
-                 value_tyBM comp;);
+                 objectval_tyBM * obj;
+                 objectval_tyBM * obattr; objectval_tyBM * obsel;
+                 const stringval_tyBM * namev;
+                 objectval_tyBM * oldnamedob; value_tyBM val; value_tyBM comp;
+                 value_tyBM tinyargsarr[TINYARGSNUM_BM];);
   ASSERT_BM (isparser_BM (pars));
   parserskipspaces_BM (pars, (struct stackframe_stBM *) &_);
   unsigned oblineno = parserlineno_BM (pars);
@@ -1548,6 +1550,84 @@ parsobjexp_newguicmd_BM (struct parser_stBM
               objunlock_BM (_.obj);
             }
         }
+      //
+      // !> <obselector> ( ...)  # send a side-effecting message
+      else if (tok.tok_kind == plex_DELIM
+               && tok.tok_delim == delim_exclamgreater)
+        {
+          bool gotobsel = false;
+          _.obsel =
+            parsergetobject_BM (pars,
+                                (struct stackframe_stBM *) &_, depth + 1,
+                                &gotobsel);
+          if (!gotobsel)
+            parsererrorprintf_BM
+              (pars,
+               (struct stackframe_stBM *) &_,
+               tok.tok_line, tok.tok_col,
+               "missing selector after !> in object");
+          tok = parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
+          if (tok.tok_kind != plex_DELIM || tok.tok_delim != delim_leftparen)
+            parsererrorprintf_BM
+              (pars,
+               (struct stackframe_stBM *) &_,
+               tok.tok_line, tok.tok_col,
+               "missing left paren after selector after !> in object");
+
+          bool gotson = false;
+          int nbsons = 0;
+          memset (_.tinyargsarr, 0, sizeof (_.tinyargsarr));
+          while ((gotson = false),      //
+                 (_.val =    //
+                  parsergetvalue_BM     //
+                  (pars,        //
+                   (struct stackframe_stBM *) &_,       //
+                   depth + 1, &gotson)),        //
+                 gotson)
+            {
+              if (nbsons < TINYARGSNUM_BM)
+                _.tinyargsarr[nbsons] = _.val;
+              else
+                parsererrorprintf_BM
+                  (pars,
+                   (struct stackframe_stBM *) &_,
+                   tok.tok_line, tok.tok_col,
+                   "too many %d arguments after selector after !> in object",
+                   nbsons);
+              nbsons++;
+	      _.val = NULL;
+            }
+          if (tok.tok_kind != plex_DELIM || tok.tok_delim != delim_rightparen)
+            parsererrorprintf_BM
+              (pars,
+               (struct stackframe_stBM *) &_,
+               tok.tok_line, tok.tok_col,
+               "missing right paren after selector after !> in object");
+#warning !> unimplemented inside $[...]
+          /**
+	  if (!nobuild) {
+              objlock_BM (_.obj);
+              objputattr_BM (_.obj, _.obattr, _.val);
+              log_begin_message_BM ();
+              log_puts_message_BM ("put into to ");
+              log_object_message_BM (_.obj);
+              log_puts_message_BM (" attribute ");
+              log_object_message_BM (_.obattr);
+              log_end_message_BM ();
+              objtouchnow_BM (_.obj);
+              objunlock_BM (_.obj);
+	  }
+	  **/
+        }                       // end !>
+      //
+      // error otherwise
+      else
+        parsererrorprintf_BM
+          (pars,
+           (struct stackframe_stBM *) &_,
+           tok.tok_line, tok.tok_col, "unexpected inside $[...] object");
+
+
       //
 #warning parsobjexp_newguicmd_BM incomplete, should handle !: etc...
     };
@@ -1867,15 +1947,10 @@ fill_nvx_thing_newgui_BM (struct
 
 
 void
-add_indexed_named_value_newgui_BM (const
-                                   stringval_tyBM
-                                   * namev,
-                                   const
-                                   value_tyBM
-                                   val,
-                                   int
-                                   browsdepth,
-                                   unsigned idx, struct stackframe_stBM *stkf)
+  add_indexed_named_value_newgui_BM
+  (const stringval_tyBM * namev,
+   const value_tyBM val,
+   int browsdepth, unsigned idx, struct stackframe_stBM *stkf)
 {
   LOCALFRAME_BM ( /*prev: */ stkf,
                  /*descr: */ NULL,
