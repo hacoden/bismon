@@ -1407,6 +1407,35 @@ parsobjexp_newguicmd_BM (struct parser_stBM
           log_end_message_BM ();
         }
     }
+  //
+  // ^ macro ( args ... ) converted to object
+  else if (tok.tok_kind == plex_DELIM && tok.tok_delim == delim_caret)
+    {
+      parserseek_BM (pars, oblineno, obcolpos);
+      bool gotval = false;
+      _.val =
+        parsergetvalue_BM (pars,
+                           (struct stackframe_stBM *) &_, depth + 1, &gotval);
+      if (!gotval)
+        parsererrorprintf_BM (pars,
+                              (struct stackframe_stBM *) &_,
+                              oblineno, obcolpos, "bad ^macro inside $[...]");
+      if (!nobuild && !isobject_BM (_.val))
+        parsererrorprintf_BM (pars,
+                              (struct stackframe_stBM *) &_,
+                              oblineno, obcolpos,
+                              "non-object ^macro inside $[...]");
+      if (!nobuild)
+        {
+          _.obj = objectcast_BM (_.val);
+          log_begin_message_BM ();
+          log_puts_message_BM ("macro created object ");
+          log_object_message_BM (_.obj);
+          log_end_message_BM ();
+        }
+    }
+  //
+  // objectstart
   else if (parsertokenstartobject_BM (pars, tok))
     {
       parserseek_BM (pars, oblineno, obcolpos);
