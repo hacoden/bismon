@@ -3525,14 +3525,14 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
           || (!objectisinstance_BM (_.curobj, k_basiclo_statement)
               && !objectisinstance_BM (_.curobj, k_basiclo_block)))
         {
-          char curobid32[32];
-          memset (curobid32, 0, sizeof (curobid32));
-          idtocbuf32_BM (objid_BM (_.curobj), curobid32);
-          parsererrorprintf_BM (pars,
-                                (struct stackframe_stBM *) &_, lineno,
-                                colpos,
-                                "bad arg #%d (%s) in when readmacro (not a basiclo_statement or basiclo_block)",
-                                ix, curobid32);
+          parsererrorprintf_BM
+            (pars,
+             (struct stackframe_stBM *) &_, lineno,
+             colpos,
+             "bad arg #%d (%s) in when readmacro (not a basiclo_statement or basiclo_block)",
+             ix,
+             debug_outstr_value_BM (_.curarg,
+                                    (struct stackframe_stBM *) &_, 0));
           LOCALRETURN_BM (NULL);
         };
       _.curarg = NULL;
