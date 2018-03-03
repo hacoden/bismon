@@ -1688,10 +1688,10 @@ parsergetvalue_BM (struct parser_stBM *pars,
               if (_.vecobj)
                 objlock_BM (_.vecobj);
               _.resval = (value_tyBM)
-                (nbcomp < TINYARGSNUM_BM)
-                ? makenode_BM (_.connobj, nbcomp, (_.tinyargsarr))
-                : makenode_BM (_.connobj, objnbcomps_BM (_.vecobj),
-                               (objcompdata_BM (_.vecobj)));
+                ((nbcomp < TINYARGSNUM_BM)
+                 ? makenode_BM (_.connobj, nbcomp, (_.tinyargsarr))
+                 : makenode_BM (_.connobj, objnbcomps_BM (_.vecobj),
+                                (objcompdata_BM (_.vecobj))));
               if (_.vecobj)
                 objunlock_BM (_.vecobj);
             }
