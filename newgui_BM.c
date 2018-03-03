@@ -1092,8 +1092,7 @@ parsecommandbuf_newgui_BM (struct
                                   (struct stackframe_stBM *) &_,
                                   cmdtok.tok_line,
                                   cmdtok.tok_col, "invalid command");
-        }
-      //start of object?
+        }                       //start of object?
       else if (parsertokenstartobject_BM (pars, tok))
         {
           parserseek_BM (pars, curlineno, curcolpos);
@@ -1114,6 +1113,8 @@ parsecommandbuf_newgui_BM (struct
                                   "no current object window to show object");
           if (!nobuild)
             {
+              DBGPRINTF_BM ("parsecommandbuf_newgui obj %s",
+                            objectdbg_BM (_.obj));
               if (!_.obj)
                 parsererrorprintf_BM (pars,
                                       (struct stackframe_stBM *) &_,
@@ -1168,6 +1169,12 @@ parsecommandbuf_newgui_BM (struct
             }
         }
       else if (tok.tok_kind == plex__NONE)
+        break;
+      else if (tok.tok_kind == plex_CNAME)
+        parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
+                              curlineno, curcolpos, "unknown name %s",
+                              bytstring_BM (tok.tok_cname));
+      else
         parsererrorprintf_BM (pars,
                               (struct stackframe_stBM *) &_,
                               curlineno, curcolpos, "invalid token");
@@ -2507,7 +2514,8 @@ parserror_newguicmd_BM (struct parser_stBM *pars,
          GTK_DIALOG_DESTROY_WITH_PARENT,
          GTK_MESSAGE_ERROR,
          GTK_BUTTONS_CLOSE,
-         "<b>command error</b> L%dC%d:\n" "%s", lineno, colpos, msg);
+         "<b>command error</b> L%dC%d:\n" "<small>%s</small>", lineno, colpos,
+         msg);
       gtk_widget_show_all (errormessagedialog_BM);
       fflush (NULL);
       /// errormessagedialog_BM is run in runcommand_BM 
