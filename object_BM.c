@@ -1208,10 +1208,20 @@ send8_BM (const value_tyBM recv, const objectval_tyBM * obselector,
 }                               /* end send8_BM */
 
 
+// only used from sendvar_BM
+extern value_tyBM sendtinyvar_BM (const value_tyBM recv,
+                                  const objectval_tyBM * obselector,
+                                  struct stackframe_stBM *stkf,
+                                  unsigned nbargs, const value_tyBM * argarr);
+extern value_tyBM sendmanyvar_BM (const value_tyBM recv,
+                                  const objectval_tyBM * obselector,
+                                  struct stackframe_stBM *stkf,
+                                  unsigned nbargs, const value_tyBM * argarr);
+
 value_tyBM
 sendtinyvar_BM (const value_tyBM recv,
                 const objectval_tyBM * obselector,
-                struct stackframe_stBM * stkf,
+                struct stackframe_stBM *stkf,
                 unsigned nbargs, const value_tyBM * argarr)
 {
   value_tyBM locargs[TINYSIZE_BM + 1];
