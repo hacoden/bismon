@@ -40,6 +40,10 @@ enum gctyenum_BM
   typayl_classinfo_BM,
   typayl_strbuffer_BM,
   typayl_dumper_BM,
+  typayl_hashsetval_BM,
+  typayl_hashsetvbucket_BM,
+  typayl_hashmapval_BM,
+  typayl_hashmapbucket_BM,
   typayl_dict_BM,
 #define typayl_LAST_BM typayl_dict_BM
   typayl__SpareA_BM,
@@ -206,6 +210,19 @@ struct hashsetobj_stBM
 {                               /* typayl_hashsetobj_BM */
   typedsize_tyBM pa;            // rlen is allocated size, size is used count
   objectval_tyBM *hashset_objs[];
+};
+
+struct hashsetbucket_stBM;
+struct hashsetval_stBM          /* typayl_hashsetval_BM */
+{
+  typedsize_tyBM pa;            // rlen is allocated size, size is used count
+  struct hashsetvbucket_stBM *hashval_vbuckets[];
+};
+
+struct hashsetvbucket_stBM      /* typal_hashsetvbucket_BM */
+{
+  typedsize_tyBM pa;            // rlen is allocated size, size is used count
+  value_tyBM *vbuck_arr[];
 };
 
 struct classinfo_stBM

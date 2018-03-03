@@ -1229,4 +1229,22 @@ sendvar_BM (const value_tyBM recv, const objectval_tyBM * obselector, struct sta
     FATAL_BM ("too many arguments %d for sendmanyvar_BM %s",
               nbargs, objectdbg_BM (obselector));
 }                               /* end sendvar_BM */
+
+bool
+ishashsetval_BM (const value_tyBM v)
+{
+  int ty = valtype_BM (v);
+  return ty == typayl_hashsetval_BM;
+}                               /* end ishashsetval_BM */
+
+
+bool
+ishashsetvbucket_BM (const value_tyBM v)
+{
+  int ty = valtype_BM (v);
+  return ty == typayl_hashsetvbucket_BM;
+}                               /* end ishashsetvbucket_BM */
+
+
+////////////////////////////////////////////////////////////////
 #endif /*INLINE_BM_INCLUDED */

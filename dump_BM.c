@@ -316,7 +316,7 @@ dump_emit_pass_BM (struct dumper_stBM *du, struct stackframe_stBM *stkf)
     for (unsigned ix = 0; ix < alsiz; ix++)
       {
         objectval_tyBM *curduob = dhset->hashset_objs[ix];
-        if (!curduob || curduob == HASHSETEMPTYSLOT_BM)
+        if (!curduob || curduob == HASHEMPTYSLOT_BM)
           continue;
         _.curobj = curduob;
         int cursp = objspacenum_BM (curduob);

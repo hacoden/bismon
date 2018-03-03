@@ -628,3 +628,47 @@ assocgcproc_BM (struct garbcoll_stBM *gc, anyassoc_tyBM * assoc, int depth)
   else
     FATAL_BM ("unexpected assoc @%p", assoc);
 }                               /* end assocgcproc_BM */
+
+/*********** HASH SET VALUES **********/
+void
+hashsetvalgcmark_BM (struct garbcoll_stBM *gc, struct hashsetval_stBM *hsv,
+                     int depth)
+{
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (ishashsetval_BM ((value_tyBM) hsv));
+  uint8_t oldmark = ((typedhead_tyBM *) hsv)->hgc;
+  if (oldmark)
+    return;
+  ((typedhead_tyBM *) hsv)->hgc = MARKGC_BM;
+  gc->gc_nbmarks++;
+  unsigned siz = ((typedsize_tyBM *) hsv)->size;
+  for (unsigned ix = 0; ix < siz; ix++)
+    {
+      struct hashsetvbucket_stBM *vbu = hsv->hashval_vbuckets[ix];
+      if (!vbu || vbu == HASHEMPTYSLOT_BM)
+        continue;
+      ASSERT_BM (valtype_BM ((value_tyBM) vbu) == typayl_hashsetvbucket_BM);
+      EXTENDEDGCPROC_BM (gc, vbu, depth + 1);
+    }
+}                               /* end hashsetvalgcmark_BM */
+
+void
+hashsetvbucketgcmark_BM (struct garbcoll_stBM *gc,
+                         struct hashsetvbucket_stBM *hvb, int depth)
+{
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (ishashsetvbucket_BM ((value_tyBM) hvb));
+  uint8_t oldmark = ((typedhead_tyBM *) hvb)->hgc;
+  if (oldmark)
+    return;
+  ((typedhead_tyBM *) hvb)->hgc = MARKGC_BM;
+  gc->gc_nbmarks++;
+  unsigned siz = ((typedsize_tyBM *) hvb)->size;
+  for (unsigned ix = 0; ix < siz; ix++)
+    {
+      value_tyBM cval = hvb->vbuck_arr[ix];
+      if (!cval || cval == HASHEMPTYSLOT_BM)
+        continue;
+      VALUEGCPROC_BM (gc, hvb->vbuck_arr[ix], depth + 1);
+    }
+}                               /* end hashsetvbucketgcmark_BM */

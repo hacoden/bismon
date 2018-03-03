@@ -1299,12 +1299,9 @@ parsvalexp_newguicmd_BM (struct parser_stBM
 
 #define TINYARGSNUM_BM 9
 // parse inside $[...]
-const objectval_tyBM *
-parsobjexp_newguicmd_BM (struct parser_stBM
-                         *pars,
-                         unsigned lineno,
-                         unsigned colpos,
-                         int depth, struct stackframe_stBM *stkf)
+const objectval_tyBM *parsobjexp_newguicmd_BM
+  (struct parser_stBM *pars,
+   unsigned lineno, unsigned colpos, int depth, struct stackframe_stBM *stkf)
 {
   const struct parserops_stBM *parsops = pars->pars_ops;
   objectval_tyBM *k_basiclo_function = BMK_2Ir1i8qnrA4_3jSkierlc5z;

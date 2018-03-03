@@ -171,6 +171,13 @@ extendedgcproc_BM (struct garbcoll_stBM *gc, extendedval_tyBM xval, int depth)
     case typayl_dict_BM:
       dictgcmark_BM (gc, (struct dict_stBM *) xval, depth);
       return xval;
+    case typayl_hashsetval_BM:
+      hashsetvalgcmark_BM (gc, (struct hashsetval_stBM *) xval, depth);
+      return xval;
+    case typayl_hashsetvbucket_BM:
+      hashsetvbucketgcmark_BM (gc, (struct hashsetvbucket_stBM *) xval,
+                               depth);
+      return xval;
     case typayl_FailureHandler_BM:
       {
         struct failurehandler_stBM *fh = (struct failurehandler_stBM *) xval;

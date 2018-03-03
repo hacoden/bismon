@@ -547,6 +547,14 @@ extern const stringval_tyBM *dictkeybefore_BM (struct dict_stBM *dict,
 extern const node_tyBM *dictnodeofkeys_BM (struct dict_stBM *dict,
                                            const objectval_tyBM * obj);
 ////////////////
+static inline bool ishashsetval_BM (const value_tyBM v);
+static inline bool ishashsetvbucket_BM (const value_tyBM v);
+extern void hashsetvalgcmark_BM (struct garbcoll_stBM *gc,
+                                 struct hashsetval_stBM *hsv, int depth);
+extern void hashsetvbucketgcmark_BM (struct garbcoll_stBM *gc,
+                                     struct hashsetvbucket_stBM *hvb,
+                                     int depth);
+////////////////
 /** apply a closure, or directly an object; so applying OBJ is same as
     applying closure % OBJ () without closed values */
 

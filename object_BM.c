@@ -495,7 +495,7 @@ hashsetobj_insert_BM (struct hashsetobj_stBM *hset,
           ((typedsize_tyBM *) hset)->size = ucnt + 1;
           return true;
         };
-      if (curobj == HASHSETEMPTYSLOT_BM)
+      if (curobj == HASHEMPTYSLOT_BM)
         {
           if (pos < 0)
             pos = (int) ix;
@@ -514,7 +514,7 @@ hashsetobj_insert_BM (struct hashsetobj_stBM *hset,
           ((typedsize_tyBM *) hset)->size = ucnt + 1;
           return true;
         };
-      if (curobj == HASHSETEMPTYSLOT_BM)
+      if (curobj == HASHEMPTYSLOT_BM)
         {
           if (pos < 0)
             pos = (int) ix;
@@ -559,7 +559,7 @@ hashsetobj_grow_BM (struct hashsetobj_stBM *hset, unsigned gap)
   for (unsigned oix = 0; oix < alsiz; oix++)
     {
       const objectval_tyBM *oldobj = hset->hashset_objs[oix];
-      if (!oldobj || oldobj == HASHSETEMPTYSLOT_BM)
+      if (!oldobj || oldobj == HASHEMPTYSLOT_BM)
         continue;
       if (!hashsetobj_insert_BM (newhset, oldobj))
         FATAL_BM ("corrupted hashset");
@@ -645,8 +645,7 @@ hashsetobj_remove_BM (struct hashsetobj_stBM *hset,
       for (unsigned ix = 0; ix < alsiz; ix++)
         {
           objectval_tyBM *curobj = hset->hashset_objs[ix];
-          if (curobj != NULL && curobj != HASHSETEMPTYSLOT_BM
-              && curobj != obj)
+          if (curobj != NULL && curobj != HASHEMPTYSLOT_BM && curobj != obj)
             {
               if (!hashsetobj_insert_BM (newhset, obj))
                 FATAL_BM ("corrupted hashset");
@@ -661,7 +660,7 @@ hashsetobj_remove_BM (struct hashsetobj_stBM *hset,
       objectval_tyBM *curobj = hset->hashset_objs[ix];
       if (curobj == obj)
         {
-          hset->hashset_objs[ix] = HASHSETEMPTYSLOT_BM;
+          hset->hashset_objs[ix] = HASHEMPTYSLOT_BM;
           ((typedsize_tyBM *) hset)->size = ucnt - 1;
           return hset;
         }
@@ -673,7 +672,7 @@ hashsetobj_remove_BM (struct hashsetobj_stBM *hset,
       objectval_tyBM *curobj = hset->hashset_objs[ix];
       if (curobj == obj)
         {
-          hset->hashset_objs[ix] = HASHSETEMPTYSLOT_BM;
+          hset->hashset_objs[ix] = HASHEMPTYSLOT_BM;
           ((typedsize_tyBM *) hset)->size = ucnt - 1;
           return hset;
         }
@@ -702,7 +701,7 @@ hashsetobj_to_set_BM (struct hashsetobj_stBM *hset)
   for (unsigned ix = 0; ix < alsiz; ix++)
     {
       objectval_tyBM *curobj = hset->hashset_objs[ix];
-      if (!curobj || curobj == HASHSETEMPTYSLOT_BM)
+      if (!curobj || curobj == HASHEMPTYSLOT_BM)
         continue;
       ASSERT_BM (valtype_BM ((const value_tyBM) curobj) == tyObject_BM);
       ASSERT_BM (elcnt < ucnt);
@@ -732,7 +731,7 @@ hashsetgcmark_BM (struct garbcoll_stBM *gc, struct hashsetobj_stBM *hset)
   for (unsigned ix = 0; ix < alsiz; ix++)
     {
       objectval_tyBM *curobj = hset->hashset_objs[ix];
-      if (!curobj || curobj == HASHSETEMPTYSLOT_BM)
+      if (!curobj || curobj == HASHEMPTYSLOT_BM)
         continue;
       ASSERT_BM (valtype_BM ((const value_tyBM) curobj) == tyObject_BM);
       ASSERT_BM (elcnt < ucnt);

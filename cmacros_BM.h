@@ -23,7 +23,7 @@
 #define EXTENDEDGCPROC_BM(Gc,Xval,Depth) \
   do { Xval = extendedgcproc_BM((Gc),(Xval),(Depth)); } while(0)
 
-#define HASHSETEMPTYSLOT_BM ((void*)(-1))
+#define HASHEMPTYSLOT_BM ((void*)(-1))
 
 #define STRBUFFERWANTEDWIDTH_BM 80
 #define LOADERMAGIC_BM 281610361        /*0x10c90879 */
