@@ -222,7 +222,7 @@ struct hashsetval_stBM          /* typayl_hashsetval_BM */
 struct hashsetvbucket_stBM      /* typal_hashsetvbucket_BM */
 {
   typedsize_tyBM pa;            // rlen is allocated size, size is used count
-  value_tyBM *vbuck_arr[];
+  value_tyBM vbuck_arr[];
 };
 
 struct classinfo_stBM

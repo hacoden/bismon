@@ -672,3 +672,30 @@ hashsetvbucketgcmark_BM (struct garbcoll_stBM *gc,
       VALUEGCPROC_BM (gc, hvb->vbuck_arr[ix], depth + 1);
     }
 }                               /* end hashsetvbucketgcmark_BM */
+
+void
+hashsetvalgcdestroy_BM (struct garbcoll_stBM *gc, struct hashsetval_stBM *hsv)
+{
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) hsv)->htyp == typayl_hashsetval_BM);
+  unsigned len = ((typedhead_tyBM *) hsv)->rlen;
+  memset (hsv, 0,
+          sizeof (*hsv) + len * sizeof (struct hashsetvbucket_stBM *));
+  free (hsv);
+  gc->gc_freedbytes +=
+    sizeof (*hsv) + len * sizeof (struct hashsetvbucket_stBM *);
+}                               /* end  hashsetvalgcdestroy_BM */
+
+void
+hashsetvbucketgcdsestroy_BM (struct garbcoll_stBM *gc,
+                             struct hashsetvbucket_stBM *hvb)
+{
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) hvb)->htyp == typayl_hashsetvbucket_BM);
+  unsigned len = ((typedhead_tyBM *) hvb)->rlen;
+  memset (hvb, 0, sizeof (*hvb) + len * sizeof (value_tyBM));
+  free (hvb);
+  gc->gc_freedbytes += sizeof (*hvb) + len * sizeof (value_tyBM);
+}                               /* end hashsetvbucketgcdsestroy_BM */
+
+#warning more needed on hashsets, hashmaps, etc....

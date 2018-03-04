@@ -258,6 +258,12 @@ valgcdestroy_BM (struct garbcoll_stBM *gc, value_tyBM val)
       return;
     case typayl_FailureHandler_BM:
       return;
+    case typayl_hashsetval_BM:
+      hashsetvalgcdestroy_BM (gc, (struct hashsetval_stBM *) val);
+      return;
+    case typayl_hashsetvbucket_BM:
+      hashsetvbucketgcdsestroy_BM (gc, (struct hashsetvbucket_stBM *) val);
+      return;
     default:
       FATAL_BM ("gcdestroy ty#%d unexpected for val@%p", ty, val);
     }

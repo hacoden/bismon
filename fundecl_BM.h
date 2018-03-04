@@ -554,6 +554,10 @@ extern void hashsetvalgcmark_BM (struct garbcoll_stBM *gc,
 extern void hashsetvbucketgcmark_BM (struct garbcoll_stBM *gc,
                                      struct hashsetvbucket_stBM *hvb,
                                      int depth);
+extern void hashsetvalgcdestroy_BM (struct garbcoll_stBM *gc,
+                                    struct hashsetval_stBM *hsv);
+extern void hashsetvbucketgcdsestroy_BM (struct garbcoll_stBM *gc,
+                                         struct hashsetvbucket_stBM *hvb);
 ////////////////
 /** apply a closure, or directly an object; so applying OBJ is same as
     applying closure % OBJ () without closed values */

@@ -18,6 +18,8 @@ dumpgcdestroy_BM (struct garbcoll_stBM *gc, struct dumper_stBM *du)
 {
   ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
   ASSERT_BM (((typedhead_tyBM *) du)->htyp == typayl_dumper_BM);
+  /* dont free du here */
+
 }                               /* end dumpgcdestroy_BM */
 
 
