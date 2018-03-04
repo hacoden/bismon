@@ -698,4 +698,26 @@ hashsetvbucketgcdsestroy_BM (struct garbcoll_stBM *gc,
   gc->gc_freedbytes += sizeof (*hvb) + len * sizeof (value_tyBM);
 }                               /* end hashsetvbucketgcdsestroy_BM */
 
+void
+hashsetvalgckeep_BM (struct garbcoll_stBM *gc, struct hashsetval_stBM *hsv)
+{
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) hsv)->htyp == typayl_hashsetval_BM);
+  unsigned len = ((typedhead_tyBM *) hsv)->rlen;
+  ASSERT_BM (len < MAXSIZE_BM);
+  gc->gc_keptbytes +=
+    sizeof (*hsv) + len * sizeof (struct hashsetvbucket_stBM *);
+}                               /* end  hashsetvalgckeep_BM */
+
+void
+hashsetvbucketgckeep_BM (struct garbcoll_stBM *gc,
+                         struct hashsetvbucket_stBM *hvb)
+{
+  ASSERT_BM (gc && gc->gc_magic == GCMAGIC_BM);
+  ASSERT_BM (((typedhead_tyBM *) hvb)->htyp == typayl_hashsetvbucket_BM);
+  unsigned len = ((typedhead_tyBM *) hvb)->rlen;
+  ASSERT_BM (len < MAXSIZE_BM);
+  gc->gc_keptbytes += sizeof (*hvb) + len * sizeof (value_tyBM);
+}                               /* end hashsetvbucketgckeep_BM */
+
 #warning more needed on hashsets, hashmaps, etc....

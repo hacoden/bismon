@@ -320,6 +320,10 @@ typestring_BM (int ty)
       return "payl_SpecialFrame";
     case typayl_StackFrame_BM:
       return "payl_StackFrame";
+    case typayl_hashsetval_BM:
+      return "payl_hashsetval";
+    case typayl_hashsetvbucket_BM:
+      return "payl_hashsetbucket";
     default:
       {
         static char buf[32];
@@ -438,6 +442,12 @@ valgckeep_BM (struct garbcoll_stBM *gc, value_tyBM val)
       return;
     case typayl_dumper_BM:
       dumpgckeep_BM (gc, (struct dumper_stBM *) val);
+      return;
+    case typayl_hashsetval_BM:
+      hashsetvalgckeep_BM (gc, (struct hashsetval_stBM *) val);
+      return;
+    case typayl_hashsetvbucket_BM:
+      hashsetvbucketgckeep_BM (gc, (struct hashsetvbucket_stBM *) val);
       return;
     default:
       FATAL_BM ("gckeep ty#%d unexpected for val@%p", ty, val);
