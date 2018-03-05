@@ -801,7 +801,120 @@ hashsetvalcontains_BM (struct hashsetval_stBM *hsv, value_tyBM val)
       && (curval == val || valequal_BM (curval, val)))
     return true;
   return false;
-}                               /* end hashsetcontains_BM */
+}                               /* end hashsetvalcontains_BM */
 
+
+static void hashsetvalrawadd_BM (struct hashsetval_stBM *hsv, value_tyBM val);
+
+static void
+hashsetvalrawadd_BM (struct hashsetval_stBM *hsv, value_tyBM val)
+{
+  if (!hsv || valtype_BM ((value_tyBM) hsv) != typayl_hashsetval_BM)
+    return;
+  if (!val)
+    return;
+  struct hashsetvalindexes_stBM hvindexes = hashsetfindindexes_BM (hsv, val);
+  int bix = hvindexes.hvi_buckix;
+  int compix = hvindexes.hvi_compix;
+  if (bix < 0)
+    return;
+  unsigned hslen = ((typedhead_tyBM *) hsv)->rlen;
+  ASSERT_BM (bix < (int) hslen);
+  struct hashsetvbucket_stBM *curbuck = hsv->hashval_vbuckets[bix];
+  if (!curbuck)
+    {
+      ASSERT_BM (compix < 0);
+      unsigned newsiz = 5;
+      struct hashsetvbucket_stBM *newbuck
+        = allocgcty_BM (typayl_hashsetvbucket_BM,
+                        sizeof (struct hashsetvbucket_stBM) +
+                        newsiz * sizeof (value_tyBM));
+      ((typedhead_tyBM *) newbuck)->rlen = newsiz;
+
+      hsv->hashval_vbuckets[bix] = newbuck;
+      newbuck->vbuck_arr[0] = val;
+      ((struct typedsize_stBM *) newbuck)->size = 1;
+      ((struct typedsize_stBM *) hsv)->size++;
+      return;
+    }
+  unsigned bucklen = ((typedhead_tyBM *) curbuck)->rlen;
+  if (compix >= 0)
+    {
+      ASSERT_BM (compix < (int) bucklen);
+      if (curbuck->vbuck_arr[compix] == NULL
+          || curbuck->vbuck_arr[compix] == (value_tyBM) HASHEMPTYSLOT_BM)
+        {
+          curbuck->vbuck_arr[compix] = val;
+          ((struct typedsize_stBM *) curbuck)->size++;
+          ((struct typedsize_stBM *) hsv)->size++;
+        }
+      else
+        {
+          ASSERT_BM (curbuck->vbuck_arr[compix] == val
+                     || valequal_BM (curbuck->vbuck_arr[compix], val));
+          return;
+        }
+    }
+  else
+    {                           /* should grow the bucket */
+      ASSERT_BM (((struct typedsize_stBM *) curbuck)->size == bucklen);
+      unsigned newsiz = prime_above_BM (5 * bucklen / 4 + bucklen / 32 + 3);
+      if (newsiz > MAXSIZE_BM)
+        FATAL_BM ("too huge hashsetval bucket for bucklen %d", bucklen);
+      struct hashsetvbucket_stBM *newbuck
+        = allocgcty_BM (typayl_hashsetvbucket_BM,
+                        sizeof (struct hashsetvbucket_stBM) +
+                        newsiz * sizeof (value_tyBM));
+      ((typedhead_tyBM *) newbuck)->rlen = newsiz;
+      unsigned newbuckcnt = 0;
+      for (unsigned oldbix = 0; oldbix < bucklen; oldbix++)
+        {
+          value_tyBM oldval = curbuck->vbuck_arr[oldbix];
+          if (!oldval || oldval == (value_tyBM) HASHEMPTYSLOT_BM)
+            continue;
+          newbuck->vbuck_arr[newbuckcnt++] = oldval;
+        }
+      ASSERT_BM (newbuckcnt < newsiz);
+      ((struct typedsize_stBM *) newbuck)->size = newbuckcnt;
+      hsv->hashval_vbuckets[bix] = newbuck;
+      ((struct typedsize_stBM *) hsv)->size++;
+    }
+}                               /* end hashsetvalrawadd_BM */
+
+
+struct hashsetval_stBM *
+hashsetvalreorganize_BM (struct hashsetval_stBM *hsv, unsigned gap)
+{
+  if (valtype_BM ((value_tyBM) hsv) != typayl_hashsetval_BM)
+    hsv = NULL;
+  unsigned oldhsiz = hsv ? (((struct typedsize_stBM *) hsv)->size) : 0;
+  unsigned oldhlen = hsv ? (((struct typedhead_stBM *) hsv)->rlen) : 0;
+  unsigned newsiz = prime_above_BM ((oldhsiz + gap) / 7 + gap / 32 + 3);
+  struct hashsetval_stBM *newhsv = allocgcty_BM (typayl_hashsetval_BM,
+                                                 sizeof (struct
+                                                         hashsetval_stBM) +
+                                                 newsiz *
+                                                 sizeof (struct
+                                                         hashsetvbucket_stBM
+                                                         *));
+  ((typedhead_tyBM *) newhsv)->rlen = newsiz;
+  if (!oldhsiz)
+    return newhsv;
+  for (unsigned oldbix = 0; oldbix < oldhlen; oldbix++)
+    {
+      struct hashsetvbucket_stBM *oldbuck = hsv->hashval_vbuckets[oldbix];
+      if (!oldbuck)
+        continue;
+      unsigned oldbucklen = ((typedhead_tyBM *) oldbuck)->rlen;
+      for (unsigned oldelix = 0; oldelix < oldbucklen; oldelix++)
+        {
+          value_tyBM oldval = oldbuck->vbuck_arr[oldelix];
+          if (!oldval || oldval == (value_tyBM) HASHEMPTYSLOT_BM)
+            continue;
+          hashsetvalrawadd_BM (newhsv, oldval);
+        }
+    }
+  return newhsv;
+}                               /* end hashsetvalreorganize_BM */
 
 #warning more needed on hashsets, hashmaps, etc....
