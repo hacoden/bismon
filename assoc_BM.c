@@ -804,6 +804,7 @@ hashsetvalcontains_BM (struct hashsetval_stBM *hsv, value_tyBM val)
 }                               /* end hashsetvalcontains_BM */
 
 
+#define HASHSETVAL_INITBUCKETSIZE_BM 5
 static void hashsetvalrawadd_BM (struct hashsetval_stBM *hsv, value_tyBM val);
 
 static void
@@ -824,7 +825,7 @@ hashsetvalrawadd_BM (struct hashsetval_stBM *hsv, value_tyBM val)
   if (!curbuck)
     {
       ASSERT_BM (compix < 0);
-      unsigned newsiz = 5;
+      unsigned newsiz = HASHSETVAL_INITBUCKETSIZE_BM;
       struct hashsetvbucket_stBM *newbuck
         = allocgcty_BM (typayl_hashsetvbucket_BM,
                         sizeof (struct hashsetvbucket_stBM) +
@@ -890,13 +891,10 @@ hashsetvalreorganize_BM (struct hashsetval_stBM *hsv, unsigned gap)
   unsigned oldhsiz = hsv ? (((struct typedsize_stBM *) hsv)->size) : 0;
   unsigned oldhlen = hsv ? (((struct typedhead_stBM *) hsv)->rlen) : 0;
   unsigned newsiz = prime_above_BM ((oldhsiz + gap) / 7 + gap / 32 + 3);
-  struct hashsetval_stBM *newhsv = allocgcty_BM (typayl_hashsetval_BM,
-                                                 sizeof (struct
-                                                         hashsetval_stBM) +
-                                                 newsiz *
-                                                 sizeof (struct
-                                                         hashsetvbucket_stBM
-                                                         *));
+  struct hashsetval_stBM *newhsv =      //
+    allocgcty_BM (typayl_hashsetval_BM,
+                  sizeof (struct hashsetval_stBM) +
+                  newsiz * sizeof (struct hashsetvbucket_stBM *));
   ((typedhead_tyBM *) newhsv)->rlen = newsiz;
   if (!oldhsiz)
     return newhsv;
@@ -914,7 +912,31 @@ hashsetvalreorganize_BM (struct hashsetval_stBM *hsv, unsigned gap)
           hashsetvalrawadd_BM (newhsv, oldval);
         }
     }
+  ASSERT_BM (oldhsiz == (((struct typedsize_stBM *) newhsv)->size));
   return newhsv;
 }                               /* end hashsetvalreorganize_BM */
+
+struct hashsetval_stBM *
+hashsetvalput_BM (struct hashsetval_stBM *hsv, value_tyBM * val)
+{
+  if (!val)
+    return ishashsetval_BM ((value_tyBM) hsv) ? hsv : NULL;
+  if (!ishashsetval_BM ((value_tyBM) hsv))
+    hsv = hashsetvalreorganize_BM (NULL, 3);
+  ASSERT_BM (ishashsetval_BM (hsv));
+  {
+    unsigned oldhsiz = ((struct typedsize_stBM *) hsv)->size;
+    unsigned oldhlen = ((struct typedhead_stBM *) hsv)->rlen;
+    if (oldhsiz > oldhlen * (HASHSETVAL_INITBUCKETSIZE_BM + 2) + 2)
+      hsv = hashsetvalreorganize_BM (NULL, 4 + ILOG2_BM (oldhsiz) / 4);
+    else if (oldhsiz > oldhlen * HASHSETVAL_INITBUCKETSIZE_BM + 4)
+      {
+        if (g_random_int () % 4 == 0)
+          hsv = hashsetvalreorganize_BM (NULL, 4 + ILOG2_BM (oldhsiz) / 6);
+      }
+  }
+  hashsetvalrawadd_BM (hsv, val);
+  return hsv;
+}                               /* end hashsetvalput_BM */
 
 #warning more needed on hashsets, hashmaps, etc....
