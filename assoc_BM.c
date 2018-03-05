@@ -939,4 +939,45 @@ hashsetvalput_BM (struct hashsetval_stBM *hsv, value_tyBM * val)
   return hsv;
 }                               /* end hashsetvalput_BM */
 
+struct hashsetval_stBM *
+hashsetvalremove_BM (struct hashsetval_stBM *hsv, value_tyBM * val)
+{
+  if (!val)
+    return ishashsetval_BM ((value_tyBM) hsv) ? hsv : NULL;
+  if (!ishashsetval_BM ((value_tyBM) hsv))
+    return NULL;
+  struct hashsetvalindexes_stBM hvindexes = hashsetfindindexes_BM (hsv, val);
+  int bix = hvindexes.hvi_buckix;
+  int compix = hvindexes.hvi_compix;
+  if (bix < 0 || compix < 0)
+    return hsv;
+  unsigned hslen = ((typedhead_tyBM *) hsv)->rlen;
+  ASSERT_BM (bix < (int) hslen);
+  struct hashsetvbucket_stBM *curbuck = hsv->hashval_vbuckets[bix];
+  ASSERT_BM (curbuck != NULL);
+  unsigned bucklen = ((typedhead_tyBM *) curbuck)->rlen;
+  ASSERT_BM (compix < (int) bucklen);
+  if (curbuck->vbuck_arr[compix] == NULL
+      || curbuck->vbuck_arr[compix] == (value_tyBM) HASHEMPTYSLOT_BM)
+    return hsv;
+  ASSERT_BM (curbuck->vbuck_arr[compix] == val
+             || valequal_BM (curbuck->vbuck_arr[compix], val));
+  curbuck->vbuck_arr[compix] = HASHEMPTYSLOT_BM;;
+  ((struct typedsize_stBM *) curbuck)->size--;
+  ((struct typedsize_stBM *) hsv)->size++;
+  unsigned oldhsiz = ((struct typedsize_stBM *) hsv)->size;
+  unsigned oldhlen = ((struct typedhead_stBM *) hsv)->rlen;
+  if (oldhsiz > 50
+      && oldhsiz < oldhlen * (HASHSETVAL_INITBUCKETSIZE_BM / 4) + 2)
+    hsv = hashsetvalreorganize_BM (NULL, 4 + ILOG2_BM (oldhsiz) / 4);
+  else if (oldhsiz > 80
+           && oldhsiz < oldhlen * (HASHSETVAL_INITBUCKETSIZE_BM / 5) + 2)
+    {
+      if (g_random_int () % 4 == 0)
+        hsv = hashsetvalreorganize_BM (NULL, 4 + ILOG2_BM (oldhsiz) / 6);
+    }
+  return hsv;
+}                               /* end hashsetvalremove_BM */
+
+
 #warning more needed on hashsets, hashmaps, etc....
