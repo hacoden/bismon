@@ -13,6 +13,10 @@
 #define CLEARMGC_BM 0
 #define GCMAGIC_BM 24501383     /*0x175dc87 */
 
+// see https://stackoverflow.com/a/11376759/841108
+// integer log in base 2, for a positive X
+#define ILOG2_BM(X) ((unsigned) (8*sizeof (unsigned long long) \
+				 - __builtin_clzll((X)) - 1))
 #define FAILUREHANDLEMAGIC_BM    853401645      /*Ox32dde02d */
 
 #define VALUEGCPROC_BM(Gc,Val,Depth)		\
