@@ -562,6 +562,8 @@ extern void hashsetvalgckeep_BM (struct garbcoll_stBM *gc,
                                  struct hashsetval_stBM *hsv);
 extern void hashsetvbucketgckeep_BM (struct garbcoll_stBM *gc,
                                      struct hashsetvbucket_stBM *hvb);
+extern bool hashsetvalcontains_BM (struct hashsetval_stBM *hsv,
+                                   value_tyBM val);
 ////////////////
 /** apply a closure, or directly an object; so applying OBJ is same as
     applying closure % OBJ () without closed values */

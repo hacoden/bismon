@@ -720,4 +720,88 @@ hashsetvbucketgckeep_BM (struct garbcoll_stBM *gc,
   gc->gc_keptbytes += sizeof (*hvb) + len * sizeof (value_tyBM);
 }                               /* end hashsetvbucketgckeep_BM */
 
+struct hashsetvalindexes_stBM
+{
+  int hvi_buckix;               /* index of bucket */
+  int hvi_compix;               /* index of component */
+};
+
+// give the indexes of a value; if the value is present, give the
+// actual indexes; if the value is absent, give the index where it
+// should go
+static struct hashsetvalindexes_stBM
+hashsetfindindexes_BM (struct hashsetval_stBM *hsv, value_tyBM val)
+{
+  ASSERT_BM (hsv && ((typedhead_tyBM *) hsv)->htyp == typayl_hashsetval_BM);
+  if (!val)
+    return (struct hashsetvalindexes_stBM)
+    {
+    -1, -1};
+  unsigned len = ((typedhead_tyBM *) hsv)->rlen;
+  ASSERT_BM (len < MAXSIZE_BM && len > 2);
+  hash_tyBM hva = valhash_BM (val);
+  unsigned bix = hva % len;
+  struct hashsetvbucket_stBM *curbuck = hsv->hashval_vbuckets[bix];
+  if (!curbuck)
+    return (struct hashsetvalindexes_stBM)
+    {
+    .hvi_buckix = bix,.hvi_compix = -1};
+  ASSERT_BM (((typedhead_tyBM *) curbuck)->htyp == typayl_hashsetvbucket_BM);
+  unsigned bucklen = ((typedhead_tyBM *) curbuck)->rlen;
+  int buckpos = -1;
+  for (unsigned vix = 0; vix < bucklen; vix++)
+    {
+      value_tyBM curval = curbuck->vbuck_arr[vix];
+      if (!curval)
+        {
+          if (buckpos < 0)
+            buckpos = (int) vix;
+          return (struct hashsetvalindexes_stBM)
+          {
+          .hvi_buckix = bix,.hvi_compix = vix};
+        }
+      else if (curval == (value_tyBM) HASHEMPTYSLOT_BM)
+        {
+          if (buckpos < 0)
+            buckpos = (int) vix;
+          continue;
+        }
+      else if (curval == val || valequal_BM (curval, val))
+        {
+          return (struct hashsetvalindexes_stBM)
+          {
+          .hvi_buckix = bix,.hvi_compix = vix};
+        }
+    }
+  return (struct hashsetvalindexes_stBM)
+  {
+  .hvi_buckix = bix,.hvi_compix = -1};
+}                               /* end hashsetfindindexes_BM */
+
+bool
+hashsetvalcontains_BM (struct hashsetval_stBM *hsv, value_tyBM val)
+{
+  if (!hsv || valtype_BM ((value_tyBM) hsv) != typayl_hashsetval_BM)
+    return false;
+  if (!val)
+    return false;
+  struct hashsetvalindexes_stBM hvindexes = hashsetfindindexes_BM (hsv, val);
+  int bix = hvindexes.hvi_buckix;
+  int compix = hvindexes.hvi_compix;
+  if (bix < 0 || compix < 0)
+    return false;
+  unsigned hslen = ((typedhead_tyBM *) hsv)->rlen;
+  ASSERT_BM (bix < (int) hslen);
+  struct hashsetvbucket_stBM *curbuck = hsv->hashval_vbuckets[bix];
+  ASSERT_BM (curbuck != NULL);
+  unsigned bucklen = ((typedhead_tyBM *) curbuck)->rlen;
+  ASSERT_BM (compix < (int) bucklen);
+  value_tyBM curval = curbuck->vbuck_arr[compix];
+  if (curval && curval != (value_tyBM) HASHEMPTYSLOT_BM
+      && (curval == val || valequal_BM (curval, val)))
+    return true;
+  return false;
+}                               /* end hashsetcontains_BM */
+
+
 #warning more needed on hashsets, hashmaps, etc....
