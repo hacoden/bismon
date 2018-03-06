@@ -559,8 +559,8 @@ extern void hashsetvbucketgcmark_BM (struct garbcoll_stBM *gc,
                                      int depth);
 extern void hashsetvalgcdestroy_BM (struct garbcoll_stBM *gc,
                                     struct hashsetval_stBM *hsv);
-extern void hashsetvbucketgcdsestroy_BM (struct garbcoll_stBM *gc,
-                                         struct hashsetvbucket_stBM *hvb);
+extern void hashsetvbucketgcdestroy_BM (struct garbcoll_stBM *gc,
+                                        struct hashsetvbucket_stBM *hvb);
 extern void hashsetvalgckeep_BM (struct garbcoll_stBM *gc,
                                  struct hashsetval_stBM *hsv);
 extern void hashsetvbucketgckeep_BM (struct garbcoll_stBM *gc,
@@ -586,6 +586,24 @@ extern value_tyBM hashsetvalnext_BM (struct hashsetval_stBM *hsv,
 /* make a wide node from all the (sorted) values inside an hashsetval */
 extern value_tyBM hashsetvalmakenode_BM (struct hashsetval_stBM *hsv,
                                          objectval_tyBM * connob);
+
+//// hash maps associating values to values
+static inline bool ishashmapval_BM (const value_tyBM v);
+static inline bool ishashmapbucket_BM (const value_tyBM v);
+extern void hashmapvalgcmark_BM (struct garbcoll_stBM *gc,
+                                 struct hashmapval_stBM *hsv, int depth);
+extern void hashmapbucketgcmark_BM (struct garbcoll_stBM *gc,
+                                    struct hashmapbucket_stBM *hvb,
+                                    int depth);
+extern void hashmapvalgcdestroy_BM (struct garbcoll_stBM *gc,
+                                    struct hashmapval_stBM *hsv);
+extern void hashmapbucketgcdestroy_BM (struct garbcoll_stBM *gc,
+                                       struct hashmapbucket_stBM *hvb);
+extern void hashmapvalgckeep_BM (struct garbcoll_stBM *gc,
+                                 struct hashmapval_stBM *hsv);
+extern void hashmapbucketgckeep_BM (struct garbcoll_stBM *gc,
+                                    struct hashmapbucket_stBM *hvb);
+
 ////////////////
 /** apply a closure, or directly an object; so applying OBJ is same as
     applying closure % OBJ () without closed values */

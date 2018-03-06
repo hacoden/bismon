@@ -139,7 +139,7 @@ ROUTINEOBJNAME_BM (_23ViGouPnAg_15P5mpG9x3d)    //
     gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
     const objectval_tyBM *tinyarr[TINYSIZE_BM] = {
     };
-    const objectval_tyBM **arr = (nbattrs < TINYSIZE_BM) ? tinyarr      //
+    objectval_tyBM **arr = (nbattrs < TINYSIZE_BM) ? tinyarr    //
       : calloc (prime_above_BM (nbattrs),
                 sizeof (const objectval_tyBM *));
     if (!arr)
@@ -285,9 +285,9 @@ ROUTINEOBJNAME_BM (_09DxyieS5Wz_7pkad4F88FA)    //
   _.setsel = objgetclassinfosetofselectors_BM (_.objbrows);
   _.supercla = objgetclassinfosuperclass_BM (_.objbrows);
   unsigned nbmeth = setcardinal_BM (_.setsel);
-  const objectval_tyBM *tinyarr[TINYSIZE_BM] = {
+  objectval_tyBM *tinyarr[TINYSIZE_BM] = {
   };
-  const objectval_tyBM **arr = (nbmeth < TINYSIZE_BM) ? tinyarr //
+  objectval_tyBM **arr = (nbmeth < TINYSIZE_BM) ? tinyarr       //
     : calloc (prime_above_BM (nbmeth),
               sizeof (const objectval_tyBM *));
   if (!arr)
@@ -439,9 +439,9 @@ ROUTINEOBJNAME_BM (_3rne4qbpnV9_0pywzeJp3Qr)    //
                                     "{", -1, nest_brotag_BM, NULL);
   if (curdepth < maxdepth)
     {
-      const objectval_tyBM *tinyarr[TINYSIZE_BM] = {
+      objectval_tyBM *tinyarr[TINYSIZE_BM] = {
       };
-      const objectval_tyBM **arr =      //
+      objectval_tyBM **arr =    //
         (setcard < TINYSIZE_BM) ? tinyarr
         : calloc (setcard + 1, sizeof (const objectval_tyBM *));
       if (!arr)

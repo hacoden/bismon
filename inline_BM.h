@@ -1264,5 +1264,21 @@ ishashsetvbucket_BM (const value_tyBM v)
 }                               /* end ishashsetvbucket_BM */
 
 
+bool
+ishashmapval_BM (const value_tyBM v)
+{
+  int ty = valtype_BM (v);
+  return ty == typayl_hashmapval_BM;
+}                               /* end ishashsetval_BM */
+
+
+bool
+ishashmapbucket_BM (const value_tyBM v)
+{
+  int ty = valtype_BM (v);
+  return ty == typayl_hashmapbucket_BM;
+}                               /* end ishashmapbucket_BM */
+
+
 ////////////////////////////////////////////////////////////////
 #endif /*INLINE_BM_INCLUDED */

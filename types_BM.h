@@ -212,10 +212,11 @@ struct hashsetobj_stBM
   objectval_tyBM *hashset_objs[];
 };
 
+// hash set of values
 struct hashsetbucket_stBM;
 struct hashsetval_stBM          /* typayl_hashsetval_BM */
 {
-  typedsize_tyBM pa;            // rlen is allocated size, size is used count
+  typedsize_tyBM pa;            // rlen is allocated size, size is used count, i.e. cardinal of the hashset
   struct hashsetvbucket_stBM *hashval_vbuckets[];
 };
 
@@ -223,6 +224,29 @@ struct hashsetvbucket_stBM      /* typal_hashsetvbucket_BM */
 {
   typedsize_tyBM pa;            // rlen is allocated size, size is used count
   value_tyBM vbuck_arr[];
+};
+
+
+// hash map associating values to values
+struct hashmapbucket_stBM;
+struct hashmapval_stBM          /* typayl_hashmapval_BM */
+{
+  typedsize_tyBM pa;            // rlen is allocated size, size is
+  // used count, i.e. number of filled
+  // entries in the hashmap
+  struct hashmapbucket_stBM *hashval_vbuckets[];
+};                              /* end struct hashmapval_stBM */
+
+struct hashmapentry_stBM
+{
+  value_tyBM hmap_keyv;
+  value_tyBM hmap_valv;
+};                              /* end struct hashmapentry_stBM */
+
+struct hashmapbucket_stBM       /* typal_hashmapbucket_BM */
+{
+  typedsize_tyBM pa;            // rlen is allocated size, size is used count
+  struct hashmapentry_stBM vbent_arr[];
 };
 
 struct classinfo_stBM

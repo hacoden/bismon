@@ -178,6 +178,12 @@ extendedgcproc_BM (struct garbcoll_stBM *gc, extendedval_tyBM xval, int depth)
       hashsetvbucketgcmark_BM (gc, (struct hashsetvbucket_stBM *) xval,
                                depth);
       return xval;
+    case typayl_hashmapval_BM:
+      hashmapvalgcmark_BM (gc, (struct hashmapval_stBM *) xval, depth);
+      return xval;
+    case typayl_hashmapbucket_BM:
+      hashmapbucketgcmark_BM (gc, (struct hashmapbucket_stBM *) xval, depth);
+      return xval;
     case typayl_FailureHandler_BM:
       {
         struct failurehandler_stBM *fh = (struct failurehandler_stBM *) xval;
@@ -262,7 +268,13 @@ valgcdestroy_BM (struct garbcoll_stBM *gc, value_tyBM val)
       hashsetvalgcdestroy_BM (gc, (struct hashsetval_stBM *) val);
       return;
     case typayl_hashsetvbucket_BM:
-      hashsetvbucketgcdsestroy_BM (gc, (struct hashsetvbucket_stBM *) val);
+      hashsetvbucketgcdestroy_BM (gc, (struct hashsetvbucket_stBM *) val);
+      return;
+    case typayl_hashmapval_BM:
+      hashmapvalgcdestroy_BM (gc, (struct hashmapval_stBM *) val);
+      return;
+    case typayl_hashmapbucket_BM:
+      hashmapbucketgcdestroy_BM (gc, (struct hashmapbucket_stBM *) val);
       return;
     default:
       FATAL_BM ("gcdestroy ty#%d unexpected for val@%p", ty, val);
@@ -324,6 +336,10 @@ typestring_BM (int ty)
       return "payl_hashsetval";
     case typayl_hashsetvbucket_BM:
       return "payl_hashsetbucket";
+    case typayl_hashmapval_BM:
+      return "payl_hashmapval";
+    case typayl_hashmapbucket_BM:
+      return "payl_hashmapbucket";
     default:
       {
         static char buf[32];
@@ -448,6 +464,12 @@ valgckeep_BM (struct garbcoll_stBM *gc, value_tyBM val)
       return;
     case typayl_hashsetvbucket_BM:
       hashsetvbucketgckeep_BM (gc, (struct hashsetvbucket_stBM *) val);
+      return;
+    case typayl_hashmapval_BM:
+      hashmapvalgckeep_BM (gc, (struct hashmapval_stBM *) val);
+      return;
+    case typayl_hashmapbucket_BM:
+      hashmapbucketgckeep_BM (gc, (struct hashmapbucket_stBM *) val);
       return;
     default:
       FATAL_BM ("gckeep ty#%d unexpected for val@%p", ty, val);
