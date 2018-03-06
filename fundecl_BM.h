@@ -32,7 +32,8 @@ static inline bool valequal_BM (const value_tyBM v1, const value_tyBM v2);
 extern bool valsamecontent_BM (const value_tyBM v1, const value_tyBM v2,
                                int depth);
 static inline int valcmp_BM (const value_tyBM v1, const value_tyBM v2);
-
+extern int valqcmp_BM (const void *, const void *);     // for qsort
+static inline void valarrqsort_BM (value_tyBM * arr, unsigned siz);
 static inline bool validserial63_BM (serial63_tyBM s);
 extern serial63_tyBM randomserial63_BM (void);
 #if __cplusplus
@@ -138,8 +139,8 @@ static inline int objectnamedcmp_BM (const objectval_tyBM * ob1,
                                      const objectval_tyBM * ob2);
 
 
-extern void sortobjarr_BM (const objectval_tyBM ** obarr, size_t arrsiz);
-extern void sortnamedobjarr_BM (const objectval_tyBM ** obarr, size_t arrsiz);
+extern void sortobjarr_BM (objectval_tyBM ** obarr, size_t arrsiz);
+extern void sortnamedobjarr_BM (objectval_tyBM ** obarr, size_t arrsiz);
 
 extern objectval_tyBM *findobjofid_BM (const rawid_tyBM id);
 extern objectval_tyBM *makeobjofid_BM (const rawid_tyBM id);

@@ -189,7 +189,8 @@ dump_run_todo_BM (struct dumper_stBM *du, struct stackframe_stBM *stkf)
       listpopfirst_BM (du->dump_todolist);
       if (isclosure_BM ((const value_tyBM) _.curclo))
         {
-          apply1_BM (_.curclo, (struct stackframe_stBM *) &_, du);
+          apply1_BM ((value_tyBM) _.curclo, (struct stackframe_stBM *) &_,
+                     du);
           du->dump_todocount++;
         }
     }
@@ -374,7 +375,7 @@ dump_emit_space_BM (struct dumper_stBM *du, unsigned spix,
                  const stringval_tyBM * pathv;
                  const stringval_tyBM * backupv;
                  const stringval_tyBM * tempathv;
-                 const objectval_tyBM * curobj; //
+                 objectval_tyBM * curobj;       //
                  const objectval_tyBM * modobj; //
                  const setval_tyBM * setmodules;
     );
@@ -447,8 +448,7 @@ dump_emit_space_BM (struct dumper_stBM *du, unsigned spix,
       fprintf (spfil, "!^%s\n", curmodid);
     };
   fputc ('\n', spfil);
-  const objectval_tyBM **objarr
-    = calloc (prime_above_BM (nbobj), sizeof (void *));
+  objectval_tyBM **objarr = calloc (prime_above_BM (nbobj), sizeof (void *));
   if (!objarr)
     FATAL_BM ("calloc failure for %d objects spix#%u", nbobj, spix);
   for (unsigned obix = 0; obix < nbobj; obix++)

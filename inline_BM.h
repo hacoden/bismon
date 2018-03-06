@@ -188,6 +188,14 @@ valcmp_BM (const value_tyBM v1, const value_tyBM v2)
   return valcmpdepth_BM (v1, v2, 0);
 }                               /* end valcmp_BM */
 
+void
+valarrqsort_BM (value_tyBM * arr, unsigned siz)
+{
+  if (!arr || siz <= 1)
+    return;
+  qsort (arr, siz, sizeof (value_tyBM), valqcmp_BM);
+}                               /* end valarrqsort_BM */
+
 bool
 validserial63_BM (serial63_tyBM s)
 {

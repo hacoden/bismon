@@ -38,7 +38,7 @@ objnamedptrqcmp_BM (const void *p1, const void *p2)
 }                               /* end objptrqcmp_BM */
 
 void
-sortobjarr_BM (const objectval_tyBM ** obarr, size_t arrsiz)
+sortobjarr_BM (objectval_tyBM ** obarr, size_t arrsiz)
 {
   if (obarr == NULL)
     arrsiz = 0;
@@ -48,7 +48,7 @@ sortobjarr_BM (const objectval_tyBM ** obarr, size_t arrsiz)
 
 
 void
-sortnamedobjarr_BM (const objectval_tyBM ** obarr, size_t arrsiz)
+sortnamedobjarr_BM (objectval_tyBM ** obarr, size_t arrsiz)
 {
   if (obarr == NULL)
     arrsiz = 0;
@@ -1077,13 +1077,13 @@ send0_BM (const value_tyBM recv, const objectval_tyBM * obselector,
   if (!mclos)
     return NULL;
   ASSERT_BM (isclosure_BM ((const value_tyBM) mclos));
-  return apply1_BM (mclos, stkf, recv);
+  return apply1_BM ((const value_tyBM) mclos, stkf, recv);
 }                               /* end send0_BM */
 
 
 value_tyBM
 send1_BM (const value_tyBM recv, const objectval_tyBM * obselector,
-          struct stackframe_stBM * stkf, const value_tyBM arg1)
+          struct stackframe_stBM *stkf, const value_tyBM arg1)
 {
   if (!isobject_BM ((const value_tyBM) obselector))
     return NULL;
@@ -1091,13 +1091,13 @@ send1_BM (const value_tyBM recv, const objectval_tyBM * obselector,
   if (!mclos)
     return NULL;
   ASSERT_BM (isclosure_BM ((const value_tyBM) mclos));
-  return apply2_BM (mclos, stkf, recv, arg1);
+  return apply2_BM ((const value_tyBM) mclos, stkf, recv, arg1);
 }                               /* end send1_BM */
 
 
 value_tyBM
 send2_BM (const value_tyBM recv, const objectval_tyBM * obselector,
-          struct stackframe_stBM * stkf, const value_tyBM arg1,
+          struct stackframe_stBM *stkf, const value_tyBM arg1,
           const value_tyBM arg2)
 {
   if (!isobject_BM ((const value_tyBM) obselector))
@@ -1106,13 +1106,13 @@ send2_BM (const value_tyBM recv, const objectval_tyBM * obselector,
   if (!mclos)
     return NULL;
   ASSERT_BM (isclosure_BM ((const value_tyBM) mclos));
-  return apply3_BM (mclos, stkf, recv, arg1, arg2);
+  return apply3_BM ((const value_tyBM) mclos, stkf, recv, arg1, arg2);
 }                               /* end send2_BM */
 
 
 value_tyBM
 send3_BM (const value_tyBM recv, const objectval_tyBM * obselector,
-          struct stackframe_stBM * stkf, const value_tyBM arg1,
+          struct stackframe_stBM *stkf, const value_tyBM arg1,
           const value_tyBM arg2, const value_tyBM arg3)
 {
   if (!isobject_BM ((const value_tyBM) obselector))
@@ -1121,13 +1121,13 @@ send3_BM (const value_tyBM recv, const objectval_tyBM * obselector,
   if (!mclos)
     return NULL;
   ASSERT_BM (isclosure_BM ((const value_tyBM) mclos));
-  return apply4_BM (mclos, stkf, recv, arg1, arg2, arg3);
+  return apply4_BM ((const value_tyBM) mclos, stkf, recv, arg1, arg2, arg3);
 }                               /* end send3_BM */
 
 
 value_tyBM
 send4_BM (const value_tyBM recv, const objectval_tyBM * obselector,
-          struct stackframe_stBM * stkf, const value_tyBM arg1,
+          struct stackframe_stBM *stkf, const value_tyBM arg1,
           const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4)
 {
   if (!isobject_BM ((const value_tyBM) obselector))
@@ -1136,13 +1136,14 @@ send4_BM (const value_tyBM recv, const objectval_tyBM * obselector,
   if (!mclos)
     return NULL;
   ASSERT_BM (isclosure_BM ((const value_tyBM) mclos));
-  return apply5_BM (mclos, stkf, recv, arg1, arg2, arg3, arg4);
+  return apply5_BM ((const value_tyBM) mclos, stkf, recv, arg1, arg2, arg3,
+                    arg4);
 }                               /* end send4_BM */
 
 
 value_tyBM
 send5_BM (const value_tyBM recv, const objectval_tyBM * obselector,
-          struct stackframe_stBM * stkf, const value_tyBM arg1,
+          struct stackframe_stBM *stkf, const value_tyBM arg1,
           const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4,
           const value_tyBM arg5)
 {
@@ -1152,13 +1153,14 @@ send5_BM (const value_tyBM recv, const objectval_tyBM * obselector,
   if (!mclos)
     return NULL;
   ASSERT_BM (isclosure_BM ((const value_tyBM) mclos));
-  return apply6_BM (mclos, stkf, recv, arg1, arg2, arg3, arg4, arg5);
+  return apply6_BM ((const value_tyBM) mclos, stkf, recv, arg1, arg2, arg3,
+                    arg4, arg5);
 }                               /* end send5_BM */
 
 
 value_tyBM
 send6_BM (const value_tyBM recv, const objectval_tyBM * obselector,
-          struct stackframe_stBM * stkf, const value_tyBM arg1,
+          struct stackframe_stBM *stkf, const value_tyBM arg1,
           const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4,
           const value_tyBM arg5, const value_tyBM arg6)
 {
@@ -1168,13 +1170,14 @@ send6_BM (const value_tyBM recv, const objectval_tyBM * obselector,
   if (!mclos)
     return NULL;
   ASSERT_BM (isclosure_BM ((const value_tyBM) mclos));
-  return apply7_BM (mclos, stkf, recv, arg1, arg2, arg3, arg4, arg5, arg6);
+  return apply7_BM ((const value_tyBM) mclos, stkf, recv, arg1, arg2, arg3,
+                    arg4, arg5, arg6);
 }                               /* end send6_BM */
 
 
 value_tyBM
 send7_BM (const value_tyBM recv, const objectval_tyBM * obselector,
-          struct stackframe_stBM * stkf, const value_tyBM arg1,
+          struct stackframe_stBM *stkf, const value_tyBM arg1,
           const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4,
           const value_tyBM arg5, const value_tyBM arg6, const value_tyBM arg7)
 {
@@ -1184,14 +1187,14 @@ send7_BM (const value_tyBM recv, const objectval_tyBM * obselector,
   if (!mclos)
     return NULL;
   ASSERT_BM (isclosure_BM ((const value_tyBM) mclos));
-  return apply8_BM (mclos, stkf, recv, arg1, arg2, arg3, arg4, arg5, arg6,
-                    arg7);
+  return apply8_BM ((const value_tyBM) mclos, stkf, recv, arg1, arg2, arg3,
+                    arg4, arg5, arg6, arg7);
 }                               /* end send7_BM */
 
 
 value_tyBM
 send8_BM (const value_tyBM recv, const objectval_tyBM * obselector,
-          struct stackframe_stBM * stkf, const value_tyBM arg1,
+          struct stackframe_stBM *stkf, const value_tyBM arg1,
           const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4,
           const value_tyBM arg5, const value_tyBM arg6, const value_tyBM arg7,
           const value_tyBM arg8)
@@ -1202,8 +1205,8 @@ send8_BM (const value_tyBM recv, const objectval_tyBM * obselector,
   if (!mclos)
     return NULL;
   ASSERT_BM (isclosure_BM ((const value_tyBM) mclos));
-  return apply9_BM (mclos, stkf, recv, arg1, arg2, arg3, arg4, arg5, arg6,
-                    arg7, arg8);
+  return apply9_BM ((const value_tyBM) mclos, stkf, recv,
+                    arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
 }                               /* end send8_BM */
 
 
@@ -1235,13 +1238,13 @@ sendtinyvar_BM (const value_tyBM recv,
   locargs[0] = recv;
   if (nbargs > 0)
     memcpy (locargs + 1, argarr, nbargs * sizeof (value_tyBM));
-  return applyvar_BM (mclos, stkf, nbargs + 1, locargs);
+  return applyvar_BM ((const value_tyBM) mclos, stkf, nbargs + 1, locargs);
 }                               /* end sendtinyvar_BM */
 
 value_tyBM
 sendmanyvar_BM (const value_tyBM recv,
                 const objectval_tyBM * obselector,
-                struct stackframe_stBM * stkf,
+                struct stackframe_stBM *stkf,
                 unsigned nbargs, const value_tyBM * argarr)
 {
   value_tyBM locargs[MAXAPPLYARGS_BM];
@@ -1256,7 +1259,7 @@ sendmanyvar_BM (const value_tyBM recv,
   locargs[0] = recv;
   if (nbargs > 0)
     memcpy (locargs + 1, argarr, nbargs * sizeof (value_tyBM));
-  return applyvar_BM (mclos, stkf, nbargs + 1, locargs);
+  return applyvar_BM ((const value_tyBM) mclos, stkf, nbargs + 1, locargs);
 }                               /* end sendmanyvar_BM */
 
 

@@ -419,6 +419,12 @@ valcmpdepth_BM (const value_tyBM v1, const value_tyBM v2, int depth)
             (void *) v1, (void *) v2, ty1);
 }                               /* end valcmpdepth_BM */
 
+int
+valqcmp_BM (const void *p1, const void *p2)
+{
+  return valcmp_BM (*(value_tyBM *) p1, *(value_tyBM *) p2);
+}                               /* end valqcmp_BM */
+
 ////////////////////////////////////////////////////////////////
 
 void
