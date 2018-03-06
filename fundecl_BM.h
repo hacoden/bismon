@@ -696,6 +696,10 @@ extern bool obdumpobjisdumpable_BM (objectval_tyBM * dumpob,
 extern bool obdumpvalisdumpable_BM (objectval_tyBM * dumpob,
                                     const value_tyBM val);
 
+// true if the value (and every son or component) is dumpable
+extern bool obdumpvalisfullydumpable_BM (objectval_tyBM * dumpob,
+                                         const value_tyBM val);
+
 extern void obdumpscanobj_BM (objectval_tyBM * dumpob,
                               const objectval_tyBM * obj);
 extern void obdumpscanvalue_BM (objectval_tyBM * dumpob, const value_tyBM val,

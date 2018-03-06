@@ -52,6 +52,69 @@ obdumpvalisdumpable_BM (objectval_tyBM * dumpob, const value_tyBM val)
   return obdumpobjisdumpable_BM (dumpob, (const objectval_tyBM *) val);
 }                               /* end dumpvalisdumpable_BM */
 
+
+static bool
+obdumpvalisfullydumpabledepth_BM (struct dumper_stBM *du,
+                                  const value_tyBM val, int depth);
+
+bool
+obdumpvalisfullydumpabledepth_BM (struct dumper_stBM *du,
+                                  const value_tyBM val, int depth)
+{
+  ASSERT_BM (((typedhead_tyBM *) du)->htyp == typayl_dumper_BM);
+  if (depth > MAXDEPTHGC_BM)
+    return false;
+  if (!val)
+    return false;
+  switch (valtype_BM (val))
+    {
+    case tyString_BM:
+    case tyInt_BM:
+    case tyUnspecified_BM:
+      return true;
+    case tySet_BM:
+    case tyTuple_BM:
+      {
+        const seqobval_tyBM *seq = val;
+        for (int ix = (int)(((const typedsize_tyBM *)seq)->size) - 1;
+             ix >= 0; ix--)
+          {
+            const objectval_tyBM *curob = seq->seq_objs[ix];
+            if (!curob || !hashsetobj_contains_BM (du->dump_hset, curob))
+              return false;
+          }
+        return true;
+      }
+    case tyNode_BM:
+    case tyClosure_BM:
+      {
+        const tree_tyBM *tree = val;
+        if (!hashsetobj_contains_BM (du->dump_hset, tree->nodt_conn))
+          return false;
+        for (int ix = (int)(((const typedsize_tyBM *)tree)->size) - 1;
+             ix >= 0; ix--)
+          if (!obdumpvalisfullydumpabledepth_BM
+              (du, tree->nodt_sons[ix], depth + 1))
+            return false;
+        return true;
+      }
+    case tyObject_BM:
+      return hashsetobj_contains_BM (du->dump_hset, (objectval_tyBM *) val);
+    }
+  return false;
+}                               /* end obdumpvalisfullydumpabledepth_BM */
+
+
+bool
+obdumpvalisfullydumpable_BM (objectval_tyBM * dumpob, const value_tyBM val)
+{
+  struct dumper_stBM *du = obdumpgetdumper_BM (dumpob);
+  if (!du)
+    return false;
+  return obdumpvalisfullydumpabledepth_BM (du, val, 0);
+}                               /* end obdumpvalisfullydumpable_BM */
+
+
 void
 obdumpscanobj_BM (objectval_tyBM * dumpob, const objectval_tyBM * obj)
 {
