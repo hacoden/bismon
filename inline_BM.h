@@ -175,7 +175,7 @@ valequal_BM (const value_tyBM v1, const value_tyBM v2)
     return false;
   if (ty1 == tyObject_BM)
     return false;
-  return valsamecontent_BM (v1, v2);
+  return valsamecontent_BM (v1, v2, 0);
 }                               /* end valequal_BM */
 
 int

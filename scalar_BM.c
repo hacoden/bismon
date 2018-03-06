@@ -242,7 +242,7 @@ bytstring_BM (const stringval_tyBM * strv)
 
 
 bool
-valsamecontent_BM (const value_tyBM v1, const value_tyBM v2)
+valsamecontent_BM (const value_tyBM v1, const value_tyBM v2, int depth)
 {
   if (v1 == v2)
     return true;
@@ -254,6 +254,8 @@ valsamecontent_BM (const value_tyBM v1, const value_tyBM v2)
   hash_tyBM h2 = valhash_BM (v2);
   if (h1 != h2)
     return false;
+  if (depth + 2 > MAXDEPTHGC_BM)
+    FATAL_BM ("too deep valsamecontent_BM depth %u", depth);
   switch (ty1)                  /* same as ty2 */
     {
     case tyInt_BM:
@@ -292,7 +294,8 @@ valsamecontent_BM (const value_tyBM v1, const value_tyBM v2)
           {
             if (tr1->nodt_sons[ix] == tr2->nodt_sons[ix])
               continue;
-            if (!valequal_BM (tr1->nodt_sons[ix], tr2->nodt_sons[ix]))
+            if (!valsamecontent_BM
+                (tr1->nodt_sons[ix], tr2->nodt_sons[ix], depth + 1))
               return false;
           }
       }
@@ -397,7 +400,7 @@ valcmpdepth_BM (const value_tyBM v1, const value_tyBM v2, int depth)
           {
             const value_tyBM son1 = tree1->nodt_sons[ix];
             const value_tyBM son2 = tree2->nodt_sons[ix];
-            if (son1 == son2 || valequal_BM (son1, son2))
+            if (son1 == son2 || valsamecontent_BM (son1, son2, depth + 1))
               continue;
             int cmp = valcmpdepth_BM (son1, son2, depth + 1);
             ASSERT_BM (cmp != 0);
