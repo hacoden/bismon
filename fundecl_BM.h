@@ -30,6 +30,7 @@ void valgcdestroy_BM (struct garbcoll_stBM *, value_tyBM v);
 void valgckeep_BM (struct garbcoll_stBM *, value_tyBM v);
 static inline bool valequal_BM (const value_tyBM v1, const value_tyBM v2);
 extern bool valsamecontent_BM (const value_tyBM v1, const value_tyBM v2);
+static inline int valcmp_BM (const value_tyBM v1, const value_tyBM v2);
 
 static inline bool validserial63_BM (serial63_tyBM s);
 extern serial63_tyBM randomserial63_BM (void);

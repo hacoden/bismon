@@ -39,7 +39,7 @@ elapsedtime_BM (void)
 bool
 istaggedint_BM (value_tyBM v)
 {
-  return (uintptr_t) v & 1;
+  return ((uintptr_t) v) & 1;
 }                               /* end istaggedint_BM */
 
 intptr_t
@@ -177,6 +177,16 @@ valequal_BM (const value_tyBM v1, const value_tyBM v2)
     return false;
   return valsamecontent_BM (v1, v2);
 }                               /* end valequal_BM */
+
+int
+valcmp_BM (const value_tyBM v1, const value_tyBM v2)
+{
+  extern int valcmpdepth_BM (const value_tyBM v1, const value_tyBM v2,
+                             int depth);
+  if (v1 == v2)
+    return 0;
+  return valcmpdepth_BM (v1, v2, 0);
+}                               /* end valcmp_BM */
 
 bool
 validserial63_BM (serial63_tyBM s)

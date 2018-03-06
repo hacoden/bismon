@@ -303,6 +303,119 @@ valsamecontent_BM (const value_tyBM v1, const value_tyBM v2)
     }
 }                               /* end valsamecontent_BM */
 
+
+
+int
+valcmpdepth_BM (const value_tyBM v1, const value_tyBM v2, int depth)
+{
+  if (v1 == v2)
+    return 0;
+  if (!v1)
+    return -1;
+  if (!v2)
+    return +1;
+  int ty1 = valtype_BM (v1);
+  int ty2 = valtype_BM (v2);
+  if (ty1 < ty2)
+    return -1;
+  else if (ty1 > ty2)
+    return +1;
+  if (depth > MAXDEPTHGC_BM)
+    FATAL_BM ("too deep val compare %d", depth);
+  switch (ty1)                  /* same as ty2 */
+    {
+    case tyInt_BM:
+      {
+        intptr_t i1 = ((intptr_t) v1) >> 1;
+        intptr_t i2 = ((intptr_t) v2) >> 1;
+        if (i1 < i2)
+          return -1;
+        else if (i1 > i2)
+          return +1;
+        FATAL_BM ("impossible case of same integers %lld & %lld",
+                  (long long) i1, (long long) i2);
+      }
+    case tyString_BM:
+      return strcmp (((stringval_tyBM *) v1)->strv_bytes,
+                     ((stringval_tyBM *) v2)->strv_bytes);
+    case tySet_BM:
+    case tyTuple_BM:
+      {
+        const seqobval_tyBM *seq1 = v1;
+        const seqobval_tyBM *seq2 = v2;
+        unsigned siz1 = ((typedsize_tyBM *) seq1)->size;
+        unsigned siz2 = ((typedsize_tyBM *) seq2)->size;
+        unsigned minsiz = (siz1 < siz2) ? siz1 : siz2;
+        for (unsigned ix = 0; ix < minsiz; ix++)
+          {
+            objectval_tyBM *comp1 = (objectval_tyBM *) seq1->seq_objs[ix];
+            objectval_tyBM *comp2 = (objectval_tyBM *) seq2->seq_objs[ix];
+            if (comp1 == comp2)
+              continue;
+            if (!comp1)
+              return -1;
+            if (!comp2)
+              return +1;
+            int cmpid = cmpid_BM (comp1->ob_id, comp2->ob_id);
+            if (cmpid < 0)
+              return -1;
+            if (cmpid > 0)
+              return +1;
+            FATAL_BM
+              ("corrupted components comp1@%p comp2@%p in seq1@%p seq2@%p ix#%u",
+               (void *) comp1, (void *) comp2, (void *) seq1, (void *) seq2,
+               ix);
+          }
+        if (siz1 == siz2)
+          return 0;
+        else if (siz1 < siz2)
+          return -1;
+        else
+          return +1;
+      }
+    case tyObject_BM:
+      {
+        objectval_tyBM *ob1 = (objectval_tyBM *) v1;
+        objectval_tyBM *ob2 = (objectval_tyBM *) v2;
+        return cmpid_BM (ob1->ob_id, ob2->ob_id);
+      }
+    case tyClosure_BM:
+    case tyNode_BM:
+      {
+        const tree_tyBM *tree1 = v1;
+        const tree_tyBM *tree2 = v2;
+        objectval_tyBM *conn1 = tree1->nodt_conn;
+        objectval_tyBM *conn2 = tree2->nodt_conn;
+        ASSERT_BM (isobject_BM (conn1));
+        ASSERT_BM (isobject_BM (conn2));
+        if (conn1 != conn2)
+          return cmpid_BM (conn1->ob_id, conn2->ob_id);
+        unsigned wid1 = ((const typedsize_tyBM *) tree1)->size;
+        unsigned wid2 = ((const typedsize_tyBM *) tree2)->size;
+        unsigned minwid = (wid1 < wid2) ? wid1 : wid2;
+        for (unsigned ix = 0; ix < minwid; ix++)
+          {
+            const value_tyBM son1 = tree1->nodt_sons[ix];
+            const value_tyBM son2 = tree2->nodt_sons[ix];
+            if (son1 == son2 || valequal_BM (son1, son2))
+              continue;
+            int cmp = valcmpdepth_BM (son1, son2, depth + 1);
+            ASSERT_BM (cmp != 0);
+            return cmp;
+          }
+        if (wid1 == wid2)
+          return 0;
+        else if (wid1 < wid2)
+          return -1;
+        else
+          return +1;
+      }
+#warning incomplete valcmpdepth_BM
+    }
+  FATAL_BM ("uncomparable values @%p & @%p of type #%d",
+            (void *) v1, (void *) v2, ty1);
+}                               /* end valcmpdepth_BM */
+
 ////////////////////////////////////////////////////////////////
 
 void
