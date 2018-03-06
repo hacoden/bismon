@@ -979,5 +979,116 @@ hashsetvalremove_BM (struct hashsetval_stBM *hsv, value_tyBM * val)
   return hsv;
 }                               /* end hashsetvalremove_BM */
 
+value_tyBM
+hashsetvalfirst_BM (struct hashsetval_stBM * hsv)
+{
+  if (!ishashsetval_BM ((value_tyBM) hsv))
+    return NULL;
+  unsigned hslen = ((typedhead_tyBM *) hsv)->rlen;
+  for (unsigned bix = 0; bix < hslen; bix++)
+    {
+      struct hashsetvbucket_stBM *curbuck = hsv->hashval_vbuckets[bix];
+      if (!curbuck)
+        continue;
+      ASSERT_BM (valtype_BM (curbuck) == typayl_hashsetvbucket_BM);
+      unsigned bucklen = ((typedhead_tyBM *) curbuck)->rlen;
+      for (unsigned compix = 0; compix < bucklen; compix++)
+        {
+          value_tyBM curval = curbuck->vbuck_arr[compix];
+          if (curval == HASHEMPTYSLOT_BM)
+            continue;
+          if (!curval)
+            break;
+          return curval;
+        }
+    }
+  return NULL;
+}                               /* end hashsetvalfirst_BM */
+
+value_tyBM
+hashsetvalnext_BM (struct hashsetval_stBM * hsv, value_tyBM prev)
+{
+  if (!ishashsetval_BM ((value_tyBM) hsv))
+    return NULL;
+  if (!prev || prev == HASHEMPTYSLOT_BM)
+    return NULL;
+  struct hashsetvalindexes_stBM hvindexes = hashsetfindindexes_BM (hsv, prev);
+  int bix = hvindexes.hvi_buckix;
+  int compix = hvindexes.hvi_compix;
+  if (bix < 0 || compix < 0)
+    return NULL;
+  unsigned hslen = ((typedhead_tyBM *) hsv)->rlen;
+  ASSERT_BM (bix < hslen);
+  struct hashsetvbucket_stBM *curbuck = hsv->hashval_vbuckets[bix];
+  ASSERT_BM (curbuck != NULL
+             && valtype_BM (curbuck) == typayl_hashsetvbucket_BM);
+  unsigned bucklen = ((typedhead_tyBM *) curbuck)->rlen;
+  for (; compix < bucklen; compix++)
+    {
+      value_tyBM curval = curbuck->vbuck_arr[compix];
+      if (curval == HASHEMPTYSLOT_BM)
+        continue;
+      if (!curval)
+        break;
+      return curval;
+    }
+  for (bix = bix + 1; bix < hslen; bix++)
+    {
+      curbuck = hsv->hashval_vbuckets[bix];
+      if (!curbuck)
+        continue;
+      ASSERT_BM (valtype_BM (curbuck) == typayl_hashsetvbucket_BM);
+      bucklen = ((typedhead_tyBM *) curbuck)->rlen;
+      for (compix = 0; compix < bucklen; compix++)
+        {
+          value_tyBM curval = curbuck->vbuck_arr[compix];
+          if (curval == HASHEMPTYSLOT_BM)
+            continue;
+          if (!curval)
+            break;
+          return curval;
+        }
+    }
+  return NULL;
+}                               /* end hashsetvalnext_BM */
+
+value_tyBM
+hashsetvalmakenode_BM (struct hashsetval_stBM * hsv, objectval_tyBM * connob)
+{
+  value_tyBM resv = NULL;
+  if (!ishashsetval_BM ((value_tyBM) hsv))
+    return NULL;
+  if (!isobject_BM (connob))
+    return NULL;
+  unsigned hslen = ((typedhead_tyBM *) hsv)->rlen;
+  unsigned hsiz = ((struct typedsize_stBM *) hsv)->size;
+  value_tyBM *arr = calloc (hsiz + 1, sizeof (value_tyBM));
+  if (!arr)
+    FATAL_BM ("hashsetmakenode_BM calloc %d failure", hsiz);
+  unsigned cnt = 0;
+  for (unsigned bix = 0; bix < hslen; bix++)
+    {
+      struct hashsetvbucket_stBM *curbuck = hsv->hashval_vbuckets[bix];
+      if (!curbuck)
+        continue;
+      ASSERT_BM (valtype_BM (curbuck) == typayl_hashsetvbucket_BM);
+      unsigned bucklen = ((typedhead_tyBM *) curbuck)->rlen;
+      for (unsigned compix = 0; compix < bucklen; compix++)
+        {
+          value_tyBM curval = curbuck->vbuck_arr[compix];
+          if (curval == HASHEMPTYSLOT_BM)
+            continue;
+          if (!curval)
+            break;
+          ASSERT_BM (cnt < hsiz);
+          arr[cnt++] = curval;
+        }
+    }
+  ASSERT_BM (cnt == hsiz);
+  valarrqsort_BM (arr, cnt);
+  resv = makenode_BM (connob, cnt, arr);
+  free (arr), arr = NULL;
+  return resv;
+}                               /* end hashsetvalmakenode_BM */
 
 #warning more needed on hashsets, hashmaps, etc....

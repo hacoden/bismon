@@ -574,7 +574,18 @@ extern struct hashsetval_stBM *hashsetvalput_BM (struct hashsetval_stBM *hsv,
 extern struct hashsetval_stBM *hashsetvalremove_BM (struct hashsetval_stBM
                                                     *hsv, value_tyBM * val);
 
-
+/** to iterate in an hashsetval using
+  for (value_tyBM v = hashsetvalfirst_BM(hsv); v!=NULL;
+       v = hashsetvalnext_BM(hsv, v))
+ which makes only sense with an unchanged hashsetval
+ (so no insertion or deletion or reorganization inside the loop body)
+ **/
+extern value_tyBM hashsetvalfirst_BM (struct hashsetval_stBM *hsv);
+extern value_tyBM hashsetvalnext_BM (struct hashsetval_stBM *hsv,
+                                     value_tyBM prev);
+/* make a wide node from all the (sorted) values inside an hashsetval */
+extern value_tyBM hashsetvalmakenode_BM (struct hashsetval_stBM *hsv,
+                                         objectval_tyBM * connob);
 ////////////////
 /** apply a closure, or directly an object; so applying OBJ is same as
     applying closure % OBJ () without closed values */
