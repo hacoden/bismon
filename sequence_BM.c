@@ -154,7 +154,7 @@ makeset_BM (const objectval_tyBM ** arr, unsigned rawsiz)
     if (arr[ix])
       tmparr[cnt++] = arr[ix];
   ASSERT_BM (cnt == siz);
-  sortobjarr_BM ((const objectval_tyBM **) tmparr, siz);
+  sortobjarr_BM ((objectval_tyBM **) tmparr, siz);
   int nbdup = 0;
   setval_tyBM *set = NULL;
   for (unsigned nix = 1; nix < siz; nix++)

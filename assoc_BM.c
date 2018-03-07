@@ -1328,7 +1328,7 @@ hashmapvalrawput_BM (struct hashmapval_stBM *hmv, value_tyBM keyv,
       return;
     }
   unsigned bucklen = ((typedhead_tyBM *) curbuck)->rlen;
-  ASSERT_BM (compix < bucklen);
+  ASSERT_BM (compix >= 0 && compix < (int) bucklen);
   value_tyBM oldkeyv = curbuck->vbent_arr[compix].hmap_keyv;
   if (!oldkeyv || oldkeyv == HASHEMPTYSLOT_BM)
     {
@@ -1343,5 +1343,43 @@ hashmapvalrawput_BM (struct hashmapval_stBM *hmv, value_tyBM keyv,
   return;
 }                               /* end hashmapvalrawput_BM */
 
+
+
+
+struct hashmapval_stBM *
+hashmapvalreorganize_BM (struct hashmapval_stBM *hmv, unsigned gap)
+{
+  if (valtype_BM ((value_tyBM) hmv) != typayl_hashmapval_BM)
+    hmv = NULL;
+  unsigned oldhsiz = hmv ? (((struct typedsize_stBM *) hmv)->size) : 0;
+  unsigned oldhlen = hmv ? (((struct typedhead_stBM *) hmv)->rlen) : 0;
+  unsigned newsiz = prime_above_BM ((oldhsiz + gap) / 7 + gap / 32 + 3);
+  struct hashmapval_stBM *newhmv =      //
+    allocgcty_BM (typayl_hashsetval_BM,
+                  sizeof (struct hashmapval_stBM) +
+                  newsiz * sizeof (struct hashmapbucket_stBM *));
+  ((typedhead_tyBM *) newhmv)->rlen = newsiz;
+  if (!oldhsiz)
+    return newhmv;
+  for (unsigned oldbix = 0; oldbix < oldhlen; oldbix++)
+    {
+      struct hashmapbucket_stBM *oldbuck = hmv->hashmap_vbuckets[oldbix];
+      if (!oldbuck)
+        continue;
+      unsigned oldbucklen = ((typedhead_tyBM *) oldbuck)->rlen;
+      for (unsigned oldelix = 0; oldelix < oldbucklen; oldelix++)
+        {
+          value_tyBM oldkeyv = oldbuck->vbent_arr[oldelix].hmap_keyv;
+          if (!oldkeyv)
+            break;
+          if (oldkeyv == HASHEMPTYSLOT_BM)
+            continue;
+          value_tyBM oldvalv = oldbuck->vbent_arr[oldelix].hmap_valv;
+          ASSERT_BM (oldvalv != NULL);
+          hashmapvalrawput_BM (newhmv, oldkeyv, oldvalv);
+        }
+    }
+  return newhmv;
+}                               /* end of hashmapvalreorganize_BM */
 
 #warning more needed on hashsets, hashmaps, etc....

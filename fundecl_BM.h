@@ -605,6 +605,8 @@ extern void hashmapbucketgckeep_BM (struct garbcoll_stBM *gc,
 extern value_tyBM
 hashmapvalget_BM (struct hashmapval_stBM *hmv, value_tyBM keyv);
 
+extern struct hashmapval_stBM *hashmapvalreorganize_BM (struct hashmapval_stBM
+                                                        *hmv, unsigned gap);
 
 
 ////////////////
