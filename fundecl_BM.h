@@ -422,12 +422,10 @@ extern void datavectgcdestroy_BM (struct garbcoll_stBM *gc,
 extern void datavectgckeep_BM (struct garbcoll_stBM *gc,
                                struct datavectval_stBM *dvec);
 
-static inline struct hashsetobj_stBM *objputhashsetpayload_BM (objectval_tyBM
-                                                               * obj,
-                                                               unsigned
-                                                               inisiz);
-static inline struct hashsetobj_stBM *objhashsetpayload_BM (objectval_tyBM *
-                                                            obj);
+static inline struct hashsetobj_stBM *objputhashsetpayload_BM   //
+  (objectval_tyBM * obj, unsigned inisiz);
+static inline struct hashsetobj_stBM *objhashsetpayload_BM      //
+  (objectval_tyBM * obj);
 extern struct hashsetobj_stBM *hashsetobj_grow_BM (struct hashsetobj_stBM
                                                    *hset, unsigned gap);
 static inline struct hashsetobj_stBM *hashsetobjcast_BM (const value_tyBM v);
@@ -603,6 +601,11 @@ extern void hashmapvalgckeep_BM (struct garbcoll_stBM *gc,
                                  struct hashmapval_stBM *hsv);
 extern void hashmapbucketgckeep_BM (struct garbcoll_stBM *gc,
                                     struct hashmapbucket_stBM *hvb);
+
+extern value_tyBM
+hashmapvalget_BM (struct hashmapval_stBM *hmv, value_tyBM keyv);
+
+
 
 ////////////////
 /** apply a closure, or directly an object; so applying OBJ is same as

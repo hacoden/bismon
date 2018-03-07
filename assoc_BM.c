@@ -725,7 +725,7 @@ struct hashpairindexes_stBM
   int hvi_buckix;               /* index of bucket */
   int hvi_compix;               /* index of component */
 };
-
+#define EMPTYPAIRINDEXES_BM ((struct hashpairindexes_stBM){-1,-1})
 // give the indexes of a value; if the value is present, give the
 // actual indexes; if the value is absent, give the index where it
 // should go
@@ -734,9 +734,7 @@ hashsetvalfindindexes_BM (struct hashsetval_stBM *hsv, value_tyBM val)
 {
   ASSERT_BM (hsv && ((typedhead_tyBM *) hsv)->htyp == typayl_hashsetval_BM);
   if (!val)
-    return (struct hashpairindexes_stBM)
-    {
-    -1, -1};
+    return EMPTYPAIRINDEXES_BM;
   unsigned len = ((typedhead_tyBM *) hsv)->rlen;
   ASSERT_BM (len < MAXSIZE_BM && len > 2);
   hash_tyBM hva = valhash_BM (val);
@@ -745,7 +743,8 @@ hashsetvalfindindexes_BM (struct hashsetval_stBM *hsv, value_tyBM val)
   if (!curbuck)
     return (struct hashpairindexes_stBM)
     {
-    .hvi_buckix = bix,.hvi_compix = -1};
+      .hvi_buckix = bix,        //
+    .hvi_compix = -1};
   ASSERT_BM (((typedhead_tyBM *) curbuck)->htyp == typayl_hashsetvbucket_BM);
   unsigned bucklen = ((typedhead_tyBM *) curbuck)->rlen;
   int buckpos = -1;
@@ -758,7 +757,8 @@ hashsetvalfindindexes_BM (struct hashsetval_stBM *hsv, value_tyBM val)
             buckpos = (int) vix;
           return (struct hashpairindexes_stBM)
           {
-          .hvi_buckix = bix,.hvi_compix = vix};
+            .hvi_buckix = bix,  //
+          .hvi_compix = vix};
         }
       else if (curval == (value_tyBM) HASHEMPTYSLOT_BM)
         {
@@ -770,16 +770,15 @@ hashsetvalfindindexes_BM (struct hashsetval_stBM *hsv, value_tyBM val)
         {
           return (struct hashpairindexes_stBM)
           {
-          .hvi_buckix = bix,.hvi_compix = vix};
+            .hvi_buckix = bix,  //
+          .hvi_compix = vix};
         }
     }
-  return (struct hashpairindexes_stBM)
-  {
-  .hvi_buckix = bix,.hvi_compix = -1};
+  return EMPTYPAIRINDEXES_BM;
 }                               /* end hashsetvalfindindexes_BM */
 
 bool
-hashsetvalcontains_BM (struct hashsetval_stBM *hsv, value_tyBM val)
+hashsetvalcontains_BM (struct hashsetval_stBM * hsv, value_tyBM val)
 {
   if (!hsv || valtype_BM ((value_tyBM) hsv) != typayl_hashsetval_BM)
     return false;
@@ -1115,7 +1114,7 @@ hashmapvalgcmark_BM (struct garbcoll_stBM *gc, struct hashmapval_stBM *hmv,
   unsigned siz = ((typedsize_tyBM *) hmv)->size;
   for (unsigned ix = 0; ix < siz; ix++)
     {
-      struct hashmapbucket_stBM *vbu = hmv->hashval_vbuckets[ix];
+      struct hashmapbucket_stBM *vbu = hmv->hashmap_vbuckets[ix];
       if (!vbu || vbu == HASHEMPTYSLOT_BM)
         continue;
       ASSERT_BM (valtype_BM ((value_tyBM) vbu) == typayl_hashmapbucket_BM);
@@ -1192,6 +1191,83 @@ hashmapbucketgckeep_BM (struct garbcoll_stBM *gc,
   ASSERT_BM (len < MAXSIZE_BM);
   gc->gc_keptbytes += sizeof (*hvb) + len * sizeof (struct hashmapentry_stBM);
 }                               /* end hashmapvbucketgckeep_BM */
+
+static struct hashpairindexes_stBM
+hashmapvalfindindexes_BM (struct hashmapval_stBM *hmv, value_tyBM val)
+{
+  ASSERT_BM (hmv && ((typedhead_tyBM *) hmv)->htyp == typayl_hashmapval_BM);
+  if (!val)
+    return EMPTYPAIRINDEXES_BM;
+  unsigned len = ((typedhead_tyBM *) hmv)->rlen;
+  ASSERT_BM (len < MAXSIZE_BM && len > 2);
+  hash_tyBM hva = valhash_BM (val);
+  unsigned bix = hva % len;
+  struct hashmapbucket_stBM *curbuck = hmv->hashmap_vbuckets[bix];
+  if (!curbuck)
+    return (struct hashpairindexes_stBM)
+    {
+      .hvi_buckix = bix,        //
+    .hvi_compix = -1};
+  ASSERT_BM (((typedhead_tyBM *) curbuck)->htyp == typayl_hashmapbucket_BM);
+  unsigned bucklen = ((typedhead_tyBM *) curbuck)->rlen;
+  int buckpos = -1;
+  for (unsigned vix = 0; vix < bucklen; vix++)
+    {
+      value_tyBM curkey = curbuck->vbent_arr[vix].hmap_keyv;
+      if (!curkey)
+        {
+          if (buckpos < 0)
+            buckpos = (int) vix;
+          return (struct hashpairindexes_stBM)
+          {
+            .hvi_buckix = bix,  //
+          .hvi_compix = vix};
+        }
+      else if (curkey == (value_tyBM) HASHEMPTYSLOT_BM)
+        {
+          if (buckpos < 0)
+            buckpos = (int) vix;
+          continue;
+        }
+      else if (curkey == val || valequal_BM (curkey, val))
+        {
+          return (struct hashpairindexes_stBM)
+          {
+            .hvi_buckix = bix,  //
+          .hvi_compix = vix};
+        }
+    }
+  return EMPTYPAIRINDEXES_BM;
+}                               /* end hashmapvalfindindexes_BM */
+
+
+value_tyBM
+hashmapvalget_BM (struct hashmapval_stBM * hmv, value_tyBM keyv)
+{
+  if (!hmv || valtype_BM ((value_tyBM) hmv) != typayl_hashmapval_BM)
+    return false;
+  if (!keyv)
+    return false;
+  struct hashpairindexes_stBM hvindexes =
+    hashmapvalfindindexes_BM (hmv, keyv);
+  int bix = hvindexes.hvi_buckix;
+  int compix = hvindexes.hvi_compix;
+  if (bix < 0 || compix < 0)
+    return NULL;
+  unsigned hslen = ((typedhead_tyBM *) hmv)->rlen;
+  ASSERT_BM (bix < (int) hslen);
+  struct hashmapbucket_stBM *curbuck = hmv->hashmap_vbuckets[bix];
+  ASSERT_BM (curbuck != NULL);
+  unsigned bucklen = ((typedhead_tyBM *) curbuck)->rlen;
+  ASSERT_BM (compix < (int) bucklen);
+  value_tyBM curkey = curbuck->vbent_arr[compix].hmap_keyv;
+  if (curkey && curkey != (value_tyBM) HASHEMPTYSLOT_BM)
+    {
+      ASSERT_BM (curkey == keyv || valequal_BM (curkey, keyv));
+      return curbuck->vbent_arr[compix].hmap_valv;
+    }
+  return NULL;
+}                               /* end hashmapvalget_BM */
 
 
 #warning more needed on hashsets, hashmaps, etc....

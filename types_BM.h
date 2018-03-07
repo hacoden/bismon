@@ -234,7 +234,7 @@ struct hashmapval_stBM          /* typayl_hashmapval_BM */
   typedsize_tyBM pa;            // rlen is allocated size, size is
   // used count, i.e. number of filled
   // entries in the hashmap
-  struct hashmapbucket_stBM *hashval_vbuckets[];
+  struct hashmapbucket_stBM *hashmap_vbuckets[];
 };                              /* end struct hashmapval_stBM */
 
 struct hashmapentry_stBM
