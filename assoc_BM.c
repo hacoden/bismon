@@ -830,7 +830,6 @@ hashsetvalrawadd_BM (struct hashsetval_stBM *hsv, value_tyBM val)
                         sizeof (struct hashsetvbucket_stBM) +
                         newsiz * sizeof (value_tyBM));
       ((typedhead_tyBM *) newbuck)->rlen = newsiz;
-
       hsv->hashval_vbuckets[bix] = newbuck;
       newbuck->vbuck_arr[0] = val;
       ((struct typedsize_stBM *) newbuck)->size = 1;
@@ -1095,8 +1094,6 @@ hashsetvalmakenode_BM (struct hashsetval_stBM * hsv, objectval_tyBM * connob)
 
 
 
-
-
 /******** HASH MAPS ASSOCIATING VALUES TO VALUES ********/
 
 
@@ -1268,6 +1265,83 @@ hashmapvalget_BM (struct hashmapval_stBM * hmv, value_tyBM keyv)
     }
   return NULL;
 }                               /* end hashmapvalget_BM */
+
+
+#define HASHMAPVAL_INITBUCKETSIZE_BM 5
+static void hashsetvalrawput_BM (struct hashmapval_stBM *hmv, value_tyBM keyv,
+                                 value_tyBM valv);
+
+static void
+hashmapvalrawput_BM (struct hashmapval_stBM *hmv, value_tyBM keyv,
+                     value_tyBM valv)
+{
+  if (!hmv || valtype_BM ((value_tyBM) hmv) != typayl_hashmapval_BM)
+    return;
+  if (!keyv)
+    return;
+  if (!valv)
+    return;
+  struct hashpairindexes_stBM hvindexes =
+    hashmapvalfindindexes_BM (hmv, keyv);
+  int bix = hvindexes.hvi_buckix;
+  int compix = hvindexes.hvi_compix;
+  if (bix < 0)
+    return;
+  unsigned hslen = ((typedhead_tyBM *) hmv)->rlen;
+  ASSERT_BM (bix < (int) hslen);
+  struct hashmapbucket_stBM *curbuck = hmv->hashmap_vbuckets[bix];
+  if (!curbuck)
+    {
+      ASSERT_BM (compix < 0);
+      unsigned newsiz = HASHMAPVAL_INITBUCKETSIZE_BM;
+      struct hashmapbucket_stBM *newbuck
+        = allocgcty_BM (typayl_hashmapbucket_BM,
+                        sizeof (struct hashmapbucket_stBM)
+                        + newsiz * sizeof (struct hashmapentry_stBM));
+      ((typedhead_tyBM *) newbuck)->rlen = newsiz;
+      ((struct typedsize_stBM *) newbuck)->size = 1;
+      newbuck->vbent_arr[0].hmap_keyv = keyv;
+      newbuck->vbent_arr[0].hmap_valv = valv;
+      hmv->hashmap_vbuckets[bix] = newbuck;
+      ((struct typedsize_stBM *) hmv)->size++;
+      return;
+    }
+  else if (compix < 0)
+    {
+      // curbuck is full, grow it
+      unsigned oldbucklen = ((typedhead_tyBM *) curbuck)->rlen;
+      ASSERT_BM (oldbucklen == ((struct typedsize_stBM *) curbuck)->size);
+      unsigned newsiz =
+        prime_above_BM (4 * oldbucklen / 3 + 3 + ILOG2_BM (hslen + 1) / 4);
+      struct hashmapbucket_stBM *newbuck =
+        allocgcty_BM (typayl_hashmapbucket_BM,
+                      sizeof (struct hashmapbucket_stBM) +
+                      newsiz * sizeof (struct hashmapentry_stBM));
+      ((typedhead_tyBM *) newbuck)->rlen = newsiz;
+      memcpy (newbuck->vbent_arr, curbuck->vbent_arr,
+              oldbucklen * sizeof (struct hashmapentry_stBM));
+      newbuck->vbent_arr[oldbucklen].hmap_keyv = keyv;
+      newbuck->vbent_arr[oldbucklen].hmap_valv = valv;
+      ((typedsize_tyBM *) newbuck)->size = oldbucklen + 1;
+      hmv->hashmap_vbuckets[bix] = newbuck;
+      ((struct typedsize_stBM *) hmv)->size++;
+      return;
+    }
+  unsigned bucklen = ((typedhead_tyBM *) curbuck)->rlen;
+  ASSERT_BM (compix < bucklen);
+  value_tyBM oldkeyv = curbuck->vbent_arr[compix].hmap_keyv;
+  if (!oldkeyv || oldkeyv == HASHEMPTYSLOT_BM)
+    {
+      curbuck->vbent_arr[compix].hmap_keyv = keyv;
+      curbuck->vbent_arr[compix].hmap_valv = valv;
+      ((typedsize_tyBM *) curbuck)->size = bucklen + 1;
+      ((struct typedsize_stBM *) hmv)->size++;
+      return;
+    }
+  ASSERT_BM (oldkeyv == keyv || valequal_BM (oldkeyv, keyv));
+  curbuck->vbent_arr[compix].hmap_valv = valv;
+  return;
+}                               /* end hashmapvalrawput_BM */
 
 
 #warning more needed on hashsets, hashmaps, etc....
