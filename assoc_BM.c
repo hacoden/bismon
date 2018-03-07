@@ -720,6 +720,9 @@ hashsetvbucketgckeep_BM (struct garbcoll_stBM *gc,
   gc->gc_keptbytes += sizeof (*hvb) + len * sizeof (value_tyBM);
 }                               /* end hashsetvbucketgckeep_BM */
 
+#define HASHRATIO_BM 7
+#define HASHTHRESHOLD_BM (5*HASHRATIO_BM/3+2)
+
 struct hashpairindexes_stBM
 {
   int hvi_buckix;               /* index of bucket */
@@ -888,7 +891,8 @@ hashsetvalreorganize_BM (struct hashsetval_stBM *hsv, unsigned gap)
     hsv = NULL;
   unsigned oldhsiz = hsv ? (((struct typedsize_stBM *) hsv)->size) : 0;
   unsigned oldhlen = hsv ? (((struct typedhead_stBM *) hsv)->rlen) : 0;
-  unsigned newsiz = prime_above_BM ((oldhsiz + gap) / 7 + gap / 32 + 3);
+  unsigned newsiz =
+    prime_above_BM ((oldhsiz + gap) / HASHRATIO_BM + ILOG2_BM (gap + 2) + 3);
   struct hashsetval_stBM *newhsv =      //
     allocgcty_BM (typayl_hashsetval_BM,
                   sizeof (struct hashsetval_stBM) +
@@ -925,12 +929,15 @@ hashsetvalput_BM (struct hashsetval_stBM *hsv, value_tyBM * val)
   {
     unsigned oldhsiz = ((struct typedsize_stBM *) hsv)->size;
     unsigned oldhlen = ((struct typedhead_stBM *) hsv)->rlen;
-    if (oldhsiz > oldhlen * (HASHSETVAL_INITBUCKETSIZE_BM + 2) + 2)
-      hsv = hashsetvalreorganize_BM (NULL, 4 + ILOG2_BM (oldhsiz) / 4);
-    else if (oldhsiz > oldhlen * HASHSETVAL_INITBUCKETSIZE_BM + 4)
+    if (oldhsiz > oldhlen * HASHTHRESHOLD_BM + 2)
+      hsv = hashsetvalreorganize_BM (hsv, 4 + ILOG2_BM (oldhsiz + 2) / 4);
+    else if (oldhsiz
+             > oldhlen
+             * (HASHRATIO_BM + (HASHTHRESHOLD_BM - HASHRATIO_BM) / 2) +
+             ILOG2_BM (oldhlen + 3))
       {
-        if (g_random_int () % 4 == 0)
-          hsv = hashsetvalreorganize_BM (NULL, 4 + ILOG2_BM (oldhsiz) / 6);
+        if (g_random_int () % HASHTHRESHOLD_BM == 0)
+          hsv = hashsetvalreorganize_BM (hsv, 4 + ILOG2_BM (oldhsiz + 2) / 6);
       }
   }
   hashsetvalrawadd_BM (hsv, val);
@@ -965,15 +972,9 @@ hashsetvalremove_BM (struct hashsetval_stBM *hsv, value_tyBM * val)
   ((struct typedsize_stBM *) hsv)->size++;
   unsigned oldhsiz = ((struct typedsize_stBM *) hsv)->size;
   unsigned oldhlen = ((struct typedhead_stBM *) hsv)->rlen;
-  if (oldhsiz > 50
-      && oldhsiz < oldhlen * (HASHSETVAL_INITBUCKETSIZE_BM / 4) + 2)
-    hsv = hashsetvalreorganize_BM (NULL, 4 + ILOG2_BM (oldhsiz) / 4);
-  else if (oldhsiz > 80
-           && oldhsiz < oldhlen * (HASHSETVAL_INITBUCKETSIZE_BM / 5) + 2)
-    {
-      if (g_random_int () % 4 == 0)
-        hsv = hashsetvalreorganize_BM (NULL, 4 + ILOG2_BM (oldhsiz) / 6);
-    }
+  if (oldhsiz > 2 * HASHTHRESHOLD_BM
+      && oldhsiz < oldhlen * (HASHRATIO_BM / 2 + 1) + 2)
+    hsv = hashsetvalreorganize_BM (hsv, 4 + ILOG2_BM (oldhsiz) / 4);
   return hsv;
 }                               /* end hashsetvalremove_BM */
 
@@ -1353,7 +1354,8 @@ hashmapvalreorganize_BM (struct hashmapval_stBM *hmv, unsigned gap)
     hmv = NULL;
   unsigned oldhsiz = hmv ? (((struct typedsize_stBM *) hmv)->size) : 0;
   unsigned oldhlen = hmv ? (((struct typedhead_stBM *) hmv)->rlen) : 0;
-  unsigned newsiz = prime_above_BM ((oldhsiz + gap) / 7 + gap / 32 + 3);
+  unsigned newsiz =
+    prime_above_BM ((oldhsiz + gap) / HASHRATIO_BM + ILOG2_BM (gap + 2) + 3);
   struct hashmapval_stBM *newhmv =      //
     allocgcty_BM (typayl_hashsetval_BM,
                   sizeof (struct hashmapval_stBM) +
@@ -1381,5 +1383,69 @@ hashmapvalreorganize_BM (struct hashmapval_stBM *hmv, unsigned gap)
     }
   return newhmv;
 }                               /* end of hashmapvalreorganize_BM */
+
+
+struct hashmapval_stBM *
+hashmapvalput_BM (struct hashmapval_stBM *hmv, value_tyBM keyv,
+                  value_tyBM valv)
+{
+  if (!keyv)
+    return ishashmapval_BM ((value_tyBM) hmv) ? hmv : NULL;
+  if (!valv)
+    return hashmapvalremove_BM (hmv, keyv);
+  if (!ishashmapval_BM ((value_tyBM) hmv))
+    hmv = hashmapvalreorganize_BM (NULL, 3);
+  ASSERT_BM (ishashmapval_BM (hmv));
+  {
+    unsigned oldhsiz = ((struct typedsize_stBM *) hmv)->size;
+    unsigned oldhlen = ((struct typedhead_stBM *) hmv)->rlen;
+    if (oldhsiz > oldhlen * HASHTHRESHOLD_BM + 2)
+      hmv = hashmapvalreorganize_BM (hmv, 4 + ILOG2_BM (oldhsiz + 2) / 4);
+    else if (oldhsiz
+             > oldhlen
+             * (HASHRATIO_BM + (HASHTHRESHOLD_BM - HASHRATIO_BM) / 2) +
+             ILOG2_BM (oldhlen + 3))
+      {
+        if (g_random_int () % HASHTHRESHOLD_BM == 0)
+          hmv = hashsetvalreorganize_BM (hmv, 4 + ILOG2_BM (oldhsiz + 2) / 6);
+      }
+  }
+  hashmapvalrawput_BM (hmv, keyv, valv);
+  return hmv;
+}                               /* end hashmapvalput_BM */
+
+struct hashmapval_stBM *
+hashmapvalremove_BM (struct hashmapval_stBM *hmv, value_tyBM keyv)
+{
+  if (!keyv)
+    return ishashmapval_BM ((value_tyBM) hmv) ? hmv : NULL;
+  if (!ishashmapval_BM ((value_tyBM) hmv))
+    return NULL;
+  struct hashpairindexes_stBM hvindexes =
+    hashmapvalfindindexes_BM (hmv, keyv);
+  int bix = hvindexes.hvi_buckix;
+  int compix = hvindexes.hvi_compix;
+  if (bix < 0 || compix < 0)
+    return hmv;
+  unsigned hslen = ((typedhead_tyBM *) hmv)->rlen;
+  ASSERT_BM (bix < (int) hslen);
+  struct hashmapbucket_stBM *curbuck = hmv->hashmap_vbuckets[bix];
+  ASSERT_BM (curbuck != NULL);
+  unsigned bucklen = ((typedhead_tyBM *) curbuck)->rlen;
+  ASSERT_BM (compix < (int) bucklen);
+  value_tyBM curkeyv = curbuck->vbent_arr[compix].hmap_keyv;
+  if (curkeyv == NULL || curkeyv == (value_tyBM) HASHEMPTYSLOT_BM)
+    return hmv;
+  curbuck->vbent_arr[compix].hmap_keyv = HASHEMPTYSLOT_BM;
+  curbuck->vbent_arr[compix].hmap_valv = NULL;
+  ((struct typedsize_stBM *) curbuck)->size--;
+  ((struct typedsize_stBM *) hmv)->size++;
+  unsigned oldhsiz = ((struct typedsize_stBM *) hmv)->size;
+  unsigned oldhlen = ((struct typedhead_stBM *) hmv)->rlen;
+  if (oldhsiz > 2 * HASHTHRESHOLD_BM
+      && oldhsiz < oldhlen * (HASHRATIO_BM / 2 + 1) + 2)
+    hmv = hashmapvalreorganize_BM (hmv, 4 + ILOG2_BM (oldhsiz) / 3);
+  return hmv;
+}                               /* end hashmapvalremove_BM */
 
 #warning more needed on hashsets, hashmaps, etc....

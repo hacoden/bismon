@@ -608,6 +608,11 @@ hashmapvalget_BM (struct hashmapval_stBM *hmv, value_tyBM keyv);
 extern struct hashmapval_stBM *hashmapvalreorganize_BM (struct hashmapval_stBM
                                                         *hmv, unsigned gap);
 
+extern struct hashmapval_stBM *hashmapvalput_BM (struct hashmapval_stBM *hmv,
+                                                 value_tyBM keyv,
+                                                 value_tyBM valv);
+extern struct hashmapval_stBM *hashmapvalremove_BM (struct hashmapval_stBM
+                                                    *hmv, value_tyBM keyv);
 
 ////////////////
 /** apply a closure, or directly an object; so applying OBJ is same as
