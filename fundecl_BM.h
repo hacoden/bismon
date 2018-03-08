@@ -626,7 +626,7 @@ extern value_tyBM hashmapvalnextkey_BM (struct hashmapval_stBM *hmv,
 
 extern value_tyBM
   hashmapvalmakenodeofkeys_BM
-  (struct hashmapval_stBM *, objectval_tyBM * connob);
+  (struct hashmapval_stBM *hmv, objectval_tyBM * connob);
 
 ////////////////
 /** apply a closure, or directly an object; so applying OBJ is same as
