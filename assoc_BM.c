@@ -206,7 +206,10 @@ assoc_reorganize_BM (anyassoc_tyBM ** passoc, unsigned gap)
   if (newish > MAXSIZE_BM)
     FATAL_BM ("new assoc wish %lu too big", newish);
   unsigned newnbuckets =
-    prime_above_BM (newish / (TINYSIZE_BM - 3) + gap / 128 + 4);
+    prime_above_BM (newish / (TINYSIZE_BM - 3) + gap / 128 +
+                    ILOG2_BM (oldcnt + gap + 1) / 4 + 4);
+  if (newnbuckets > MAXSIZE_BM)
+    FATAL_BM ("too big #buckets %u in assoc", newnbuckets);
   struct assocbucket_stBM *newbuckets = allocgcty_BM (typayl_assocbucket_BM,
                                                       sizeof (struct
                                                               assocbucket_stBM)
@@ -339,7 +342,8 @@ assoc_setattrs_BM (const anyassoc_tyBM * assoc)
     return makeset_BM (NULL, 0);
   const objectval_tyBM *tinyarr[TINYSIZE_BM] = { };
   const objectval_tyBM **arr =
-    (nbkeys < TINYSIZE_BM) ? tinyarr : calloc (nbkeys, sizeof (void *));
+    (nbkeys < TINYSIZE_BM) ? tinyarr : calloc (prime_above_BM (nbkeys + 1),
+                                               sizeof (void *));
   if (!arr)
     FATAL_BM ("out of memory for %u keys in assoc", nbkeys);
   unsigned keycnt = 0;
@@ -860,7 +864,9 @@ hashsetvalrawadd_BM (struct hashsetval_stBM *hsv, value_tyBM val)
   else
     {                           /* should grow the bucket */
       ASSERT_BM (((struct typedsize_stBM *) curbuck)->size == bucklen);
-      unsigned newsiz = prime_above_BM (5 * bucklen / 4 + bucklen / 32 + 3);
+      unsigned newsiz =
+        prime_above_BM (5 * bucklen / 4 + bucklen / 32 +
+                        ILOG2_BM (hslen + 1) / 4 + 3);
       if (newsiz > MAXSIZE_BM)
         FATAL_BM ("too huge hashsetval bucket for bucklen %d", bucklen);
       struct hashsetvbucket_stBM *newbuck
@@ -892,7 +898,10 @@ hashsetvalreorganize_BM (struct hashsetval_stBM *hsv, unsigned gap)
   unsigned oldhsiz = hsv ? (((struct typedsize_stBM *) hsv)->size) : 0;
   unsigned oldhlen = hsv ? (((struct typedhead_stBM *) hsv)->rlen) : 0;
   unsigned newsiz =
-    prime_above_BM ((oldhsiz + gap) / HASHRATIO_BM + ILOG2_BM (gap + 2) + 3);
+    prime_above_BM ((oldhsiz + gap) / HASHRATIO_BM
+                    + ILOG2_BM (oldhsiz + gap + 2) + 3);
+  if (newsiz > MAXSIZE_BM)
+    FATAL_BM ("too big hashset new size %u", newsiz);
   struct hashsetval_stBM *newhsv =      //
     allocgcty_BM (typayl_hashsetval_BM,
                   sizeof (struct hashsetval_stBM) +
@@ -1062,7 +1071,7 @@ hashsetvalmakenode_BM (struct hashsetval_stBM * hsv, objectval_tyBM * connob)
     return NULL;
   unsigned hslen = ((typedhead_tyBM *) hsv)->rlen;
   unsigned hsiz = ((struct typedsize_stBM *) hsv)->size;
-  value_tyBM *arr = calloc (hsiz + 1, sizeof (value_tyBM));
+  value_tyBM *arr = calloc (prime_above_BM (hsiz + 1), sizeof (value_tyBM));
   if (!arr)
     FATAL_BM ("hashsetmakenode_BM calloc %d failure", hsiz);
   unsigned cnt = 0;
@@ -1314,6 +1323,8 @@ hashmapvalrawput_BM (struct hashmapval_stBM *hmv, value_tyBM keyv,
       ASSERT_BM (oldbucklen == ((struct typedsize_stBM *) curbuck)->size);
       unsigned newsiz =
         prime_above_BM (4 * oldbucklen / 3 + 3 + ILOG2_BM (hslen + 1) / 4);
+      if (newsiz > MAXSIZE_BM)
+        FATAL_BM ("too big bucket size %u", newsiz);
       struct hashmapbucket_stBM *newbuck =
         allocgcty_BM (typayl_hashmapbucket_BM,
                       sizeof (struct hashmapbucket_stBM) +
@@ -1355,7 +1366,10 @@ hashmapvalreorganize_BM (struct hashmapval_stBM *hmv, unsigned gap)
   unsigned oldhsiz = hmv ? (((struct typedsize_stBM *) hmv)->size) : 0;
   unsigned oldhlen = hmv ? (((struct typedhead_stBM *) hmv)->rlen) : 0;
   unsigned newsiz =
-    prime_above_BM ((oldhsiz + gap) / HASHRATIO_BM + ILOG2_BM (gap + 2) + 3);
+    prime_above_BM ((oldhsiz + gap) / HASHRATIO_BM +
+                    ILOG2_BM (oldhsiz + gap + 2) + 3);
+  if (newsiz > MAXSIZE_BM)
+    FATAL_BM ("too big new size %u for hashmapval", newsiz);
   struct hashmapval_stBM *newhmv =      //
     allocgcty_BM (typayl_hashsetval_BM,
                   sizeof (struct hashmapval_stBM) +
