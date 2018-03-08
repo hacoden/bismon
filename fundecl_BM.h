@@ -605,14 +605,28 @@ extern void hashmapbucketgckeep_BM (struct garbcoll_stBM *gc,
 extern value_tyBM
 hashmapvalget_BM (struct hashmapval_stBM *hmv, value_tyBM keyv);
 
-extern struct hashmapval_stBM *hashmapvalreorganize_BM (struct hashmapval_stBM
-                                                        *hmv, unsigned gap);
+extern struct hashmapval_stBM *hashmapvalreorganize_BM
+  (struct hashmapval_stBM *hmv, unsigned gap);
 
-extern struct hashmapval_stBM *hashmapvalput_BM (struct hashmapval_stBM *hmv,
-                                                 value_tyBM keyv,
-                                                 value_tyBM valv);
-extern struct hashmapval_stBM *hashmapvalremove_BM (struct hashmapval_stBM
-                                                    *hmv, value_tyBM keyv);
+extern struct hashmapval_stBM *hashmapvalput_BM
+  (struct hashmapval_stBM *hmv, value_tyBM keyv, value_tyBM valv);
+
+extern struct hashmapval_stBM *hashmapvalremove_BM
+  (struct hashmapval_stBM *hmv, value_tyBM keyv);
+
+/** to iterate in an hashmapval using
+  for (value_tyBM kv = hashmapvalfirstkey_BM(hmv); kv!=NULL;
+       kv = hashmapvalnextkey_BM(hsv, kv))
+ which makes only sense with an unchanged hashmapval
+ (so no insertion or deletion or reorganization inside the loop body)
+ **/
+extern value_tyBM hashmapvalfirstkey_BM (struct hashmapval_stBM *hmv);
+extern value_tyBM hashmapvalnextkey_BM (struct hashmapval_stBM *hmv,
+                                        value_tyBM prevk);
+
+extern value_tyBM
+  hashmapvalmakenodeofkeys_BM
+  (struct hashmapval_stBM *, objectval_tyBM * connob);
 
 ////////////////
 /** apply a closure, or directly an object; so applying OBJ is same as

@@ -1462,4 +1462,82 @@ hashmapvalremove_BM (struct hashmapval_stBM *hmv, value_tyBM keyv)
   return hmv;
 }                               /* end hashmapvalremove_BM */
 
+
+value_tyBM
+hashmapvalfirstkey_BM (struct hashmapval_stBM * hmv)
+{
+  if (!ishashmapval_BM ((value_tyBM) hmv))
+    return NULL;
+  unsigned hslen = ((typedhead_tyBM *) hmv)->rlen;
+  for (unsigned bix = 0; bix < hslen; bix++)
+    {
+      struct hashmapbucket_stBM *curbuck = hmv->hashmap_vbuckets[bix];
+      if (!curbuck || curbuck == HASHEMPTYSLOT_BM)
+        continue;
+      ASSERT_BM (((typedhead_tyBM *) curbuck)->htyp ==
+                 typayl_hashmapbucket_BM);
+      unsigned bucklen = ((typedhead_tyBM *) curbuck)->rlen;
+      for (unsigned enix = 0; enix < bucklen; enix++)
+        {
+          value_tyBM curkey = curbuck->vbent_arr[enix].hmap_keyv;
+          if (!curkey)
+            break;
+          else if (curkey == HASHEMPTYSLOT_BM)
+            continue;
+          return curkey;
+        }
+    }
+  return NULL;
+}                               /* end hashmapvalfirstkey_BM */
+
+
+value_tyBM
+hashmapvalnextkey_BM (struct hashmapval_stBM * hmv, value_tyBM keyv)
+{
+  if (!ishashmapval_BM ((value_tyBM) hmv) || !keyv)
+    return NULL;
+  struct hashpairindexes_stBM hvindexes =
+    hashmapvalfindindexes_BM (hmv, keyv);
+  int bix = hvindexes.hvi_buckix;
+  int compix = hvindexes.hvi_compix;
+  if (bix < 0 || compix < 0)
+    return NULL;
+  unsigned hslen = ((typedhead_tyBM *) hmv)->rlen;
+  struct hashmapbucket_stBM *curbuck = NULL;
+  ASSERT_BM (bix < hslen);
+  curbuck = hmv->hashmap_vbuckets[bix];
+  if (!curbuck || curbuck == HASHEMPTYSLOT_BM)
+    return NULL;
+  ASSERT_BM (((typedhead_tyBM *) curbuck)->htyp == typayl_hashmapbucket_BM);
+  unsigned bucklen = ((typedhead_tyBM *) curbuck)->rlen;
+  for (unsigned enix = compix + 1; enix < bucklen; enix++)
+    {
+      value_tyBM curkey = curbuck->vbent_arr[enix].hmap_keyv;
+      if (!curkey)
+        break;
+      else if (curkey == HASHEMPTYSLOT_BM)
+        continue;
+      return curkey;
+    }
+  for (bix = bix + 1; bix < hslen; bix++)
+    {
+      curbuck = hmv->hashmap_vbuckets[bix];
+      if (!curbuck || curbuck == HASHEMPTYSLOT_BM)
+        continue;
+      ASSERT_BM (((typedhead_tyBM *) curbuck)->htyp ==
+                 typayl_hashmapbucket_BM);
+      unsigned bucklen = ((typedhead_tyBM *) curbuck)->rlen;
+      for (unsigned enix = 0; enix < bucklen; enix++)
+        {
+          value_tyBM curkey = curbuck->vbent_arr[enix].hmap_keyv;
+          if (!curkey)
+            break;
+          else if (curkey == HASHEMPTYSLOT_BM)
+            continue;
+          return curkey;
+        }
+    }
+  return NULL;
+}                               /* end of hashmapvalnextkey_BM */
+
 #warning more needed on hashsets, hashmaps, etc....
