@@ -602,7 +602,7 @@ dump_emit_object_BM (struct dumper_stBM *du, const objectval_tyBM * curobj,
     }
   _.attrset = objsetattrs_BM (curobj);
   _.bufob = makeobj_BM ();
-  objputstrbuffer_BM (_.bufob, 0);
+  objputstrbufferpayl_BM (_.bufob, 0);
   /// dump the attributes
   unsigned nbattrs = setcardinal_BM (_.attrset);
   for (unsigned atix = 0; atix < nbattrs; atix++)
@@ -613,12 +613,12 @@ dump_emit_object_BM (struct dumper_stBM *du, const objectval_tyBM * curobj,
       _.curval = objgetattr_BM (curobj, _.curattr);
       if (!obdumpvalisdumpable_BM (_.dumpob, _.curval))
         continue;
-      objstrbufferreset_BM (_.bufob);
+      objstrbufferresetpayl_BM (_.bufob);
       _.dumpres =
         send3_BM (_.curval, BMP_dump_value,
                   (struct stackframe_stBM *) &_,
                   _.bufob, _.dumpob, taggedint_BM (0));
-      if (!_.dumpres || objstrbufferlength_BM (_.bufob) == 0)
+      if (!_.dumpres || objstrbufferlengthpayl_BM (_.bufob) == 0)
         continue;
       char curattrid[32] = "";
       idtocbuf32_BM (objid_BM (_.curattr), curattrid);
@@ -627,10 +627,10 @@ dump_emit_object_BM (struct dumper_stBM *du, const objectval_tyBM * curobj,
         fprintf (spfil, "!: %s |=%s|\n", curattrid, attrnam);
       else
         fprintf (spfil, "!: %s\n", curattrid);
-      fputs (objstrbufferbytes_BM (_.bufob), spfil);
+      fputs (objstrbufferbytespayl_BM (_.bufob), spfil);
       fputc ('\n', spfil);
     }
-  objstrbufferreset_BM (_.bufob);
+  objstrbufferresetpayl_BM (_.bufob);
   /// dump the components
   unsigned nbcomp = objnbcomps_BM (_.curobj);
   if (nbcomp > 0)
@@ -641,17 +641,17 @@ dump_emit_object_BM (struct dumper_stBM *du, const objectval_tyBM * curobj,
           _.curval = objgetcomp_BM (_.curobj, cpix);
           if (obdumpvalisdumpable_BM (_.dumpob, _.curval))
             {
-              objstrbufferreset_BM (_.bufob);
+              objstrbufferresetpayl_BM (_.bufob);
               _.dumpres =
                 send3_BM (_.curval, BMP_dump_value,
                           (struct stackframe_stBM *) &_,
                           _.bufob, _.dumpob, taggedint_BM (0));
-              if (!_.dumpres || objstrbufferlength_BM (_.bufob) == 0)
+              if (!_.dumpres || objstrbufferlengthpayl_BM (_.bufob) == 0)
                 fputs ("!& __\n", spfil);
               else
                 {
                   fputs ("!& ", spfil);
-                  fputs (objstrbufferbytes_BM (_.bufob), spfil);
+                  fputs (objstrbufferbytespayl_BM (_.bufob), spfil);
                   fputc ('\n', spfil);
                 }
             }
@@ -661,13 +661,13 @@ dump_emit_object_BM (struct dumper_stBM *du, const objectval_tyBM * curobj,
             }
         }
     }
-  objstrbufferreset_BM (_.bufob);
+  objstrbufferresetpayl_BM (_.bufob);
   /// dump the data
   _.dumpres = send2_BM ((const value_tyBM) _.curobj, BMP_dump_data,
                         (struct stackframe_stBM *) &_, _.dumpob, _.bufob);
-  if (_.dumpres && objstrbufferlength_BM (_.bufob) > 0)
+  if (_.dumpres && objstrbufferlengthpayl_BM (_.bufob) > 0)
     {
-      fputs (objstrbufferbytes_BM (_.bufob), spfil);
+      fputs (objstrbufferbytespayl_BM (_.bufob), spfil);
       fputc ('\n', spfil);
     }
   fprintf (spfil, "!)%s\n", curobjid);
@@ -691,10 +691,10 @@ debug_outstr_value_BM (const value_tyBM val, struct stackframe_stBM *stkf,
     return "__";
   WEAKASSERT_BM (valtype_BM (val) <= type_LASTREAL_BM);
   _.bufob = makeobj_BM ();
-  objputstrbuffer_BM (_.bufob, 256 * 1024);
+  objputstrbufferpayl_BM (_.bufob, 256 * 1024);
   if (!send3_BM (_.valv, BMP_dump_value,
                  (struct stackframe_stBM *) &_,
                  _.bufob, NULL, taggedint_BM (curdepth)))
     return "??";
-  return objstrbufferbytes_BM (_.bufob);
+  return objstrbufferbytespayl_BM (_.bufob);
 }                               /* end debug_outstr_value_BM */

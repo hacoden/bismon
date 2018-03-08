@@ -81,7 +81,7 @@ ROUTINEOBJNAME_BM (_6gRlN8loM4E_4pSsNmiCeIa)    // emit_c_type:c_opaque
   _.recv = /*ctype */ (arg1);
   WEAKASSERT_BM (isobject_BM (_.recv));
   _.bufob = objectcast_BM (arg2);
-  WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
+  WEAKASSERT_BM (objhasstrbufferpayl_BM (_.bufob));
   DBGPRINTF_BM
     ("start  emit_c_type:c_opaque _6gRlN8loM4E_4pSsNmiCeIa recv=%s",
      objectdbg_BM (_.recv));
@@ -90,15 +90,15 @@ ROUTINEOBJNAME_BM (_6gRlN8loM4E_4pSsNmiCeIa)    // emit_c_type:c_opaque
   idtocbuf32_BM (objid_BM (_.recv), idbuf);
   if (nam)
     {
-      objstrbufferprintf_BM (_.bufob, "\n// opaque named type\n");
-      objstrbufferprintf_BM (_.bufob, "typedef void* %s_TyBM;\n", nam);
-      objstrbufferprintf_BM (_.bufob, "#define %s_TyBM %s_TyBM\n", idbuf,
-                             nam);
+      objstrbufferprintfpayl_BM (_.bufob, "\n// opaque named type\n");
+      objstrbufferprintfpayl_BM (_.bufob, "typedef void* %s_TyBM;\n", nam);
+      objstrbufferprintfpayl_BM (_.bufob, "#define %s_TyBM %s_TyBM\n", idbuf,
+                                 nam);
     }
   else
     {
-      objstrbufferprintf_BM (_.bufob, "\n// opaque anonymous type\n");
-      objstrbufferprintf_BM (_.bufob, "typedef void* %s_TyBM;\n", idbuf);
+      objstrbufferprintfpayl_BM (_.bufob, "\n// opaque anonymous type\n");
+      objstrbufferprintfpayl_BM (_.bufob, "typedef void* %s_TyBM;\n", idbuf);
     }
   LOCALRETURN_BM (_.recv);
 }                               /* end emit_c_type:c_opaque _6gRlN8loM4E_4pSsNmiCeIa */
@@ -125,7 +125,7 @@ ROUTINEOBJNAME_BM (_979hCujWp2g_9tjRbM8Ht1l)    // emit_c_type:c_enum
   // retrieve arguments
   _.recv = /*ctype */ (arg1);
   WEAKASSERT_BM (isobject_BM (_.recv));
-  WEAKASSERT_BM (objhasstrbuffer_BM (arg2));
+  WEAKASSERT_BM (objhasstrbufferpayl_BM (arg2));
   _.prbufob = objectcast_BM (arg2);
   DBGPRINTF_BM
     ("start emit_c_type:c_enum _979hCujWp2g_9tjRbM8Ht1l recv=%s",

@@ -1023,7 +1023,7 @@ ROUTINEOBJNAME_BM (_5KWAjUEGiiq_2B6rbvkCcgc)    //
         {
           const struct strbuffer_stBM *sbuf = _.curval;
           snprintf (vcommbuf, sizeof (vcommbuf), "|xsbuf l:%u| ",
-                    objstrbufferlength_BM (_.objbrows));
+                    objstrbufferlengthpayl_BM (_.objbrows));
           gtk_text_buffer_insert_with_tags (brobuf,
                                             &browserit_BM, vcommbuf, -1,
                                             miscomm_brotag_BM, NULL);

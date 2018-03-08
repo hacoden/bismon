@@ -23,12 +23,13 @@ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
                  value_tyBM depthv;
     );
   _.recv = arg1;
-  WEAKASSERT_BM (objhasstrbuffer_BM (arg2));
+  WEAKASSERT_BM (objhasstrbufferpayl_BM (arg2));
   _.bufob = objectcast_BM (arg2);
   _.dumpob = objectcast_BM (arg3);
   WEAKASSERT_BM (!_.dumpob || obdumpgetdumper_BM (_.dumpob) != NULL);
   _.depthv = arg4;
-  objstrbufferprintf_BM (_.bufob, " %lld", (long long) getint_BM (_.recv));
+  objstrbufferprintfpayl_BM (_.bufob, " %lld",
+                             (long long) getint_BM (_.recv));
   LOCALRETURN_BM (_.bufob);
 }                               /* end ROUTINE _3kMqlEugRVW_7DgwjR4CBbP */
 
@@ -56,12 +57,12 @@ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
     );
   _.recv = (arg1);
   _.bufob = objectcast_BM (arg2);
-  WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
+  WEAKASSERT_BM (objhasstrbufferpayl_BM (_.bufob));
   _.dumpob = objectcast_BM (arg3);
   WEAKASSERT_BM (!_.dumpob || obdumpgetdumper_BM (_.dumpob) != NULL);
   _.depthv = arg4;
-  objstrbufferprintf_BM (_.bufob, "\t{");
-  objstrbuffermoreindent_BM (_.bufob);
+  objstrbufferprintfpayl_BM (_.bufob, "\t{");
+  objstrbuffermoreindentpayl_BM (_.bufob);
   unsigned card = setcardinal_BM (_.recv);
   unsigned cnt = 0;
   for (unsigned ix = 0; ix < card; ix++)
@@ -72,12 +73,12 @@ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
       char curidbuf[32];
       idtocbuf32_BM (objid_BM (_.curobj), curidbuf);
       if (cnt > 0 && cnt % 4 == 0)
-        objstrbuffernewline_BM (_.bufob);
-      objstrbufferprintf_BM (_.bufob, "\t%s", curidbuf);
+        objstrbuffernewlinepayl_BM (_.bufob);
+      objstrbufferprintfpayl_BM (_.bufob, "\t%s", curidbuf);
       cnt++;
     };
-  objstrbufferlessindent_BM (_.bufob);
-  objstrbufferprintf_BM (_.bufob, " }");
+  objstrbufferlessindentpayl_BM (_.bufob);
+  objstrbufferprintfpayl_BM (_.bufob, " }");
   LOCALRETURN_BM (_.bufob);
 }                               /* end ROUTINE _3Tc3E4uo2p5_4EXWCPwCR5b */
 
@@ -104,12 +105,12 @@ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
     );
   _.recv = (arg1);
   _.bufob = objectcast_BM (arg2);
-  WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
+  WEAKASSERT_BM (objhasstrbufferpayl_BM (_.bufob));
   _.dumpob = objectcast_BM (arg3);
   WEAKASSERT_BM (!_.dumpob || obdumpgetdumper_BM (_.dumpob) != NULL);
   _.depthv = arg4;
-  objstrbufferprintf_BM (_.bufob, "\t[");
-  objstrbuffermoreindent_BM (_.bufob);
+  objstrbufferprintfpayl_BM (_.bufob, "\t[");
+  objstrbuffermoreindentpayl_BM (_.bufob);
   unsigned tsiz = tuplesize_BM (_.recv);
   unsigned cnt = 0;
   for (unsigned ix = 0; ix < tsiz; ix++)
@@ -120,12 +121,12 @@ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
       char curidbuf[32];
       idtocbuf32_BM (objid_BM (_.curobj), curidbuf);
       if (cnt > 0 && cnt % 4 == 0)
-        objstrbuffernewline_BM (_.bufob);
-      objstrbufferprintf_BM (_.bufob, "\t%s", curidbuf);
+        objstrbuffernewlinepayl_BM (_.bufob);
+      objstrbufferprintfpayl_BM (_.bufob, "\t%s", curidbuf);
       cnt++;
     };
-  objstrbufferlessindent_BM (_.bufob);
-  objstrbufferprintf_BM (_.bufob, " ]");
+  objstrbufferlessindentpayl_BM (_.bufob);
+  objstrbufferprintfpayl_BM (_.bufob, " ]");
   LOCALRETURN_BM (_.bufob);
 }                               /* end ROUTINE _5D9kkPHSPxq_8suDXpjlzjE */
 
@@ -154,21 +155,21 @@ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
   _.recv = (arg1);
   _.bufob = objectcast_BM (arg2);
   _.dumpob = objectcast_BM (arg3);
-  WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
+  WEAKASSERT_BM (objhasstrbufferpayl_BM (_.bufob));
   WEAKASSERT_BM (!_.dumpob || obdumpgetdumper_BM (_.dumpob) != NULL);
   _.depthv = arg4;
   unsigned depth = getint_BM (_.depthv);
   _.connobj = nodeconn_BM ((const value_tyBM) _.recv);
   if (_.dumpob && !obdumpobjisdumpable_BM (_.dumpob, _.connobj))
     {
-      objstrbufferprintf_BM (_.bufob, " __");
+      objstrbufferprintfpayl_BM (_.bufob, " __");
       LOCALRETURN_BM (_.bufob);
     }
   char connidbuf[32];
   idtocbuf32_BM (objid_BM (_.connobj), connidbuf);
-  objstrbufferprintf_BM (_.bufob, "\t* %s (", connidbuf);
+  objstrbufferprintfpayl_BM (_.bufob, "\t* %s (", connidbuf);
   unsigned width = nodewidth_BM ((const value_tyBM) _.recv);
-  objstrbuffermoreindent_BM (_.bufob);
+  objstrbuffermoreindentpayl_BM (_.bufob);
   unsigned cnt = 0;
   for (unsigned six = 0; six < width; six++)
     {
@@ -176,15 +177,15 @@ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
       if (_.dumpob && !obdumpvalisdumpable_BM (_.dumpob, _.curson))
         continue;
       if (cnt > 0 && cnt % 5 == 0)
-        objstrbuffernewline_BM (_.bufob);
-      objstrbufferprintf_BM (_.bufob, "\t");
+        objstrbuffernewlinepayl_BM (_.bufob);
+      objstrbufferprintfpayl_BM (_.bufob, "\t");
       send3_BM (_.curson, BMP_dump_value,
                 (struct stackframe_stBM *) &_,
                 _.bufob, _.dumpob, taggedint_BM (depth + 1));
       cnt++;
     }
-  objstrbufferlessindent_BM (_.bufob);
-  objstrbufferprintf_BM (_.bufob, ")");
+  objstrbufferlessindentpayl_BM (_.bufob);
+  objstrbufferprintfpayl_BM (_.bufob, ")");
   LOCALRETURN_BM (_.bufob);
 }                               /* end ROUTINE _5v30KC0IMxx_53ZzXprJTM6 */
 
@@ -212,39 +213,39 @@ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
   _.bufob = objectcast_BM (arg2);
   _.dumpob = objectcast_BM (arg3);
   WEAKASSERT_BM (!_.dumpob || obdumpgetdumper_BM (_.dumpob) != NULL);
-  WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
+  WEAKASSERT_BM (objhasstrbufferpayl_BM (_.bufob));
   _.depthv = arg4;
   unsigned depth = getint_BM (_.depthv);
   _.connobj = closureconn_BM ((const value_tyBM) _.recv);
   if (_.dumpob && !obdumpobjisdumpable_BM (_.dumpob, _.connobj))
     {
-      objstrbufferprintf_BM (_.bufob, " |transclos:| __");
+      objstrbufferprintfpayl_BM (_.bufob, " |transclos:| __");
       LOCALRETURN_BM (_.bufob);
     }
   char connidbuf[32];
   idtocbuf32_BM (objid_BM (_.connobj), connidbuf);
-  objstrbufferprintf_BM (_.bufob, "\t%% %s (", connidbuf);
+  objstrbufferprintfpayl_BM (_.bufob, "\t%% %s (", connidbuf);
   unsigned width = closurewidth_BM ((const value_tyBM) _.recv);
-  objstrbuffermoreindent_BM (_.bufob);
+  objstrbuffermoreindentpayl_BM (_.bufob);
   unsigned cnt = 0;
   for (unsigned six = 0; six < width; six++)
     {
       _.curson = closurenthson_BM ((const value_tyBM) _.recv, six);
       if (_.dumpob && !obdumpvalisdumpable_BM (_.dumpob, _.curson))
         {
-          objstrbufferprintf_BM (_.bufob, "\t__");
+          objstrbufferprintfpayl_BM (_.bufob, "\t__");
           continue;
         }
       if (cnt > 0 && cnt % 5 == 0)
-        objstrbuffernewline_BM (_.bufob);
-      objstrbufferprintf_BM (_.bufob, "\t");
+        objstrbuffernewlinepayl_BM (_.bufob);
+      objstrbufferprintfpayl_BM (_.bufob, "\t");
       send3_BM (_.curson, BMP_dump_value,
                 (struct stackframe_stBM *) &_,
                 _.bufob, _.dumpob, taggedint_BM (depth + 1));
       cnt++;
     }
-  objstrbufferlessindent_BM (_.bufob);
-  objstrbufferprintf_BM (_.bufob, ")");
+  objstrbufferlessindentpayl_BM (_.bufob);
+  objstrbufferprintfpayl_BM (_.bufob, ")");
   LOCALRETURN_BM (_.bufob);
 }                               /* end ROUTINE _6jvRZetUz36_978V6SKIWZC */
 
@@ -273,16 +274,16 @@ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
   _.bufob = objectcast_BM (arg2);
   _.dumpob = objectcast_BM (arg3);
   WEAKASSERT_BM (!_.dumpob || obdumpgetdumper_BM (_.dumpob) != NULL);
-  WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
+  WEAKASSERT_BM (objhasstrbufferpayl_BM (_.bufob));
   _.depthv = arg4;
   unsigned depth = getint_BM (_.depthv);
   ASSERT_BM (depth < MAXDEPTHMETHOD_BM);
   unsigned bsiz = lenstring_BM (_.recv);
   const char *bstr = bytstring_BM (_.recv);
-  objstrbufferprintf_BM (_.bufob, "\t\"");
+  objstrbufferprintfpayl_BM (_.bufob, "\t\"");
   if (bsiz < STRBUFFERWANTEDWIDTH_BM)
     {
-      objstrbufferencodedutf8_BM (_.bufob, bstr, bsiz);
+      objstrbufferencodedutf8payl_BM (_.bufob, bstr, bsiz);
     }
   else
     {
@@ -302,27 +303,27 @@ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
                 break;
               nextp = g_utf8_next_char (nextp);
             }
-          objstrbufferencodedutf8_BM (_.bufob, ps, nextp - ps);
+          objstrbufferencodedutf8payl_BM (_.bufob, ps, nextp - ps);
           if (*nextp)
             {
               if (uc == '\n')
                 {
-                  objstrbufferprintf_BM (_.bufob, "\"+\t\"");
+                  objstrbufferprintfpayl_BM (_.bufob, "\"+\t\"");
                   nextp = g_utf8_next_char (nextp);
                 }
               else
-                objstrbufferprintf_BM (_.bufob, "\"&\t\"");
+                objstrbufferprintfpayl_BM (_.bufob, "\"&\t\"");
             }
           else if (nextp < bend)
             {
               if (uc == '\n')
-                objstrbufferprintf_BM (_.bufob, "\\n\"");
+                objstrbufferprintfpayl_BM (_.bufob, "\\n\"");
               else
-                objstrbufferprintf_BM (_.bufob, "\"");
+                objstrbufferprintfpayl_BM (_.bufob, "\"");
             }
         }
     }
-  objstrbufferprintf_BM (_.bufob, "\"");
+  objstrbufferprintfpayl_BM (_.bufob, "\"");
   LOCALRETURN_BM (_.bufob);
 }                               /* end ROUTINE _7mvOlkB1tAJ_3psVFz4QEAn */
 
@@ -392,15 +393,15 @@ ROUTINEOBJNAME_BM (_67IapmpeTLU_8MQKtlK8iAD)    // dump_data°class
   _.dumpob = objectcast_BM (arg2);
   WEAKASSERT_BM (obdumpgetdumper_BM (_.dumpob) != NULL);
   _.bufob = objectcast_BM (arg3);
-  WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
+  WEAKASSERT_BM (objhasstrbufferpayl_BM (_.bufob));
   ASSERT_BM (restargs_ == NULL);
   _.supercl = objgetclassinfosuperclass_BM ((const value_tyBM) _.recv);
   if (!_.supercl)
     _.supercl = BMP_object;
   _.selset = objgetclassinfosetofselectors_BM ((const value_tyBM) _.recv);
   unsigned nbsel = setcardinal_BM (_.selset);
-  objstrbufferprintf_BM (_.bufob, "!~ class (~\t");
-  objstrbuffermoreindent_BM (_.bufob);
+  objstrbufferprintfpayl_BM (_.bufob, "!~ class (~\t");
+  objstrbuffermoreindentpayl_BM (_.bufob);
   if (obdumpobjisdumpable_BM (_.dumpob, _.supercl))
     {
       char superidbuf[32];
@@ -408,14 +409,14 @@ ROUTINEOBJNAME_BM (_67IapmpeTLU_8MQKtlK8iAD)    // dump_data°class
       idtocbuf32_BM (objid_BM (_.supercl), superidbuf);
       const char *supername = findobjectname_BM (_.supercl);
       if (supername)
-        objstrbufferprintf_BM (_.bufob, "|supercl %s:| %s", supername,
-                               superidbuf);
+        objstrbufferprintfpayl_BM (_.bufob, "|supercl %s:| %s", supername,
+                                   superidbuf);
       else
-        objstrbufferprintf_BM (_.bufob, "|supercl=| %s", superidbuf);
+        objstrbufferprintfpayl_BM (_.bufob, "|supercl=| %s", superidbuf);
     }
   else
     {
-      objstrbufferprintf_BM (_.bufob, "|nosuperclass| __");
+      objstrbufferprintfpayl_BM (_.bufob, "|nosuperclass| __");
     }
   for (unsigned six = 0; six < nbsel; six++)
     {
@@ -431,19 +432,20 @@ ROUTINEOBJNAME_BM (_67IapmpeTLU_8MQKtlK8iAD)    // dump_data°class
       idtocbuf32_BM (objid_BM (_.cursel), selidbuf);
       const char *selname = findobjectname_BM (_.cursel);
       if (selname)
-        objstrbufferprintf_BM (_.bufob, "\n~: %s |=%s|\t", selidbuf, selname);
+        objstrbufferprintfpayl_BM (_.bufob, "\n~: %s |=%s|\t", selidbuf,
+                                   selname);
       else
-        objstrbufferprintf_BM (_.bufob, "\n~: %s\t", selidbuf);
-      unsigned oldbuflen = objstrbufferlength_BM (_.bufob);
+        objstrbufferprintfpayl_BM (_.bufob, "\n~: %s\t", selidbuf);
+      unsigned oldbuflen = objstrbufferlengthpayl_BM (_.bufob);
       send3_BM (_.curmeth, BMP_dump_value,
                 (struct stackframe_stBM *) &_,
                 _.bufob, _.dumpob, taggedint_BM (1));
-      unsigned newbuflen = objstrbufferlength_BM (_.bufob);
+      unsigned newbuflen = objstrbufferlengthpayl_BM (_.bufob);
       if (newbuflen == oldbuflen)
-        objstrbufferprintf_BM (_.bufob, "\t |nometh| __");
+        objstrbufferprintfpayl_BM (_.bufob, "\t |nometh| __");
     }
-  objstrbufferlessindent_BM (_.bufob);
-  objstrbufferappendcstr_BM (_.bufob, "\n~)\n");
+  objstrbufferlessindentpayl_BM (_.bufob);
+  objstrbufferappendcstrpayl_BM (_.bufob, "\n~)\n");
   LOCALRETURN_BM ((value_tyBM) _.recv);
 }                               /* end ROUTINE _67IapmpeTLU_8MQKtlK8iAD */
 
@@ -501,23 +503,23 @@ ROUTINEOBJNAME_BM (_7GMLV81ntO3_4NHTv7fCL0A)    // dump_data°hset_object
   _.dumpob = objectcast_BM (arg2);
   WEAKASSERT_BM (obdumpgetdumper_BM (_.dumpob));
   _.bufob = objectcast_BM (arg3);
-  WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
+  WEAKASSERT_BM (objhasstrbufferpayl_BM (_.bufob));
   WEAKASSERT_BM (restargs_ == NULL);
   WEAKASSERT_BM (valtype_BM (objpayload_BM (_.recv)) == typayl_hashsetobj_BM);
   ASSERT_BM (arg3 == NULL);
   ASSERT_BM (restargs_ == NULL);
   _.setv = hashsetobj_to_set_BM (objpayload_BM (_.recv));
-  objstrbufferprintf_BM (_.bufob, "!~ todo (~\t");
-  objstrbuffermoreindent_BM (_.bufob);
+  objstrbufferprintfpayl_BM (_.bufob, "!~ todo (~\t");
+  objstrbuffermoreindentpayl_BM (_.bufob);
   _.dumpres = send3_BM (k_put, BMP_dump_value,
                         (struct stackframe_stBM *) &_,
                         _.bufob, _.dumpob, taggedint_BM (0));
-  objstrbufferprintf_BM (_.bufob, "\t");
+  objstrbufferprintfpayl_BM (_.bufob, "\t");
   _.dumpres = send3_BM ((value_tyBM) _.setv, BMP_dump_value,
                         (struct stackframe_stBM *) &_,
                         _.bufob, _.dumpob, taggedint_BM (0));
-  objstrbufferlessindent_BM (_.bufob);
-  objstrbufferappendcstr_BM (_.bufob, "\n~)\n");
+  objstrbufferlessindentpayl_BM (_.bufob);
+  objstrbufferappendcstrpayl_BM (_.bufob, "\n~)\n");
   LOCALRETURN_BM (_.recv);
 }                               /* end dump_data hset_object ROUTINE _7GMLV81ntO3_4NHTv7fCL0A  */
 
@@ -789,22 +791,22 @@ ROUTINEOBJNAME_BM (_0y90r6nyAYP_2MmfH2V00B1)    // dump_data°vector_object
   _.dumpob = objectcast_BM (arg2);
   WEAKASSERT_BM (obdumpgetdumper_BM (_.dumpob));
   _.bufob = objectcast_BM (arg3);
-  WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
+  WEAKASSERT_BM (objhasstrbufferpayl_BM (_.bufob));
   WEAKASSERT_BM (restargs_ == NULL);
   WEAKASSERT_BM (valtype_BM (objpayload_BM (_.recv)) == typayl_vectval_BM);
   ASSERT_BM (arg3 == NULL);
   ASSERT_BM (restargs_ == NULL);
   /**
-  objstrbufferprintf_BM (_.bufob, "!~ todo (~\t");
-  objstrbuffermoreindent_BM (_.bufob);
+  objstrbufferprintfpayl_BM (_.bufob, "!~ todo (~\t");
+  objstrbuffermoreindentpayl_BM (_.bufob);
   _.dumpres = send3_BM (k_put, BMP_dump_value,
                         (struct stackframe_stBM *) &_,
                         _.bufob, _.dumpob, taggedint_BM (0));
-  objstrbufferprintf_BM (_.bufob, "\t");
+  objstrbufferprintfpayl_BM (_.bufob, "\t");
   _.dumpres = send3_BM ((value_tyBM) _.setv, BMP_dump_value,
                         (struct stackframe_stBM *) &_,
                         _.bufob, _.dumpob, taggedint_BM (0));
-  objstrbufferlessindent_BM (_.bufob);
+  objstrbufferlessindentpayl_BM (_.bufob);
   objstrbufferappendcstr_BM (_.bufob, "\n~)\n");
   **/
 #warning dump_data°vector_object unimplemented
@@ -876,7 +878,7 @@ ROUTINEOBJNAME_BM (_9EytjXNb76D_1ZP3iSk9cuu)    // dump_data°assoc_object
   WEAKASSERT_BM (obdumpgetdumper_BM (arg2) != NULL);
   _.dumpob = arg2;
   _.bufob = objectcast_BM (arg3);
-  WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
+  WEAKASSERT_BM (objhasstrbufferpayl_BM (_.bufob));
   WEAKASSERT_BM (restargs == NULL);
   ASSERT_BM (restargs == NULL);
   objectval_tyBM *k_dump_value = BMK_1FEnnpEkGdI_5DAcVDL5XHG;
@@ -891,8 +893,8 @@ ROUTINEOBJNAME_BM (_9EytjXNb76D_1ZP3iSk9cuu)    // dump_data°assoc_object
   _.setv = assoc_setattrs_BM (assoc);
   unsigned nbattr = setcardinal_BM (_.setv);
   int cnt = 0;
-  objstrbufferprintf_BM (_.bufob, "!~ todo (~\t");
-  objstrbuffermoreindent_BM (_.bufob);
+  objstrbufferprintfpayl_BM (_.bufob, "!~ todo (~\t");
+  objstrbuffermoreindentpayl_BM (_.bufob);
   for (unsigned ix = 0; ix < nbattr; ix++)
     {
       _.curattrob = setelemnth_BM (_.setv, ix);
@@ -900,24 +902,24 @@ ROUTINEOBJNAME_BM (_9EytjXNb76D_1ZP3iSk9cuu)    // dump_data°assoc_object
         continue;
       _.curval = assoc_getattr_BM (assoc, _.curattrob);
       if (cnt > 0)
-        objstrbufferprintf_BM (_.bufob, "\n!& ");
+        objstrbufferprintfpayl_BM (_.bufob, "\n!& ");
       else
-        objstrbufferprintf_BM (_.bufob, " ");
+        objstrbufferprintfpayl_BM (_.bufob, " ");
       _.dumpres = send3_BM (k_put, BMP_dump_value,
                             (struct stackframe_stBM *) &_,
                             _.bufob, _.dumpob, taggedint_BM (0));
-      objstrbufferprintf_BM (_.bufob, "\t");
+      objstrbufferprintfpayl_BM (_.bufob, "\t");
       _.dumpres = send3_BM (_.curattrob, BMP_dump_value,
                             (struct stackframe_stBM *) &_,
                             _.bufob, _.dumpob, taggedint_BM (0));
-      objstrbufferprintf_BM (_.bufob, "\t");
+      objstrbufferprintfpayl_BM (_.bufob, "\t");
       _.dumpres = send3_BM (_.curval, BMP_dump_value,
                             (struct stackframe_stBM *) &_,
                             _.bufob, _.dumpob, taggedint_BM (0));
       cnt++;
     };
-  objstrbufferlessindent_BM (_.bufob);
-  objstrbufferappendcstr_BM (_.bufob, "\n~)\n");
+  objstrbufferlessindentpayl_BM (_.bufob);
+  objstrbufferappendcstrpayl_BM (_.bufob, "\n~)\n");
   LOCALRETURN_BM (_.recv);
 }                               /* end ROUTINE _9EytjXNb76D_1ZP3iSk9cuu dump_data°assoc_object */
 
@@ -1075,21 +1077,21 @@ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
     );
   _.recv = (arg1);
   _.bufob = objectcast_BM (arg2);
-  WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
+  WEAKASSERT_BM (objhasstrbufferpayl_BM (_.bufob));
   _.dumpob = objectcast_BM (arg3);
   WEAKASSERT_BM (!_.dumpob || obdumpgetdumper_BM (_.dumpob) != NULL);
   _.depthv = arg4;
   if (_.dumpob && !obdumpobjisdumpable_BM (_.dumpob, _.recv))
-    objstrbufferprintf_BM (_.bufob, " __");
+    objstrbufferprintfpayl_BM (_.bufob, " __");
   else
     {
       char objidbuf[32];
       idtocbuf32_BM (objid_BM (_.recv), objidbuf);
       const char *n = findobjectname_BM (_.recv);
       if (n)
-        objstrbufferprintf_BM (_.bufob, "%s |=%s|\t", objidbuf, n);
+        objstrbufferprintfpayl_BM (_.bufob, "%s |=%s|\t", objidbuf, n);
       else
-        objstrbufferprintf_BM (_.bufob, "%s", objidbuf);
+        objstrbufferprintfpayl_BM (_.bufob, "%s", objidbuf);
     };
   LOCALRETURN_BM (_.bufob);
 }                               /* end ROUTINE _7fCcteNe7aR_3IKHeHjmzff */
@@ -1114,7 +1116,7 @@ value_tyBM ROUTINEOBJNAME_BM (_6PmxiZR9WBe_13DwWExCALl) (struct stackframe_stBM 
   _.recv = arg1;
   WEAKASSERT_BM (obdumpgetdumper_BM (arg2) != NULL);
   _.dumpob = arg2;
-  WEAKASSERT_BM (objhasstrbuffer_BM (arg3));
+  WEAKASSERT_BM (objhasstrbufferpayl_BM (arg3));
   _.bufob = arg3;
   ASSERT_BM (restargs_ == NULL);
   _.closv = objgetattr_BM (_.recv, BMP_dump_data);
@@ -1148,21 +1150,21 @@ __attribute__ ((unused)), const quasinode_tyBM * restargs_ __attribute__ ((unuse
   WEAKASSERT_BM (obdumpgetdumper_BM (arg2) != NULL);
   _.dumpob = arg2;
   _.bufob = objectcast_BM (arg3);
-  WEAKASSERT_BM (objhasstrbuffer_BM (_.bufob));
+  WEAKASSERT_BM (objhasstrbufferpayl_BM (_.bufob));
   ASSERT_BM (restargs_ == NULL);
   _.obval = objpayload_BM (_.recv);
   int tyval = valtype_BM (_.obval);
   if (tyval >= type_FIRST_BM && tyval <= type_LASTREAL_BM)
     {
-      objstrbufferprintf_BM (_.bufob, "\n" "!~value (~ ");
-      unsigned oldbuflen = objstrbufferlength_BM (_.bufob);
+      objstrbufferprintfpayl_BM (_.bufob, "\n" "!~value (~ ");
+      unsigned oldbuflen = objstrbufferlengthpayl_BM (_.bufob);
       send3_BM (_.obval, BMP_dump_value,
                 (struct stackframe_stBM *) &_,
                 _.bufob, _.dumpob, taggedint_BM (1));
-      unsigned newbuflen = objstrbufferlength_BM (_.bufob);
+      unsigned newbuflen = objstrbufferlengthpayl_BM (_.bufob);
       if (newbuflen == oldbuflen)
-        objstrbufferprintf_BM (_.bufob, "\t |novalue| __");
-      objstrbufferprintf_BM (_.bufob, " ~)\n");
+        objstrbufferprintfpayl_BM (_.bufob, "\t |novalue| __");
+      objstrbufferprintfpayl_BM (_.bufob, " ~)\n");
       LOCALRETURN_BM (_.recv);
     }
   LOCALRETURN_BM (NULL);
@@ -1399,109 +1401,111 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
     FATAL_BM
       ("bad closure for _075tZNHCAMa_7XNNBaNM4qv dump_data of dumper_of_predefined");
   _.prsbufob = makeobj_BM ();
-  objputstrbuffer_BM (_.prsbufob, 512 * 1024);
+  objputstrbufferpayl_BM (_.prsbufob, 512 * 1024);
   _.filnamv = closurenthson_BM (_.cclos, closix_filnamv);
   ASSERT_BM (isstring_BM ((const value_tyBM) _.filnamv));
   const char *basepath = bytstring_BM (_.filnamv);
-  objstrbufferprintf_BM (_.prsbufob,
-                         "// generated file for predefined %s\n", basepath);
+  objstrbufferprintfpayl_BM (_.prsbufob,
+                             "// generated file for predefined %s\n",
+                             basepath);
   _.prset = setpredefinedobjects_BM ();
   unsigned nbpredef = setcardinal_BM (_.prset);
   const objectval_tyBM **arrnamed =
     calloc (nbpredef, sizeof (objectval_tyBM *));
   if (!arrnamed)
     FATAL_BM ("calloc failed for arrnamed (%u) - %m", nbpredef);
-  objstrbufferreserve_BM (_.prsbufob, nbpredef * 512);
-  objstrbufferprintf_BM (_.prsbufob,
-                         "#if !defined(HAS_PREDEF_BM) && !defined(HAS_NAMED_PREDEF_BM)\n"
-                         "#error missing HAS_PREDEF_BM or HAS_NAMED_PREDEF_BM\n"
-                         "#endif\n");
-  objstrbufferprintf_BM (_.prsbufob,
-                         "#undef BM_NB_PREDEFINED\n"
-                         "#define BM_NB_PREDEFINED %u\n\n", nbpredef);
-  objstrbufferprintf_BM (_.prsbufob,
-                         "#ifdef HAS_PREDEF_BM\n"
-                         "//HAS_PREDEF_BM(Id,Hi,Lo,Hash)\n");
+  objstrbufferreservepayl_BM (_.prsbufob, nbpredef * 512);
+  objstrbufferprintfpayl_BM (_.prsbufob,
+                             "#if !defined(HAS_PREDEF_BM) && !defined(HAS_NAMED_PREDEF_BM)\n"
+                             "#error missing HAS_PREDEF_BM or HAS_NAMED_PREDEF_BM\n"
+                             "#endif\n");
+  objstrbufferprintfpayl_BM (_.prsbufob,
+                             "#undef BM_NB_PREDEFINED\n"
+                             "#define BM_NB_PREDEFINED %u\n\n", nbpredef);
+  objstrbufferprintfpayl_BM (_.prsbufob,
+                             "#ifdef HAS_PREDEF_BM\n"
+                             "//HAS_PREDEF_BM(Id,Hi,Lo,Hash)\n");
   unsigned nbnamed = 0;
   unsigned widthnames = 0;
   for (unsigned pix = 0; pix < nbpredef; pix++)
     {
       _.curpredef = setelemnth_BM (_.prset, pix);
       if (pix % 5 == 0)
-        objstrbufferprintf_BM (_.prsbufob, "\n");
+        objstrbufferprintfpayl_BM (_.prsbufob, "\n");
       char idbuf[32];
       memset (idbuf, 0, sizeof (idbuf));
       rawid_tyBM curid = objid_BM (_.curpredef);
       idtocbuf32_BM (curid, idbuf);
-      objstrbufferprintf_BM (_.prsbufob, "HAS_PREDEF_BM(%s,%llu,%llu,%lu)",
-                             idbuf, (unsigned long long) curid.id_hi,
-                             (unsigned long long) curid.id_lo,
-                             (unsigned long) hashid_BM (curid));
+      objstrbufferprintfpayl_BM (_.prsbufob,
+                                 "HAS_PREDEF_BM(%s,%llu,%llu,%lu)", idbuf,
+                                 (unsigned long long) curid.id_hi,
+                                 (unsigned long long) curid.id_lo,
+                                 (unsigned long) hashid_BM (curid));
       const char *n = findobjectname_BM (_.curpredef);
       if (n)
         {
-          objstrbufferprintf_BM (_.prsbufob, " /*=%s*/\n", n);
+          objstrbufferprintfpayl_BM (_.prsbufob, " /*=%s*/\n", n);
           arrnamed[nbnamed++] = _.curpredef;
           if (widthnames < strlen (n))
             widthnames = strlen (n);
         }
       else
-        objstrbufferprintf_BM (_.prsbufob, "\n");
+        objstrbufferprintfpayl_BM (_.prsbufob, "\n");
     }
   widthnames = (widthnames | 3) + 1;
-  objstrbufferprintf_BM (_.prsbufob, "#undef HAS_PREDEF_BM\n"
-                         "#endif /*HAS_PREDEF_BM*/\n");
-  objstrbufferprintf_BM (_.prsbufob, "#undef BM_NB_NAMED_PREDEFINED\n"
-                         "#define BM_NB_NAMED_PREDEFINED %u\n", nbnamed);
+  objstrbufferprintfpayl_BM (_.prsbufob, "#undef HAS_PREDEF_BM\n"
+                             "#endif /*HAS_PREDEF_BM*/\n");
+  objstrbufferprintfpayl_BM (_.prsbufob, "#undef BM_NB_NAMED_PREDEFINED\n"
+                             "#define BM_NB_NAMED_PREDEFINED %u\n", nbnamed);
   qsort (arrnamed, nbnamed, sizeof (objectval_tyBM *), cmpnamedpredef_BM);
   for (unsigned nix = 0; nix < nbnamed; nix++)
     {
       _.curpredef = arrnamed[nix];
       if (nix % 5 == 0)
-        objstrbufferprintf_BM (_.prsbufob, "\n");
+        objstrbufferprintfpayl_BM (_.prsbufob, "\n");
       const char *n = findobjectname_BM (_.curpredef);
       ASSERT_BM (n != NULL);
       char idbuf[32];
       memset (idbuf, 0, sizeof (idbuf));
       rawid_tyBM curid = objid_BM (_.curpredef);
       idtocbuf32_BM (curid, idbuf);
-      objstrbufferprintf_BM (_.prsbufob, "#undef BMP_%s\n#undef BMPNID_%s\n",
-                             n, n);
-      objstrbufferprintf_BM (_.prsbufob, "#define BMP_%s", n);
+      objstrbufferprintfpayl_BM (_.prsbufob,
+                                 "#undef BMP_%s\n#undef BMPNID_%s\n", n, n);
+      objstrbufferprintfpayl_BM (_.prsbufob, "#define BMP_%s", n);
       for (int i = widthnames - strlen (n); i > 0; i--)
-        objstrbufferappendcstr_BM (_.prsbufob, " ");
-      objstrbufferprintf_BM (_.prsbufob, "PREDEF_BM(%s)\n", idbuf);
-      objstrbufferprintf_BM (_.prsbufob, "#define BMPNID_%s", n);
+        objstrbufferappendcstrpayl_BM (_.prsbufob, " ");
+      objstrbufferprintfpayl_BM (_.prsbufob, "PREDEF_BM(%s)\n", idbuf);
+      objstrbufferprintfpayl_BM (_.prsbufob, "#define BMPNID_%s", n);
       for (int i = widthnames - strlen (n); i > 0; i--)
-        objstrbufferappendcstr_BM (_.prsbufob, " ");
-      objstrbufferprintf_BM (_.prsbufob, "%s\n", idbuf);
+        objstrbufferappendcstrpayl_BM (_.prsbufob, " ");
+      objstrbufferprintfpayl_BM (_.prsbufob, "%s\n", idbuf);
     }
-  objstrbufferprintf_BM (_.prsbufob, "\n\n#ifdef HAS_NAMED_PREDEF_BM\n"
-                         "//HAS_NAMED_PREDEF_BM(Nam,Id)\n");
+  objstrbufferprintfpayl_BM (_.prsbufob, "\n\n#ifdef HAS_NAMED_PREDEF_BM\n"
+                             "//HAS_NAMED_PREDEF_BM(Nam,Id)\n");
   for (unsigned nix = 0; nix < nbnamed; nix++)
     {
       _.curpredef = arrnamed[nix];
       if (nix % 5 == 0)
-        objstrbufferprintf_BM (_.prsbufob, "\n");
+        objstrbufferprintfpayl_BM (_.prsbufob, "\n");
       const char *n = findobjectname_BM (_.curpredef);
       ASSERT_BM (n != NULL);
       char idbuf[32];
       memset (idbuf, 0, sizeof (idbuf));
       rawid_tyBM curid = objid_BM (_.curpredef);
       idtocbuf32_BM (curid, idbuf);
-      objstrbufferprintf_BM (_.prsbufob, "HAS_NAMED_PREDEF_BM(%s,%s)\n", n,
-                             idbuf);
+      objstrbufferprintfpayl_BM (_.prsbufob, "HAS_NAMED_PREDEF_BM(%s,%s)\n",
+                                 n, idbuf);
     };
-  objstrbufferprintf_BM (_.prsbufob, "\n#undef HAS_NAMED_PREDEF_BM\n"
-                         "#endif/*HAS_NAMED_PREDEF_BM*/\n\n");
-  objstrbufferprintf_BM (_.prsbufob, "// end of generated file %s\n",
-                         basepath);
+  objstrbufferprintfpayl_BM (_.prsbufob, "\n#undef HAS_NAMED_PREDEF_BM\n"
+                             "#endif/*HAS_NAMED_PREDEF_BM*/\n\n");
+  objstrbufferprintfpayl_BM (_.prsbufob, "// end of generated file %s\n",
+                             basepath);
   char *filpath = NULL;
   asprintf (&filpath, "%s/%s", bytstring_BM (duptr->dump_dir), basepath);
   if (!filpath)
     FATAL_BM ("asprintf failed for %s", basepath);
-  objstrbufferwritetofile_BM (_.prsbufob, filpath);
-  objstrbufferreset_BM (_.prsbufob);
+  objstrbufferwritetofilepayl_BM (_.prsbufob, filpath);
+  objstrbufferresetpayl_BM (_.prsbufob);
   printf ("wrote predefined file %s\n", filpath);
   duptr->dump_wrotefilecount++;
   free (filpath), filpath = NULL;
@@ -1545,38 +1549,38 @@ const quasinode_tyBM * restargs __attribute__ ((unused)))
       ("bad closure for _4ENXjApm7Qb_3bXo8F6Jg9z dump_data inside dumper_of_globals");
   _.dumpob = arg2;
   _.prsbufob = makeobj_BM ();
-  objputstrbuffer_BM (_.prsbufob, 256 * 1024);
+  objputstrbufferpayl_BM (_.prsbufob, 256 * 1024);
   _.filnamv = closurenthson_BM (_.cclosv, closix_filnamv);
   _.nodglobv = nodeglobalnames_BM (BMP_node);
   ASSERT_BM (isstring_BM ((const value_tyBM) _.filnamv));
   const char *basepath = bytstring_BM (_.filnamv);
-  objstrbufferprintf_BM (_.prsbufob,
-                         "// generated file for globals %s\n", basepath);
-  objstrbufferprintf_BM (_.prsbufob,
-                         "#ifndef HAS_GLOBAL_BM\n"
-                         "#error missing HAS_GLOBAL_BM\n" "#endif\n\n");
+  objstrbufferprintfpayl_BM (_.prsbufob,
+                             "// generated file for globals %s\n", basepath);
+  objstrbufferprintfpayl_BM (_.prsbufob,
+                             "#ifndef HAS_GLOBAL_BM\n"
+                             "#error missing HAS_GLOBAL_BM\n" "#endif\n\n");
   unsigned nbglob = nodewidth_BM ((const value_tyBM) _.nodglobv);
-  objstrbufferprintf_BM (_.prsbufob,
-                         "#undef BM_NB_GLOBAL\n"
-                         "#define BM_NB_GLOBAL %d\n", nbglob);
+  objstrbufferprintfpayl_BM (_.prsbufob,
+                             "#undef BM_NB_GLOBAL\n"
+                             "#define BM_NB_GLOBAL %d\n", nbglob);
   for (unsigned gix = 0; gix < nbglob; gix++)
     {
       _.curglobname =           //
         (const stringval_tyBM *) nodenthson_BM ((const value_tyBM) _.nodglobv,
                                                 gix);
       ASSERT_BM (isstring_BM ((const value_tyBM) _.curglobname));
-      objstrbufferprintf_BM (_.prsbufob, "HAS_GLOBAL_BM(%s)\n",
-                             bytstring_BM (_.curglobname));
+      objstrbufferprintfpayl_BM (_.prsbufob, "HAS_GLOBAL_BM(%s)\n",
+                                 bytstring_BM (_.curglobname));
     };
-  objstrbufferprintf_BM (_.prsbufob, "\n#undef HAS_GLOBAL_BM\n");
-  objstrbufferprintf_BM (_.prsbufob, "\n\n"
-                         "// end of generated file %s\n", basepath);
+  objstrbufferprintfpayl_BM (_.prsbufob, "\n#undef HAS_GLOBAL_BM\n");
+  objstrbufferprintfpayl_BM (_.prsbufob, "\n\n"
+                             "// end of generated file %s\n", basepath);
   char *filpath = NULL;
   asprintf (&filpath, "%s/%s", bytstring_BM (duptr->dump_dir), basepath);
   if (!filpath)
     FATAL_BM ("asprintf failed for %s", basepath);
-  objstrbufferwritetofile_BM (_.prsbufob, filpath);
-  objstrbufferreset_BM (_.prsbufob);
+  objstrbufferwritetofilepayl_BM (_.prsbufob, filpath);
+  objstrbufferresetpayl_BM (_.prsbufob);
   printf ("wrote globals file %s\n", filpath);
   duptr->dump_wrotefilecount++;
   free (filpath), filpath = NULL;
@@ -1632,9 +1636,10 @@ ROUTINEOBJNAME_BM (_3yJPC4SxGtF_6ilaF37wdxG)    //
   unsigned nbtypes = tuplesize_BM (_.tuptypes);
   const char *basepath = bytstring_BM (_.filnamv);
   _.prsbufob = makeobj_BM ();
-  objputstrbuffer_BM (_.prsbufob, 512 * 1024);
-  objstrbufferprintf_BM (_.prsbufob, "// generated file for %u types %s\n",
-                         nbtypes, basepath);
+  objputstrbufferpayl_BM (_.prsbufob, 512 * 1024);
+  objstrbufferprintfpayl_BM (_.prsbufob,
+                             "// generated file for %u types %s\n", nbtypes,
+                             basepath);
   unsigned nbgoodtypes = 0;
   for (unsigned ix = 0; ix < nbtypes; ix++)
     {
@@ -1654,12 +1659,12 @@ ROUTINEOBJNAME_BM (_3yJPC4SxGtF_6ilaF37wdxG)    //
           idtocbuf32_BM (objid_BM (_.curtype), idtyp);
           const char *tynam = findobjectname_BM (_.curtype);
           if (tynam)
-            objstrbufferprintf_BM (_.prsbufob,
-                                   "#error bad type #%d %s : %s\n", ix, idtyp,
-                                   tynam);
+            objstrbufferprintfpayl_BM (_.prsbufob,
+                                       "#error bad type #%d %s : %s\n", ix,
+                                       idtyp, tynam);
           else
-            objstrbufferprintf_BM (_.prsbufob, "#error bad type #%d %s\n", ix,
-                                   idtyp);
+            objstrbufferprintfpayl_BM (_.prsbufob, "#error bad type #%d %s\n",
+                                       ix, idtyp);
         }
     }
   if (nbgoodtypes != nbtypes)
@@ -1679,11 +1684,11 @@ ROUTINEOBJNAME_BM (_3yJPC4SxGtF_6ilaF37wdxG)    //
       idtocbuf32_BM (objid_BM (_.curtype), idtyp);
       const char *tynam = findobjectname_BM (_.curtype);
       if (tynam)
-        objstrbufferprintf_BM (_.prsbufob, "\n\n"
-                               "// type #%d %s - %s\n", ix, idtyp, tynam);
+        objstrbufferprintfpayl_BM (_.prsbufob, "\n\n"
+                                   "// type #%d %s - %s\n", ix, idtyp, tynam);
       else
-        objstrbufferprintf_BM (_.prsbufob, "\n\n" "// type #%d %s *\n", ix,
-                               idtyp);
+        objstrbufferprintfpayl_BM (_.prsbufob, "\n\n" "// type #%d %s *\n",
+                                   ix, idtyp);
       /// emit the type
       _.emittedv = send2_BM (_.curtype, k_emit_c_type,
                              (struct stackframe_stBM *) &_,
@@ -1693,26 +1698,27 @@ ROUTINEOBJNAME_BM (_3yJPC4SxGtF_6ilaF37wdxG)    //
           DBGPRINTF_BM ("failed to emit_c_type type #%d %s / of class %s", ix,
                         objectdbg_BM (_.curtype),
                         objectdbg1_BM (objclass_BM (_.curtype)));
-          objstrbufferprintf_BM (_.prsbufob,
-                                 "\n" "#error emit_c_type failed for %s\n",
-                                 idtyp);
+          objstrbufferprintfpayl_BM (_.prsbufob,
+                                     "\n"
+                                     "#error emit_c_type failed for %s\n",
+                                     idtyp);
           LOCALRETURN_BM (NULL);
         };
       if (tynam)
-        objstrbufferprintf_BM (_.prsbufob, "\n"
-                               "// end type #%d %s - %s\n\n", ix, idtyp,
-                               tynam);
+        objstrbufferprintfpayl_BM (_.prsbufob, "\n"
+                                   "// end type #%d %s - %s\n\n", ix, idtyp,
+                                   tynam);
       else
-        objstrbufferprintf_BM (_.prsbufob, "\n"
-                               "// end type #%d %s *\n\n", ix, idtyp);
+        objstrbufferprintfpayl_BM (_.prsbufob, "\n"
+                                   "// end type #%d %s *\n\n", ix, idtyp);
       _.emittedv = NULL;
     };
   char *filpath = NULL;
   asprintf (&filpath, "%s/%s", bytstring_BM (duptr->dump_dir), basepath);
   if (!filpath)
     FATAL_BM ("asprintf failed for %s", basepath);
-  objstrbufferwritetofile_BM (_.prsbufob, filpath);
-  objstrbufferreset_BM (_.prsbufob);
+  objstrbufferwritetofilepayl_BM (_.prsbufob, filpath);
+  objstrbufferresetpayl_BM (_.prsbufob);
   printf ("wrote types file %s\n", filpath);
   duptr->dump_wrotefilecount++;
   free (filpath), filpath = NULL;
@@ -1819,7 +1825,7 @@ ROUTINEOBJNAME_BM (_1gME6zn82Kf_8hzWibLFRfz)    //
   _.modgenob = makeobj_BM ();
   objputclass_BM (_.modgenob, k_simple_module_generation);
   objputattr_BM (_.modgenob, k_plain_module, _.recv);
-  objputstrbuffer_BM (_.modgenob, (1024 * 1024));
+  objputstrbufferpayl_BM (_.modgenob, (1024 * 1024));
   objtouchnow_BM (_.modgenob);
   _.resprep = send1_BM (_.recv, k_prepare_module,
                         (struct stackframe_stBM *) &_, _.modgenob);
@@ -2187,7 +2193,7 @@ ROUTINEOBJNAME_BM (_5DyG7xVcxRI_1Ckpbj7b3QK)    //
   _.obmod = arg1;
   WEAKASSERT_BM (obdumpgetdumper_BM (arg2) != NULL);
   _.dumpob = arg2;
-  WEAKASSERT_BM (objhasstrbuffer_BM ((objectval_tyBM *) arg3));
+  WEAKASSERT_BM (objhasstrbufferpayl_BM ((objectval_tyBM *) arg3));
   _.bufob = objectcast_BM (arg3);
   DBGPRINTF_BM ("@@dump_data°plain_dumpable_module obmod=%s",
                 objectdbg_BM (_.obmod));
@@ -2197,7 +2203,7 @@ ROUTINEOBJNAME_BM (_5DyG7xVcxRI_1Ckpbj7b3QK)    //
       char idbuf[32];
       memset (idbuf, 0, sizeof (idbuf));
       idtocbuf32_BM (objid_BM (_.obmod), idbuf);
-      objstrbufferprintf_BM (_.bufob, "\t// emitted module %s\n", idbuf);
+      objstrbufferprintfpayl_BM (_.bufob, "\t// emitted module %s\n", idbuf);
       DBGPRINTF_BM ("@@dump_data°plain_dumpable_module emitted obmod=%s",
                     objectdbg_BM (_.obmod));
     }

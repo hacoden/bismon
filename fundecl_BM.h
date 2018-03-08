@@ -307,41 +307,43 @@ extern void objectgckeep_BM (struct garbcoll_stBM *gc, objectval_tyBM * obj);
 
 
 ////////////////
-extern bool objputstrbuffer_BM (objectval_tyBM * obj, unsigned maxsize);
-static inline bool objhasstrbuffer_BM (const objectval_tyBM * obj);
-static inline struct strbuffer_stBM *objgetstrbufferpayload_BM (objectval_tyBM
-                                                                * obj);
-extern void objstrbufferreserve_BM (objectval_tyBM * obj, unsigned gap);
-extern const char *objstrbufferbytes_BM (objectval_tyBM * obj);
-extern int objstrbufferindentation_BM (objectval_tyBM * obj);
-extern void objstrbufferclearindent_BM (objectval_tyBM * obj);
-extern void objstrbuffermoreindent_BM (objectval_tyBM * obj);
-extern void objstrbufferlessindent_BM (objectval_tyBM * obj);
-extern void objstrbufferappendcstr_BM (objectval_tyBM * obj,
-                                       const char *cstr);
-extern void objstrbufferreset_BM (objectval_tyBM * obj);
-extern unsigned objstrbufferlength_BM (const objectval_tyBM * obj);
+/// notice the naming convention objXXXXXpayl_BM for functions dealing
+/// with particular payloads in objects.
+extern bool objputstrbufferpayl_BM (objectval_tyBM * obj, unsigned maxsize);
+static inline bool objhasstrbufferpayl_BM (const objectval_tyBM * obj);
+static inline struct strbuffer_stBM *objgetstrbufferpayl_BM (objectval_tyBM
+                                                             * obj);
+extern void objstrbufferreservepayl_BM (objectval_tyBM * obj, unsigned gap);
+extern const char *objstrbufferbytespayl_BM (objectval_tyBM * obj);
+extern int objstrbufferindentationpayl_BM (objectval_tyBM * obj);
+extern void objstrbufferclearindentpayl_BM (objectval_tyBM * obj);
+extern void objstrbuffermoreindentpayl_BM (objectval_tyBM * obj);
+extern void objstrbufferlessindentpayl_BM (objectval_tyBM * obj);
+extern void objstrbufferappendcstrpayl_BM (objectval_tyBM * obj,
+                                           const char *cstr);
+extern void objstrbufferresetpayl_BM (objectval_tyBM * obj);
+extern unsigned objstrbufferlengthpayl_BM (const objectval_tyBM * obj);
 /// raw printf
-extern void objstrbufferrawprintf_BM (objectval_tyBM * obj,
-                                      const char *fmt, ...)
+extern void objstrbufferrawprintfpayl_BM (objectval_tyBM * obj,
+                                          const char *fmt, ...)
   __attribute__ ((format (printf, 2, 3)));
 /// cooked printf: the tabs become spaces or indented-newlines, the
 /// newlines become indented
-extern void objstrbufferprintf_BM (objectval_tyBM * obj, const char *fmt,
-                                   ...)
+extern void objstrbufferprintfpayl_BM (objectval_tyBM * obj, const char *fmt,
+                                       ...)
   __attribute__ ((format (printf, 2, 3)));
 /// indented newline
-extern void objstrbuffernewline_BM (objectval_tyBM * obj);
+extern void objstrbuffernewlinepayl_BM (objectval_tyBM * obj);
 /// output UTF8 encoded à la JSON
-extern void objstrbufferencodedutf8_BM (objectval_tyBM * obj,
-                                        const char *str, ssize_t bytelen);
+extern void objstrbufferencodedutf8payl_BM (objectval_tyBM * obj,
+                                            const char *str, ssize_t bytelen);
 /// output bytes encoded à la C
-extern void objstrbufferencodedc_BM (objectval_tyBM * obj,
-                                     const char *str, ssize_t bytelen);
+extern void objstrbufferencodedcpayl_BM (objectval_tyBM * obj,
+                                         const char *str, ssize_t bytelen);
 
 /// write the content to a file, if different
-extern void objstrbufferwritetofile_BM (objectval_tyBM * obj,
-                                        const char *filepath);
+extern void objstrbufferwritetofilepayl_BM (objectval_tyBM * obj,
+                                            const char *filepath);
 ///////
 
 extern void strbuffergcmark_BM (struct garbcoll_stBM *gc,
@@ -378,7 +380,14 @@ extern anyassoc_tyBM *assoc_addattr_BM (anyassoc_tyBM * assoc,
                                         value_tyBM val);
 extern anyassoc_tyBM *assoc_removeattr_BM (anyassoc_tyBM * assoc,
                                            const objectval_tyBM * obattr);
+//// assoc payload support
 
+extern bool objputassocpayl_BM (objectval_tyBM * obj, unsigned maxsize);
+static inline bool objhasassocpayl_BM (const objectval_tyBM * obj);
+static inline anyassoc_tyBM *objgetassocpayl_BM (objectval_tyBM * obj);
+
+
+////////////////
 
 static inline unsigned datavectlen_BM (const struct datavectval_stBM *dvec);
 
@@ -446,6 +455,8 @@ extern struct hashsetobj_stBM *hashsetobj_remove_BM (struct hashsetobj_stBM
                                                      obj);
 extern const setval_tyBM *hashsetobj_to_set_BM (struct hashsetobj_stBM *hset);
 static inline unsigned hashsetobj_cardinal_BM (struct hashsetobj_stBM *hset);
+
+
 
 extern struct listtop_stBM *makelist_BM (void);
 static inline bool islist_BM (const value_tyBM);

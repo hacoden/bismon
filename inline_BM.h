@@ -623,7 +623,7 @@ objgetclassinfosetofselectors_BM (const objectval_tyBM * obj)
 
 ////////////////////////////////////////////////////////////////
 bool
-objhasstrbuffer_BM (const objectval_tyBM * obj)
+objhasstrbufferpayl_BM (const objectval_tyBM * obj)
 {
   extendedval_tyBM payl = objpayload_BM (obj);
   if (!payl)
@@ -634,7 +634,7 @@ objhasstrbuffer_BM (const objectval_tyBM * obj)
 
 
 struct strbuffer_stBM *
-objgetstrbufferpayload_BM (objectval_tyBM * obj)
+objgetstrbufferpayl_BM (objectval_tyBM * obj)
 {
   extendedval_tyBM payl = objpayload_BM (obj);
   if (!payl)
@@ -642,7 +642,7 @@ objgetstrbufferpayload_BM (objectval_tyBM * obj)
   if (valtype_BM ((const value_tyBM) payl) == typayl_strbuffer_BM)
     return (struct strbuffer_stBM *) payl;
   return NULL;
-}                               /* end objgetstrbufferpayload_BM */
+}                               /* end objgetstrbufferpayl_BM */
 
 
 ////////////////
