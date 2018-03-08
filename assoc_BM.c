@@ -1071,7 +1071,9 @@ hashsetvalmakenode_BM (struct hashsetval_stBM * hsv, objectval_tyBM * connob)
     return NULL;
   unsigned hslen = ((typedhead_tyBM *) hsv)->rlen;
   unsigned hsiz = ((struct typedsize_stBM *) hsv)->size;
-  value_tyBM *arr = calloc (prime_above_BM (hsiz + 1), sizeof (value_tyBM));
+  value_tyBM tinyarr[TINYSIZE_BM] = { 0 };
+  value_tyBM *arr = (hsiz < TINYSIZE_BM) ? tinyarr
+    : calloc (prime_above_BM (hsiz + 1), sizeof (value_tyBM));
   if (!arr)
     FATAL_BM ("hashsetmakenode_BM calloc %d failure", hsiz);
   unsigned cnt = 0;
@@ -1096,7 +1098,8 @@ hashsetvalmakenode_BM (struct hashsetval_stBM * hsv, objectval_tyBM * connob)
   ASSERT_BM (cnt == hsiz);
   valarrqsort_BM (arr, cnt);
   resv = (value_tyBM) makenode_BM (connob, cnt, arr);
-  free (arr), arr = NULL;
+  if (arr != tinyarr)
+    free (arr), arr = NULL;
   return resv;
 }                               /* end hashsetvalmakenode_BM */
 
@@ -1278,7 +1281,7 @@ hashmapvalget_BM (struct hashmapval_stBM * hmv, value_tyBM keyv)
 
 
 #define HASHMAPVAL_INITBUCKETSIZE_BM 5
-static void hashsetvalrawput_BM (struct hashmapval_stBM *hmv, value_tyBM keyv,
+static void hashmapvalrawput_BM (struct hashmapval_stBM *hmv, value_tyBM keyv,
                                  value_tyBM valv);
 
 static void
@@ -1421,7 +1424,7 @@ hashmapvalput_BM (struct hashmapval_stBM *hmv, value_tyBM keyv,
              ILOG2_BM (oldhlen + 3))
       {
         if (g_random_int () % HASHTHRESHOLD_BM == 0)
-          hmv = hashsetvalreorganize_BM (hmv, 4 + ILOG2_BM (oldhsiz + 2) / 6);
+          hmv = hashmapvalreorganize_BM (hmv, 4 + ILOG2_BM (oldhsiz + 2) / 6);
       }
   }
   hashmapvalrawput_BM (hmv, keyv, valv);
@@ -1504,7 +1507,7 @@ hashmapvalnextkey_BM (struct hashmapval_stBM * hmv, value_tyBM keyv)
     return NULL;
   unsigned hslen = ((typedhead_tyBM *) hmv)->rlen;
   struct hashmapbucket_stBM *curbuck = NULL;
-  ASSERT_BM (bix < hslen);
+  ASSERT_BM (bix < (int) hslen);
   curbuck = hmv->hashmap_vbuckets[bix];
   if (!curbuck || curbuck == HASHEMPTYSLOT_BM)
     return NULL;
@@ -1519,7 +1522,7 @@ hashmapvalnextkey_BM (struct hashmapval_stBM * hmv, value_tyBM keyv)
         continue;
       return curkey;
     }
-  for (bix = bix + 1; bix < hslen; bix++)
+  for (bix = bix + 1; bix < (int) hslen; bix++)
     {
       curbuck = hmv->hashmap_vbuckets[bix];
       if (!curbuck || curbuck == HASHEMPTYSLOT_BM)
@@ -1539,5 +1542,52 @@ hashmapvalnextkey_BM (struct hashmapval_stBM * hmv, value_tyBM keyv)
     }
   return NULL;
 }                               /* end of hashmapvalnextkey_BM */
+
+
+value_tyBM
+  hashmapvalmakenodeofkeys_BM
+  (struct hashmapval_stBM * hmv, objectval_tyBM * connob)
+{
+  if (!ishashmapval_BM ((value_tyBM) hmv))
+    return NULL;
+  if (!isobject_BM ((value_tyBM) connob))
+    return NULL;
+  unsigned hmlen = ((typedhead_tyBM *) hmv)->rlen;
+  unsigned hmsiz = ((typedsize_tyBM *) hmv)->size;
+  value_tyBM tinyarr[TINYSIZE_BM] = { 0 };
+  value_tyBM *keyarr =
+    (hmsiz < TINYSIZE_BM)
+    ? tinyarr : calloc (prime_above_BM (hmsiz + 1), sizeof (value_tyBM));
+  if (!keyarr)
+    FATAL_BM ("failed to calloc for %u values", hmsiz + 1);
+  unsigned keycnt = 0;
+  for (unsigned bix = 0; bix < hmlen; bix++)
+    {
+      struct hashmapbucket_stBM *curbuck = hmv->hashmap_vbuckets[bix];
+      if (!curbuck || curbuck == HASHEMPTYSLOT_BM)
+        continue;
+      ASSERT_BM (((typedhead_tyBM *) curbuck)->htyp ==
+                 typayl_hashmapbucket_BM);
+      unsigned bucklen = ((typedhead_tyBM *) curbuck)->rlen;
+      for (unsigned enix = 0; enix < bucklen; enix++)
+        {
+          value_tyBM curkey = curbuck->vbent_arr[enix].hmap_keyv;
+          if (!curkey)
+            break;
+          else if (curkey == HASHEMPTYSLOT_BM)
+            continue;
+          ASSERT_BM (keycnt < hmsiz);
+          keyarr[keycnt] = curkey;
+          keycnt++;
+        }
+    }
+  ASSERT_BM (keycnt == hmsiz);
+  valarrqsort_BM (keyarr, keycnt);
+  value_tyBM resv = (value_tyBM) makenode_BM (connob, keycnt, keyarr);
+  if (keyarr != tinyarr)
+    free (keyarr), keyarr = NULL;
+  return resv;
+
+}                               /* end hashmapvalmakenodeofkeys_BM */
 
 #warning more needed on hashsets, hashmaps, etc....
