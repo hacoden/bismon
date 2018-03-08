@@ -67,10 +67,10 @@ extern objrout_sigBM ROUTINEOBJNAME_BM (_6gRlN8loM4E_4pSsNmiCeIa);
 
 value_tyBM
 ROUTINEOBJNAME_BM (_6gRlN8loM4E_4pSsNmiCeIa)    // emit_c_type:c_opaque
-(struct stackframe_stBM * stkf,
- const value_tyBM arg1,
- const value_tyBM arg2, const value_tyBM arg3_
- __attribute__ ((unused)), const value_tyBM arg4,
+(struct stackframe_stBM * stkf, const value_tyBM arg1,  //
+ const value_tyBM arg2,         //
+ const value_tyBM arg3_ __attribute__ ((unused)),       //
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
