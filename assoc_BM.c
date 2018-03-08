@@ -633,6 +633,22 @@ assocgcproc_BM (struct garbcoll_stBM *gc, anyassoc_tyBM * assoc, int depth)
     FATAL_BM ("unexpected assoc @%p", assoc);
 }                               /* end assocgcproc_BM */
 
+
+///// ASSOC PAYLOAD
+
+bool
+objputassocpayl_BM (objectval_tyBM * obj, unsigned maxsize)
+{
+  if (!isobject_BM ((value_tyBM) obj))
+    return false;
+  if (maxsize > MAXSIZE_BM)
+    FATAL_BM ("objputassocpayl_BM too big maxsize %u for obj %s", maxsize,
+              objectdbg_BM (obj));
+  anyassoc_tyBM *asso = make_assoc_BM (maxsize);
+  objputpayload_BM (obj, asso);
+  return true;
+}                               /* end objputassocpayl_BM */
+
 /*********** HASH SET VALUES **********/
 void
 hashsetvalgcmark_BM (struct garbcoll_stBM *gc, struct hashsetval_stBM *hsv,

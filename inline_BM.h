@@ -732,6 +732,77 @@ make_assoc_BM (unsigned len)
   return res;
 }                               /* end make_assoc_BM */
 
+bool
+objhasassocpayl_BM (const objectval_tyBM * obj)
+{
+  if (!isobject_BM ((value_tyBM) obj))
+    return false;
+  extendedval_tyBM payl = objpayload_BM (obj);
+  if (!payl)
+    return false;
+  return isassoc_BM (payl);
+}                               /* end objhasassocpayl_BM */
+
+anyassoc_tyBM *
+objgetassocpayl_BM (objectval_tyBM * obj)
+{
+  if (!isobject_BM ((value_tyBM) obj))
+    return NULL;
+  extendedval_tyBM payl = objpayload_BM (obj);
+  if (!payl)
+    return NULL;
+  return assoccast_BM (payl);
+}                               /* end objgetassocpayl_BM */
+
+const setval_tyBM *
+objassocsetattrspayl_BM (objectval_tyBM * obj)
+{
+  anyassoc_tyBM *asso = objgetassocpayl_BM (obj);
+  if (!asso)
+    return NULL;
+  return assoc_setattrs_BM (asso);
+}                               /* end objassocsetattrspayl_BM */
+
+value_tyBM
+objassocgetattrpayl_BM (objectval_tyBM * obj, const objectval_tyBM * obattr)
+{
+  anyassoc_tyBM *asso = objgetassocpayl_BM (obj);
+  if (!asso)
+    return NULL;
+  if (!isobject_BM ((value_tyBM) obattr))
+    return NULL;
+  return assoc_getattr_BM (asso, obattr);
+}                               /* end objassocgetattrpayl_BM */
+
+void
+objassocaddattrpayl_BM (objectval_tyBM * obj,
+                        const objectval_tyBM * obattr, value_tyBM val)
+{
+  anyassoc_tyBM *asso = objgetassocpayl_BM (obj);
+  if (!asso)
+    return;
+  if (!isobject_BM ((value_tyBM) obattr))
+    return;
+  anyassoc_tyBM *newasso = assoc_addattr_BM (asso, obattr, val);
+  if (newasso != asso)
+    objputpayload_BM (obj, newasso);
+}                               /* end objassocaddattrpayl_BM */
+
+void
+objassocremoveattrpayl_BM (objectval_tyBM * obj,
+                           const objectval_tyBM * obattr)
+{
+  anyassoc_tyBM *asso = objgetassocpayl_BM (obj);
+  if (!asso)
+    return;
+  if (!isobject_BM ((value_tyBM) obattr))
+    return;
+  anyassoc_tyBM *newasso = assoc_removeattr_BM (asso, obattr);
+  if (newasso != asso)
+    objputpayload_BM (obj, newasso);
+}                               /* end  objassocremoveattrpayl_BM */
+
+////////////////
 unsigned
 datavectlen_BM (const struct datavectval_stBM *dvec)
 {

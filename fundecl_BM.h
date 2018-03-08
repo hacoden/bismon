@@ -380,13 +380,22 @@ extern anyassoc_tyBM *assoc_addattr_BM (anyassoc_tyBM * assoc,
                                         value_tyBM val);
 extern anyassoc_tyBM *assoc_removeattr_BM (anyassoc_tyBM * assoc,
                                            const objectval_tyBM * obattr);
+
 //// assoc payload support
 
 extern bool objputassocpayl_BM (objectval_tyBM * obj, unsigned maxsize);
 static inline bool objhasassocpayl_BM (const objectval_tyBM * obj);
 static inline anyassoc_tyBM *objgetassocpayl_BM (objectval_tyBM * obj);
-
-
+static inline const setval_tyBM *objassocsetattrspayl_BM (objectval_tyBM *
+                                                          obj);
+static inline value_tyBM objassocgetattrpayl_BM (objectval_tyBM * obj,
+                                                 const objectval_tyBM *
+                                                 obattr);
+static inline void objassocaddattrpayl_BM (objectval_tyBM * obj,
+                                           const objectval_tyBM * obattr,
+                                           value_tyBM val);
+static inline void objassocremoveattrpayl_BM (objectval_tyBM * obj,
+                                              const objectval_tyBM * obattr);
 ////////////////
 
 static inline unsigned datavectlen_BM (const struct datavectval_stBM *dvec);
