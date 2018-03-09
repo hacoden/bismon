@@ -648,10 +648,17 @@ static inline value_tyBM objdictgetpayl_BM (objectval_tyBM * obj,
                                             const stringval_tyBM * str);
 static inline void objdictputpayl_BM (objectval_tyBM * obj,
                                       const stringval_tyBM * str,
-                                      const value_tyBM val);;
+                                      const value_tyBM val);
 static inline void objdictremovepayl_BM (objectval_tyBM * obj,
                                          const stringval_tyBM * str);
-
+static inline const stringval_tyBM *objdictkeyafterpayl_BM (objectval_tyBM *
+                                                            obj,
+                                                            const
+                                                            stringval_tyBM *
+                                                            str);
+static inline const stringval_tyBM
+  * objdictkeysameorafterpayl_BM (objectval_tyBM * obj,
+                                  const stringval_tyBM * str);
 
 
 ////////////////////////////////

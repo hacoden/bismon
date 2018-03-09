@@ -1640,6 +1640,75 @@ objhasdictpayl_BM (objectval_tyBM * obj)
   return objgetdictpayl_BM (obj) != NULL;
 }                               /* end objhasdictpayl_BM */
 
+unsigned
+objdictsizepayl_BM (objectval_tyBM * obj)
+{
+  struct dict_stBM *dic = objgetdictpayl_BM (obj);
+  if (dic)
+    return dictsize_BM (dic);
+  return 0;
+}                               /* end objdictsizepayl_BM */
+
+value_tyBM
+objdictgetpayl_BM (objectval_tyBM * obj, const stringval_tyBM * str)
+{
+  struct dict_stBM *dic = objgetdictpayl_BM (obj);
+  if (dic)
+    {
+      if (isstring_BM ((value_tyBM) str))
+        return dictget_BM (dic, str);
+    }
+  return NULL;
+}                               /* end objdictgetpayl_BM */
+
+void
+objdictputpayl_BM (objectval_tyBM * obj,
+                   const stringval_tyBM * str, const value_tyBM val)
+{
+  struct dict_stBM *dic = objgetdictpayl_BM (obj);
+  if (dic)
+    {
+      if (isstring_BM ((value_tyBM) str) && val)
+        dictput_BM (dic, str, val);
+    }
+}                               /* end of objdictputpayl_BM */
+
+void
+objdictremovepayl_BM (objectval_tyBM * obj, const stringval_tyBM * str)
+{
+  struct dict_stBM *dic = objgetdictpayl_BM (obj);
+  if (dic)
+    {
+      if (isstring_BM ((value_tyBM) str))
+        dictremove_BM (dic, str);
+    }
+}                               /* end objdictremovepayl_BM */
+
+const stringval_tyBM *
+objdictkeyafterpayl_BM (objectval_tyBM * obj, const stringval_tyBM * str)
+{
+  struct dict_stBM *dic = objgetdictpayl_BM (obj);
+  if (dic)
+    {
+      if (isstring_BM ((value_tyBM) str))
+        return dictkeyafter_BM (dic, str);
+    }
+  return NULL;
+}                               /* end objdictkeyafterpayl_BM */
+
+const stringval_tyBM *
+objdictkeysameorafterpayl_BM (objectval_tyBM * obj,
+                              const stringval_tyBM * str)
+{
+  struct dict_stBM *dic = objgetdictpayl_BM (obj);
+  if (dic)
+    {
+      if (isstring_BM ((value_tyBM) str))
+        return dictkeysameorafter_BM (dic, str);
+    }
+  return NULL;
+}                               /* end objdictkeysameorafterpayl_BM */
+
 ////////////////
 bool
 openmodule_BM (const rawid_tyBM id, struct stackframe_stBM * stkf)
