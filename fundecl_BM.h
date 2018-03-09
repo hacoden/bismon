@@ -683,9 +683,9 @@ extern bool hashsetvalcontains_BM (struct hashsetval_stBM *hsv,
 extern struct hashsetval_stBM *hashsetvalreorganize_BM
   (struct hashsetval_stBM *hsv, unsigned gap);
 extern struct hashsetval_stBM *hashsetvalput_BM (struct hashsetval_stBM *hsv,
-                                                 value_tyBM * val);
+                                                 value_tyBM val);
 extern struct hashsetval_stBM *hashsetvalremove_BM (struct hashsetval_stBM
-                                                    *hsv, value_tyBM * val);
+                                                    *hsv, value_tyBM val);
 
 /** to iterate in an hashsetval using
   for (value_tyBM v = hashsetvalfirst_BM(hsv); v!=NULL;
@@ -709,8 +709,10 @@ static inline struct hashsetval_stBM *objgethashsetvalpayl_BM (objectval_tyBM
 static inline bool objhashashsetvalpayl_BM (objectval_tyBM * obj);
 static inline bool objhashsetvalcontainspayl_BM (objectval_tyBM * obj,
                                                  value_tyBM val);
-
-
+static inline void objhashsetvalreorganizepayl_BM (objectval_tyBM * obj,
+                                                   unsigned gap);
+static inline void objhashsetvalputpayl_BM (objectval_tyBM * obj,
+                                            value_tyBM val);
 ////////////////////////////////
 //// hash maps associating values to values
 static inline bool ishashmapval_BM (const value_tyBM v);

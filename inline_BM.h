@@ -1827,6 +1827,19 @@ objhashsetvalcontainspayl_BM (objectval_tyBM * obj, value_tyBM val)
   return false;
 }                               /* end objhashsetvalcontainspayl_BM */
 
+void
+objhashsetvalreorganizepayl_BM (objectval_tyBM * obj, unsigned gap)
+{
+  struct hashsetval_stBM *hsv = objgethashsetvalpayl_BM (obj);
+  if (hsv)
+    {
+      struct hashsetval_stBM *newhsv = hashsetvalreorganize_BM (hsv, gap);
+      if (newhsv != hsv)
+        obj->ob_payl = newhsv;
+    }
+}                               /* end objhashsetvalreorganizepayl_BM */
+
+
 ////////////////////////////////////////////////////////////////
 
 bool

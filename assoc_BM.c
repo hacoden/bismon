@@ -944,7 +944,7 @@ hashsetvalreorganize_BM (struct hashsetval_stBM *hsv, unsigned gap)
 }                               /* end hashsetvalreorganize_BM */
 
 struct hashsetval_stBM *
-hashsetvalput_BM (struct hashsetval_stBM *hsv, value_tyBM * val)
+hashsetvalput_BM (struct hashsetval_stBM *hsv, value_tyBM val)
 {
   if (!val)
     return ishashsetval_BM ((value_tyBM) hsv) ? hsv : NULL;
@@ -970,7 +970,7 @@ hashsetvalput_BM (struct hashsetval_stBM *hsv, value_tyBM * val)
 }                               /* end hashsetvalput_BM */
 
 struct hashsetval_stBM *
-hashsetvalremove_BM (struct hashsetval_stBM *hsv, value_tyBM * val)
+hashsetvalremove_BM (struct hashsetval_stBM *hsv, value_tyBM val)
 {
   if (!val)
     return ishashsetval_BM ((value_tyBM) hsv) ? hsv : NULL;
