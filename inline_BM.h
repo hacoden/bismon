@@ -763,6 +763,15 @@ objassocsetattrspayl_BM (objectval_tyBM * obj)
   return assoc_setattrs_BM (asso);
 }                               /* end objassocsetattrspayl_BM */
 
+unsigned
+objassocnbkeyspayl_BM (const objectval_tyBM * obj)
+{
+  anyassoc_tyBM *asso = objgetassocpayl_BM ((objectval_tyBM*)obj);
+  if (!asso)
+    return 0;
+  return assoc_nbkeys_BM (asso);
+}                               /* end objassocnbkeyspayl_BM */
+
 value_tyBM
 objassocgetattrpayl_BM (objectval_tyBM * obj, const objectval_tyBM * obattr)
 {

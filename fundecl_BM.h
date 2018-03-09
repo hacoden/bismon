@@ -385,6 +385,7 @@ extern anyassoc_tyBM *assoc_removeattr_BM (anyassoc_tyBM * assoc,
 
 extern bool objputassocpayl_BM (objectval_tyBM * obj, unsigned maxsize);
 static inline bool objhasassocpayl_BM (const objectval_tyBM * obj);
+static inline unsigned objassocnbkeyspayl_BM (const objectval_tyBM * obj);
 static inline anyassoc_tyBM *objgetassocpayl_BM (objectval_tyBM * obj);
 static inline const setval_tyBM *objassocsetattrspayl_BM (objectval_tyBM *
                                                           obj);
@@ -442,6 +443,8 @@ extern void datavectgcdestroy_BM (struct garbcoll_stBM *gc,
 extern void datavectgckeep_BM (struct garbcoll_stBM *gc,
                                struct datavectval_stBM *dvec);
 
+
+////////////////
 static inline struct hashsetobj_stBM *objputhashsetpayload_BM   //
   (objectval_tyBM * obj, unsigned inisiz);
 static inline struct hashsetobj_stBM *objhashsetpayload_BM      //
