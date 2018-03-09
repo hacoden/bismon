@@ -766,7 +766,7 @@ objassocsetattrspayl_BM (objectval_tyBM * obj)
 unsigned
 objassocnbkeyspayl_BM (const objectval_tyBM * obj)
 {
-  anyassoc_tyBM *asso = objgetassocpayl_BM ((objectval_tyBM*)obj);
+  anyassoc_tyBM *asso = objgetassocpayl_BM ((objectval_tyBM *) obj);
   if (!asso)
     return 0;
   return assoc_nbkeys_BM (asso);
@@ -924,30 +924,6 @@ hashsetobjcast_BM (const value_tyBM v)
   return (struct hashsetobj_stBM *) v;
 }                               /* end hashsetobjcast_BM */
 
-struct hashsetobj_stBM *
-objputhashsetpayload_BM (objectval_tyBM * obj, unsigned inisiz)
-{
-  if (!isobject_BM (obj))
-    return NULL;
-  ASSERT_BM (inisiz < MAXSIZE_BM);
-  struct hashsetobj_stBM *hset = hashsetobj_grow_BM (NULL, inisiz);
-  objputpayload_BM (obj, hset);
-  return hset;
-}                               /* end objputhashsetpayload_BM */
-
-
-struct hashsetobj_stBM *
-objhashsetpayload_BM (objectval_tyBM * obj)
-{
-  if (!isobject_BM (obj))
-    return NULL;
-  void *payl = objpayload_BM (obj);
-  if (valtype_BM (payl) == typayl_hashsetobj_BM)
-    return (struct hashsetobj_stBM *) payl;
-  return NULL;
-}                               /* end objhashsetpayload_BM */
-
-
 unsigned
 hashsetobj_cardinal_BM (struct hashsetobj_stBM *hset)
 {
@@ -955,6 +931,96 @@ hashsetobj_cardinal_BM (struct hashsetobj_stBM *hset)
     return 0;
   return ((typedsize_tyBM *) hset)->size;
 }                               /* end hashsetobj_cardinal_BM */
+
+void
+objputhashsetpayl_BM (objectval_tyBM * obj, unsigned inisiz)
+{
+  if (!isobject_BM (obj))
+    return;
+  ASSERT_BM (inisiz < MAXSIZE_BM);
+  struct hashsetobj_stBM *hset = hashsetobj_grow_BM (NULL, inisiz);
+  objputpayload_BM (obj, hset);
+}                               /* end objputhashsetpayl_BM */
+
+
+struct hashsetobj_stBM *
+objgethashsetpayl_BM (objectval_tyBM * obj)
+{
+  if (!isobject_BM (obj))
+    return NULL;
+  void *payl = objpayload_BM (obj);
+  if (valtype_BM (payl) == typayl_hashsetobj_BM)
+    return (struct hashsetobj_stBM *) payl;
+  return NULL;
+}                               /* end objgethashsetpayl_BM */
+
+bool
+objhashashsetpayl_BM (objectval_tyBM * obj)
+{
+  if (!isobject_BM (obj))
+    return false;
+  void *payl = objpayload_BM (obj);
+  return (valtype_BM (payl) == typayl_hashsetobj_BM);
+}                               /* end objhashashsetpayl_BM */
+
+void
+objhashsetaddpayl_BM (objectval_tyBM * obj, objectval_tyBM * obelem)
+{
+  if (!isobject_BM (obelem))
+    return;
+  struct hashsetobj_stBM *hset = objgethashsetpayl_BM (obj);
+  if (hset)
+    hashsetobj_add_BM (hset, obelem);
+}                               /* end objhashsetaddpayl_BM */
+
+void
+objhashsetremovepayl_BM (objectval_tyBM * obj, objectval_tyBM * obelem)
+{
+  if (!isobject_BM (obelem))
+    return;
+  struct hashsetobj_stBM *hset = objgethashsetpayl_BM (obj);
+  if (hset)
+    hashsetobj_remove_BM (hset, obelem);
+}                               /* end objhashsetremovepayl_BM */
+
+unsigned
+objhashsetcardinalpayl_BM (objectval_tyBM * obj)
+{
+  struct hashsetobj_stBM *hset = objgethashsetpayl_BM (obj);
+  if (hset)
+    return hashsetobj_cardinal_BM (hset);
+  return 0;
+}                               /* end objhashsetcardinalpayl_BM */
+
+bool
+objhashsetcontainspayl_BM (objectval_tyBM * obj,
+                           const objectval_tyBM * obelem)
+{
+  if (!isobject_BM ((value_tyBM) obelem))
+    return false;
+  struct hashsetobj_stBM *hset = objgethashsetpayl_BM (obj);
+  if (!hset)
+    return false;
+  return hashsetobj_contains_BM (hset, obelem);
+}                               /* end objhashsetcontainspayl_BM */
+
+void
+objhashsetgrowpayl_BM (objectval_tyBM * obj, unsigned gap)
+{
+  struct hashsetobj_stBM *hset = objgethashsetpayl_BM (obj);
+  if (!hset)
+    return;
+  obj->ob_payl = hashsetobj_grow_BM (hset, gap);
+}                               /* end objhashsetgrowpayl_BM */
+
+const setval_tyBM *
+objhashsettosetpayl_BM (objectval_tyBM * obj)
+{
+  struct hashsetobj_stBM *hset = objgethashsetpayl_BM (obj);
+  if (!hset)
+    return NULL;
+  return hashsetobj_to_set_BM (hset);
+}                               /* end objhashsettosetpayl_BM */
 
 ////////////////
 

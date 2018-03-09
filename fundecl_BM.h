@@ -445,10 +445,6 @@ extern void datavectgckeep_BM (struct garbcoll_stBM *gc,
 
 
 ////////////////
-static inline struct hashsetobj_stBM *objputhashsetpayload_BM   //
-  (objectval_tyBM * obj, unsigned inisiz);
-static inline struct hashsetobj_stBM *objhashsetpayload_BM      //
-  (objectval_tyBM * obj);
 extern struct hashsetobj_stBM *hashsetobj_grow_BM (struct hashsetobj_stBM
                                                    *hset, unsigned gap);
 static inline struct hashsetobj_stBM *hashsetobjcast_BM (const value_tyBM v);
@@ -470,6 +466,24 @@ extern struct hashsetobj_stBM *hashsetobj_remove_BM (struct hashsetobj_stBM
 extern const setval_tyBM *hashsetobj_to_set_BM (struct hashsetobj_stBM *hset);
 static inline unsigned hashsetobj_cardinal_BM (struct hashsetobj_stBM *hset);
 
+//// obj hashset payload
+
+static inline void objputhashsetpayl_BM //
+  (objectval_tyBM * obj, unsigned inisiz);
+static inline struct hashsetobj_stBM *objgethashsetpayl_BM (objectval_tyBM *
+                                                            obj);
+static inline bool objhashashsetpayl_BM (objectval_tyBM * obj);
+static inline bool objhashsetcontainspayl_BM (objectval_tyBM * obj,
+                                              const objectval_tyBM * obelem);
+static inline void objhashsetaddpayl_BM (objectval_tyBM * obj,
+                                         objectval_tyBM * obelem);
+static inline void objhashsetremovepayl_BM (objectval_tyBM * obj,
+                                            objectval_tyBM * obelem);
+static inline void objhashsetgrowpayl_BM (objectval_tyBM * obj, unsigned gap);
+static inline unsigned objhashsetcardinalpayl_BM (objectval_tyBM * obj);
+static inline const setval_tyBM *objhashsettosetpayl_BM (objectval_tyBM *
+                                                         obj);
+////////////////
 
 
 extern struct listtop_stBM *makelist_BM (void);
