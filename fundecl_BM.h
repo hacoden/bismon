@@ -700,7 +700,13 @@ extern value_tyBM hashsetvalnext_BM (struct hashsetval_stBM *hsv,
 extern value_tyBM hashsetvalmakenode_BM (struct hashsetval_stBM *hsv,
                                          objectval_tyBM * connob);
 
+//////////////// obj hashsetval payload
 
+static inline void objputhashsetvalpayl_BM (objectval_tyBM * obj,
+                                            unsigned gap);
+static inline struct hashsetval_stBM *objgethashsetvalpayl_BM (objectval_tyBM
+                                                               * obj);
+static inline bool objhashashsetvalpayl_BM (objectval_tyBM * obj);
 
 ////////////////////////////////
 //// hash maps associating values to values

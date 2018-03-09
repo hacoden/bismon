@@ -1774,6 +1774,8 @@ sendvar_BM (const value_tyBM recv, const objectval_tyBM * obselector, struct sta
               nbargs, objectdbg_BM (obselector));
 }                               /* end sendvar_BM */
 
+
+////////////////////////////////////////////////////////////////
 bool
 ishashsetval_BM (const value_tyBM v)
 {
@@ -1789,6 +1791,34 @@ ishashsetvbucket_BM (const value_tyBM v)
   return ty == typayl_hashsetvbucket_BM;
 }                               /* end ishashsetvbucket_BM */
 
+
+////////////////////////////////////////////////////////////////
+void
+objputhashsetvalpayl_BM (objectval_tyBM * obj, unsigned gap)
+{
+  if (!isobject_BM ((value_tyBM) obj))
+    return;
+  objputpayload_BM (obj, hashsetvalreorganize_BM (NULL, gap + gap / 32 + 1));
+}                               /* end objputhashsetvalpayl_BM */
+
+struct hashsetval_stBM *
+objgethashsetvalpayl_BM (objectval_tyBM * obj)
+{
+  if (!isobject_BM ((value_tyBM) obj))
+    return NULL;
+  void *payl = obj->ob_payl;
+  if (ishashsetval_BM ((value_tyBM) payl))
+    return (struct hashsetval_stBM *) payl;
+  return NULL;
+}                               /* end objgethashsetvalpayl_BM */
+
+bool
+objhashashsetvalpayl_BM (objectval_tyBM * obj)
+{
+  return objgethashsetvalpayl_BM (obj) != NULL;
+}                               /* end objhashashsetpayl_BM */
+
+////////////////////////////////////////////////////////////////
 
 bool
 ishashmapval_BM (const value_tyBM v)
