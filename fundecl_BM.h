@@ -713,6 +713,21 @@ static inline void objhashsetvalreorganizepayl_BM (objectval_tyBM * obj,
                                                    unsigned gap);
 static inline void objhashsetvalputpayl_BM (objectval_tyBM * obj,
                                             value_tyBM val);
+static inline void objhashsetvalremovepayl_BM (objectval_tyBM * obj,
+                                               value_tyBM val);
+
+/** to iterate in an hashsetval obj payload using
+  for (value_tyBM v = objhashsetvalfirstpayl_BM(obhs); v!=NULL;
+       v = objhashsetvalnextpayl_BM(obhs, v))
+ which makes only sense with an unchanged hashsetval
+ (so no insertion or deletion or reorganization inside the loop body)
+ **/
+static inline value_tyBM objhashsetvalfirstpayl_BM (objectval_tyBM * obj);
+static inline value_tyBM objhashsetvalnextpayl_BM (objectval_tyBM * obj,
+                                                   value_tyBM prev);
+static inline value_tyBM objhashsetvalmakenodepayl_BM (objectval_tyBM * obj,
+                                                       objectval_tyBM *
+                                                       connob);
 ////////////////////////////////
 //// hash maps associating values to values
 static inline bool ishashmapval_BM (const value_tyBM v);

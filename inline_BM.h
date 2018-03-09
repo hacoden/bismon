@@ -1839,6 +1839,59 @@ objhashsetvalreorganizepayl_BM (objectval_tyBM * obj, unsigned gap)
     }
 }                               /* end objhashsetvalreorganizepayl_BM */
 
+void
+objhashsetvalputpayl_BM (objectval_tyBM * obj, value_tyBM val)
+{
+  struct hashsetval_stBM *hsv = objgethashsetvalpayl_BM (obj);
+  if (hsv)
+    {
+      struct hashsetval_stBM *newhsv = hashsetvalput_BM (hsv, val);
+      if (newhsv != hsv)
+        obj->ob_payl = newhsv;
+    }
+}                               /* end objhashsetvalputpayl_BM */
+
+void
+objhashsetvalremovepayl_BM (objectval_tyBM * obj, value_tyBM val)
+{
+  struct hashsetval_stBM *hsv = objgethashsetvalpayl_BM (obj);
+  if (hsv)
+    {
+      struct hashsetval_stBM *newhsv = hashsetvalremove_BM (hsv, val);
+      if (newhsv != hsv)
+        obj->ob_payl = newhsv;
+    }
+}                               /* end objhashsetvalputpayl_BM */
+
+
+value_tyBM
+objhashsetvalfirstpayl_BM (objectval_tyBM * obj)
+{
+  struct hashsetval_stBM *hsv = objgethashsetvalpayl_BM (obj);
+  if (hsv)
+    return hashsetvalfirst_BM (hsv);
+  return NULL;
+}                               /* end objhashsetvalfirstpayl_BM */
+
+value_tyBM
+objhashsetvalnextpayl_BM (objectval_tyBM * obj, value_tyBM prev)
+{
+  struct hashsetval_stBM *hsv = objgethashsetvalpayl_BM (obj);
+  if (hsv)
+    return hashsetvalnext_BM (hsv, prev);
+  return NULL;
+}                               /* end objhashsetvalnextpayl_BM */
+
+
+value_tyBM objhashsetvalmakenodepayl_BM
+  (objectval_tyBM * obj, objectval_tyBM * connob)
+{
+  struct hashsetval_stBM *hsv = objgethashsetvalpayl_BM (obj);
+  if (hsv)
+    if (isobject_BM ((value_tyBM) connob))
+      return hashsetvalmakenode_BM (hsv, connob);
+  return NULL;
+}                               /* end objhashsetvalmakenodepayl_BM */
 
 ////////////////////////////////////////////////////////////////
 
