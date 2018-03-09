@@ -707,6 +707,9 @@ static inline void objputhashsetvalpayl_BM (objectval_tyBM * obj,
 static inline struct hashsetval_stBM *objgethashsetvalpayl_BM (objectval_tyBM
                                                                * obj);
 static inline bool objhashashsetvalpayl_BM (objectval_tyBM * obj);
+static inline bool objhashsetvalcontainspayl_BM (objectval_tyBM * obj,
+                                                 value_tyBM val);
+
 
 ////////////////////////////////
 //// hash maps associating values to values

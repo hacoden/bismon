@@ -1818,6 +1818,15 @@ objhashashsetvalpayl_BM (objectval_tyBM * obj)
   return objgethashsetvalpayl_BM (obj) != NULL;
 }                               /* end objhashashsetpayl_BM */
 
+bool
+objhashsetvalcontainspayl_BM (objectval_tyBM * obj, value_tyBM val)
+{
+  struct hashsetval_stBM *hsv = objgethashsetvalpayl_BM (obj);
+  if (hsv)
+    return hashsetvalcontains_BM (hsv, val);
+  return false;
+}                               /* end objhashsetvalcontainspayl_BM */
+
 ////////////////////////////////////////////////////////////////
 
 bool
