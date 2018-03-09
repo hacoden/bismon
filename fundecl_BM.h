@@ -491,8 +491,30 @@ static inline void objputdatavectpayl_BM        //
   (objectval_tyBM * obj, unsigned inisiz);
 static inline struct datavectval_stBM *objgetdatavectpayl_BM    //
   (objectval_tyBM * obj);
+static inline bool objhasdatavectpayl_BM (objectval_tyBM * obj);
+static inline unsigned objdatavectlengthpayl_BM (objectval_tyBM * obj);
+static inline const value_tyBM *objdatavectdatapayl_BM (objectval_tyBM * obj);
+static inline void objdatavectgrowpayl_BM (objectval_tyBM * obj,
+                                           unsigned gap);
+static inline void objdatavectreservepayl_BM (objectval_tyBM * obj,
+                                              unsigned gap);
+static inline void objdatavectappendpayl_BM (objectval_tyBM * obj,
+                                             value_tyBM val);
+static inline void objdatavectinsertpayl_BM (objectval_tyBM * obj,
+                                             int rk,
+                                             value_tyBM * valarr,
+                                             unsigned len);
+static inline void objdatavectinsertonepayl_BM (objectval_tyBM * obj,
+                                                int rk, value_tyBM val);
 
-
+static inline void objdatavectremovepayl_BM (objectval_tyBM * obj, int rk,
+                                             unsigned len);
+static inline const node_tyBM *objdatavecttonodepayl_BM //
+  (objectval_tyBM * obj, const objectval_tyBM * obconn);
+static inline value_tyBM objdatavectnthpayl_BM (objectval_tyBM * obj, int rk);
+static inline void objdatavectputnthpayl_BM (objectval_tyBM * obj,
+                                             int rk,
+                                             const value_tyBM valcomp);
 ////////////////////////////////
 
 

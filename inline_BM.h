@@ -891,6 +891,136 @@ objgetdatavectpayl_BM (objectval_tyBM * obj)
   return NULL;
 }                               /* end objgetdatavectpayl_BM */
 
+bool
+objhasdatavectpayl_BM (objectval_tyBM * obj)
+{
+  return objgetdatavectpayl_BM (obj) != NULL;
+}                               /* end objhasdatavectpayl_BM */
+
+
+unsigned
+objdatavectlengthpayl_BM (objectval_tyBM * obj)
+{
+  struct datavectval_stBM *dvec = objgetdatavectpayl_BM (obj);
+  if (dvec)
+    return datavectlen_BM (dvec);
+  return NULL;
+}                               /* end objdatavectlengthpayl_BM */
+
+const value_tyBM *
+objdatavectdatapayl_BM (objectval_tyBM * obj)
+{
+  struct datavectval_stBM *dvec = objgetdatavectpayl_BM (obj);
+  if (dvec)
+    return datavectdata_BM (dvec);
+  return NULL;
+}                               /* end objdatavectdatapayl_BM */
+
+void
+objdatavectgrowpayl_BM (objectval_tyBM * obj, unsigned gap)
+{
+  struct datavectval_stBM *dvec = objgetdatavectpayl_BM (obj);
+  if (dvec)
+    {
+      struct datavectval_stBM *newdvec = datavect_grow_BM (dvec, gap);
+      if (newdvec != dvec)
+        obj->ob_payl = newdvec;
+    }
+}                               /* end objdatavectgrowpayl_BM */
+
+void
+objdatavectreservepayl_BM (objectval_tyBM * obj, unsigned gap)
+{
+  struct datavectval_stBM *dvec = objgetdatavectpayl_BM (obj);
+  if (dvec)
+    {
+      struct datavectval_stBM *newdvec = datavect_reserve_BM (dvec, gap);
+      if (newdvec != dvec)
+        obj->ob_payl = newdvec;
+    }
+}                               /* end objdatavectreservepayl_BM */
+
+void
+objdatavectappendpayl_BM (objectval_tyBM * obj, value_tyBM val)
+{
+  struct datavectval_stBM *dvec = objgetdatavectpayl_BM (obj);
+  if (dvec)
+    {
+      struct datavectval_stBM *newdvec = datavect_append_BM (dvec, val);
+      if (newdvec != dvec)
+        obj->ob_payl = newdvec;
+    }
+}                               /* end objdatavectappendpayl_BM */
+
+void
+objdatavectinsertpayl_BM (objectval_tyBM * obj,
+                          int rk, value_tyBM * valarr, unsigned len)
+{
+  struct datavectval_stBM *dvec = objgetdatavectpayl_BM (obj);
+  if (dvec)
+    {
+      struct datavectval_stBM *newdvec =
+        datavect_insert_BM (dvec, rk, valarr, len);
+      if (newdvec != dvec)
+        obj->ob_payl = newdvec;
+    }
+}                               /* end objdatavectinsertpayl_BM */
+
+void
+objdatavectinsertonepayl_BM (objectval_tyBM * obj, int rk, value_tyBM val)
+{
+  struct datavectval_stBM *dvec = objgetdatavectpayl_BM (obj);
+  if (dvec)
+    {
+      struct datavectval_stBM *newdvec =
+        datavect_insertone_BM (dvec, rk, val);
+      if (newdvec != dvec)
+        obj->ob_payl = newdvec;
+    }
+}                               /* end objdatavectinsertonepayl_BM */
+
+void
+objdatavectremovepayl_BM (objectval_tyBM * obj, int rk, unsigned len)
+{
+  struct datavectval_stBM *dvec = objgetdatavectpayl_BM (obj);
+  if (dvec)
+    {
+      struct datavectval_stBM *newdvec = datavect_remove_BM (dvec, rk, len);
+      if (newdvec != dvec)
+        obj->ob_payl = newdvec;
+    }
+}                               /* end objdatavectremovepayl_BM */
+
+const node_tyBM *
+objdatavecttonodepayl_BM (objectval_tyBM * obj, const objectval_tyBM * obconn)
+{
+  if (!isobject_BM ((value_tyBM) obconn))
+    return NULL;
+  struct datavectval_stBM *dvec = objgetdatavectpayl_BM (obj);
+  if (dvec)
+    return datavect_to_node_BM (dvec, obconn);
+  return NULL;
+}                               /* end objdatavecttonodepayl_BM  */
+
+value_tyBM
+objdatavectnthpayl_BM (objectval_tyBM * obj, int rk)
+{
+  struct datavectval_stBM *dvec = objgetdatavectpayl_BM (obj);
+  if (dvec)
+    return datavectnth_BM (dvec, rk);
+  return NULL;
+}                               /* end objdatavectnthpayl_BM */
+
+void
+objdatavectputnthpayl_BM (objectval_tyBM * obj,
+                          int rk, const value_tyBM valcomp)
+{
+  struct datavectval_stBM *dvec = objgetdatavectpayl_BM (obj);
+  if (dvec)
+    datavectputnth_BM (dvec, rk, valcomp);
+}                               /* end objdatavectputnthpayl_BM */
+
+
 ////////////////////////////////
 bool
 isset_BM (const value_tyBM v)
