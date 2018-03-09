@@ -651,16 +651,17 @@ static inline void objdictputpayl_BM (objectval_tyBM * obj,
                                       const value_tyBM val);
 static inline void objdictremovepayl_BM (objectval_tyBM * obj,
                                          const stringval_tyBM * str);
-static inline const stringval_tyBM *objdictkeyafterpayl_BM (objectval_tyBM *
-                                                            obj,
-                                                            const
-                                                            stringval_tyBM *
-                                                            str);
+static inline const stringval_tyBM *objdictkeyafterpayl_BM
+  (objectval_tyBM * obj, const stringval_tyBM * str);
 static inline const stringval_tyBM
   * objdictkeysameorafterpayl_BM (objectval_tyBM * obj,
                                   const stringval_tyBM * str);
 
+static inline const stringval_tyBM *objdictkeybeforepayl_BM
+  (objectval_tyBM * obj, const stringval_tyBM * str);
 
+static inline const node_tyBM *objdictnodeofkeyspayl_BM
+  (objectval_tyBM * obj, const objectval_tyBM * obconn);
 ////////////////////////////////
 static inline bool ishashsetval_BM (const value_tyBM v);
 static inline bool ishashsetvbucket_BM (const value_tyBM v);

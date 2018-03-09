@@ -1709,6 +1709,28 @@ objdictkeysameorafterpayl_BM (objectval_tyBM * obj,
   return NULL;
 }                               /* end objdictkeysameorafterpayl_BM */
 
+const stringval_tyBM *
+objdictkeybeforepayl_BM (objectval_tyBM * obj, const stringval_tyBM * str)
+{
+  struct dict_stBM *dic = objgetdictpayl_BM (obj);
+  if (dic)
+    {
+      if (isstring_BM ((value_tyBM) str))
+        return dictkeybefore_BM (dic, str);
+    }
+  return NULL;
+}                               /* end objdictkeybeforepayl_BM */
+
+const node_tyBM *objdictnodeofkeyspayl_BM
+  (objectval_tyBM * obj, const objectval_tyBM * obconn)
+{
+  struct dict_stBM *dic = objgetdictpayl_BM (obj);
+  if (dic && isobject_BM ((value_tyBM) obconn))
+    return dictnodeofkeys_BM (dic, obconn);
+  return NULL;
+}                               /* end objdictnodeofkeyspayl_BM */
+
+
 ////////////////
 bool
 openmodule_BM (const rawid_tyBM id, struct stackframe_stBM * stkf)
