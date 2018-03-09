@@ -1230,7 +1230,102 @@ listlength_BM (const struct listtop_stBM *lis)
   return ((typedhead_tyBM *) lis)->rlen;
 }                               /* end listlength_BM */
 
+////////////////
 
+void
+objputlistpayl_BM (objectval_tyBM * obj)
+{
+  if (!isobject_BM ((value_tyBM) obj))
+    return;
+  struct listtop_stBM *lis = makelist_BM ();
+  objputpayload_BM (obj, lis);
+}                               /* end objputlistpayl_BM */
+
+struct listtop_stBM *
+objgetlistpayl_BM (objectval_tyBM * obj)
+{
+  if (!isobject_BM ((value_tyBM) obj))
+    return NULL;
+  void *payl = objpayload_BM (obj);
+  if (valtype_BM ((value_tyBM) payl) == typayl_listtop_BM)
+    return (struct listtop_stBM *) payl;
+  return NULL;
+}                               /* end objgetlistpayl_BM */
+
+bool
+objhaslistpayl_BM (objectval_tyBM * obj)
+{
+  return objgetlistpayl_BM (obj) != NULL;
+}                               /* end objhaslistpayl_BM */
+
+static inline value_tyBM
+objlistfirstpayl_BM (objectval_tyBM * obj)
+{
+  struct listtop_stBM *lis = objgetlistpayl_BM (obj);
+  if (lis)
+    return listfirst_BM (lis);
+  return NULL;
+}                               /* end objlistfirstpayl_BM */
+
+static inline value_tyBM
+objlistlastpayl_BM (objectval_tyBM * obj)
+{
+  struct listtop_stBM *lis = objgetlistpayl_BM (obj);
+  if (lis)
+    return listlast_BM (lis);
+  return NULL;
+}                               /* end objlistlastpayl_BM */
+
+static inline unsigned
+objlistlengthpayl_BM (objectval_tyBM * obj)
+{
+  struct listtop_stBM *lis = objgetlistpayl_BM (obj);
+  if (lis)
+    return listlength_BM (lis);
+  return 0;
+}                               /* end objlistlengthpayl_BM */
+
+void
+objlistclearpayl_BM (objectval_tyBM * obj)
+{
+  struct listtop_stBM *lis = objgetlistpayl_BM (obj);
+  if (lis)
+    listclear_BM (lis);
+}                               /* end objlistclearpayl_BM */
+
+void
+objlistappendpayl_BM (objectval_tyBM * obj, value_tyBM val)
+{
+  struct listtop_stBM *lis = objgetlistpayl_BM (obj);
+  if (lis)
+    listappend_BM (lis, val);
+}                               /* end objlistappendpayl_BM */
+
+void
+objlistprependpayl_BM (objectval_tyBM * obj, value_tyBM val)
+{
+  struct listtop_stBM *lis = objgetlistpayl_BM (obj);
+  if (lis)
+    listprepend_BM (lis, val);
+}                               /* end objlistprependpayl_BM */
+
+void
+objlistpopfirstpayl_BM (objectval_tyBM * obj)
+{
+  struct listtop_stBM *lis = objgetlistpayl_BM (obj);
+  if (lis)
+    listpopfirst_BM (lis);
+}                               /* end objlistpopfirstpayl_BM */
+
+void
+objlistpoplastpayl_BM (objectval_tyBM * obj)
+{
+  struct listtop_stBM *lis = objgetlistpayl_BM (obj);
+  if (lis)
+    listpoplast_BM (lis);
+}                               /* end objlistpoplastpayl_BM */
+
+////////////////////////////////////////////////////////////////
 bool
 istree_BM (const value_tyBM v)
 {

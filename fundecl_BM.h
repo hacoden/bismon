@@ -540,6 +540,22 @@ extern const node_tyBM *list_to_node_BM (const struct listtop_stBM *lis,
 // make a tuple from the objects in the list
 extern const tupleval_tyBM *list_to_tuple_BM (const struct listtop_stBM *lis);
 
+//////////////// obj list payload
+
+static inline void objputlistpayl_BM (objectval_tyBM * obj);
+static inline struct listtop_stBM *objgetlistpayl_BM (objectval_tyBM * obj);
+static inline bool objhaslistpayl_BM (objectval_tyBM * obj);
+static inline value_tyBM objlistfirstpayl_BM (objectval_tyBM * obj);
+static inline value_tyBM objlistlastpayl_BM (objectval_tyBM * obj);
+static inline unsigned objlistlengthpayl_BM (objectval_tyBM * obj);
+static inline void objlistclearpayl_BM (objectval_tyBM * obj);
+static inline void objlistappendpayl_BM (objectval_tyBM * obj,
+                                         value_tyBM val);
+static inline void objlistprependpayl_BM (objectval_tyBM * obj,
+                                          value_tyBM val);
+static inline void objlistpopfirstpayl_BM (objectval_tyBM * obj);
+static inline void objlistpoplastpayl_BM (objectval_tyBM * obj);
+////////////////////////////////
 
 static inline bool istree_BM (const value_tyBM v);
 static inline bool isclosure_BM (const value_tyBM v);
