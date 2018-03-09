@@ -787,6 +787,13 @@ static inline void objhashmapvalputpayl_BM (objectval_tyBM * obj,
                                             value_tyBM keyv, value_tyBM valv);
 static inline void objhashmapvalremovepayl_BM (objectval_tyBM * obj,
                                                value_tyBM keyv);
+static inline value_tyBM objhashmapvalfirstkeypayl_BM (objectval_tyBM * obj);
+static inline value_tyBM objhashmapvalnextkeypayl_BM (objectval_tyBM * obj,
+                                                      value_tyBM prevk);
+static inline value_tyBM objhashmapvalmakenodeofkeyspayl_BM (objectval_tyBM *
+                                                             obj,
+                                                             objectval_tyBM *
+                                                             connob);
 ////////////////////////////////////////////////////////////////
 ////////////////
 /** apply a closure, or directly an object; so applying OBJ is same as

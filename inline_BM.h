@@ -1982,5 +1982,34 @@ objhashmapvalremovepayl_BM (objectval_tyBM * obj, value_tyBM keyv)
     }
 }                               /* end objhashmapvalremovepayl_BM */
 
+
+value_tyBM
+objhashmapvalfirstkeypayl_BM (objectval_tyBM * obj)
+{
+  struct hashmapval_stBM *hma = objgethashmapvalpayl_BM (obj);
+  if (hma)
+    return hashmapvalfirstkey_BM (hma);
+  return NULL;
+}                               /* end objhashmapvalremovepayl_BM */
+
+value_tyBM
+objhashmapvalnextkeypayl_BM (objectval_tyBM * obj, value_tyBM prevk)
+{
+  struct hashmapval_stBM *hma = objgethashmapvalpayl_BM (obj);
+  if (hma)
+    return hashmapvalnextkey_BM (hma, prevk);
+  return NULL;
+}                               /* end objhashmapvalnextkeypayl_BM  */
+
+value_tyBM
+objhashmapvalmakenodeofkeyspayl_BM (objectval_tyBM * obj,
+                                    objectval_tyBM * connob)
+{
+  struct hashmapval_stBM *hma = objgethashmapvalpayl_BM (obj);
+  if (hma)
+    return hashmapvalmakenodeofkeys_BM (hma, connob);
+  return NULL;
+}                               /* end objhashmapvalmakenodeofkeyspayl_BM  */
+
 ////////////////////////////////////////////////////////////////
 #endif /*INLINE_BM_INCLUDED */
