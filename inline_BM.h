@@ -820,6 +820,8 @@ objassocreorganizepayl_BM (objectval_tyBM * obj, unsigned gap)
   assoc_reorganize_BM (&obj->ob_payl, gap);
 }                               /* end objassocreorganizepayl_BM */
 
+
+
 ////////////////
 unsigned
 datavectlen_BM (const struct datavectval_stBM *dvec)
@@ -866,6 +868,30 @@ datavect_insertone_BM (struct datavectval_stBM *dvec, int rk, value_tyBM val)
 }                               /* end datavect_insertone_BM  */
 
 ////////////////
+void objputdatavectpayl_BM      //
+  (objectval_tyBM * obj, unsigned inisiz)
+{
+  if (!isobject_BM ((value_tyBM) obj))
+    return;
+  struct datavectval_stBM *dvec = datavect_grow_BM (NULL, inisiz);
+  objputpayload_BM (obj, dvec);
+}                               /* end objputdatavectpayl_BM */
+
+
+struct datavectval_stBM *
+objgetdatavectpayl_BM (objectval_tyBM * obj)
+{
+  if (!isobject_BM ((value_tyBM) obj))
+    return NULL;
+  void *payl = obj->ob_payl;
+  if (!payl)
+    return NULL;
+  if (valtype_BM (payl) == typayl_vectval_BM)
+    return (struct datavectval_stBM *) payl;
+  return NULL;
+}                               /* end objgetdatavectpayl_BM */
+
+////////////////////////////////
 bool
 isset_BM (const value_tyBM v)
 {
