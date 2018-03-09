@@ -904,7 +904,7 @@ objdatavectlengthpayl_BM (objectval_tyBM * obj)
   struct datavectval_stBM *dvec = objgetdatavectpayl_BM (obj);
   if (dvec)
     return datavectlen_BM (dvec);
-  return NULL;
+  return 0;
 }                               /* end objdatavectlengthpayl_BM */
 
 const value_tyBM *

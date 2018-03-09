@@ -482,7 +482,8 @@ dump_emit_space_BM (struct dumper_stBM *du, unsigned spix,
                 {
                   _.modobj = findobjofid_BM (modid);
                   if (_.modobj)
-                    objhashsetaddpayl_BM (_.modhsetob, _.modobj);
+                    objhashsetaddpayl_BM (_.modhsetob,
+                                          (objectval_tyBM *) _.modobj);
                 }
             }
         }

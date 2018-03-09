@@ -123,6 +123,55 @@ extern void *setgcproc_BM (struct garbcoll_stBM *gc, setval_tyBM * set)
 extern void setgcdestroy_BM (struct garbcoll_stBM *gc, setval_tyBM * set);
 extern void setgckeep_BM (struct garbcoll_stBM *gc, setval_tyBM * set);
 
+
+
+static inline bool istree_BM (const value_tyBM v);
+static inline bool isclosure_BM (const value_tyBM v);
+static inline const closure_tyBM *closurecast_BM (const value_tyBM);
+static inline bool isnode_BM (const value_tyBM v);
+static inline const node_tyBM *nodecast_BM (const value_tyBM);
+
+static inline objectval_tyBM *treeconn_BM (const value_tyBM);
+static inline objectval_tyBM *closureconn_BM (const value_tyBM);
+static inline objectval_tyBM *nodeconn_BM (const value_tyBM);
+
+static inline unsigned treewidth_BM (const value_tyBM);
+static inline unsigned closurewidth_BM (const value_tyBM);
+static inline unsigned nodewidth_BM (const value_tyBM);
+
+static inline value_tyBM treenthson_BM (const value_tyBM tr, int rk);
+static inline value_tyBM closurenthson_BM (const value_tyBM clo, int rk);
+static inline value_tyBM nodenthson_BM (const value_tyBM nod, int rk);
+
+extern void *nodegcproc_BM (struct garbcoll_stBM *gc, node_tyBM * nod,
+                            int depth) __attribute__ ((warn_unused_result));
+extern void nodegcdestroy_BM (struct garbcoll_stBM *gc, node_tyBM * nod);
+extern void nodegckeep_BM (struct garbcoll_stBM *gc, node_tyBM * nod);
+
+extern const node_tyBM *makenode_BM (const objectval_tyBM * connob,
+                                     unsigned nbval,
+                                     const value_tyBM * sonvalarr);
+extern const node_tyBM *makenodevar_BM (const objectval_tyBM * connob, ...)
+  __attribute__ ((sentinel));
+
+extern const closure_tyBM *makeclosure_BM (const objectval_tyBM * conn,
+                                           unsigned nbclos,
+                                           const value_tyBM * closvalarr);
+extern const closure_tyBM *makeclosurevar_BM (const objectval_tyBM * connob,
+                                              ...) __attribute__ ((sentinel));
+
+extern void *closuregcproc_BM (struct garbcoll_stBM *gc, closure_tyBM * clos,
+                               int depth)
+  __attribute__ ((warn_unused_result));
+extern void closuregcdestroy_BM (struct garbcoll_stBM *gc,
+                                 closure_tyBM * clos);
+extern void closuregckeep_BM (struct garbcoll_stBM *gc, closure_tyBM * clos);
+
+extern void *quasinodegcproc_BM (struct garbcoll_stBM *gc,
+                                 quasinode_tyBM * quasi, int depth)
+  __attribute__ ((warn_unused_result));
+////////////////
+
 extern void initialize_garbage_collector_BM (void);
 extern void initialize_predefined_objects_BM (void);
 
@@ -557,51 +606,6 @@ static inline void objlistpopfirstpayl_BM (objectval_tyBM * obj);
 static inline void objlistpoplastpayl_BM (objectval_tyBM * obj);
 ////////////////////////////////
 
-static inline bool istree_BM (const value_tyBM v);
-static inline bool isclosure_BM (const value_tyBM v);
-static inline const closure_tyBM *closurecast_BM (const value_tyBM);
-static inline bool isnode_BM (const value_tyBM v);
-static inline const node_tyBM *nodecast_BM (const value_tyBM);
-
-static inline objectval_tyBM *treeconn_BM (const value_tyBM);
-static inline objectval_tyBM *closureconn_BM (const value_tyBM);
-static inline objectval_tyBM *nodeconn_BM (const value_tyBM);
-
-static inline unsigned treewidth_BM (const value_tyBM);
-static inline unsigned closurewidth_BM (const value_tyBM);
-static inline unsigned nodewidth_BM (const value_tyBM);
-
-static inline value_tyBM treenthson_BM (const value_tyBM tr, int rk);
-static inline value_tyBM closurenthson_BM (const value_tyBM clo, int rk);
-static inline value_tyBM nodenthson_BM (const value_tyBM nod, int rk);
-
-extern void *nodegcproc_BM (struct garbcoll_stBM *gc, node_tyBM * nod,
-                            int depth) __attribute__ ((warn_unused_result));
-extern void nodegcdestroy_BM (struct garbcoll_stBM *gc, node_tyBM * nod);
-extern void nodegckeep_BM (struct garbcoll_stBM *gc, node_tyBM * nod);
-
-extern const node_tyBM *makenode_BM (const objectval_tyBM * connob,
-                                     unsigned nbval,
-                                     const value_tyBM * sonvalarr);
-extern const node_tyBM *makenodevar_BM (const objectval_tyBM * connob, ...)
-  __attribute__ ((sentinel));
-
-extern const closure_tyBM *makeclosure_BM (const objectval_tyBM * conn,
-                                           unsigned nbclos,
-                                           const value_tyBM * closvalarr);
-extern const closure_tyBM *makeclosurevar_BM (const objectval_tyBM * connob,
-                                              ...) __attribute__ ((sentinel));
-
-extern void *closuregcproc_BM (struct garbcoll_stBM *gc, closure_tyBM * clos,
-                               int depth)
-  __attribute__ ((warn_unused_result));
-extern void closuregcdestroy_BM (struct garbcoll_stBM *gc,
-                                 closure_tyBM * clos);
-extern void closuregckeep_BM (struct garbcoll_stBM *gc, closure_tyBM * clos);
-
-extern void *quasinodegcproc_BM (struct garbcoll_stBM *gc,
-                                 quasinode_tyBM * quasi, int depth)
-  __attribute__ ((warn_unused_result));
 
 extern void classinfogcmark_BM (struct garbcoll_stBM *gc,
                                 struct classinfo_stBM *clinf, int depth);
