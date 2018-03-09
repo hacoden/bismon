@@ -1612,6 +1612,35 @@ isdict_BM (const value_tyBM v)
   return ty == typayl_dict_BM;
 }                               /* end isdict_BM */
 
+void
+objputdictpayl_BM (objectval_tyBM * obj)
+{
+  if (!isobject_BM ((value_tyBM) obj))
+    return;
+  struct dict_stBM *dic = dictmake_BM ();
+  objputpayload_BM (obj, dic);
+}                               /* end objputdictpayl_BM */
+
+struct dict_stBM *
+objgetdictpayl_BM (objectval_tyBM * obj)
+{
+  if (!isobject_BM ((value_tyBM) obj))
+    return NULL;
+  void *payl = obj->ob_payl;
+  if (!payl)
+    return NULL;
+  if (isdict_BM ((value_tyBM) payl))
+    return (struct dict_stBM *) payl;
+  return NULL;
+}                               /* end objgetdictpayl_BM */
+
+bool
+objhasdictpayl_BM (objectval_tyBM * obj)
+{
+  return objgetdictpayl_BM (obj) != NULL;
+}                               /* end objhasdictpayl_BM */
+
+////////////////
 bool
 openmodule_BM (const rawid_tyBM id, struct stackframe_stBM * stkf)
 {

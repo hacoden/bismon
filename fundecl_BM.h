@@ -614,7 +614,7 @@ extern void classinfogcdestroy_BM (struct garbcoll_stBM *gc,
 extern void classinfogckeep_BM (struct garbcoll_stBM *gc,
                                 struct classinfo_stBM *clinf);
 
-////////////////
+////////////////////////////////
 extern struct dict_stBM *dictmake_BM (void);
 static inline bool isdict_BM (const value_tyBM v);
 extern unsigned dictsize_BM (const struct dict_stBM *dict);
@@ -638,7 +638,23 @@ extern const stringval_tyBM *dictkeybefore_BM (struct dict_stBM *dict,
                                                const stringval_tyBM * str);
 extern const node_tyBM *dictnodeofkeys_BM (struct dict_stBM *dict,
                                            const objectval_tyBM * obj);
-////////////////
+
+//////////////// obj dict payload
+static inline void objputdictpayl_BM (objectval_tyBM * obj);
+static inline struct dict_stBM *objgetdictpayl_BM (objectval_tyBM * obj);
+static inline bool objhasdictpayl_BM (objectval_tyBM * obj);
+static inline unsigned objdictsizepayl_BM (objectval_tyBM * obj);
+static inline value_tyBM objdictgetpayl_BM (objectval_tyBM * obj,
+                                            const stringval_tyBM * str);
+static inline void objdictputpayl_BM (objectval_tyBM * obj,
+                                      const stringval_tyBM * str,
+                                      const value_tyBM val);;
+static inline void objdictremovepayl_BM (objectval_tyBM * obj,
+                                         const stringval_tyBM * str);
+
+
+
+////////////////////////////////
 static inline bool ishashsetval_BM (const value_tyBM v);
 static inline bool ishashsetvbucket_BM (const value_tyBM v);
 extern void hashsetvalgcmark_BM (struct garbcoll_stBM *gc,
@@ -676,6 +692,9 @@ extern value_tyBM hashsetvalnext_BM (struct hashsetval_stBM *hsv,
 extern value_tyBM hashsetvalmakenode_BM (struct hashsetval_stBM *hsv,
                                          objectval_tyBM * connob);
 
+
+
+////////////////////////////////
 //// hash maps associating values to values
 static inline bool ishashmapval_BM (const value_tyBM v);
 static inline bool ishashmapbucket_BM (const value_tyBM v);
@@ -719,6 +738,7 @@ extern value_tyBM
   hashmapvalmakenodeofkeys_BM
   (struct hashmapval_stBM *hmv, objectval_tyBM * connob);
 
+////////////////////////////////////////////////////////////////
 ////////////////
 /** apply a closure, or directly an object; so applying OBJ is same as
     applying closure % OBJ () without closed values */
