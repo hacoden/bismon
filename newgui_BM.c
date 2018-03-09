@@ -2844,7 +2844,8 @@ void
   _.shobsel = shobsel;
   DBGPRINTF_BM
     ("show_object_in_obwin_newgui obj=%s shobsel=%s depth=%d ulen=%d obw@%p start",
-     objectdbg_BM (_.obj), objectdbg1_BM (_.shobsel), obw->obw_ulen, obw);
+     objectdbg_BM (_.obj), objectdbg1_BM (_.shobsel), depth, obw->obw_ulen,
+     obw);
   if (obw->obw_asiz <= 0)
     {
       ASSERT_BM (obw->obw_arr == NULL);
