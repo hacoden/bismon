@@ -785,7 +785,7 @@ objassocaddattrpayl_BM (objectval_tyBM * obj,
     return;
   anyassoc_tyBM *newasso = assoc_addattr_BM (asso, obattr, val);
   if (newasso != asso)
-    objputpayload_BM (obj, newasso);
+    obj->ob_payl = newasso;
 }                               /* end objassocaddattrpayl_BM */
 
 void
@@ -799,8 +799,17 @@ objassocremoveattrpayl_BM (objectval_tyBM * obj,
     return;
   anyassoc_tyBM *newasso = assoc_removeattr_BM (asso, obattr);
   if (newasso != asso)
-    objputpayload_BM (obj, newasso);
+    obj->ob_payl = newasso;
 }                               /* end  objassocremoveattrpayl_BM */
+
+void
+objassocreorganizepayl_BM (objectval_tyBM * obj, unsigned gap)
+{
+  anyassoc_tyBM *asso = objgetassocpayl_BM (obj);
+  if (!asso)
+    return;
+  assoc_reorganize_BM (&obj->ob_payl, gap);
+}                               /* end objassocreorganizepayl_BM */
 
 ////////////////
 unsigned

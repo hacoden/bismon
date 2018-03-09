@@ -396,6 +396,8 @@ static inline void objassocaddattrpayl_BM (objectval_tyBM * obj,
                                            value_tyBM val);
 static inline void objassocremoveattrpayl_BM (objectval_tyBM * obj,
                                               const objectval_tyBM * obattr);
+static inline void objassocreorganizepayl_BM (objectval_tyBM * obj,
+                                              unsigned gap);
 ////////////////
 
 static inline unsigned datavectlen_BM (const struct datavectval_stBM *dvec);
