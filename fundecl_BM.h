@@ -772,6 +772,21 @@ extern value_tyBM
   hashmapvalmakenodeofkeys_BM
   (struct hashmapval_stBM *hmv, objectval_tyBM * connob);
 
+//////////////// obj hashmapval payload 
+
+static inline void
+objputhashmapvalpayl_BM (objectval_tyBM * obj, unsigned gap);
+static inline struct hashmapval_stBM *objgethashmapvalpayl_BM (objectval_tyBM
+                                                               * obj);
+static inline bool objhashashmapvalpayl_BM (objectval_tyBM * obj);
+static inline value_tyBM objhashmapvalgetpayl_BM (objectval_tyBM * obj,
+                                                  value_tyBM keyv);
+static inline void objhashmapvalreorganizepayl_BM (objectval_tyBM * obj,
+                                                   unsigned gap);
+static inline void objhashmapvalputpayl_BM (objectval_tyBM * obj,
+                                            value_tyBM keyv, value_tyBM valv);
+static inline void objhashmapvalremovepayl_BM (objectval_tyBM * obj,
+                                               value_tyBM keyv);
 ////////////////////////////////////////////////////////////////
 ////////////////
 /** apply a closure, or directly an object; so applying OBJ is same as

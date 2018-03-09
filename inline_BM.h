@@ -1910,6 +1910,77 @@ ishashmapbucket_BM (const value_tyBM v)
   return ty == typayl_hashmapbucket_BM;
 }                               /* end ishashmapbucket_BM */
 
+void
+objputhashmapvalpayl_BM (objectval_tyBM * obj, unsigned gap)
+{
+  if (!isobject_BM ((value_tyBM) obj))
+    return;
+  objputpayload_BM (obj, hashmapvalreorganize_BM (NULL, gap + gap / 32 + 1));
+}                               /* end objputhashmapvalpayl_BM */
+
+struct hashmapval_stBM *
+objgethashmapvalpayl_BM (objectval_tyBM * obj)
+{
+  if (!isobject_BM ((value_tyBM) obj))
+    return NULL;
+  void *payl = obj->ob_payl;
+  if (ishashmapval_BM ((value_tyBM) payl))
+    return (struct hashmapval_stBM *) payl;
+  return NULL;
+}                               /* end objgethashmapvalpayl_BM */
+
+bool
+objhashashmapvalpayl_BM (objectval_tyBM * obj)
+{
+  return objgethashmapvalpayl_BM (obj) != NULL;
+}                               /* end objhashashmapvalpayl_BM */
+
+value_tyBM
+objhashmapvalgetpayl_BM (objectval_tyBM * obj, value_tyBM keyv)
+{
+  struct hashmapval_stBM *hma = objgethashmapvalpayl_BM (obj);
+  if (hma)
+    return hashmapvalget_BM (hma, keyv);
+  return NULL;
+}                               /* end objhashmapvalgetpayl_BM */
+
+void
+objhashmapvalreorganizepayl_BM (objectval_tyBM * obj, unsigned gap)
+{
+  struct hashmapval_stBM *hma = objgethashmapvalpayl_BM (obj);
+  if (hma)
+    {
+      struct hashmapval_stBM *newhma = hashmapvalreorganize_BM (hma, gap);
+      if (newhma != hma)
+        obj->ob_payl = newhma;
+    }
+}                               /* end objhashmapvalreorganizepayl_BM */
+
+void
+objhashmapvalputpayl_BM (objectval_tyBM * obj, value_tyBM keyv,
+                         value_tyBM valv)
+{
+  struct hashmapval_stBM *hma = objgethashmapvalpayl_BM (obj);
+  if (hma)
+    {
+      struct hashmapval_stBM *newhma = hashmapvalput_BM (hma, keyv, valv);
+      if (newhma != hma)
+        obj->ob_payl = newhma;
+    }
+}                               /* end objhashmapvalputpayl_BM */
+
+
+void
+objhashmapvalremovepayl_BM (objectval_tyBM * obj, value_tyBM keyv)
+{
+  struct hashmapval_stBM *hma = objgethashmapvalpayl_BM (obj);
+  if (hma)
+    {
+      struct hashmapval_stBM *newhma = hashmapvalremove_BM (hma, keyv);
+      if (newhma != hma)
+        obj->ob_payl = newhma;
+    }
+}                               /* end objhashmapvalremovepayl_BM */
 
 ////////////////////////////////////////////////////////////////
 #endif /*INLINE_BM_INCLUDED */
