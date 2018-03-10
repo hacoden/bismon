@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 243 objects
+// for 245 objects
 // with 0 modules
 
 
@@ -1023,6 +1023,19 @@ _6QdXYI1ivTg_8NnpdDMRQK5 ])
 !@ 1508128268.20
 !$_7T9OwSFlgov_0wVJaK1eZbn |=object|
 !)_2LPrNfUHb6Y_1qOPmENNXqB
+
+
+
+!(_3cRGd7uw43z_6OibwMICv3P |=hashsetval_object|
+!~ name (~ hashsetval_object
+~)
+!@ 1520706125.04
+!$_0LK4TzFd6u1_0JFUsrQ4odG |=class|
+!~ class (~ |supercl object:| _7T9OwSFlgov_0wVJaK1eZbn 
+~: _9uRC9w2Gte9_5mW0NanaS19 |=browse_data|  % _9dKLCRPRn9Z_1tczFz5weBe ()
+~)
+
+!)_3cRGd7uw43z_6OibwMICv3P
 
 
 
@@ -2828,6 +2841,16 @@ _36MhHxakHKT_1ZzV5Xoj5LX
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "routine dump_scan\u00b0vector_object"
 !)_99PsYq2Nw3w_9q4BJNeQ6Re
+
+
+
+!(_9dKLCRPRn9Z_1tczFz5weBe
+!|*
+!@ 1520706183.91
+!$_2Ir1i8qnrA4_3jSkierlc5z |=basiclo_function|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "method browse_data\u00b0hsetval_object"
+!)_9dKLCRPRn9Z_1tczFz5weBe
 
 
 
