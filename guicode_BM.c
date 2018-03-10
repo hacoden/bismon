@@ -1625,3 +1625,78 @@ ROUTINEOBJNAME_BM (_9dKLCRPRn9Z_1tczFz5weBe)    //
   }
   LOCALRETURN_BM (_.objbrows);
 }                               /* end browse_data°hashsetval_object  _9dKLCRPRn9Z_1tczFz5weBe */
+
+
+// browse_data°hashmapval_object _0M2jApBzFAy_8H8cpCjGpTi
+extern objrout_sigBM ROUTINEOBJNAME_BM (_0M2jApBzFAy_8H8cpCjGpTi);
+
+value_tyBM
+ROUTINEOBJNAME_BM (_0M2jApBzFAy_8H8cpCjGpTi)    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // object
+ const value_tyBM arg2,         // depth
+ const value_tyBM arg3_ __attribute__ ((unused)),       //
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
+{
+  LOCALFRAME_BM (stkf, /*descr: */ BMK_0M2jApBzFAy_8H8cpCjGpTi,
+                 value_tyBM resultv; const objectval_tyBM * objbrows;
+                 value_tyBM nodv; value_tyBM cursonv; value_tyBM curvalv;
+    );
+  WEAKASSERT_BM (pthread_self () == mainthreadid_BM);
+  if (!isobject_BM (arg1))
+    FATAL_BM
+      ("non-object for method to browse_data for hashmapval_object-s _0M2jApBzFAy_8H8cpCjGpTi");
+  _.objbrows = (const objectval_tyBM *) arg1;
+  int maxdepth = getint_BM (arg2);
+  WEAKASSERT_BM (objhashashmapvalpayl_BM (_.objbrows));
+  _.nodv = objhashmapvalmakenodeofkeyspayl_BM (_.objbrows, BMP_node);
+  WEAKASSERT_BM (isnode_BM (_.nodv));
+  GtkTextBuffer *brobuf = gtk_text_iter_get_buffer (&browserit_BM);
+  int nbkeys = nodewidth_BM (_.nodv);
+  {
+    char bufmsg[48];
+    memset (bufmsg, 0, sizeof (bufmsg));
+    snprintf (bufmsg, sizeof (bufmsg), "|hashmapval %d:|", nbkeys);
+    gtk_text_buffer_insert_with_tags (brobuf,
+                                      &browserit_BM, bufmsg, -1,
+                                      miscomm_brotag_BM, NULL);
+    gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
+  }
+  for (int ix = 0; ix < nbkeys; ix++)
+    {
+      if (ix > 0 && ix % 10 == 0)
+        gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
+      _.cursonv = nodenthson_BM (_.nodv, ix);
+      WEAKASSERT_BM (_.cursonv != NULL);
+      _.curvalv = objhashmapvalgetpayl_BM (_.objbrows, _.cursonv);
+      WEAKASSERT_BM (_.curvalv != NULL);
+      char bufmsg[48];
+      memset (bufmsg, 0, sizeof (bufmsg));
+      snprintf (bufmsg, sizeof (bufmsg),        //
+                "\342\232\255 %d: ",    // U+26AD MARRIAGE SYMBOL ⚭
+                ix);
+      gtk_text_buffer_insert_with_tags (brobuf,
+                                        &browserit_BM, bufmsg, -1,
+                                        nest_brotag_BM, NULL);
+      browse_value_BM ((const value_tyBM) _.cursonv,
+                       (struct stackframe_stBM *) &_, maxdepth, 1);
+      gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
+      gtk_text_buffer_insert_with_tags (brobuf, &browserit_BM,  //
+                                        " \342\206\246 ", -1,   // U+21A6 RIGHTWARDS ARROW FROM BAR ↦
+                                        nest_brotag_BM, NULL);
+      browse_value_BM ((const value_tyBM) _.curvalv,
+                       (struct stackframe_stBM *) &_, maxdepth, 1);
+      gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
+    }
+  {
+    char bufmsg[48];
+    memset (bufmsg, 0, sizeof (bufmsg));
+    snprintf (bufmsg, sizeof (bufmsg), "|end hashmapval of %d|", nbkeys);
+    gtk_text_buffer_insert_with_tags (brobuf,
+                                      &browserit_BM, bufmsg, -1,
+                                      miscomm_brotag_BM, NULL);
+    gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
+  }
+  LOCALRETURN_BM (_.objbrows);
+}                               /* end browse_data°hashmapval_object _0M2jApBzFAy_8H8cpCjGpTi */
