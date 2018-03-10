@@ -1488,26 +1488,70 @@ ROUTINEOBJNAME_BM (_2EtVNhr2mHz_8CsOQJdYeCE)    //
 
 extern objrout_sigBM ROUTINEOBJNAME_BM (_6xPQJolJkUw_2jCiJ3IOKXE);
 
-value_tyBM
-ROUTINEOBJNAME_BM (_6xPQJolJkUw_2jCiJ3IOKXE)
-(struct stackframe_stBM* stkf, //
- const value_tyBM arg1,         // the reciever
- const value_tyBM arg2,         // the browse maxdepth
- const value_tyBM arg3_ __attribute__ ((unused)),       //
- const value_tyBM arg4_ __attribute__ ((unused)),       //
- const quasinode_tyBM* restargs_ __attribute__((unused)))
+value_tyBM ROUTINEOBJNAME_BM (_6xPQJolJkUw_2jCiJ3IOKXE) (struct stackframe_stBM * stkf, //
+                                                         const value_tyBM arg1, // the reciever
+                                                         const value_tyBM arg2, // the browse maxdepth
+                                                         const value_tyBM arg3_ __attribute__ ((unused)),       //
+                                                         const value_tyBM arg4_ __attribute__ ((unused)),       //
+                                                         const quasinode_tyBM
+                                                         * restargs_
+                                                         __attribute__ ((unused)))
 {
-  LOCALFRAME_BM (stkf, /*descr:*/ BMK_6xPQJolJkUw_2jCiJ3IOKXE,
-   value_tyBM resultv; const objectval_tyBM * objbrows;
-                 value_tyBM nodv; value_tyBM cursonv;
-  );
+  LOCALFRAME_BM (stkf, /*descr: */ BMK_6xPQJolJkUw_2jCiJ3IOKXE,
+                 value_tyBM resultv; const objectval_tyBM * objbrows;
+                 value_tyBM nodv; value_tyBM cursonv; value_tyBM curvalv;
+    );
   WEAKASSERT_BM (pthread_self () == mainthreadid_BM);
   if (!isobject_BM (arg1))
     FATAL_BM
       ("non-object for method to browse_data for dict_object-s _6xPQJolJkUw_2jCiJ3IOKXE");
   _.objbrows = (const objectval_tyBM *) arg1;
   int maxdepth = getint_BM (arg2);
-#warning unimplemented browse_data°dict_object  _6xPQJolJkUw_2jCiJ3IOKXE routine
-  WEAKASSERT_BM(false && "unimplemented  browse_data°dict_object _6xPQJolJkUw_2jCiJ3IOKXE routine");
-  LOCALRETURN_BM(_.resultv);
-} /* end browse_data°dict_object _6xPQJolJkUw_2jCiJ3IOKXE*/
+  WEAKASSERT_BM (objhasdictpayl_BM (_.objbrows));
+  _.nodv = objdictnodeofkeyspayl_BM (_.objbrows, BMP_node);
+  GtkTextBuffer *brobuf = gtk_text_iter_get_buffer (&browserit_BM);
+  int nbnames = nodewidth_BM (_.nodv);
+  {
+    char bufmsg[48];
+    memset (bufmsg, 0, sizeof (bufmsg));
+    snprintf (bufmsg, sizeof (bufmsg), "|dict %d:|", nbnames);
+    gtk_text_buffer_insert_with_tags (brobuf,
+                                      &browserit_BM, bufmsg, -1,
+                                      miscomm_brotag_BM, NULL);
+    gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
+  }
+  for (int ix = 0; ix < nbnames; ix++)
+    {
+      if (ix > 0 && ix % 10 == 0)
+        gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
+      _.cursonv = nodenthson_BM (_.nodv, ix);
+      WEAKASSERT_BM (isstring_BM (_.cursonv));
+      _.curvalv = objdictgetpayl_BM (_.objbrows, _.cursonv);
+      WEAKASSERT_BM (_.curvalv != NULL);
+      char bufmsg[48];
+      memset (bufmsg, 0, sizeof (bufmsg));
+      snprintf (bufmsg, sizeof (bufmsg), "\342\257\216 %d: ",   //U+2BCE WHITE FOUR POINTED CUSP ⯎
+                ix);
+      gtk_text_buffer_insert_with_tags (brobuf,
+                                        &browserit_BM, bufmsg, -1,
+                                        nest_brotag_BM, NULL);
+      browse_value_BM ((const value_tyBM) _.cursonv,
+                       (struct stackframe_stBM *) &_, maxdepth, 1);
+      gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
+      gtk_text_buffer_insert_with_tags (brobuf, &browserit_BM, " \342\206\246 ", -1,    // U+21A6 RIGHTWARDS ARROW FROM BAR ↦
+                                        nest_brotag_BM, NULL);
+      browse_value_BM ((const value_tyBM) _.curvalv,
+                       (struct stackframe_stBM *) &_, maxdepth, 1);
+      gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
+    }
+  {
+    char bufmsg[48];
+    memset (bufmsg, 0, sizeof (bufmsg));
+    snprintf (bufmsg, sizeof (bufmsg), "|end dict of %d|", nbnames);
+    gtk_text_buffer_insert_with_tags (brobuf,
+                                      &browserit_BM, bufmsg, -1,
+                                      miscomm_brotag_BM, NULL);
+    gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
+  }
+  LOCALRETURN_BM (_.objbrows);
+}                               /* end browse_data°dict_object _6xPQJolJkUw_2jCiJ3IOKXE */
