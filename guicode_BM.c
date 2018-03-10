@@ -22,11 +22,11 @@ ROUTINEOBJNAME_BM (_23ViGouPnAg_15P5mpG9x3d)    //
                  const setval_tyBM * setattrs; const objectval_tyBM * curattr;
                  value_tyBM curval;);
   _.objbrows = (const objectval_tyBM *) arg1;
-  int depth = getint_BM (arg2);
+  int maxdepth = getint_BM (arg2);
   char objbroid[32];
   memset (objbroid, 0, sizeof (objbroid));
   idtocbuf32_BM (objid_BM (_.objbrows), objbroid);
-  char *objbroname = findobjectname_BM (_.objbrows);
+  const char *objbroname = findobjectname_BM (_.objbrows);
   gtk_text_buffer_insert_with_tags (brobuf, &browserit_BM,
                                     "|", -1, miscomm_brotag_BM, NULL);
   if (objbroname)
@@ -137,7 +137,7 @@ ROUTINEOBJNAME_BM (_23ViGouPnAg_15P5mpG9x3d)    //
                                       &browserit_BM, commbuf, -1,
                                       miscomm_brotag_BM, NULL);
     gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
-    const objectval_tyBM *tinyarr[TINYSIZE_BM] = {
+    objectval_tyBM *tinyarr[TINYSIZE_BM] = {
     };
     objectval_tyBM **arr = (nbattrs < TINYSIZE_BM) ? tinyarr    //
       : calloc (prime_above_BM (nbattrs),
@@ -153,10 +153,10 @@ ROUTINEOBJNAME_BM (_23ViGouPnAg_15P5mpG9x3d)    //
         _.curval = objgetattr_BM (_.objbrows, _.curattr);
         gtk_text_buffer_insert (brobuf, &browserit_BM, "!: ", -1);
         browse_value_BM ((const value_tyBM) _.curattr,
-                         (struct stackframe_stBM *) &_, 2, 0);
+                         (struct stackframe_stBM *) &_, maxdepth, 2);
         browsespacefordepth_BM (1);
         browse_value_BM ((const value_tyBM) _.curval,
-                         (struct stackframe_stBM *) &_, depth, 1);
+                         (struct stackframe_stBM *) &_, maxdepth, 1);
         gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
       };
     if (arr != tinyarr)
@@ -183,7 +183,7 @@ ROUTINEOBJNAME_BM (_23ViGouPnAg_15P5mpG9x3d)    //
         _.curval = objgetcomp_BM (_.objbrows, cix);
         browsespacefordepth_BM (1);
         browse_value_BM ((const value_tyBM) _.curval,
-                         (struct stackframe_stBM *) &_, depth, 1);
+                         (struct stackframe_stBM *) &_, maxdepth, 1);
         gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
       }
   }
@@ -193,7 +193,7 @@ ROUTINEOBJNAME_BM (_23ViGouPnAg_15P5mpG9x3d)    //
   if (payl)
     {
       send1_BM ((const value_tyBM) _.objbrows, BMP_browse_data,
-                (struct stackframe_stBM *) &_, taggedint_BM (depth));
+                (struct stackframe_stBM *) &_, taggedint_BM (maxdepth));
       gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
     }
   /// return itself
@@ -949,9 +949,9 @@ ROUTINEOBJNAME_BM (_5KWAjUEGiiq_2B6rbvkCcgc)    //
                                             miscomm_brotag_BM, NULL);
           _.setk = assoc_setattrs_BM (assoc);
           ASSERT_BM (nbkeys == setcardinal_BM (_.setk));
-          const objectval_tyBM *tinyarr[TINYSIZE_BM] = {
+          objectval_tyBM *tinyarr[TINYSIZE_BM] = {
           };
-          const objectval_tyBM **arr = (nbkeys < TINYSIZE_BM) ? tinyarr //
+          objectval_tyBM **arr = (nbkeys < TINYSIZE_BM) ? tinyarr       //
             : calloc (prime_above_BM (nbkeys),
                       sizeof (const objectval_tyBM *));
           if (!arr)
@@ -1022,7 +1022,6 @@ ROUTINEOBJNAME_BM (_5KWAjUEGiiq_2B6rbvkCcgc)    //
         break;
       case typayl_strbuffer_BM:
         {
-          const struct strbuffer_stBM *sbuf = _.curval;
           snprintf (vcommbuf, sizeof (vcommbuf), "|xsbuf l:%u| ",
                     objstrbufferlengthpayl_BM (_.objbrows));
           gtk_text_buffer_insert_with_tags (brobuf,
@@ -1443,7 +1442,7 @@ ROUTINEOBJNAME_BM (_2EtVNhr2mHz_8CsOQJdYeCE)    //
     FATAL_BM
       ("non-object for method to browse_data for list_object-s _2EtVNhr2mHz_8CsOQJdYeCE");
   _.objbrows = (const objectval_tyBM *) arg1;
-  int depth = getint_BM (arg2);
+  int maxdepth = getint_BM (arg2);
   WEAKASSERT_BM (objhaslistpayl_BM (_.objbrows));
   _.nodv = objlisttonodepayl_BM (_.objbrows, BMP_node);
   GtkTextBuffer *brobuf = gtk_text_iter_get_buffer (&browserit_BM);
@@ -1470,7 +1469,7 @@ ROUTINEOBJNAME_BM (_2EtVNhr2mHz_8CsOQJdYeCE)    //
                                         &browserit_BM, bufmsg, -1,
                                         nest_brotag_BM, NULL);
       browse_value_BM ((const value_tyBM) _.cursonv,
-                       (struct stackframe_stBM *) &_, 1, 0);
+                       (struct stackframe_stBM *) &_, maxdepth, 1);
       gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
     }
   {
