@@ -1325,6 +1325,26 @@ objlistpoplastpayl_BM (objectval_tyBM * obj)
     listpoplast_BM (lis);
 }                               /* end objlistpoplastpayl_BM */
 
+const node_tyBM *
+objlisttonodepayl_BM (objectval_tyBM * obj, const objectval_tyBM * obconn)
+{
+  struct listtop_stBM *lis = objgetlistpayl_BM (obj);
+  if (!isobject_BM ((value_tyBM) obconn))
+    return NULL;
+  if (lis)
+    return list_to_node_BM (lis, obconn);
+  return NULL;
+}                               /* end objlisttonodepayl_BM */
+
+const tupleval_tyBM *
+objlisttotuplepayl_BM (objectval_tyBM * obj)
+{
+  struct listtop_stBM *lis = objgetlistpayl_BM (obj);
+  if (lis)
+    return list_to_tuple_BM (lis);
+  return NULL;
+}                               /* end objlisttotuplepayl_BM */
+
 ////////////////////////////////////////////////////////////////
 bool
 istree_BM (const value_tyBM v)

@@ -604,6 +604,11 @@ static inline void objlistprependpayl_BM (objectval_tyBM * obj,
                                           value_tyBM val);
 static inline void objlistpopfirstpayl_BM (objectval_tyBM * obj);
 static inline void objlistpoplastpayl_BM (objectval_tyBM * obj);
+static inline const node_tyBM *objlisttonodepayl_BM (objectval_tyBM * obj,
+                                                     const objectval_tyBM *
+                                                     obconn);
+static inline const tupleval_tyBM *objlisttotuplepayl_BM (objectval_tyBM *
+                                                          obj);
 ////////////////////////////////
 
 
@@ -776,8 +781,8 @@ extern value_tyBM
 
 static inline void
 objputhashmapvalpayl_BM (objectval_tyBM * obj, unsigned gap);
-static inline struct hashmapval_stBM *objgethashmapvalpayl_BM (objectval_tyBM
-                                                               * obj);
+static inline struct hashmapval_stBM *objgethashmapvalpayl_BM
+  (objectval_tyBM * obj);
 static inline bool objhashashmapvalpayl_BM (objectval_tyBM * obj);
 static inline value_tyBM objhashmapvalgetpayl_BM (objectval_tyBM * obj,
                                                   value_tyBM keyv);
@@ -790,10 +795,8 @@ static inline void objhashmapvalremovepayl_BM (objectval_tyBM * obj,
 static inline value_tyBM objhashmapvalfirstkeypayl_BM (objectval_tyBM * obj);
 static inline value_tyBM objhashmapvalnextkeypayl_BM (objectval_tyBM * obj,
                                                       value_tyBM prevk);
-static inline value_tyBM objhashmapvalmakenodeofkeyspayl_BM (objectval_tyBM *
-                                                             obj,
-                                                             objectval_tyBM *
-                                                             connob);
+static inline value_tyBM objhashmapvalmakenodeofkeyspayl_BM
+  (objectval_tyBM * obj, objectval_tyBM * connob);
 ////////////////////////////////////////////////////////////////
 ////////////////
 /** apply a closure, or directly an object; so applying OBJ is same as
