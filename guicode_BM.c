@@ -1484,18 +1484,21 @@ ROUTINEOBJNAME_BM (_2EtVNhr2mHz_8CsOQJdYeCE)    //
   LOCALRETURN_BM (_.objbrows);
 }                               /* end browse_data°list_object _2EtVNhr2mHz_8CsOQJdYeCE */
 
+
+
+
 // browse_data°dict_object _6xPQJolJkUw_2jCiJ3IOKXE
 
 extern objrout_sigBM ROUTINEOBJNAME_BM (_6xPQJolJkUw_2jCiJ3IOKXE);
 
-value_tyBM ROUTINEOBJNAME_BM (_6xPQJolJkUw_2jCiJ3IOKXE) (struct stackframe_stBM * stkf, //
-                                                         const value_tyBM arg1, // the reciever
-                                                         const value_tyBM arg2, // the browse maxdepth
-                                                         const value_tyBM arg3_ __attribute__ ((unused)),       //
-                                                         const value_tyBM arg4_ __attribute__ ((unused)),       //
-                                                         const quasinode_tyBM
-                                                         * restargs_
-                                                         __attribute__ ((unused)))
+value_tyBM
+ROUTINEOBJNAME_BM (_6xPQJolJkUw_2jCiJ3IOKXE)    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // the reciever
+ const value_tyBM arg2,         // the browse maxdepth
+ const value_tyBM arg3_ __attribute__ ((unused)),       //
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM (stkf, /*descr: */ BMK_6xPQJolJkUw_2jCiJ3IOKXE,
                  value_tyBM resultv; const objectval_tyBM * objbrows;
@@ -1561,14 +1564,14 @@ value_tyBM ROUTINEOBJNAME_BM (_6xPQJolJkUw_2jCiJ3IOKXE) (struct stackframe_stBM 
 // browse_data°hashsetval_object _9dKLCRPRn9Z_1tczFz5weBe
 extern objrout_sigBM ROUTINEOBJNAME_BM (_9dKLCRPRn9Z_1tczFz5weBe);
 
-value_tyBM ROUTINEOBJNAME_BM (_9dKLCRPRn9Z_1tczFz5weBe) (struct stackframe_stBM * stkf, //
-                                                         const value_tyBM arg1, //
-                                                         const value_tyBM arg2, //
-                                                         const value_tyBM arg3, //
-                                                         const value_tyBM arg4, //
-                                                         const quasinode_tyBM
-                                                         * restargs_
-                                                         __attribute__ ((unused)))
+value_tyBM
+ROUTINEOBJNAME_BM (_9dKLCRPRn9Z_1tczFz5weBe)    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         //
+ const value_tyBM arg2,         //
+ const value_tyBM arg3,         //
+ const value_tyBM arg4,         //
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM (stkf, /*descr: */ BMK_9dKLCRPRn9Z_1tczFz5weBe,
                  value_tyBM resultv; const objectval_tyBM * objbrows;
