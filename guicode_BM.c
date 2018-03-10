@@ -274,6 +274,7 @@ ROUTINEOBJNAME_BM (_09DxyieS5Wz_7pkad4F88FA)    //
                  const objectval_tyBM * cursel;
                  const objectval_tyBM * supercla;
                  value_tyBM curval;);
+  WEAKASSERT_BM (pthread_self () == mainthreadid_BM);
   GtkTextBuffer *brobuf = gtk_text_iter_get_buffer (&browserit_BM);
   if (!isobject_BM (arg1))
     FATAL_BM
@@ -1418,3 +1419,68 @@ ROUTINEOBJNAME_BM (_9QuovXgtk9K_17pMbAD0XmX)    //
     }
   LOCALRETURN_BM (_.recv);
 }                               /* end commandhandler°put_method _9QuovXgtk9K_17pMbAD0XmX */
+
+
+
+// method browse_data°list_object _2EtVNhr2mHz_8CsOQJdYeCE
+extern objrout_sigBM ROUTINEOBJNAME_BM (_2EtVNhr2mHz_8CsOQJdYeCE);
+
+value_tyBM
+ROUTINEOBJNAME_BM (_2EtVNhr2mHz_8CsOQJdYeCE)    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // the reciever
+ const value_tyBM arg2,         // the browse maxdepth
+ const value_tyBM arg3_ __attribute__ ((unused)),       //
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
+{
+  LOCALFRAME_BM (stkf, /*descr: */ BMK_2EtVNhr2mHz_8CsOQJdYeCE,
+                 value_tyBM resultv; const objectval_tyBM * objbrows;
+                 value_tyBM nodv; value_tyBM cursonv;
+    );
+  WEAKASSERT_BM (pthread_self () == mainthreadid_BM);
+  if (!isobject_BM (arg1))
+    FATAL_BM
+      ("non-object for method to browse_data for list_object-s _2EtVNhr2mHz_8CsOQJdYeCE");
+  _.objbrows = (const objectval_tyBM *) arg1;
+  int depth = getint_BM (arg2);
+  WEAKASSERT_BM (objhaslistpayl_BM (_.objbrows));
+  _.nodv = objlisttonodepayl_BM (_.objbrows, BMP_node);
+  GtkTextBuffer *brobuf = gtk_text_iter_get_buffer (&browserit_BM);
+  int nodlen = nodewidth_BM (_.nodv);
+  {
+    char bufmsg[48];
+    memset (bufmsg, 0, sizeof (bufmsg));
+    snprintf (bufmsg, sizeof (bufmsg), "|list %d:|", nodlen);
+    gtk_text_buffer_insert_with_tags (brobuf,
+                                      &browserit_BM, bufmsg, -1,
+                                      miscomm_brotag_BM, NULL);
+    gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
+  }
+  for (int ix = 0; ix < nodlen; ix++)
+    {
+      if (ix > 0 && ix % 10 == 0)
+        gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
+      _.cursonv = nodenthson_BM (_.nodv, ix);
+      char bufmsg[48];
+      memset (bufmsg, 0, sizeof (bufmsg));
+      snprintf (bufmsg, sizeof (bufmsg), "\342\255\231 %d: ",   //U+2B59 HEAVY CIRCLED SALTIRE ⭙
+                ix);
+      gtk_text_buffer_insert_with_tags (brobuf,
+                                        &browserit_BM, bufmsg, -1,
+                                        nest_brotag_BM, NULL);
+      browse_value_BM ((const value_tyBM) _.cursonv,
+                       (struct stackframe_stBM *) &_, 1, 0);
+      gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
+    }
+  {
+    char bufmsg[48];
+    memset (bufmsg, 0, sizeof (bufmsg));
+    snprintf (bufmsg, sizeof (bufmsg), "|end list of %d|", nodlen);
+    gtk_text_buffer_insert_with_tags (brobuf,
+                                      &browserit_BM, bufmsg, -1,
+                                      miscomm_brotag_BM, NULL);
+    gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
+  }
+  LOCALRETURN_BM (_.objbrows);
+}                               /* end browse_data°list_object _2EtVNhr2mHz_8CsOQJdYeCE */
