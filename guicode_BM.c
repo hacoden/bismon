@@ -1538,7 +1538,8 @@ value_tyBM ROUTINEOBJNAME_BM (_6xPQJolJkUw_2jCiJ3IOKXE) (struct stackframe_stBM 
       browse_value_BM ((const value_tyBM) _.cursonv,
                        (struct stackframe_stBM *) &_, maxdepth, 1);
       gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
-      gtk_text_buffer_insert_with_tags (brobuf, &browserit_BM, " \342\206\246 ", -1,    // U+21A6 RIGHTWARDS ARROW FROM BAR ↦
+      gtk_text_buffer_insert_with_tags (brobuf, &browserit_BM,  //
+                                        " \342\206\246 ", -1,   // U+21A6 RIGHTWARDS ARROW FROM BAR ↦
                                         nest_brotag_BM, NULL);
       browse_value_BM ((const value_tyBM) _.curvalv,
                        (struct stackframe_stBM *) &_, maxdepth, 1);
