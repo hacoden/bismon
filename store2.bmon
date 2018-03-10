@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 241 objects
+// for 243 objects
 // with 0 modules
 
 
@@ -745,6 +745,21 @@ _6bQLwLF3pc5_5gSAmlh5Nsx
 !@ 1516304622.60
 !$_7T9OwSFlgov_0wVJaK1eZbn |=object|
 !)_17YdW6dWrBA_2mn4QmBjMNs
+
+
+
+!(_6VGKPmigLUx_65sfKINCa6w |=dict_object|
+!~ name (~ dict_object
+~)
+!@ 1520702595.47
+!$_0LK4TzFd6u1_0JFUsrQ4odG |=class|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "class of object with dict payload"
+!~ class (~ |supercl object:| _7T9OwSFlgov_0wVJaK1eZbn 
+~: _9uRC9w2Gte9_5mW0NanaS19 |=browse_data|  % _6xPQJolJkUw_2jCiJ3IOKXE ()
+~)
+
+!)_6VGKPmigLUx_65sfKINCa6w
 
 
 
@@ -2557,6 +2572,16 @@ _36MhHxakHKT_1ZzV5Xoj5LX
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "method to dump_value a closure"
 !)_6jvRZetUz36_978V6SKIWZC
+
+
+
+!(_6xPQJolJkUw_2jCiJ3IOKXE
+!|*
+!@ 1520702653.45
+!$_2Ir1i8qnrA4_3jSkierlc5z |=basiclo_function|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "method for browse_data\u00b0dict_object"
+!)_6xPQJolJkUw_2jCiJ3IOKXE
 
 
 

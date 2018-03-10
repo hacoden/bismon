@@ -1483,3 +1483,31 @@ ROUTINEOBJNAME_BM (_2EtVNhr2mHz_8CsOQJdYeCE)    //
   }
   LOCALRETURN_BM (_.objbrows);
 }                               /* end browse_data°list_object _2EtVNhr2mHz_8CsOQJdYeCE */
+
+// browse_data°dict_object _6xPQJolJkUw_2jCiJ3IOKXE
+
+extern objrout_sigBM ROUTINEOBJNAME_BM (_6xPQJolJkUw_2jCiJ3IOKXE);
+
+value_tyBM
+ROUTINEOBJNAME_BM (_6xPQJolJkUw_2jCiJ3IOKXE)
+(struct stackframe_stBM* stkf, //
+ const value_tyBM arg1,         // the reciever
+ const value_tyBM arg2,         // the browse maxdepth
+ const value_tyBM arg3_ __attribute__ ((unused)),       //
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM* restargs_ __attribute__((unused)))
+{
+  LOCALFRAME_BM (stkf, /*descr:*/ BMK_6xPQJolJkUw_2jCiJ3IOKXE,
+   value_tyBM resultv; const objectval_tyBM * objbrows;
+                 value_tyBM nodv; value_tyBM cursonv;
+  );
+  WEAKASSERT_BM (pthread_self () == mainthreadid_BM);
+  if (!isobject_BM (arg1))
+    FATAL_BM
+      ("non-object for method to browse_data for dict_object-s _6xPQJolJkUw_2jCiJ3IOKXE");
+  _.objbrows = (const objectval_tyBM *) arg1;
+  int maxdepth = getint_BM (arg2);
+#warning unimplemented browse_data°dict_object  _6xPQJolJkUw_2jCiJ3IOKXE routine
+  WEAKASSERT_BM(false && "unimplemented  browse_data°dict_object _6xPQJolJkUw_2jCiJ3IOKXE routine");
+  LOCALRETURN_BM(_.resultv);
+} /* end browse_data°dict_object _6xPQJolJkUw_2jCiJ3IOKXE*/
