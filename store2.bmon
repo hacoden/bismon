@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 239 objects
+// for 241 objects
 // with 0 modules
 
 
@@ -1097,6 +1097,21 @@ _6QdXYI1ivTg_8NnpdDMRQK5 ])
 
 
 
+!(_1GWAOAM0UNL_75ijaqJjLiM |=list_object|
+!~ name (~ list_object
+~)
+!@ 1520667186.98
+!$_0LK4TzFd6u1_0JFUsrQ4odG |=class|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "class for objects with list payload"
+!~ class (~ |supercl object:| _7T9OwSFlgov_0wVJaK1eZbn 
+~: _9uRC9w2Gte9_5mW0NanaS19 |=browse_data|  % _2EtVNhr2mHz_8CsOQJdYeCE ()
+~)
+
+!)_1GWAOAM0UNL_75ijaqJjLiM
+
+
+
 !(_24sSVIADeHm_0Sx34wQfG7W |=locals|
 !~ name (~ locals
 ~)
@@ -2154,6 +2169,16 @@ _0EfjiBTrXEo_3ppwTZ0M7xf |=foreach_in_tuple|
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "method to init_class in object (class)"
 !)_2qppG2LJu79_9ljkbLS0eFQ
+
+
+
+!(_2EtVNhr2mHz_8CsOQJdYeCE
+!|*
+!@ 1520667287.53
+!$_2Ir1i8qnrA4_3jSkierlc5z |=basiclo_function|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "method browse_data\u00b0list_object"
+!)_2EtVNhr2mHz_8CsOQJdYeCE
 
 
 
