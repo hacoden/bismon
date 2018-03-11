@@ -1501,7 +1501,8 @@ ROUTINEOBJNAME_BM (_0f1S28bCE26_3X6Vpz9lG4A)    //
 {
   LOCALFRAME_BM (stkf, /*descr: */ BMK_0f1S28bCE26_3X6Vpz9lG4A,
                  value_tyBM resultv; const objectval_tyBM * objbrows;
-                 value_tyBM setv; value_tyBM tupv; value_tyBM cursonv;
+                 value_tyBM setv; value_tyBM tupv;
+                 const objectval_tyBM * curobj; value_tyBM curvalv;
     );
   WEAKASSERT_BM (pthread_self () == mainthreadid_BM);
   if (!isobject_BM (arg1))
@@ -1511,10 +1512,46 @@ ROUTINEOBJNAME_BM (_0f1S28bCE26_3X6Vpz9lG4A)    //
   int maxdepth = getint_BM (arg2);
   WEAKASSERT_BM (objhaslistpayl_BM (_.objbrows));
   _.setv = objassocsetattrspayl_BM (_.objbrows);
+  _.tupv = settonamedsortedtuple_BM (_.setv);
+  int nbelem = tuplesize_BM (_.tupv);
+  ASSERT_BM (nbelem == setcardinal_BM (_.setv));
   GtkTextBuffer *brobuf = gtk_text_iter_get_buffer (&browserit_BM);
-#warning unimplemented _0f1S28bCE26_3X6Vpz9lG4A routine
-  WEAKASSERT_BM (false && "unimplemented _0f1S28bCE26_3X6Vpz9lG4A routine");
-  LOCALRETURN_BM (_.resultv);
+  {
+    char bufmsg[48];
+    memset (bufmsg, 0, sizeof (bufmsg));
+    snprintf (bufmsg, sizeof (bufmsg), "|assoc %d:|", nbelem);
+    gtk_text_buffer_insert_with_tags (brobuf,
+                                      &browserit_BM, bufmsg, -1,
+                                      miscomm_brotag_BM, NULL);
+    gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
+  }
+  for (int ix = 0; ix < nbelem; ix++)
+    {
+      if (ix > 0 && ix % 10 == 0)
+        gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
+      _.curobj = tuplecompnth_BM (_.tupv, ix);
+      _.curvalv = objassocgetattrpayl_BM (_.objbrows, _.curobj);
+      gtk_text_buffer_insert_with_tags (brobuf, &browserit_BM, "\342\210\230 ", //U+2218 RING OPERATOR ∘
+                                        -1, nest_brotag_BM, NULL);
+      browse_value_BM ((const value_tyBM) _.curobj,
+                       (struct stackframe_stBM *) &_, maxdepth, 1);
+      gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
+      gtk_text_buffer_insert_with_tags (brobuf, &browserit_BM, " \342\206\222 ",        //U+2192 RIGHTWARDS ARROW →
+                                        -1, nest_brotag_BM, NULL);
+      browse_value_BM ((const value_tyBM) _.curvalv,
+                       (struct stackframe_stBM *) &_, maxdepth, 2);
+      gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
+    }
+  {
+    char bufmsg[48];
+    memset (bufmsg, 0, sizeof (bufmsg));
+    snprintf (bufmsg, sizeof (bufmsg), "|end assoc %d|", nbelem);
+    gtk_text_buffer_insert_with_tags (brobuf,
+                                      &browserit_BM, bufmsg, -1,
+                                      miscomm_brotag_BM, NULL);
+    gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
+  }
+  LOCALRETURN_BM (_.objbrows);
 }                               /* end browse_data°assoc_object  _0f1S28bCE26_3X6Vpz9lG4A */
 
 
