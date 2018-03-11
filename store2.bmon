@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 247 objects
+// for 248 objects
 // with 0 modules
 
 
@@ -70,10 +70,12 @@
 !(_3JH05KgIzty_1K7IDyF43V2 |=assoc|
 !~ name (~ assoc
 ~)
-!@ 1507881364.79
+!@ 1520753394.63
 !$_0LK4TzFd6u1_0JFUsrQ4odG |=class|
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "ctype for pointers to anyassoc_tyBM, and class for objects with assoc data"
+!: _3EKD6vcwegI_3LMuXHuazib |=command_readmacro|
+ % _7iKya0Q5Jii_0mjPPia0yib ()
 !~ class (~ |supercl object:| _7T9OwSFlgov_0wVJaK1eZbn
 ~)
 
@@ -2676,6 +2678,16 @@ _36MhHxakHKT_1ZzV5Xoj5LX
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "method to browse_value a node"
 !)_7fJKfG4SN0U_1QTu5J832xg
+
+
+
+!(_7iKya0Q5Jii_0mjPPia0yib
+!|*
+!@ 1520753394.63
+!$_2Ir1i8qnrA4_3jSkierlc5z |=basiclo_function|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "assoc readmacro"
+!)_7iKya0Q5Jii_0mjPPia0yib
 
 
 
