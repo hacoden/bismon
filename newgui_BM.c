@@ -1745,7 +1745,8 @@ const objectval_tyBM *parsobjexp_newguicmd_BM
               (pars,
                (struct stackframe_stBM *) &_,
                tok.tok_line, tok.tok_col,
-               "missing left paren after selector after !> in object");
+               "missing left paren after selector %s after !> in object",
+               objectdbg_BM (_.obsel));
 
           bool gotson = false;
           int nbsons = 0;
@@ -1765,8 +1766,8 @@ const objectval_tyBM *parsobjexp_newguicmd_BM
                   (pars,
                    (struct stackframe_stBM *) &_,
                    tok.tok_line, tok.tok_col,
-                   "too many %d arguments after selector after !> in object",
-                   nbsons);
+                   "too many %d arguments after selector  %s after !> in object",
+                   nbsons, objectdbg_BM (_.obsel));
               nbsons++;
               _.val = NULL;
             }
@@ -1775,7 +1776,8 @@ const objectval_tyBM *parsobjexp_newguicmd_BM
               (pars,
                (struct stackframe_stBM *) &_,
                tok.tok_line, tok.tok_col,
-               "missing right paren after selector after !> in object");
+               "missing right paren after selector  %s after !> in object",
+               objectdbg_BM (_.obsel));
           if (!nobuild)
             {
               objlock_BM (_.obj);
