@@ -1486,6 +1486,37 @@ ROUTINEOBJNAME_BM (_2EtVNhr2mHz_8CsOQJdYeCE)    //
 
 
 
+//browse_data°assoc_object _0f1S28bCE26_3X6Vpz9lG4A
+
+extern objrout_sigBM ROUTINEOBJNAME_BM (_0f1S28bCE26_3X6Vpz9lG4A);
+
+value_tyBM
+ROUTINEOBJNAME_BM (_0f1S28bCE26_3X6Vpz9lG4A)    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         //
+ const value_tyBM arg2,         //
+ const value_tyBM arg3,         //
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
+{
+  LOCALFRAME_BM (stkf, /*descr: */ BMK_0f1S28bCE26_3X6Vpz9lG4A,
+                 value_tyBM resultv; const objectval_tyBM * objbrows;
+                 value_tyBM setv; value_tyBM tupv; value_tyBM cursonv;
+    );
+  WEAKASSERT_BM (pthread_self () == mainthreadid_BM);
+  if (!isobject_BM (arg1))
+    FATAL_BM
+      ("non-object for method to browse_data for assoc_object-s _0f1S28bCE26_3X6Vpz9lG4A");
+  _.objbrows = (const objectval_tyBM *) arg1;
+  int maxdepth = getint_BM (arg2);
+  WEAKASSERT_BM (objhaslistpayl_BM (_.objbrows));
+  _.setv = objassocsetattrspayl_BM (_.objbrows);
+  GtkTextBuffer *brobuf = gtk_text_iter_get_buffer (&browserit_BM);
+#warning unimplemented _0f1S28bCE26_3X6Vpz9lG4A routine
+  WEAKASSERT_BM (false && "unimplemented _0f1S28bCE26_3X6Vpz9lG4A routine");
+  LOCALRETURN_BM (_.resultv);
+}                               /* end browse_data°assoc_object  _0f1S28bCE26_3X6Vpz9lG4A */
+
 
 // browse_data°dict_object _6xPQJolJkUw_2jCiJ3IOKXE
 

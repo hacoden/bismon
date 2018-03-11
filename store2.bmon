@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 248 objects
+// for 249 objects
 // with 0 modules
 
 
@@ -96,7 +96,8 @@
 ~: _2oNMm2aR91J_4QthSpZxplW |=dump_scan|  % _8MU0cEcpEYN_5SVe0jrv36o () 
 ~: _2LPrNfUHb6Y_1qOPmENNXqB |=get|  % _4icYJnKsN0o_4xm5UbQOMTe () 
 ~: _3OWP1zOtxz2_9uAVt50SUZO |=remove|  % _0ekJdzLOqAI_8mejMqkwuKQ () 
-~: _9pvzBeIKHXF_8YDPCrQ6OEK |=put|  % _6eD9Y1qYcnj_8uVDhxjBpG8 ()
+~: _9pvzBeIKHXF_8YDPCrQ6OEK |=put|  % _6eD9Y1qYcnj_8uVDhxjBpG8 () 
+~: _9uRC9w2Gte9_5mW0NanaS19 |=browse_data|  % _0f1S28bCE26_3X6Vpz9lG4A ()
 ~)
 
 !)_6ZQ05nCv3Ys_8LA6B5LkZgm
@@ -1960,6 +1961,16 @@ _7XasLoEUKwe_9upxyFeheD5
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "routine for remove\u00b0assoc_object"
 !)_0ekJdzLOqAI_8mejMqkwuKQ
+
+
+
+!(_0f1S28bCE26_3X6Vpz9lG4A
+!|*
+!@ 1520787741.89
+!$_2Ir1i8qnrA4_3jSkierlc5z |=basiclo_function|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "browse_data\u00b0assoc_object method"
+!)_0f1S28bCE26_3X6Vpz9lG4A
 
 
 

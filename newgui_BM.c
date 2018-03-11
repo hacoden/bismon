@@ -1227,15 +1227,11 @@ parsdollarobj_newguicmd_BM (struct
 
 // for $<var>
 value_tyBM
-parsdollarval_newguicmd_BM (struct
-                            parser_stBM
-                            *pars,
-                            unsigned
-                            lineno,
-                            unsigned
-                            colpos,
-                            const
-                            value_tyBM varname, struct stackframe_stBM *stkf)
+parsdollarval_newguicmd_BM (struct parser_stBM *pars,
+                            unsigned lineno,
+                            unsigned colpos,
+                            const value_tyBM varname,
+                            struct stackframe_stBM *stkf)
 {
   const char *varstr = NULL;
   LOCALFRAME_BM ( /*prev: */ stkf,
@@ -1542,6 +1538,10 @@ const objectval_tyBM *parsobjexp_newguicmd_BM
   for (;;)
     {
       tok = parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
+      DBGPRINTF_BM ("parsobjexp_newguicmd tok L%dC%d %s %s", tok.tok_line,
+                    tok.tok_col, lexkindname_BM (tok.tok_kind),
+                    (tok.tok_kind ==
+                     plex_DELIM) ? delimstr_BM (tok.tok_delim) : "--");
       //
       // unterminated object
       if (tok.tok_kind == plex__NONE)
@@ -1771,12 +1771,13 @@ const objectval_tyBM *parsobjexp_newguicmd_BM
               nbsons++;
               _.val = NULL;
             }
+          tok = parsertokenget_BM (pars, (struct stackframe_stBM *) &_);
           if (tok.tok_kind != plex_DELIM || tok.tok_delim != delim_rightparen)
             parsererrorprintf_BM
               (pars,
                (struct stackframe_stBM *) &_,
                tok.tok_line, tok.tok_col,
-               "missing right paren after selector  %s after !> in object",
+               "missing left paren after selector %s following !> in object",
                objectdbg_BM (_.obsel));
           if (!nobuild)
             {
