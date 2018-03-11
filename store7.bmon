@@ -1,5 +1,5 @@
 // generated file store7.bmon
-// for 7 objects
+// for 5 objects
 // with 0 modules
 
 
@@ -27,28 +27,6 @@
 !@ 1504241958.64
 !$_7T9OwSFlgov_0wVJaK1eZbn |=object|
 !)_0DcIN3EYe3y_7cRpBDYhw3s
-
-
-
-!(_0NnNXZqWvmz_1ucZGX0YPu1 |=command_arity|
-!~ name (~ command_arity
-~)
-!@ 1519243584.84
-!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
-!: _01h86SAfOfg_1q2oMegGRwW |=comment|
- "gives the arity of a command"
-!)_0NnNXZqWvmz_1ucZGX0YPu1
-
-
-
-!(_0xbmmxnN8E8_0ZuEqJmqMNH |=command_handler|
-!~ name (~ command_handler
-~)
-!@ 1519243605.98
-!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
-!: _01h86SAfOfg_1q2oMegGRwW |=comment|
- "gives the closure handling a command"
-!)_0xbmmxnN8E8_0ZuEqJmqMNH
 
 
 

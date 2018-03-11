@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 249 objects
+// for 251 objects
 // with 0 modules
 
 
@@ -652,6 +652,28 @@ _6bQLwLF3pc5_5gSAmlh5Nsx
 !@ 1511266590.00
 !$_7T9OwSFlgov_0wVJaK1eZbn |=object|
 !)_99lWaExo3Bc_4J3HkjJOIJy
+
+
+
+!(_0NnNXZqWvmz_1ucZGX0YPu1 |=command_arity|
+!~ name (~ command_arity
+~)
+!@ 1519243584.84
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "gives the arity of a command"
+!)_0NnNXZqWvmz_1ucZGX0YPu1
+
+
+
+!(_0xbmmxnN8E8_0ZuEqJmqMNH |=command_handler|
+!~ name (~ command_handler
+~)
+!@ 1519243605.98
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "gives the closure handling a command"
+!)_0xbmmxnN8E8_0ZuEqJmqMNH
 
 
 
