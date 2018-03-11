@@ -833,9 +833,12 @@ ROUTINEOBJNAME_BM (_8MU0cEcpEYN_5SVe0jrv36o)    //  dump_scan°assoc_object
   _.recv = arg1;
   WEAKASSERT_BM (obdumpgetdumper_BM (arg2) != NULL);
   _.dumpob = arg2;
+  DBGPRINTF_BM
+    ("dump_scan°assoc_object _8MU0cEcpEYN_5SVe0jrv36o recv=%s dumpob=%s",
+     objectdbg_BM (_.recv), objectdbg1_BM (_.dumpob));
   if (!objpayload_BM (_.recv))
     LOCALRETURN_BM (_.recv);
-  WEAKASSERT_BM (isassoc_BM (objpayload_BM (_.recv)));
+  WEAKASSERT_BM (objhasassocpayl_BM (_.recv));
   anyassoc_tyBM *assoc = assoccast_BM (objpayload_BM (_.recv));
   if (!assoc)
     LOCALRETURN_BM (NULL);
@@ -877,6 +880,10 @@ ROUTINEOBJNAME_BM (_9EytjXNb76D_1ZP3iSk9cuu)    // dump_data°assoc_object
   WEAKASSERT_BM (obdumpgetdumper_BM (arg2) != NULL);
   _.dumpob = arg2;
   _.bufob = objectcast_BM (arg3);
+  DBGPRINTF_BM
+    ("dump_data°assoc_object _9EytjXNb76D_1ZP3iSk9cuu recv=%s dumpob=%s bufob=%s",
+     objectdbg_BM (_.recv), objectdbg1_BM (_.dumpob),
+     objectdbg2_BM (_.bufob));
   WEAKASSERT_BM (objhasstrbufferpayl_BM (_.bufob));
   WEAKASSERT_BM (restargs == NULL);
   ASSERT_BM (restargs == NULL);
