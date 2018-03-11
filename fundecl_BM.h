@@ -112,6 +112,8 @@ extern const setval_tyBM *makeset_BM (const objectval_tyBM ** arr,
                                       unsigned rawsiz);
 static inline bool setcontains_BM (const setval_tyBM * setv,
                                    const objectval_tyBM * obelem);
+extern const tupleval_tyBM *settonamedsortedtuple_BM (const setval_tyBM *
+                                                      setv);
 /* return the index in setv of element obelem or else -1 */
 extern int setelemindex_BM (const setval_tyBM * setv,
                             const objectval_tyBM * obelem);

@@ -303,6 +303,28 @@ setelemnth_BM (const setval_tyBM * set, int rk)
   return (objectval_tyBM *) set->seq_objs[rk];
 }                               /* end setelemnth_BM */
 
+const tupleval_tyBM *
+settonamedsortedtuple_BM (const setval_tyBM * setv)
+{
+  const tupleval_tyBM *tup = NULL;
+  if (!setv || ((intptr_t) setv & 3))
+    return NULL;
+  if (((typedhead_tyBM *) setv)->htyp != tySet_BM)
+    return NULL;
+  unsigned siz = ((typedsize_tyBM *) setv)->size;
+  objectval_tyBM *tinyarr[TINYSIZE_BM] = { 0 };
+  objectval_tyBM **arr = (siz < TINYSIZE_BM) ? tinyarr :
+    calloc (prime_above_BM (siz), sizeof (objectval_tyBM *));
+  if (!arr)
+    FATAL_BM ("failed to alloc array of size %u", prime_above_BM (siz));
+  memcpy (arr, setv->seq_objs, siz * sizeof (objectval_tyBM *));
+  sortnamedobjarr_BM (arr, siz);
+  tup = maketuple_BM (arr, siz);
+  if (arr != tinyarr)
+    free (arr);
+  return tup;
+}                               /* end settonamedsortedtuple_BM */
+
 unsigned
 sequencesize_BM (const seqobval_tyBM * sq)
 {
