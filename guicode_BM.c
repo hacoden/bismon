@@ -1510,7 +1510,7 @@ ROUTINEOBJNAME_BM (_0f1S28bCE26_3X6Vpz9lG4A)    //
       ("non-object for method to browse_data for assoc_object-s _0f1S28bCE26_3X6Vpz9lG4A");
   _.objbrows = (const objectval_tyBM *) arg1;
   int maxdepth = getint_BM (arg2);
-  WEAKASSERT_BM (objhaslistpayl_BM (_.objbrows));
+  WEAKASSERT_BM (objhasassocpayl_BM (_.objbrows));
   _.setv = objassocsetattrspayl_BM (_.objbrows);
   _.tupv = settonamedsortedtuple_BM (_.setv);
   int nbelem = tuplesize_BM (_.tupv);
