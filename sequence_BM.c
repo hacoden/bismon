@@ -316,7 +316,8 @@ settonamedsortedtuple_BM (const setval_tyBM * setv)
   objectval_tyBM **arr = (siz < TINYSIZE_BM) ? tinyarr :
     calloc (prime_above_BM (siz), sizeof (objectval_tyBM *));
   if (!arr)
-    FATAL_BM ("failed to alloc array of size %u", prime_above_BM (siz));
+    FATAL_BM ("failed to alloc array of size %u",
+              (unsigned) prime_above_BM (siz));
   memcpy (arr, setv->seq_objs, siz * sizeof (objectval_tyBM *));
   sortnamedobjarr_BM (arr, siz);
   tup = maketuple_BM (arr, siz);

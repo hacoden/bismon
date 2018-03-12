@@ -325,7 +325,7 @@ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
     }
   objstrbufferprintfpayl_BM (_.bufob, "\"");
   LOCALRETURN_BM (_.bufob);
-}                               /* end ROUTINE _7mvOlkB1tAJ_3psVFz4QEAn */
+}                               /* end dump_value°string ROUTINE _7mvOlkB1tAJ_3psVFz4QEAn */
 
 
 
@@ -335,7 +335,10 @@ extern objrout_sigBM ROUTINEOBJNAME_BM (_4EBQMvthjcP_2OiZxZviSQc);
 
 value_tyBM
 ROUTINEOBJNAME_BM (_4EBQMvthjcP_2OiZxZviSQc)    // dump_scan°class 
-(struct stackframe_stBM * stkf, const value_tyBM arg1, const value_tyBM arg2, const value_tyBM arg3,    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // reciever
+ const value_tyBM arg2,         // dumpob
+ const value_tyBM arg3_ __attribute__ ((unused)),       //
  const value_tyBM arg4_ __attribute__ ((unused)),
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
@@ -351,7 +354,7 @@ ROUTINEOBJNAME_BM (_4EBQMvthjcP_2OiZxZviSQc)    // dump_scan°class
   _.dumpob = objectcast_BM (arg2);
   WEAKASSERT_BM (obdumpgetdumper_BM (_.dumpob) != NULL);
   WEAKASSERT_BM (objhasclassinfo_BM (_.recv));
-  ASSERT_BM (arg3 == NULL);
+  ASSERT_BM (arg3_ == NULL);
   ASSERT_BM (restargs_ == NULL);
   _.supercl = objgetclassinfosuperclass_BM ((const value_tyBM) _.recv);
   _.selset = objgetclassinfosetofselectors_BM ((const value_tyBM) _.recv);
@@ -376,11 +379,12 @@ extern objrout_sigBM ROUTINEOBJNAME_BM (_67IapmpeTLU_8MQKtlK8iAD);
 
 value_tyBM
 ROUTINEOBJNAME_BM (_67IapmpeTLU_8MQKtlK8iAD)    // dump_data°class
-(struct stackframe_stBM * stkf,
- const value_tyBM arg1,
- const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4_
- __attribute__ ((unused)), const quasinode_tyBM * restargs_
- __attribute__ ((unused)))
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // reciever
+ const value_tyBM arg2,         // dumpob
+ const value_tyBM arg3,         // strbufob
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv; objectval_tyBM * dumpob;
@@ -456,7 +460,11 @@ extern objrout_sigBM ROUTINEOBJNAME_BM (_4DvEF1tVGFD_6VVLpFn6FPW);
 
 value_tyBM
 ROUTINEOBJNAME_BM (_4DvEF1tVGFD_6VVLpFn6FPW)    //  dump_scan°hset_object
-(struct stackframe_stBM * stkf, const value_tyBM arg1, const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4_ __attribute__ ((unused)),   //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // reciever
+ const value_tyBM arg2,         // dumpob
+ const value_tyBM arg3_ __attribute__ ((unused)),       //
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
@@ -470,7 +478,7 @@ ROUTINEOBJNAME_BM (_4DvEF1tVGFD_6VVLpFn6FPW)    //  dump_scan°hset_object
   WEAKASSERT_BM (valtype_BM (arg2) == typayl_dumper_BM);
   extendedval_tyBM payl = objpayload_BM (_.recv);
   WEAKASSERT_BM (valtype_BM (payl) == typayl_hashsetobj_BM);
-  ASSERT_BM (arg3 == NULL);
+  WEAKASSERT_BM (arg3_ == NULL);
   ASSERT_BM (restargs_ == NULL);
   _.setv = hashsetobj_to_set_BM (payl);
   obdumpscanvalue_BM (_.dumpob, (value_tyBM) _.setv, 0);
@@ -485,7 +493,10 @@ extern objrout_sigBM ROUTINEOBJNAME_BM (_7GMLV81ntO3_4NHTv7fCL0A);
 
 value_tyBM
 ROUTINEOBJNAME_BM (_7GMLV81ntO3_4NHTv7fCL0A)    // dump_data°hset_object
-(struct stackframe_stBM * stkf, const value_tyBM arg1, const value_tyBM arg2, const value_tyBM arg3,    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // reciever
+ const value_tyBM arg2,         // dumpob
+ const value_tyBM arg3,         // strbufob
  const value_tyBM arg4_ __attribute__ ((unused)),       //
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
@@ -506,8 +517,8 @@ ROUTINEOBJNAME_BM (_7GMLV81ntO3_4NHTv7fCL0A)    // dump_data°hset_object
   WEAKASSERT_BM (objhasstrbufferpayl_BM (_.bufob));
   WEAKASSERT_BM (restargs_ == NULL);
   WEAKASSERT_BM (valtype_BM (objpayload_BM (_.recv)) == typayl_hashsetobj_BM);
-  ASSERT_BM (arg3 == NULL);
   ASSERT_BM (restargs_ == NULL);
+  // emit todo (put {elements....})
   _.setv = hashsetobj_to_set_BM (objpayload_BM (_.recv));
   objstrbufferprintfpayl_BM (_.bufob, "!~ todo (~\t");
   objstrbuffermoreindentpayl_BM (_.bufob);
@@ -772,7 +783,10 @@ extern objrout_sigBM ROUTINEOBJNAME_BM (_0y90r6nyAYP_2MmfH2V00B1);
 
 value_tyBM
 ROUTINEOBJNAME_BM (_0y90r6nyAYP_2MmfH2V00B1)    // dump_data°vector_object
-(struct stackframe_stBM * stkf, const value_tyBM arg1, const value_tyBM arg2, const value_tyBM arg3,    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // reciever
+ const value_tyBM arg2,         // dumpob 
+ const value_tyBM arg3,         // strbufob
  const value_tyBM arg4_ __attribute__ ((unused)),       //
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
@@ -823,7 +837,8 @@ value_tyBM
 ROUTINEOBJNAME_BM (_8MU0cEcpEYN_5SVe0jrv36o)    //  dump_scan°assoc_object
 (struct stackframe_stBM * stkf, const value_tyBM arg1,  // recv
  const value_tyBM arg2,         // dumpob
- const value_tyBM arg3, const value_tyBM arg4_ __attribute__ ((unused)),        //
+ const value_tyBM arg3_ __attribute__ ((unused)),       //
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
@@ -842,7 +857,7 @@ ROUTINEOBJNAME_BM (_8MU0cEcpEYN_5SVe0jrv36o)    //  dump_scan°assoc_object
   anyassoc_tyBM *assoc = assoccast_BM (objpayload_BM (_.recv));
   if (!assoc)
     LOCALRETURN_BM (NULL);
-  ASSERT_BM (arg3 == NULL);
+  ASSERT_BM (arg3_ == NULL);
   ASSERT_BM (restargs == NULL);
   _.setv = assoc_setattrs_BM (assoc);
   obdumpscanvalue_BM (_.dumpob, (const value_tyBM) _.setv, 0);
@@ -873,8 +888,12 @@ extern objrout_sigBM ROUTINEOBJNAME_BM (_9EytjXNb76D_1ZP3iSk9cuu);
 
 value_tyBM
 ROUTINEOBJNAME_BM (_9EytjXNb76D_1ZP3iSk9cuu)    // dump_data°assoc_object
-(struct stackframe_stBM * stkf, const value_tyBM arg1, const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4 __attribute__ ((unused)),    //
- const quasinode_tyBM * restargs)
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // reciever
+ const value_tyBM arg2,         // dumpob
+ const value_tyBM arg3,         // strbufob
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv; objectval_tyBM * dumpob;
@@ -892,8 +911,7 @@ ROUTINEOBJNAME_BM (_9EytjXNb76D_1ZP3iSk9cuu)    // dump_data°assoc_object
      objectdbg_BM (_.recv), objectdbg1_BM (_.dumpob),
      objectdbg2_BM (_.bufob));
   WEAKASSERT_BM (objhasstrbufferpayl_BM (_.bufob));
-  WEAKASSERT_BM (restargs == NULL);
-  ASSERT_BM (restargs == NULL);
+  WEAKASSERT_BM (restargs_ == NULL);
   objectval_tyBM *k_dump_value = BMK_1FEnnpEkGdI_5DAcVDL5XHG;
   ASSERT_BM (k_dump_value != NULL);
   objectval_tyBM *k_put = BMK_9pvzBeIKHXF_8YDPCrQ6OEK;
@@ -1114,10 +1132,13 @@ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 //// for the method to dump_data a specially_dumpable
 extern objrout_sigBM ROUTINEOBJNAME_BM (_6PmxiZR9WBe_13DwWExCALl);
 
-value_tyBM ROUTINEOBJNAME_BM (_6PmxiZR9WBe_13DwWExCALl) (struct stackframe_stBM * stkf, const value_tyBM arg1, const value_tyBM arg2, const value_tyBM arg3,    //
-                                                         const value_tyBM
-                                                         arg4_
-                                                         __attribute__ ((unused)), const quasinode_tyBM * restargs_ __attribute__ ((unused)))
+value_tyBM
+ROUTINEOBJNAME_BM (_6PmxiZR9WBe_13DwWExCALl)    //
+(struct stackframe_stBM * stkf, const value_tyBM arg1,  // reciever
+ const value_tyBM arg2,         // dumpob
+ const value_tyBM arg3,         // strbufob
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv;
@@ -1131,6 +1152,7 @@ value_tyBM ROUTINEOBJNAME_BM (_6PmxiZR9WBe_13DwWExCALl) (struct stackframe_stBM 
   _.dumpob = arg2;
   WEAKASSERT_BM (objhasstrbufferpayl_BM (arg3));
   _.bufob = arg3;
+  ASSERT_BM (arg4_ == NULL);
   ASSERT_BM (restargs_ == NULL);
   _.closv = objgetattr_BM (_.recv, BMP_dump_data);
   if (isclosure_BM (_.closv))
@@ -1140,18 +1162,19 @@ value_tyBM ROUTINEOBJNAME_BM (_6PmxiZR9WBe_13DwWExCALl) (struct stackframe_stBM 
       LOCALRETURN_BM (_.resuv);
     }
   LOCALRETURN_BM (_.recv);
-}                               /* end ROUTINE _6PmxiZR9WBe_13DwWExCALl */
+}                               /* end dump_data°specially_dumpable _6PmxiZR9WBe_13DwWExCALl */
 
 
 //// for the method to dump_data a basiclo_function or any object with a value data
 extern objrout_sigBM ROUTINEOBJNAME_BM (_7D36kHemyWQ_0YfwWnUhR9Y);
 
-value_tyBM
-ROUTINEOBJNAME_BM (_7D36kHemyWQ_0YfwWnUhR9Y)
-(struct stackframe_stBM * stkf,
-const value_tyBM arg1,
-const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4_
-__attribute__ ((unused)), const quasinode_tyBM * restargs_ __attribute__ ((unused)))
+value_tyBM ROUTINEOBJNAME_BM (_7D36kHemyWQ_0YfwWnUhR9Y) (struct stackframe_stBM * stkf, const value_tyBM arg1,  // reciever
+                                                         const value_tyBM arg2, // dumpob
+                                                         const value_tyBM arg3, // strbufob
+                                                         const value_tyBM arg4_ __attribute__ ((unused)),       //
+                                                         const quasinode_tyBM
+                                                         * restargs_
+                                                         __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv;
@@ -3645,7 +3668,7 @@ ROUTINEOBJNAME_BM (_7iKya0Q5Jii_0mjPPia0yib)    //
       objputspacenum_BM (_.resobj, GlobalSp_BM);
     };
   unsigned assosiz = 0;
-  if (startix + 1 < nodwidth)
+  if (startix + 1 < (int) nodwidth)
     {
       _.curson = nodenthson_BM ((const value_tyBM) _.rnodv, startix + 1);
       if (istaggedint_BM (_.curson))
