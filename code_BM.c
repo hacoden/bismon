@@ -625,6 +625,8 @@ ROUTINEOBJNAME_BM (_91iTl2vqF09_72WJj4swbNi)    // put°hset_object
   for (unsigned ix = 0; ix < lnseq; ix++)
     {
       _.curob = sequencenthcomp_BM (_.putseqv, ix);
+      if (!_.curob)
+	continue;
       objhashsetaddpayl_BM (_.recv, _.curob);
     };
   LOCALRETURN_BM (_.recv);
