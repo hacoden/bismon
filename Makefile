@@ -41,7 +41,7 @@ all: bismon doc
 clean:
 	$(RM) .*~ *~ *% *.o *.so */*.so *.log */*~ */*.orig *.i *.orig *.gch README.html
 	$(RM) core* *.i *.ii *prof.out gmon.out
-	$(RM) *_BM.const.h
+	$(RM) *_BM.const.h _bm_allconsts.c
 	$(RM) modules/*.so modules/*.i bismon
 	$(RM) $(patsubst %.md,%.html, $(MARKDOWN_SOURCES))
 

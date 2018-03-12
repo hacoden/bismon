@@ -3586,6 +3586,7 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
 
 //////
 
+
 // assoc readmacro _7iKya0Q5Jii_0mjPPia0yib
 
 extern objrout_sigBM ROUTINEOBJNAME_BM (_7iKya0Q5Jii_0mjPPia0yib);
@@ -3667,12 +3668,13 @@ ROUTINEOBJNAME_BM (_7iKya0Q5Jii_0mjPPia0yib)    //
 }                               /* end readmacro:assoc _7iKya0Q5Jii_0mjPPia0yib */
 
 
-// readmacro:hset  _5bwk1hB1dJ2_6gcK1lRuzM3
 
-extern objrout_sigBM ROUTINEOBJNAME_BM (_5bwk1hB1dJ2_6gcK1lRuzM3);
+// readmacro:hset _2mWbSPeD8lw_8ea0EhwQUAa
+
+extern objrout_sigBM ROUTINEOBJNAME_BM (_2mWbSPeD8lw_8ea0EhwQUAa);
 
 value_tyBM
-ROUTINEOBJNAME_BM (_5bwk1hB1dJ2_6gcK1lRuzM3)    // readmacro:hset
+ROUTINEOBJNAME_BM (_2mWbSPeD8lw_8ea0EhwQUAa)    // readmacro:hset
 (struct stackframe_stBM * stkf, //
  const value_tyBM arg1,         // node
  const value_tyBM arg2,         // lineno
@@ -3680,7 +3682,7 @@ ROUTINEOBJNAME_BM (_5bwk1hB1dJ2_6gcK1lRuzM3)    // readmacro:hset
  const value_tyBM arg4,         // parsob
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
-  LOCALFRAME_BM (stkf, /*descr: */ BMK_5bwk1hB1dJ2_6gcK1lRuzM3,
+  LOCALFRAME_BM (stkf, /*descr: */ BMK_2mWbSPeD8lw_8ea0EhwQUAa,
                  value_tyBM rnodv;
                  value_tyBM inv; value_tyBM curson; objectval_tyBM * parsob;
                  objectval_tyBM * resobj;
@@ -3693,7 +3695,7 @@ ROUTINEOBJNAME_BM (_5bwk1hB1dJ2_6gcK1lRuzM3)    // readmacro:hset
   int colpos = getint_BM (arg3);
   int startix = 0;
   unsigned nodwidth = nodewidth_BM ((const value_tyBM) _.rnodv);
-  DBGPRINTF_BM ("start readmacro:hset 5bwk1hB1dJ2_6gcK1lRuzM3"
+  DBGPRINTF_BM ("start readmacro:hset 2mWbSPeD8lw_8ea0EhwQUAa"
                 " lineno=%d colpos=%d nodwidth=%u", lineno, colpos, nodwidth);
   if (!isobject_BM (arg4))
     LOCALRETURN_BM (NULL);
@@ -3745,4 +3747,4 @@ ROUTINEOBJNAME_BM (_5bwk1hB1dJ2_6gcK1lRuzM3)    // readmacro:hset
   DBGPRINTF_BM ("readmacro:hset resobj=%s hsetsiz=%u",
                 objectdbg_BM (_.resobj), hsetsiz);
   LOCALRETURN_BM (_.resobj);
-}                               /* end readmacro:hset  _5bwk1hB1dJ2_6gcK1lRuzM3 */
+}                               /* end readmacro:hset  _2mWbSPeD8lw_8ea0EhwQUAa */

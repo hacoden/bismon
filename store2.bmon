@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 251 objects
+// for 253 objects
 // with 0 modules
 
 
@@ -1076,6 +1076,19 @@ _6QdXYI1ivTg_8NnpdDMRQK5 ])
 ~)
 
 !)_3cRGd7uw43z_6OibwMICv3P
+
+
+
+!(_8RyQniG36zA_1c5YmZc3ysq |=hset|
+!~ name (~ hset
+~)
+!@ 1520842008.67
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "command for hset"
+!: _3EKD6vcwegI_3LMuXHuazib |=command_readmacro|
+ % _2mWbSPeD8lw_8ea0EhwQUAa ()
+!)_8RyQniG36zA_1c5YmZc3ysq
 
 
 
@@ -2247,6 +2260,14 @@ _0EfjiBTrXEo_3ppwTZ0M7xf |=foreach_in_tuple|
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "method for add\u00b0hset_object"
 !)_2juH5YMCcog_8pQGCuE5mod
+
+
+
+!(_2mWbSPeD8lw_8ea0EhwQUAa
+!|*
+!@ 1520842008.67
+!$_2Ir1i8qnrA4_3jSkierlc5z |=basiclo_function|
+!)_2mWbSPeD8lw_8ea0EhwQUAa
 
 
 
