@@ -807,7 +807,7 @@ ROUTINEOBJNAME_BM (_0y90r6nyAYP_2MmfH2V00B1)    // dump_data°vector_object
   ASSERT_BM (k_dump_value != NULL);
   objectval_tyBM *k_fill = BMK_8pmtJTuEbBF_4xNgNCOElwL;
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const objectval_tyBM * recv;
+                 objectval_tyBM * recv;
                  objectval_tyBM * dumpob; objectval_tyBM * bufob;
                  value_tyBM dumpres; value_tyBM nodv;
     );
@@ -847,7 +847,7 @@ ROUTINEOBJNAME_BM (_7BhZWKS2grS_3TnuK6o8ZFH)    //
 (struct stackframe_stBM * stkf, //
  const value_tyBM arg1,         // reciever
  const value_tyBM arg2,         // content
- const value_tyBM arg3,         //
+ const value_tyBM arg3_, __attribute__ ((unused))       //
  const value_tyBM arg4_ __attribute__ ((unused)),       //
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
@@ -3820,7 +3820,7 @@ ROUTINEOBJNAME_BM (_2mWbSPeD8lw_8ea0EhwQUAa)    // readmacro:hset
       objputspacenum_BM (_.resobj, GlobalSp_BM);
     };
   unsigned hsetsiz = 0;
-  if (startix + 1 < nodwidth)
+  if (startix + 1 < (int) nodwidth)
     {
       _.curson = nodenthson_BM ((const value_tyBM) _.rnodv, startix + 1);
       if (istaggedint_BM (_.curson))
@@ -3853,7 +3853,7 @@ ROUTINEOBJNAME_BM (_8RsUtTTwcw0_9DjQfQrNouU)    //  dump_scan°hashsetval_object
  const value_tyBM arg2,         // dumpob
  const value_tyBM arg3_ __attribute__ ((unused)),       //
  const value_tyBM arg4_ __attribute__ ((unused)),       //
- const quasinode_tyBM * restargs __attribute__ ((unused)))
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ BMK_8RsUtTTwcw0_9DjQfQrNouU,
                  const objectval_tyBM * recv;
@@ -3889,8 +3889,8 @@ ROUTINEOBJNAME_BM (_6UxkFEHhNQS_0f65oUlZ7b5)    // dump_data°hashsetval_object
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ BMK_6UxkFEHhNQS_0f65oUlZ7b5,
                  const objectval_tyBM * recv; objectval_tyBM * dumpob;
-                 objectval_tyBM * bufob; const setval_tyBM * setv;
-                 objectval_tyBM * curattrob;
+                 objectval_tyBM * bufob;
+                 const setval_tyBM * setv; objectval_tyBM * curattrob;
                  value_tyBM curval; value_tyBM contv;
                  value_tyBM dumpres;
     );
