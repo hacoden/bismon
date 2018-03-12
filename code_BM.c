@@ -3902,8 +3902,8 @@ ROUTINEOBJNAME_BM (_6UxkFEHhNQS_0f65oUlZ7b5)    // dump_data°hashsetval_object
   _.bufob = objectcast_BM (arg3);
   WEAKASSERT_BM (objhasstrbufferpayl_BM (_.bufob));
   WEAKASSERT_BM (objhashashsetvalpayl_BM (_.recv));
-  _.contv = objhashsetvalmakenodepayl_BM(_.recv, BMP_node);
-  unsigned nbcont = nodewidth_BM(_.contv);
+  _.contv = objhashsetvalmakenodepayl_BM (_.recv, BMP_node);
+  unsigned nbcont = nodewidth_BM (_.contv);
   objstrbufferprintfpayl_BM (_.bufob, "!~ todo (~\t");
   objstrbuffermoreindentpayl_BM (_.bufob);
   _.dumpres = send3_BM (k_reserve, BMP_dump_value,
@@ -3952,21 +3952,27 @@ ROUTINEOBJNAME_BM (_7IlDChYeWQk_1l1rM2cq5uj)    //
 extern objrout_sigBM ROUTINEOBJNAME_BM (_9O4E8Tcc2Fq_8MXrM73GJCM);
 
 value_tyBM
-ROUTINEOBJNAME_BM (_9O4E8Tcc2Fq_8MXrM73GJCM) //
-(struct stackframe_stBM* stkf, //
- const value_tyBM arg1, //
- const value_tyBM arg2, //
- const value_tyBM arg3, //
- const value_tyBM arg4_  __attribute__((unused)), //
- const quasinode_tyBM* restargs_  __attribute__((unused)))
+ROUTINEOBJNAME_BM (_9O4E8Tcc2Fq_8MXrM73GJCM)    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         //
+ const value_tyBM arg2,         //
+ const value_tyBM arg3,         //
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
-  LOCALFRAME_BM (stkf, /*descr:*/ BMK_9O4E8Tcc2Fq_8MXrM73GJCM,
-   value_tyBM resultv;
-  );
-#warning unimplemented _9O4E8Tcc2Fq_8MXrM73GJCM routine
-  WEAKASSERT_BM(false && "unimplemented _9O4E8Tcc2Fq_8MXrM73GJCM routine");
-  LOCALRETURN_BM(_.resultv);
-} /* end add°hashsetval_object _9O4E8Tcc2Fq_8MXrM73GJCM*/
+  LOCALFRAME_BM (stkf, /*descr: */ BMK_9O4E8Tcc2Fq_8MXrM73GJCM,
+                 value_tyBM valv;
+                 objectval_tyBM * obrecv;
+    );
+  _.obrecv = (objectval_tyBM *) arg1;
+  _.valv = arg2;
+  if (objhashashsetvalpayl_BM (_.obrecv))
+    {
+      objhashsetaddpayl_BM (_.obrecv, _.valv);
+      LOCALRETURN_BM (_.obrecv);
+    }
+  LOCALRETURN_BM (NULL);
+}                               /* end add°hashsetval_object _9O4E8Tcc2Fq_8MXrM73GJCM */
 
 
 
@@ -3974,18 +3980,24 @@ ROUTINEOBJNAME_BM (_9O4E8Tcc2Fq_8MXrM73GJCM) //
 extern objrout_sigBM ROUTINEOBJNAME_BM (_2WY2j1qroxH_1sjxiD6Yvad);
 
 value_tyBM
-ROUTINEOBJNAME_BM (_2WY2j1qroxH_1sjxiD6Yvad) //
-(struct stackframe_stBM* stkf, //
- const value_tyBM arg1, //
- const value_tyBM arg2, //
- const value_tyBM arg3, //
- const value_tyBM arg4_  __attribute__((unused)), //
- const quasinode_tyBM* restargs_  __attribute__((unused)))
+ROUTINEOBJNAME_BM (_2WY2j1qroxH_1sjxiD6Yvad)    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         //
+ const value_tyBM arg2,         //
+ const value_tyBM arg3,         //
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
-  LOCALFRAME_BM (stkf, /*descr:*/ BMK_2WY2j1qroxH_1sjxiD6Yvad,
-   value_tyBM resultv;
-  );
-#warning unimplemented _2WY2j1qroxH_1sjxiD6Yvad routine
-  WEAKASSERT_BM(false && "unimplemented _2WY2j1qroxH_1sjxiD6Yvad routine");
-  LOCALRETURN_BM(_.resultv);
-} /* end remove°hashsetval_object _2WY2j1qroxH_1sjxiD6Yvad*/
+  LOCALFRAME_BM (stkf, /*descr: */ BMK_2WY2j1qroxH_1sjxiD6Yvad,
+                 value_tyBM valv;
+                 objectval_tyBM * obrecv;
+    );
+  _.obrecv = (objectval_tyBM *) arg1;
+  _.valv = arg2;
+  if (objhashashsetvalpayl_BM (_.obrecv))
+    {
+      objhashsetremovepayl_BM (_.obrecv, _.valv);
+      LOCALRETURN_BM (_.obrecv);
+    }
+  LOCALRETURN_BM (NULL);
+}                               /* end remove°hashsetval_object _2WY2j1qroxH_1sjxiD6Yvad */
