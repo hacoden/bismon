@@ -821,7 +821,9 @@ extern objrout_sigBM ROUTINEOBJNAME_BM (_8MU0cEcpEYN_5SVe0jrv36o);
 
 value_tyBM
 ROUTINEOBJNAME_BM (_8MU0cEcpEYN_5SVe0jrv36o)    //  dump_scan°assoc_object
-(struct stackframe_stBM * stkf, const value_tyBM arg1, const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4 __attribute__ ((unused)),    //
+(struct stackframe_stBM * stkf, const value_tyBM arg1,  // recv
+ const value_tyBM arg2,         // dumpob
+ const value_tyBM arg3, const value_tyBM arg4_ __attribute__ ((unused)),        //
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
@@ -836,8 +838,6 @@ ROUTINEOBJNAME_BM (_8MU0cEcpEYN_5SVe0jrv36o)    //  dump_scan°assoc_object
   DBGPRINTF_BM
     ("dump_scan°assoc_object _8MU0cEcpEYN_5SVe0jrv36o recv=%s dumpob=%s",
      objectdbg_BM (_.recv), objectdbg1_BM (_.dumpob));
-  if (!objpayload_BM (_.recv))
-    LOCALRETURN_BM (_.recv);
   WEAKASSERT_BM (objhasassocpayl_BM (_.recv));
   anyassoc_tyBM *assoc = assoccast_BM (objpayload_BM (_.recv));
   if (!assoc)
@@ -850,11 +850,18 @@ ROUTINEOBJNAME_BM (_8MU0cEcpEYN_5SVe0jrv36o)    //  dump_scan°assoc_object
   for (unsigned ix = 0; ix < nbattr; ix++)
     {
       _.curattrob = setelemnth_BM (_.setv, ix);
+      DBGPRINTF_BM
+        ("dump_scan°assoc_object ix#%d recv=%s curattrob=%s",
+         ix, objectdbg_BM (_.recv), objectdbg1_BM (_.curattrob));
       if (!obdumpobjisdumpable_BM (_.dumpob, _.curattrob))
         continue;
       _.curval = assoc_getattr_BM (assoc, _.curattrob);
       obdumpscanvalue_BM (_.dumpob, _.curval, 0);
     }
+  _.dumpob = arg2;
+  DBGPRINTF_BM
+    ("dump_scan°assoc_object end _8MU0cEcpEYN_5SVe0jrv36o recv=%s dumpob=%s",
+     objectdbg_BM (_.recv), objectdbg1_BM (_.dumpob));
   LOCALRETURN_BM (_.recv);
 }                               /* end dump_scan°assoc_object ROUTINE _8MU0cEcpEYN_5SVe0jrv36o */
 
