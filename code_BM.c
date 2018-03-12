@@ -3888,12 +3888,13 @@ ROUTINEOBJNAME_BM (_6UxkFEHhNQS_0f65oUlZ7b5)    // dump_data°hashsetval_object
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ BMK_6UxkFEHhNQS_0f65oUlZ7b5,
-                 const objectval_tyBM * recv; objectval_tyBM * dumpob;
-                 objectval_tyBM * bufob;
+                 const objectval_tyBM * recv;
+                 objectval_tyBM * dumpob; objectval_tyBM * bufob;
                  const setval_tyBM * setv; objectval_tyBM * curattrob;
                  value_tyBM curval; value_tyBM contv;
                  value_tyBM dumpres;
     );
+  objectval_tyBM *k_reserve = BMK_2pwKyMVQyvI_3PH8nIPXjW0;
   WEAKASSERT_BM (isobject_BM (arg1));
   _.recv = arg1;
   WEAKASSERT_BM (obdumpgetdumper_BM (arg2) != NULL);
@@ -3904,3 +3905,35 @@ ROUTINEOBJNAME_BM (_6UxkFEHhNQS_0f65oUlZ7b5)    // dump_data°hashsetval_object
 #warning dump_data°hashsetval_object incomplete
   LOCALRETURN_BM (NULL);
 }                               /* end  dump_data°hashsetval_object _6UxkFEHhNQS_0f65oUlZ7b5 */
+
+// method reserve°hashsetval_object _7IlDChYeWQk_1l1rM2cq5uj
+
+extern objrout_sigBM ROUTINEOBJNAME_BM (_7IlDChYeWQk_1l1rM2cq5uj);
+
+value_tyBM
+ROUTINEOBJNAME_BM (_7IlDChYeWQk_1l1rM2cq5uj)    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // reciever
+ const value_tyBM arg2,         // sizev
+ const value_tyBM arg3,         //
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
+{
+  LOCALFRAME_BM (stkf, /*descr: */ BMK_7IlDChYeWQk_1l1rM2cq5uj,
+                 objectval_tyBM * obrecv;
+    );
+  if (!isobject_BM (arg1))
+    LOCALRETURN_BM (NULL);
+  if (!istaggedint_BM (arg2))
+    LOCALRETURN_BM (NULL);
+  _.obrecv = (objectval_tyBM *) arg1;
+  unsigned siz = getint_BM (arg2);
+  if (siz > MAXSIZE_BM / 4)
+    siz = MAXSIZE_BM / 4;
+  else if (siz < 3)
+    siz = 4;
+  objlock_BM (_.obrecv);
+  objputhashsetvalpayl_BM (_.obrecv, siz);
+  objunlock_BM (_.obrecv);
+  LOCALRETURN_BM (_.obrecv);
+}                               /* end reserve°hashsetval_object _7IlDChYeWQk_1l1rM2cq5uj */

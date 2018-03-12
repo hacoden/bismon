@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 257 objects
+// for 259 objects
 // with 0 modules
 
 
@@ -1085,6 +1085,7 @@ _6QdXYI1ivTg_8NnpdDMRQK5 ])
 !~ class (~ |supercl object:| _7T9OwSFlgov_0wVJaK1eZbn 
 ~: _0pSnxYMjpqQ_3opFGfXeh5o |=dump_data|  % _6UxkFEHhNQS_0f65oUlZ7b5 () 
 ~: _2oNMm2aR91J_4QthSpZxplW |=dump_scan|  % _8RsUtTTwcw0_9DjQfQrNouU () 
+~: _2pwKyMVQyvI_3PH8nIPXjW0 |=reserve|  % _7IlDChYeWQk_1l1rM2cq5uj () 
 ~: _9uRC9w2Gte9_5mW0NanaS19 |=browse_data|  % _9dKLCRPRn9Z_1tczFz5weBe ()
 ~)
 
@@ -1617,6 +1618,15 @@ _2mYaTh9kH4I_7ENiXcymRmy |=set|
 !: _0NnNXZqWvmz_1ucZGX0YPu1 |=command_arity|
  2
 !)_3OWP1zOtxz2_9uAVt50SUZO
+
+
+
+!(_2pwKyMVQyvI_3PH8nIPXjW0 |=reserve|
+!~ name (~ reserve
+~)
+!@ 1520878917.67
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!)_2pwKyMVQyvI_3PH8nIPXjW0
 
 
 
@@ -2848,6 +2858,16 @@ _36MhHxakHKT_1ZzV5Xoj5LX
  _9pvzBeIKHXF_8YDPCrQ6OEK |=put| ) ~)
 
 !)_7GMLV81ntO3_4NHTv7fCL0A
+
+
+
+!(_7IlDChYeWQk_1l1rM2cq5uj
+!|*
+!@ 1520878963.50
+!$_2Ir1i8qnrA4_3jSkierlc5z |=basiclo_function|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "method reserve\u00b0hashsetval_object"
+!)_7IlDChYeWQk_1l1rM2cq5uj
 
 
 
