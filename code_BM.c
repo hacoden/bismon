@@ -3841,3 +3841,66 @@ ROUTINEOBJNAME_BM (_2mWbSPeD8lw_8ea0EhwQUAa)    // readmacro:hset
                 objectdbg_BM (_.resobj), hsetsiz);
   LOCALRETURN_BM (_.resobj);
 }                               /* end readmacro:hset  _2mWbSPeD8lw_8ea0EhwQUAa */
+
+
+
+//// for the method to dump_scan°hashsetval_object
+extern objrout_sigBM ROUTINEOBJNAME_BM (_8RsUtTTwcw0_9DjQfQrNouU);
+
+value_tyBM
+ROUTINEOBJNAME_BM (_8RsUtTTwcw0_9DjQfQrNouU)    //  dump_scan°hashsetval_object
+(struct stackframe_stBM * stkf, const value_tyBM arg1,  // recv
+ const value_tyBM arg2,         // dumpob
+ const value_tyBM arg3_ __attribute__ ((unused)),       //
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM * restargs __attribute__ ((unused)))
+{
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ BMK_8RsUtTTwcw0_9DjQfQrNouU,
+                 const objectval_tyBM * recv;
+                 const objectval_tyBM * curattrob; value_tyBM curval;
+                 objectval_tyBM * dumpob; const setval_tyBM * setv;
+    );
+  WEAKASSERT_BM (isobject_BM (arg1));
+  _.recv = arg1;
+  WEAKASSERT_BM (obdumpgetdumper_BM (arg2) != NULL);
+  _.dumpob = arg2;
+  WEAKASSERT_BM (restargs_ == NULL);
+  WEAKASSERT_BM (objhashashsetvalpayl_BM (_.recv));
+  for (_.curval = objhashsetvalfirstpayl_BM (_.recv); _.curval != NULL;
+       _.curval = objhashsetvalnextpayl_BM (_.recv, _.curval))
+    {
+      obdumpscanvalue_BM (_.dumpob, _.curval, 0);
+    }
+  LOCALRETURN_BM (_.recv);
+}                               /* end dump_scan°hashsetval_object */
+
+
+// dump_data°hashsetval_object
+extern objrout_sigBM ROUTINEOBJNAME_BM (_6UxkFEHhNQS_0f65oUlZ7b5);
+
+value_tyBM
+ROUTINEOBJNAME_BM (_6UxkFEHhNQS_0f65oUlZ7b5)    // dump_data°hashsetval_object
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // reciever
+ const value_tyBM arg2,         // dumpob
+ const value_tyBM arg3,         // strbufob
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
+{
+  LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ BMK_6UxkFEHhNQS_0f65oUlZ7b5,
+                 const objectval_tyBM * recv; objectval_tyBM * dumpob;
+                 objectval_tyBM * bufob; const setval_tyBM * setv;
+                 objectval_tyBM * curattrob;
+                 value_tyBM curval; value_tyBM contv;
+                 value_tyBM dumpres;
+    );
+  WEAKASSERT_BM (isobject_BM (arg1));
+  _.recv = arg1;
+  WEAKASSERT_BM (obdumpgetdumper_BM (arg2) != NULL);
+  _.dumpob = arg2;
+  _.bufob = objectcast_BM (arg3);
+  WEAKASSERT_BM (objhasstrbufferpayl_BM (_.bufob));
+  WEAKASSERT_BM (objhashashsetvalpayl_BM (_.recv));
+#warning dump_data°hashsetval_object incomplete
+  LOCALRETURN_BM (NULL);
+}                               /* end  dump_data°hashsetval_object _6UxkFEHhNQS_0f65oUlZ7b5 */
