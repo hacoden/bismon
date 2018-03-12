@@ -835,7 +835,7 @@ ROUTINEOBJNAME_BM (_8MU0cEcpEYN_5SVe0jrv36o)    //  dump_scan°assoc_object
   _.recv = arg1;
   WEAKASSERT_BM (obdumpgetdumper_BM (arg2) != NULL);
   _.dumpob = arg2;
-  DBGPRINTF_BM
+  NONPRINTF_BM
     ("dump_scan°assoc_object _8MU0cEcpEYN_5SVe0jrv36o recv=%s dumpob=%s",
      objectdbg_BM (_.recv), objectdbg1_BM (_.dumpob));
   WEAKASSERT_BM (objhasassocpayl_BM (_.recv));
@@ -850,7 +850,7 @@ ROUTINEOBJNAME_BM (_8MU0cEcpEYN_5SVe0jrv36o)    //  dump_scan°assoc_object
   for (unsigned ix = 0; ix < nbattr; ix++)
     {
       _.curattrob = setelemnth_BM (_.setv, ix);
-      DBGPRINTF_BM
+      NONPRINTF_BM
         ("dump_scan°assoc_object ix#%d recv=%s curattrob=%s",
          ix, objectdbg_BM (_.recv), objectdbg1_BM (_.curattrob));
       if (!obdumpobjisdumpable_BM (_.dumpob, _.curattrob))
@@ -859,7 +859,7 @@ ROUTINEOBJNAME_BM (_8MU0cEcpEYN_5SVe0jrv36o)    //  dump_scan°assoc_object
       obdumpscanvalue_BM (_.dumpob, _.curval, 0);
     }
   _.dumpob = arg2;
-  DBGPRINTF_BM
+  NONPRINTF_BM
     ("dump_scan°assoc_object end _8MU0cEcpEYN_5SVe0jrv36o recv=%s dumpob=%s",
      objectdbg_BM (_.recv), objectdbg1_BM (_.dumpob));
   LOCALRETURN_BM (_.recv);
@@ -887,7 +887,7 @@ ROUTINEOBJNAME_BM (_9EytjXNb76D_1ZP3iSk9cuu)    // dump_data°assoc_object
   WEAKASSERT_BM (obdumpgetdumper_BM (arg2) != NULL);
   _.dumpob = arg2;
   _.bufob = objectcast_BM (arg3);
-  DBGPRINTF_BM
+  NONPRINTF_BM
     ("dump_data°assoc_object _9EytjXNb76D_1ZP3iSk9cuu recv=%s dumpob=%s bufob=%s",
      objectdbg_BM (_.recv), objectdbg1_BM (_.dumpob),
      objectdbg2_BM (_.bufob));
