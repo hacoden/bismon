@@ -805,12 +805,11 @@ ROUTINEOBJNAME_BM (_0y90r6nyAYP_2MmfH2V00B1)    // dump_data°vector_object
 {
   objectval_tyBM *k_dump_value = BMK_1FEnnpEkGdI_5DAcVDL5XHG;
   ASSERT_BM (k_dump_value != NULL);
-  objectval_tyBM *k_put = BMK_9pvzBeIKHXF_8YDPCrQ6OEK;
-  ASSERT_BM (k_put != NULL);
+  objectval_tyBM *k_fill = BMK_8pmtJTuEbBF_4xNgNCOElwL;
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  const objectval_tyBM * recv;
                  objectval_tyBM * dumpob; objectval_tyBM * bufob;
-                 value_tyBM dumpres;
+                 value_tyBM dumpres; value_tyBM nodv;
     );
   WEAKASSERT_BM (isobject_BM (arg1));
   _.recv = arg1;
@@ -819,23 +818,22 @@ ROUTINEOBJNAME_BM (_0y90r6nyAYP_2MmfH2V00B1)    // dump_data°vector_object
   _.bufob = objectcast_BM (arg3);
   WEAKASSERT_BM (objhasstrbufferpayl_BM (_.bufob));
   WEAKASSERT_BM (restargs_ == NULL);
-  WEAKASSERT_BM (valtype_BM (objpayload_BM (_.recv)) == typayl_vectval_BM);
+  WEAKASSERT_BM (objhasdatavectpayl_BM (_.recv));
   ASSERT_BM (arg3 == NULL);
   ASSERT_BM (restargs_ == NULL);
-  /**
+  // emit todo (fill *node (vectcomp...))
+  _.nodv = objdatavecttonodepayl_BM (_.recv, BMP_node);
   objstrbufferprintfpayl_BM (_.bufob, "!~ todo (~\t");
   objstrbuffermoreindentpayl_BM (_.bufob);
-  _.dumpres = send3_BM (k_put, BMP_dump_value,
+  _.dumpres = send3_BM (k_fill, BMP_dump_value,
                         (struct stackframe_stBM *) &_,
                         _.bufob, _.dumpob, taggedint_BM (0));
   objstrbufferprintfpayl_BM (_.bufob, "\t");
-  _.dumpres = send3_BM ((value_tyBM) _.setv, BMP_dump_value,
+  _.dumpres = send3_BM ((value_tyBM) _.nodv, BMP_dump_value,
                         (struct stackframe_stBM *) &_,
                         _.bufob, _.dumpob, taggedint_BM (0));
   objstrbufferlessindentpayl_BM (_.bufob);
-  objstrbufferappendcstr_BM (_.bufob, "\n~)\n");
-  **/
-#warning dump_data°vector_object unimplemented
+  objstrbufferappendcstrpayl_BM (_.bufob, "\n~)\n");
   LOCALRETURN_BM (_.recv);
 }                               /* end dump_data vector_object ROUTINE_0y90r6nyAYP_2MmfH2V00B1  */
 
@@ -876,7 +874,7 @@ ROUTINEOBJNAME_BM (_7BhZWKS2grS_3TnuK6o8ZFH)    //
   else
     LOCALRETURN_BM (NULL);
   objlock_BM (_.recv);
-  objputdatavectpayl_BM (_recv, ilen);
+  objputdatavectpayl_BM (_.recv, ilen);
   if (isnode_BM (_.contv))
     {
       unsigned nw = nodewidth_BM (_.contv);
