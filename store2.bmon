@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 253 objects
+// for 255 objects
 // with 0 modules
 
 
@@ -935,6 +935,17 @@ _6QdXYI1ivTg_8NnpdDMRQK5 ])
 !@ 1519395689.35
 !$_7T9OwSFlgov_0wVJaK1eZbn |=object|
 !)_6yWldsq3Rmk_01WqTfwSIDV
+
+
+
+!(_8pmtJTuEbBF_4xNgNCOElwL |=fill|
+!~ name (~ fill
+~)
+!@ 1520864842.67
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "selector, e.g. to fill vector_object"
+!)_8pmtJTuEbBF_4xNgNCOElwL
 
 
 
@@ -1903,7 +1914,8 @@ _7XasLoEUKwe_9upxyFeheD5
  % _0y90r6nyAYP_2MmfH2V00B1 ()
 !: _2oNMm2aR91J_4QthSpZxplW |=dump_scan|
  % _99PsYq2Nw3w_9q4BJNeQ6Re ()
-!~ class (~ |supercl object:| _7T9OwSFlgov_0wVJaK1eZbn
+!~ class (~ |supercl object:| _7T9OwSFlgov_0wVJaK1eZbn 
+~: _8pmtJTuEbBF_4xNgNCOElwL |=fill|  % _7BhZWKS2grS_3TnuK6o8ZFH ()
 ~)
 
 !)_0Ie11LN3K5q_0mcL2jRBwgk
@@ -2780,6 +2792,16 @@ _36MhHxakHKT_1ZzV5Xoj5LX
  _4RFtYFUdfau_7Vm5jZ4Wm8e |=run| ) ~)
 
 !)_7sg0DjYTA8n_66vhff9SgXH
+
+
+
+!(_7BhZWKS2grS_3TnuK6o8ZFH
+!|*
+!@ 1520864901.61
+!$_2Ir1i8qnrA4_3jSkierlc5z |=basiclo_function|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "method fill\u00b0vector_object"
+!)_7BhZWKS2grS_3TnuK6o8ZFH
 
 
 

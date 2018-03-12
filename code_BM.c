@@ -483,7 +483,7 @@ ROUTINEOBJNAME_BM (_4DvEF1tVGFD_6VVLpFn6FPW)    //  dump_scan°hset_object
   _.setv = hashsetobj_to_set_BM (payl);
   obdumpscanvalue_BM (_.dumpob, (value_tyBM) _.setv, 0);
   LOCALRETURN_BM ((value_tyBM) _.recv);
-}                               /* end dump_scan°set_object ROUTINE _4DvEF1tVGFD_6VVLpFn6FPW */
+}                               /* end dump_scan°hset_object ROUTINE _4DvEF1tVGFD_6VVLpFn6FPW */
 
 
 
@@ -626,7 +626,7 @@ ROUTINEOBJNAME_BM (_91iTl2vqF09_72WJj4swbNi)    // put°hset_object
     {
       _.curob = sequencenthcomp_BM (_.putseqv, ix);
       if (!_.curob)
-	continue;
+        continue;
       objhashsetaddpayl_BM (_.recv, _.curob);
     };
   LOCALRETURN_BM (_.recv);
@@ -758,23 +758,34 @@ extern objrout_sigBM ROUTINEOBJNAME_BM (_99PsYq2Nw3w_9q4BJNeQ6Re);
 
 value_tyBM
 ROUTINEOBJNAME_BM (_99PsYq2Nw3w_9q4BJNeQ6Re)    //  dump_scan°vector_object
-(struct stackframe_stBM * stkf, const value_tyBM arg1, const value_tyBM arg2, const value_tyBM arg3, const value_tyBM arg4_ __attribute__ ((unused)),   //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // reciever
+ const value_tyBM arg2,         // dumpob
+ const value_tyBM arg3_ __attribute__ ((unused)),       //
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const objectval_tyBM * recv; objectval_tyBM * dumpob;
+                 objectval_tyBM * recv; objectval_tyBM * dumpob;
                  value_tyBM compv;
     );
   WEAKASSERT_BM (isobject_BM (arg1));
   _.recv = arg1;
   _.dumpob = objectcast_BM (arg2);
   WEAKASSERT_BM (obdumpgetdumper_BM (_.dumpob) != NULL);
-  WEAKASSERT_BM (valtype_BM (arg2) == typayl_dumper_BM);
+  WEAKASSERT_BM (objhasdatavectpayl_BM (_.recv));
   extendedval_tyBM payl = objpayload_BM (_.recv);
   WEAKASSERT_BM (valtype_BM (payl) == typayl_vectval_BM);
-  ASSERT_BM (arg3 == NULL);
-#warning incomplete  dump_scan°vector_object _99PsYq2Nw3w_9q4BJNeQ6Re
-  ASSERT_BM (restargs_ == NULL);
+  ASSERT_BM (arg3_ == NULL);
+  unsigned dvlen = objdatavectlengthpayl_BM (_.recv);
+  for (unsigned ix = 0; ix < dvlen; ix++)
+    {
+      _.compv = objdatavectnthpayl_BM (_.recv, dvlen);
+      if (!_.compv)
+        continue;
+      obdumpscanvalue_BM (_.dumpob, (value_tyBM) _.compv, 0);
+    }
+  _.compv = NULL;
   LOCALRETURN_BM ((value_tyBM) _.recv);
 }                               /* end dump_scan°vector_object ROUTINE _99PsYq2Nw3w_9q4BJNeQ6Re */
 
@@ -828,6 +839,65 @@ ROUTINEOBJNAME_BM (_0y90r6nyAYP_2MmfH2V00B1)    // dump_data°vector_object
   LOCALRETURN_BM (_.recv);
 }                               /* end dump_data vector_object ROUTINE_0y90r6nyAYP_2MmfH2V00B1  */
 
+
+// method fill°vector_object _7BhZWKS2grS_3TnuK6o8ZFH
+
+extern objrout_sigBM ROUTINEOBJNAME_BM (_7BhZWKS2grS_3TnuK6o8ZFH);
+
+value_tyBM
+ROUTINEOBJNAME_BM (_7BhZWKS2grS_3TnuK6o8ZFH)    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // reciever
+ const value_tyBM arg2,         // content
+ const value_tyBM arg3,         //
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
+{
+  LOCALFRAME_BM (stkf, /*descr: */ BMK_7BhZWKS2grS_3TnuK6o8ZFH,
+                 objectval_tyBM * recv; value_tyBM contv;
+                 value_tyBM compv;
+                 value_tyBM resultv;
+    );
+  _.recv = objectcast_BM (arg1);
+  _.contv = arg2;
+  unsigned ilen = 0;
+  if (istaggedint_BM (_.contv))
+    {
+      ilen = getint_BM (_.contv);
+      if (ilen < 3)
+        ilen = 3;
+      else if (ilen > MAXSIZE_BM / 4)
+        ilen = MAXSIZE_BM / 4;
+    }
+  else if (isnode_BM (_.contv))
+    ilen = nodewidth_BM (_.contv) + 1;
+  else if (issequence_BM (_.contv))
+    ilen = sequencesize_BM (_.contv) + 1;
+  else
+    LOCALRETURN_BM (NULL);
+  objlock_BM (_.recv);
+  objputdatavectpayl_BM (_recv, ilen);
+  if (isnode_BM (_.contv))
+    {
+      unsigned nw = nodewidth_BM (_.contv);
+      for (int ix = 0; ix < (int) nw; ix++)
+        {
+          _.compv = nodenthson_BM (_.contv, ix);
+          objdatavectappendpayl_BM (_.recv, _.compv);
+        }
+    }
+  else if (issequence_BM (_.contv))
+    {
+      unsigned siz = sequencesize_BM (_.contv);
+      for (int ix = 0; ix < (int) siz; ix++)
+        {
+          _.compv = sequencenthcomp_BM (_.contv, ix);
+          objdatavectappendpayl_BM (_.recv, _.compv);
+        }
+    }
+  objunlock_BM (_.recv);
+  LOCALRETURN_BM (_.recv);
+}                               /* end fill°vector_object  _7BhZWKS2grS_3TnuK6o8ZFH */
 
 
 /****************************************************************/
