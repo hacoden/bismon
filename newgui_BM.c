@@ -1185,15 +1185,11 @@ parsecommandbuf_newgui_BM (struct
 
 // for $:<var>
 const objectval_tyBM *
-parsdollarobj_newguicmd_BM (struct
-                            parser_stBM
-                            *pars,
-                            unsigned
-                            lineno,
-                            unsigned
-                            colpos,
-                            const
-                            value_tyBM varname, struct stackframe_stBM *stkf)
+parsdollarobj_newguicmd_BM (struct parser_stBM *pars,   //
+                            unsigned lineno,
+                            unsigned colpos,
+                            const value_tyBM varname,
+                            struct stackframe_stBM *stkf)
 {
 
   LOCALFRAME_BM ( /*prev: */ stkf,
@@ -1207,15 +1203,15 @@ parsdollarobj_newguicmd_BM (struct
   else if (isobject_BM (varname))
     varstr = findobjectname_BM (varname);
   if (!varstr)
-    parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,
-                          "invalid $:<var>");
+    parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
+                          lineno, colpos, "invalid $:<var>");
   _.val = find_named_value_newgui_BM (varstr, (struct stackframe_stBM *) &_);
   if (!_.val && !nobuild)
-    parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,
-                          "not found $:%s", varstr);
+    parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
+                          lineno, colpos, "not found $:%s", varstr);
   if (!isobject_BM (_.val) && !nobuild)
-    parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_, lineno, colpos,
-                          "non-object $:%s", varstr);
+    parsererrorprintf_BM (pars, (struct stackframe_stBM *) &_,
+                          lineno, colpos, "non-object $:%s", varstr);
   GtkTextIter it = EMPTY_TEXT_ITER_BM, endit = EMPTY_TEXT_ITER_BM;
   gtk_text_buffer_get_iter_at_line (commandbuf_BM, &it, lineno - 1);
   gtk_text_iter_forward_chars (&it, colpos);
