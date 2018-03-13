@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 264 objects
+// for 263 objects
 // with 0 modules
 
 
@@ -1088,28 +1088,6 @@ _6QdXYI1ivTg_8NnpdDMRQK5 ])
 !: _3EKD6vcwegI_3LMuXHuazib |=command_readmacro|
  % _2mWbSPeD8lw_8ea0EhwQUAa ()
 !)_8RyQniG36zA_1c5YmZc3ysq
-
-
-
-!(_8c9otZ4pwR6_55k81qyyYV2 |=hset_object|
-!~ name (~ hset_object
-~)
-!@ 1511289121.67
-!$_0LK4TzFd6u1_0JFUsrQ4odG |=class|
-!: _01h86SAfOfg_1q2oMegGRwW |=comment|
- "class for objects with hashed set data"
-!~ class (~ |supercl object:| _7T9OwSFlgov_0wVJaK1eZbn 
-~: _0pSnxYMjpqQ_3opFGfXeh5o |=dump_data|  % _7GMLV81ntO3_4NHTv7fCL0A () 
-~: _1dzZlwqKdLH_8HjkBsL9Mar |=add|  % _2juH5YMCcog_8pQGCuE5mod () 
-~: _2mYaTh9kH4I_7ENiXcymRmy |=set|  % _88cUYsDqSFO_0DKwKLSOmpm () 
-~: _2oNMm2aR91J_4QthSpZxplW |=dump_scan|  % _4DvEF1tVGFD_6VVLpFn6FPW () 
-~: _2LPrNfUHb6Y_1qOPmENNXqB |=get|  % _26FUvWKvkYr_5hyqhhV8NEh () 
-~: _3OWP1zOtxz2_9uAVt50SUZO |=remove|  % _5hedSPIXD0o_5ef69rR2kzb () 
-~: _9pvzBeIKHXF_8YDPCrQ6OEK |=put|  % _91iTl2vqF09_72WJj4swbNi () 
-~: _9uRC9w2Gte9_5mW0NanaS19 |=browse_data|  % _4IshjBIv6ol_5korHKUIjeK ()
-~)
-
-!)_8c9otZ4pwR6_55k81qyyYV2
 
 
 
