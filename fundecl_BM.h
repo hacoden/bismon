@@ -537,8 +537,7 @@ extern void datavectgckeep_BM (struct garbcoll_stBM *gc,
 
 
 //////////////// obj datavect payload
-static inline void objputdatavectpayl_BM        //
-  (objectval_tyBM * obj, unsigned inisiz);
+extern void objputdatavectpayl_BM (objectval_tyBM * obj, unsigned inisiz);
 static inline struct datavectval_stBM *objgetdatavectpayl_BM    //
   (objectval_tyBM * obj);
 static inline bool objhasdatavectpayl_BM (objectval_tyBM * obj);

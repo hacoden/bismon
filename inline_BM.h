@@ -868,15 +868,6 @@ datavect_insertone_BM (struct datavectval_stBM *dvec, int rk, value_tyBM val)
 }                               /* end datavect_insertone_BM  */
 
 ////////////////
-void objputdatavectpayl_BM      //
-  (objectval_tyBM * obj, unsigned inisiz)
-{
-  if (!isobject_BM ((value_tyBM) obj))
-    return;
-  struct datavectval_stBM *dvec = datavect_grow_BM (NULL, inisiz);
-  objputpayload_BM (obj, dvec);
-}                               /* end objputdatavectpayl_BM */
-
 
 struct datavectval_stBM *
 objgetdatavectpayl_BM (objectval_tyBM * obj)

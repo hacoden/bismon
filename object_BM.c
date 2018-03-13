@@ -1081,6 +1081,16 @@ objputhashsetpayl_BM (objectval_tyBM * obj, unsigned inisiz)
 }                               /* end objputhashsetpayl_BM */
 
 
+void objputdatavectpayl_BM (objectval_tyBM * obj, unsigned inisiz)
+{
+  if (!isobject_BM ((value_tyBM) obj))
+    return;
+  struct datavectval_stBM *dvec = datavect_grow_BM (NULL, inisiz);
+  objputpayload_BM (obj, dvec);
+  if (objclass_BM (obj) == BMP_object)
+    objputclass_BM (obj, BMP_vector_object);
+}                               /* end objputdatavectpayl_BM */
+
 
 ////////////////////////////////////////////////////////////////
 

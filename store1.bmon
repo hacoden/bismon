@@ -1,5 +1,5 @@
 // generated file store1.bmon
-// for 52 objects
+// for 53 objects
 // with 0 modules
 
 
@@ -639,6 +639,23 @@ _4ysNY0rIzNK_7JgIhrjYpxD |=tuplety|
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "for variables"
 !)_5ucAZimYynS_4VA0XHvr1nW
+
+
+
+!(_0Ie11LN3K5q_0mcL2jRBwgk |=vector_object|
+!~ name (~ vector_object
+~)
+!@ 1520947316.27
+!$_0LK4TzFd6u1_0JFUsrQ4odG |=class|
+!: _0pSnxYMjpqQ_3opFGfXeh5o |=dump_data|
+ % _0y90r6nyAYP_2MmfH2V00B1 ()
+!: _2oNMm2aR91J_4QthSpZxplW |=dump_scan|
+ % _99PsYq2Nw3w_9q4BJNeQ6Re ()
+!~ class (~ |supercl object:| _7T9OwSFlgov_0wVJaK1eZbn 
+~: _8pmtJTuEbBF_4xNgNCOElwL |=fill|  % _7BhZWKS2grS_3TnuK6o8ZFH ()
+~)
+
+!)_0Ie11LN3K5q_0mcL2jRBwgk
 
 
 
