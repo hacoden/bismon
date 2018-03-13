@@ -218,6 +218,7 @@ dump_BM (const char *dirname, struct stackframe_stBM *stkf)
   duptr->dump_startcputime = cputime_BM ();
   duptr->dump_object = _.duobj;
   objputpayload_BM (_.duobj, duptr);
+  objputclass_BM (_.duobj, BMP_dumper_object);
   dump_scan_pass_BM (duptr, (struct stackframe_stBM *) &_);
   dump_run_todo_BM (duptr, (struct stackframe_stBM *) &_);
   garbage_collect_if_wanted_BM ((struct stackframe_stBM *) &_);
