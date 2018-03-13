@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 263 objects
+// for 262 objects
 // with 0 modules
 
 
@@ -1057,24 +1057,6 @@ _6QdXYI1ivTg_8NnpdDMRQK5 ])
 ~)
 
 !)_1DdzQEqzTvJ_1mjRDRDUdTw
-
-
-
-!(_3cRGd7uw43z_6OibwMICv3P |=hashsetval_object|
-!~ name (~ hashsetval_object
-~)
-!@ 1520706125.04
-!$_0LK4TzFd6u1_0JFUsrQ4odG |=class|
-!~ class (~ |supercl object:| _7T9OwSFlgov_0wVJaK1eZbn 
-~: _0pSnxYMjpqQ_3opFGfXeh5o |=dump_data|  % _6UxkFEHhNQS_0f65oUlZ7b5 () 
-~: _1dzZlwqKdLH_8HjkBsL9Mar |=add|  % _9O4E8Tcc2Fq_8MXrM73GJCM () 
-~: _2oNMm2aR91J_4QthSpZxplW |=dump_scan|  % _8RsUtTTwcw0_9DjQfQrNouU () 
-~: _2pwKyMVQyvI_3PH8nIPXjW0 |=reserve|  % _7IlDChYeWQk_1l1rM2cq5uj () 
-~: _3OWP1zOtxz2_9uAVt50SUZO |=remove|  % _2WY2j1qroxH_1sjxiD6Yvad () 
-~: _9uRC9w2Gte9_5mW0NanaS19 |=browse_data|  % _9dKLCRPRn9Z_1tczFz5weBe ()
-~)
-
-!)_3cRGd7uw43z_6OibwMICv3P
 
 
 
