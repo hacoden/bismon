@@ -3912,7 +3912,6 @@ ROUTINEOBJNAME_BM (_6UxkFEHhNQS_0f65oUlZ7b5)    // dump_data°hashsetval_object
   objstrbufferprintfpayl_BM (_.bufob, " %ld\n",
                              (unsigned long) prime_above_BM (4 +
                                                              6 * nbcont / 5));
-  objstrbufferlessindentpayl_BM (_.bufob);
   for (unsigned ix = 0; ix < nbcont; ix++)
     {
       _.curval = nodenthson_BM (_.contv, ix);
@@ -3927,6 +3926,7 @@ ROUTINEOBJNAME_BM (_6UxkFEHhNQS_0f65oUlZ7b5)    // dump_data°hashsetval_object
                             (struct stackframe_stBM *) &_,
                             _.bufob, _.dumpob, taggedint_BM (0));
     }
+  objstrbufferlessindentpayl_BM (_.bufob);
   objstrbufferappendcstrpayl_BM (_.bufob, "\n~)\n");
   LOCALRETURN_BM (_.recv);
 }                               /* end  dump_data°hashsetval_object _6UxkFEHhNQS_0f65oUlZ7b5 */
@@ -4062,20 +4062,21 @@ ROUTINEOBJNAME_BM (_8EqnYwr2sed_1Njis9lW96i)    //
 {
   LOCALFRAME_BM (stkf, /*descr: */ BMK_8EqnYwr2sed_1Njis9lW96i,
                  objectval_tyBM * obrecv;
-		 value_tyBM keyv;
-		 value_tyBM valv;
+                 value_tyBM keyv;
+                 value_tyBM valv;
     );
   if (!isobject_BM (arg1))
     LOCALRETURN_BM (NULL);
   if (!arg2)
     LOCALRETURN_BM (NULL);
-  _.obrecv = (objectval_tyBM*)arg1;
+  _.obrecv = (objectval_tyBM *) arg1;
   _.keyv = arg2;
   _.valv = arg3;
-  if (objhashashmapvalpayl_BM(_.obrecv)) {
-    objhashmapvalputpayl_BM(_.obrecv, _.keyv, _.valv);
-    LOCALRETURN_BM(_.obrecv);
-  }
+  if (objhashashmapvalpayl_BM (_.obrecv))
+    {
+      objhashmapvalputpayl_BM (_.obrecv, _.keyv, _.valv);
+      LOCALRETURN_BM (_.obrecv);
+    }
   LOCALRETURN_BM (NULL);
 }                               /* end method put°hashmapval_object _8EqnYwr2sed_1Njis9lW96i */
 
@@ -4085,19 +4086,30 @@ extern objrout_sigBM ROUTINEOBJNAME_BM (_5DQ2V9upFQv_3I4NiDiwsdf);
 value_tyBM
 ROUTINEOBJNAME_BM (_5DQ2V9upFQv_3I4NiDiwsdf)    //
 (struct stackframe_stBM * stkf, //
- const value_tyBM arg1,         //
- const value_tyBM arg2,         //
+ const value_tyBM arg1,         // reciever
+ const value_tyBM arg2,         // dumpob
  const value_tyBM arg3,         //
  const value_tyBM arg4_ __attribute__ ((unused)),       //
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM (stkf, /*descr: */ BMK_5DQ2V9upFQv_3I4NiDiwsdf,
-                 value_tyBM resultv;
+                 objectval_tyBM * recv; objectval_tyBM * dumpob;
+                 value_tyBM keyv;
+                 value_tyBM valv;
     );
-#warning unimplemented _5DQ2V9upFQv_3I4NiDiwsdf routine
-  WEAKASSERT_BM (false && "unimplemented _5DQ2V9upFQv_3I4NiDiwsdf routine");
-  LOCALRETURN_BM (_.resultv);
+  _.dumpob = objectcast_BM (arg2);
+  WEAKASSERT_BM (obdumpgetdumper_BM (_.dumpob) != NULL);
+  WEAKASSERT_BM (objhashashmapvalpayl_BM (_.recv));
+  for (_.keyv = objhashmapvalfirstkeypayl_BM (_.recv);
+       _.keyv != NULL; _.keyv = objhashmapvalnextkeypayl_BM (_.recv, _.keyv))
+    {
+      _.valv = objhashmapvalgetpayl_BM (_.recv, _.keyv);
+      obdumpscanvalue_BM (_.dumpob, (value_tyBM) _.keyv, 0);
+      obdumpscanvalue_BM (_.dumpob, (value_tyBM) _.valv, 0);
+    }
+  LOCALRETURN_BM (_.recv);
 }                               /* end dump_scan°hashmapval_object _5DQ2V9upFQv_3I4NiDiwsdf */
+
 
 // method dump_data°hashmapval_object _8AzRspWL4ws_3cdvWV4S1JH
 extern objrout_sigBM ROUTINEOBJNAME_BM (_8AzRspWL4ws_3cdvWV4S1JH);
@@ -4105,16 +4117,59 @@ extern objrout_sigBM ROUTINEOBJNAME_BM (_8AzRspWL4ws_3cdvWV4S1JH);
 value_tyBM
 ROUTINEOBJNAME_BM (_8AzRspWL4ws_3cdvWV4S1JH)    //
 (struct stackframe_stBM * stkf, //
- const value_tyBM arg1,         //
- const value_tyBM arg2,         //
- const value_tyBM arg3,         //
+ const value_tyBM arg1,         // reciever
+ const value_tyBM arg2,         // dumpob
+ const value_tyBM arg3,         // strbufob
  const value_tyBM arg4_ __attribute__ ((unused)),       //
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM (stkf, /*descr: */ BMK_8AzRspWL4ws_3cdvWV4S1JH,
-                 value_tyBM resultv;
+                 objectval_tyBM * recv;
+                 objectval_tyBM * dumpob;
+                 objectval_tyBM * bufob; value_tyBM dumpres; value_tyBM nodv;
+                 value_tyBM keyv;
+                 value_tyBM valv;
     );
-#warning unimplemented _8AzRspWL4ws_3cdvWV4S1JH routine
-  WEAKASSERT_BM (false && "unimplemented _8AzRspWL4ws_3cdvWV4S1JH routine");
-  LOCALRETURN_BM (_.resultv);
+  objectval_tyBM *k_reserve = BMK_2pwKyMVQyvI_3PH8nIPXjW0;
+  objectval_tyBM *k_put = BMK_9pvzBeIKHXF_8YDPCrQ6OEK;
+  WEAKASSERT_BM (isobject_BM (arg1));
+  _.recv = arg1;
+  _.dumpob = objectcast_BM (arg2);
+  struct dumper_stBM *du = obdumpgetdumper_BM (_.dumpob);
+  WEAKASSERT_BM (du != NULL);
+  WEAKASSERT_BM (objhashashmapvalpayl_BM (_.recv));
+  _.nodv = objhashmapvalmakenodeofkeyspayl_BM (_.recv, BMP_node);
+  unsigned siz = nodewidth_BM (_.nodv);
+  objstrbufferprintfpayl_BM (_.bufob, "!~ todo (~\t");
+  objstrbuffermoreindentpayl_BM (_.bufob);
+  _.dumpres = send3_BM (k_reserve, BMP_dump_value,
+                        (struct stackframe_stBM *) &_,
+                        _.bufob, _.dumpob, taggedint_BM (0));
+  objstrbufferprintfpayl_BM (_.bufob, " %ld\n",
+                             (unsigned long) prime_above_BM (4 +
+                                                             6 * siz / 5));
+  for (unsigned ix = 0; ix < siz; ix++)
+    {
+      _.keyv = nodenthson_BM (_.nodv, ix);
+      if (!obdumpvalisfullydumpable_BM (du, _.keyv))
+        continue;
+      _.valv = objhashmapvalgetpayl_BM (_.recv, _.keyv);
+      if (!obdumpvalisfullydumpable_BM (du, _.valv))
+        continue;
+      objstrbufferprintfpayl_BM (_.bufob, "\n!& ");
+      _.dumpres = send3_BM (k_put, BMP_dump_value,
+                            (struct stackframe_stBM *) &_,
+                            _.bufob, _.dumpob, taggedint_BM (0));
+      objstrbufferprintfpayl_BM (_.bufob, "\t ");
+      _.dumpres = send3_BM (_.keyv, BMP_dump_value,
+                            (struct stackframe_stBM *) &_,
+                            _.bufob, _.dumpob, taggedint_BM (0));
+      objstrbufferprintfpayl_BM (_.bufob, "\t ");
+      _.dumpres = send3_BM (_.valv, BMP_dump_value,
+                            (struct stackframe_stBM *) &_,
+                            _.bufob, _.dumpob, taggedint_BM (0));
+    }
+  objstrbufferlessindentpayl_BM (_.bufob);
+  objstrbufferappendcstrpayl_BM (_.bufob, "\n~)\n");
+  LOCALRETURN_BM (_.recv);
 }                               /* end dump_data°hashmapval_object _8AzRspWL4ws_3cdvWV4S1JH */
