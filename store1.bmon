@@ -1,5 +1,5 @@
 // generated file store1.bmon
-// for 55 objects
+// for 56 objects
 // with 0 modules
 
 
@@ -271,6 +271,25 @@ _7jHHqKoSEZf_6G1dslcAaT8
 !: _8emBk0Le2Vy_8MxJWC61DPw |=routine_builder|
  "crout"
 !)_7rduHPDI4aV_3JkXcYrH2m6
+
+
+
+!(_1DdzQEqzTvJ_1mjRDRDUdTw |=hashmapval_object|
+!~ name (~ hashmapval_object
+~)
+!@ 1520951926.36
+!$_0LK4TzFd6u1_0JFUsrQ4odG |=class|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "class for hashmapval payload"
+!~ class (~ |supercl object:| _7T9OwSFlgov_0wVJaK1eZbn 
+~: _0pSnxYMjpqQ_3opFGfXeh5o |=dump_data|  % _8AzRspWL4ws_3cdvWV4S1JH () 
+~: _2oNMm2aR91J_4QthSpZxplW |=dump_scan|  % _5DQ2V9upFQv_3I4NiDiwsdf () 
+~: _2pwKyMVQyvI_3PH8nIPXjW0 |=reserve|  % _1PXiQf6nwlO_8J54FkeCF9A () 
+~: _9pvzBeIKHXF_8YDPCrQ6OEK |=put|  % _8EqnYwr2sed_1Njis9lW96i () 
+~: _9uRC9w2Gte9_5mW0NanaS19 |=browse_data|  % _0M2jApBzFAy_8H8cpCjGpTi ()
+~)
+
+!)_1DdzQEqzTvJ_1mjRDRDUdTw
 
 
 

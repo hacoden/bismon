@@ -779,8 +779,7 @@ extern value_tyBM
 
 //////////////// obj hashmapval payload 
 
-static inline void
-objputhashmapvalpayl_BM (objectval_tyBM * obj, unsigned gap);
+extern void objputhashmapvalpayl_BM (objectval_tyBM * obj, unsigned gap);
 static inline struct hashmapval_stBM *objgethashmapvalpayl_BM
   (objectval_tyBM * obj);
 static inline bool objhashashmapvalpayl_BM (objectval_tyBM * obj);

@@ -1893,14 +1893,6 @@ ishashmapbucket_BM (const value_tyBM v)
   return ty == typayl_hashmapbucket_BM;
 }                               /* end ishashmapbucket_BM */
 
-void
-objputhashmapvalpayl_BM (objectval_tyBM * obj, unsigned gap)
-{
-  if (!isobject_BM ((value_tyBM) obj))
-    return;
-  objputpayload_BM (obj, hashmapvalreorganize_BM (NULL, gap + gap / 32 + 1));
-}                               /* end objputhashmapvalpayl_BM */
-
 struct hashmapval_stBM *
 objgethashmapvalpayl_BM (objectval_tyBM * obj)
 {

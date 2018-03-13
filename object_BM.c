@@ -1114,6 +1114,17 @@ objputdictpayl_BM (objectval_tyBM * obj)
     objputclass_BM (obj, BMP_dict_object);
 }                               /* end objputdictpayl_BM */
 
+
+void
+objputhashmapvalpayl_BM (objectval_tyBM * obj, unsigned gap)
+{
+  if (!isobject_BM ((value_tyBM) obj))
+    return;
+  objputpayload_BM (obj, hashmapvalreorganize_BM (NULL, gap + gap / 32 + 1));
+  if(objclass_BM(obj) == BMP_object)
+    objputclass_BM(obj, BMP_hashmapval_object);
+}                               /* end objputhashmapvalpayl_BM */
+
 ////////////////////////////////////////////////////////////////
 
 value_tyBM
