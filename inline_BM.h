@@ -1213,15 +1213,6 @@ listlength_BM (const struct listtop_stBM *lis)
 
 ////////////////
 
-void
-objputlistpayl_BM (objectval_tyBM * obj)
-{
-  if (!isobject_BM ((value_tyBM) obj))
-    return;
-  struct listtop_stBM *lis = makelist_BM ();
-  objputpayload_BM (obj, lis);
-}                               /* end objputlistpayl_BM */
-
 struct listtop_stBM *
 objgetlistpayl_BM (objectval_tyBM * obj)
 {

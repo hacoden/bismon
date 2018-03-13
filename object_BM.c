@@ -1092,6 +1092,17 @@ void objputdatavectpayl_BM (objectval_tyBM * obj, unsigned inisiz)
 }                               /* end objputdatavectpayl_BM */
 
 
+void
+objputlistpayl_BM (objectval_tyBM * obj)
+{
+  if (!isobject_BM ((value_tyBM) obj))
+    return;
+  struct listtop_stBM *lis = makelist_BM ();
+  objputpayload_BM (obj, lis);
+  if (objclass_BM (obj) == BMP_object)
+    objputclass_BM (obj, BMP_list_object);
+}                               /* end objputlistpayl_BM */
+
 ////////////////////////////////////////////////////////////////
 
 value_tyBM

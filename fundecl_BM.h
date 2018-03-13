@@ -591,7 +591,7 @@ extern const tupleval_tyBM *list_to_tuple_BM (const struct listtop_stBM *lis);
 
 //////////////// obj list payload
 
-static inline void objputlistpayl_BM (objectval_tyBM * obj);
+extern void objputlistpayl_BM (objectval_tyBM * obj);
 static inline struct listtop_stBM *objgetlistpayl_BM (objectval_tyBM * obj);
 static inline bool objhaslistpayl_BM (objectval_tyBM * obj);
 static inline value_tyBM objlistfirstpayl_BM (objectval_tyBM * obj);
