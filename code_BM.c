@@ -873,7 +873,6 @@ ROUTINEOBJNAME_BM (_7BhZWKS2grS_3TnuK6o8ZFH)    //
     ilen = sequencesize_BM (_.contv) + 1;
   else
     LOCALRETURN_BM (NULL);
-  objlock_BM (_.recv);
   objputdatavectpayl_BM (_.recv, ilen);
   if (isnode_BM (_.contv))
     {
@@ -893,7 +892,6 @@ ROUTINEOBJNAME_BM (_7BhZWKS2grS_3TnuK6o8ZFH)    //
           objdatavectappendpayl_BM (_.recv, _.compv);
         }
     }
-  objunlock_BM (_.recv);
   LOCALRETURN_BM (_.recv);
 }                               /* end fill°vector_object  _7BhZWKS2grS_3TnuK6o8ZFH */
 
@@ -4023,23 +4021,63 @@ ROUTINEOBJNAME_BM (_2WY2j1qroxH_1sjxiD6Yvad)    //
 ////////////////
 // reserve°hashmapval_object _1PXiQf6nwlO_8J54FkeCF9A
 extern objrout_sigBM ROUTINEOBJNAME_BM (_1PXiQf6nwlO_8J54FkeCF9A);
-
 value_tyBM
 ROUTINEOBJNAME_BM (_1PXiQf6nwlO_8J54FkeCF9A)    //
 (struct stackframe_stBM * stkf, //
- const value_tyBM arg1,         //
- const value_tyBM arg2,         //
+ const value_tyBM arg1,         // reciever
+ const value_tyBM arg2,         // sizev
  const value_tyBM arg3,         //
  const value_tyBM arg4_ __attribute__ ((unused)),       //
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM (stkf, /*descr: */ BMK_1PXiQf6nwlO_8J54FkeCF9A,
-                 value_tyBM resultv;
+                 objectval_tyBM * obrecv;
     );
-#warning unimplemented _1PXiQf6nwlO_8J54FkeCF9A routine
-  WEAKASSERT_BM (false && "unimplemented _1PXiQf6nwlO_8J54FkeCF9A routine");
-  LOCALRETURN_BM (_.resultv);
+  if (!isobject_BM (arg1))
+    LOCALRETURN_BM (NULL);
+  if (!istaggedint_BM (arg2))
+    LOCALRETURN_BM (NULL);
+  _.obrecv = (objectval_tyBM *) arg1;
+  unsigned siz = getint_BM (arg2);
+  if (siz > MAXSIZE_BM / 4)
+    siz = MAXSIZE_BM / 4;
+  else if (siz < 3)
+    siz = 4;
+  objputhashmapvalpayl_BM (_.obrecv, siz);
+  LOCALRETURN_BM (_.obrecv);
 }                               /* end reserve°hashmapval_object _1PXiQf6nwlO_8J54FkeCF9A */
+
+
+
+// method put°hashmapval_object  _8EqnYwr2sed_1Njis9lW96i
+extern objrout_sigBM ROUTINEOBJNAME_BM (_8EqnYwr2sed_1Njis9lW96i);
+value_tyBM
+ROUTINEOBJNAME_BM (_8EqnYwr2sed_1Njis9lW96i)    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // reciever
+ const value_tyBM arg2,         // keyv
+ const value_tyBM arg3,         // valv
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
+{
+  LOCALFRAME_BM (stkf, /*descr: */ BMK_8EqnYwr2sed_1Njis9lW96i,
+                 objectval_tyBM * obrecv;
+		 value_tyBM keyv;
+		 value_tyBM valv;
+    );
+  if (!isobject_BM (arg1))
+    LOCALRETURN_BM (NULL);
+  if (!arg2)
+    LOCALRETURN_BM (NULL);
+  _.obrecv = (objectval_tyBM*)arg1;
+  _.keyv = arg2;
+  _.valv = arg3;
+  if (objhashashmapvalpayl_BM(_.obrecv)) {
+    objhashmapvalputpayl_BM(_.obrecv, _.keyv, _.valv);
+    LOCALRETURN_BM(_.obrecv);
+  }
+  LOCALRETURN_BM (NULL);
+}                               /* end method put°hashmapval_object _8EqnYwr2sed_1Njis9lW96i */
 
 
 // method dump_scan°hashmapval_object _5DQ2V9upFQv_3I4NiDiwsdf
@@ -4080,22 +4118,3 @@ ROUTINEOBJNAME_BM (_8AzRspWL4ws_3cdvWV4S1JH)    //
   WEAKASSERT_BM (false && "unimplemented _8AzRspWL4ws_3cdvWV4S1JH routine");
   LOCALRETURN_BM (_.resultv);
 }                               /* end dump_data°hashmapval_object _8AzRspWL4ws_3cdvWV4S1JH */
-
-// method put°hashmapval_object  _8EqnYwr2sed_1Njis9lW96i
-extern objrout_sigBM ROUTINEOBJNAME_BM (_8EqnYwr2sed_1Njis9lW96i);
-value_tyBM
-ROUTINEOBJNAME_BM (_8EqnYwr2sed_1Njis9lW96i)    //
-(struct stackframe_stBM * stkf, //
- const value_tyBM arg1,         //
- const value_tyBM arg2,         //
- const value_tyBM arg3,         //
- const value_tyBM arg4_ __attribute__ ((unused)),       //
- const quasinode_tyBM * restargs_ __attribute__ ((unused)))
-{
-  LOCALFRAME_BM (stkf, /*descr: */ BMK_8EqnYwr2sed_1Njis9lW96i,
-                 value_tyBM resultv;
-    );
-#warning unimplemented _8EqnYwr2sed_1Njis9lW96i routine
-  WEAKASSERT_BM (false && "unimplemented _8EqnYwr2sed_1Njis9lW96i routine");
-  LOCALRETURN_BM (_.resultv);
-}                               /* end method put°hashmapval_object _8EqnYwr2sed_1Njis9lW96i */
