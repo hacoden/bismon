@@ -1604,15 +1604,6 @@ isdict_BM (const value_tyBM v)
   return ty == typayl_dict_BM;
 }                               /* end isdict_BM */
 
-void
-objputdictpayl_BM (objectval_tyBM * obj)
-{
-  if (!isobject_BM ((value_tyBM) obj))
-    return;
-  struct dict_stBM *dic = dictmake_BM ();
-  objputpayload_BM (obj, dic);
-}                               /* end objputdictpayl_BM */
-
 struct dict_stBM *
 objgetdictpayl_BM (objectval_tyBM * obj)
 {

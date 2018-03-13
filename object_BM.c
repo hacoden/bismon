@@ -1103,6 +1103,17 @@ objputlistpayl_BM (objectval_tyBM * obj)
     objputclass_BM (obj, BMP_list_object);
 }                               /* end objputlistpayl_BM */
 
+void
+objputdictpayl_BM (objectval_tyBM * obj)
+{
+  if (!isobject_BM ((value_tyBM) obj))
+    return;
+  struct dict_stBM *dic = dictmake_BM ();
+  objputpayload_BM (obj, dic);
+  if (objclass_BM (obj) == BMP_object)
+    objputclass_BM (obj, BMP_dict_object);
+}                               /* end objputdictpayl_BM */
+
 ////////////////////////////////////////////////////////////////
 
 value_tyBM

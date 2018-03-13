@@ -1,5 +1,5 @@
 // generated file store1.bmon
-// for 54 objects
+// for 55 objects
 // with 0 modules
 
 
@@ -165,6 +165,21 @@ _7jHHqKoSEZf_6G1dslcAaT8
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "for constants etc..."
 !)_5DDSY1YgVZr_6dOU4tiBldk
+
+
+
+!(_6VGKPmigLUx_65sfKINCa6w |=dict_object|
+!~ name (~ dict_object
+~)
+!@ 1520951659.65
+!$_0LK4TzFd6u1_0JFUsrQ4odG |=class|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "class of object with dict payload"
+!~ class (~ |supercl object:| _7T9OwSFlgov_0wVJaK1eZbn 
+~: _9uRC9w2Gte9_5mW0NanaS19 |=browse_data|  % _6xPQJolJkUw_2jCiJ3IOKXE ()
+~)
+
+!)_6VGKPmigLUx_65sfKINCa6w
 
 
 
