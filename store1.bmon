@@ -1,5 +1,5 @@
 // generated file store1.bmon
-// for 50 objects
+// for 51 objects
 // with 0 modules
 
 
@@ -429,6 +429,17 @@ _4hIFpPfuaR1_39hcoYwRAm0 |=objectty|
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "selector to run a tasklet of the agenda"
 !)_4xEm6fNYKrA_0GZas0sFyYp
+
+
+
+!(_77xbaw1emfK_1nhE4tp0bF3 |=sbuf_object|
+!~ name (~ sbuf_object
+~)
+!@ 1520945570.18
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "class of strbuf payloaded objects"
+!)_77xbaw1emfK_1nhE4tp0bF3
 
 
 
