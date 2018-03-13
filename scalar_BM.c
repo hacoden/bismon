@@ -498,8 +498,8 @@ objputstrbufferpayl_BM (objectval_tyBM * obj, unsigned maxsize)
   sbuf->sbuf_curp = dbuf;
   sbuf->sbuf_lastnl = NULL;
   objputpayload_BM (obj, sbuf);
-  if (objclass_BM(obj) == BMP_object)
-    objputclass_BM(obj, BMP_sbuf_object);
+  if (objclass_BM (obj) == BMP_object)
+    objputclass_BM (obj, BMP_sbuf_object);
   return true;
 }                               /* end objputstrbufferpayl_BM */
 

@@ -1088,16 +1088,6 @@ hashsetobj_cardinal_BM (struct hashsetobj_stBM *hset)
   return ((typedsize_tyBM *) hset)->size;
 }                               /* end hashsetobj_cardinal_BM */
 
-void
-objputhashsetpayl_BM (objectval_tyBM * obj, unsigned inisiz)
-{
-  if (!isobject_BM (obj))
-    return;
-  ASSERT_BM (inisiz < MAXSIZE_BM);
-  struct hashsetobj_stBM *hset = hashsetobj_grow_BM (NULL, inisiz);
-  objputpayload_BM (obj, hset);
-}                               /* end objputhashsetpayl_BM */
-
 
 struct hashsetobj_stBM *
 objgethashsetpayl_BM (objectval_tyBM * obj)

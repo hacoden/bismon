@@ -1068,10 +1068,25 @@ valfindmethod_BM (const value_tyBM recv, const objectval_tyBM * obselector)
   return NULL;
 }                               /* end objfindmethod_BM */
 
+void
+objputhashsetpayl_BM (objectval_tyBM * obj, unsigned inisiz)
+{
+  if (!isobject_BM (obj))
+    return;
+  ASSERT_BM (inisiz < MAXSIZE_BM);
+  struct hashsetobj_stBM *hset = hashsetobj_grow_BM (NULL, inisiz);
+  objputpayload_BM (obj, hset);
+  if (objclass_BM (obj) == BMP_object)
+    objputclass_BM (obj, BMP_hashsetval_object);
+}                               /* end objputhashsetpayl_BM */
+
+
+
+////////////////////////////////////////////////////////////////
 
 value_tyBM
 send0_BM (const value_tyBM recv, const objectval_tyBM * obselector,
-          struct stackframe_stBM * stkf)
+          struct stackframe_stBM *stkf)
 {
   if (!isobject_BM ((const value_tyBM) obselector))
     return NULL;

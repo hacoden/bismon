@@ -476,8 +476,7 @@ static inline unsigned hashsetobj_cardinal_BM (struct hashsetobj_stBM *hset);
 
 //// obj hashset payload support
 
-static inline void objputhashsetpayl_BM //
-  (objectval_tyBM * obj, unsigned inisiz);
+extern void objputhashsetpayl_BM (objectval_tyBM * obj, unsigned inisiz);
 static inline struct hashsetobj_stBM *objgethashsetpayl_BM (objectval_tyBM *
                                                             obj);
 static inline bool objhashashsetpayl_BM (objectval_tyBM * obj);
