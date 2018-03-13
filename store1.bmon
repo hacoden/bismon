@@ -1,5 +1,5 @@
 // generated file store1.bmon
-// for 48 objects
+// for 49 objects
 // with 0 modules
 
 
@@ -189,6 +189,17 @@ _7jHHqKoSEZf_6G1dslcAaT8
 ~)
 !@ 1501754200.00
 !)_1FEnnpEkGdI_5DAcVDL5XHG
+
+
+
+!(_7aFDCz5prE3_7nspdPb6502 |=dumper_object|
+!~ name (~ dumper_object
+~)
+!@ 1520945223.07
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "class of dumper"
+!)_7aFDCz5prE3_7nspdPb6502
 
 
 
