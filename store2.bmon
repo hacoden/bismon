@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 264 objects
+// for 265 objects
 // with 0 modules
 
 
@@ -1073,6 +1073,7 @@ _6QdXYI1ivTg_8NnpdDMRQK5 ])
 ~: _0pSnxYMjpqQ_3opFGfXeh5o |=dump_data|  % _8AzRspWL4ws_3cdvWV4S1JH () 
 ~: _2oNMm2aR91J_4QthSpZxplW |=dump_scan|  % _5DQ2V9upFQv_3I4NiDiwsdf () 
 ~: _2pwKyMVQyvI_3PH8nIPXjW0 |=reserve|  % _1PXiQf6nwlO_8J54FkeCF9A () 
+~: _9pvzBeIKHXF_8YDPCrQ6OEK |=put|  % _8EqnYwr2sed_1Njis9lW96i () 
 ~: _9uRC9w2Gte9_5mW0NanaS19 |=browse_data|  % _0M2jApBzFAy_8H8cpCjGpTi ()
 ~)
 
@@ -2988,6 +2989,16 @@ _36MhHxakHKT_1ZzV5Xoj5LX
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "dump_data\u00b0hashmapval_object method"
 !)_8AzRspWL4ws_3cdvWV4S1JH
+
+
+
+!(_8EqnYwr2sed_1Njis9lW96i
+!|*
+!@ 1520920385.41
+!$_2Ir1i8qnrA4_3jSkierlc5z |=basiclo_function|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "put\u00b0hashmapval_object method"
+!)_8EqnYwr2sed_1Njis9lW96i
 
 
 
