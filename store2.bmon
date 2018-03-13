@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 265 objects
+// for 264 objects
 // with 0 modules
 
 
@@ -80,27 +80,6 @@
 ~)
 
 !)_3JH05KgIzty_1K7IDyF43V2
-
-
-
-!(_6ZQ05nCv3Ys_8LA6B5LkZgm |=assoc_object|
-!~ name (~ assoc_object
-~)
-!@ 1508140559.15
-!$_0LK4TzFd6u1_0JFUsrQ4odG |=class|
-!: _01h86SAfOfg_1q2oMegGRwW |=comment|
- "class for objects with assoc data"
-!~ class (~ |supercl object:| _7T9OwSFlgov_0wVJaK1eZbn 
-~: _0pSnxYMjpqQ_3opFGfXeh5o |=dump_data|  % _9EytjXNb76D_1ZP3iSk9cuu () 
-~: _2mYaTh9kH4I_7ENiXcymRmy |=set|  % _4zaM2Itdsuq_9qNJK0HbcQI () 
-~: _2oNMm2aR91J_4QthSpZxplW |=dump_scan|  % _8MU0cEcpEYN_5SVe0jrv36o () 
-~: _2LPrNfUHb6Y_1qOPmENNXqB |=get|  % _4icYJnKsN0o_4xm5UbQOMTe () 
-~: _3OWP1zOtxz2_9uAVt50SUZO |=remove|  % _0ekJdzLOqAI_8mejMqkwuKQ () 
-~: _9pvzBeIKHXF_8YDPCrQ6OEK |=put|  % _6eD9Y1qYcnj_8uVDhxjBpG8 () 
-~: _9uRC9w2Gte9_5mW0NanaS19 |=browse_data|  % _0f1S28bCE26_3X6Vpz9lG4A ()
-~)
-
-!)_6ZQ05nCv3Ys_8LA6B5LkZgm
 
 
 
