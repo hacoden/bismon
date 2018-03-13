@@ -646,6 +646,8 @@ objputassocpayl_BM (objectval_tyBM * obj, unsigned maxsize)
               objectdbg_BM (obj));
   anyassoc_tyBM *asso = make_assoc_BM (maxsize);
   objputpayload_BM (obj, asso);
+  if (objclass_BM(obj) == BMP_object)
+    objputclass_BM(obj, BMP_assoc_object);
   return true;
 }                               /* end objputassocpayl_BM */
 
