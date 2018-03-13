@@ -279,6 +279,13 @@ add_new_predefined_bm (void)
         {
           predobj = makeobj_BM ();
           registername_BM (predobj, predname);
+        }
+      else
+        {
+          char idpred[32];
+          memset (idpred, 0, sizeof (idpred));
+          idtocbuf32_BM (objid_BM (predobj), idpred);
+          printf ("existing %s becomes predefined %s\n", idpred, predname);
         };
       objtouchnow_BM ((objectval_tyBM *) predobj);
       if (predcomm)
