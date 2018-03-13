@@ -3911,7 +3911,7 @@ ROUTINEOBJNAME_BM (_6UxkFEHhNQS_0f65oUlZ7b5)    // dump_data°hashsetval_object
   _.dumpres = send3_BM (k_reserve, BMP_dump_value,
                         (struct stackframe_stBM *) &_,
                         _.bufob, _.dumpob, taggedint_BM (0));
-  objstrbufferprintfpayl_BM (_.bufob, " %ld\n", (unsigned long) nbcont);
+  objstrbufferprintfpayl_BM (_.bufob, " %ld\n", (unsigned long) prime_above_BM (4+6*nbcont/5));
   objstrbufferlessindentpayl_BM (_.bufob);
   for (unsigned ix = 0; ix < nbcont; ix++)
     {
@@ -4016,3 +4016,65 @@ ROUTINEOBJNAME_BM (_2WY2j1qroxH_1sjxiD6Yvad)    //
     }
   LOCALRETURN_BM (NULL);
 }                               /* end remove°hashsetval_object _2WY2j1qroxH_1sjxiD6Yvad */
+
+
+////////////////
+// reserve°hashmapval_object _1PXiQf6nwlO_8J54FkeCF9A
+extern objrout_sigBM ROUTINEOBJNAME_BM (_1PXiQf6nwlO_8J54FkeCF9A);
+
+value_tyBM
+ROUTINEOBJNAME_BM (_1PXiQf6nwlO_8J54FkeCF9A) //
+(struct stackframe_stBM* stkf, //
+ const value_tyBM arg1, //
+ const value_tyBM arg2, //
+ const value_tyBM arg3, //
+ const value_tyBM arg4_  __attribute__((unused)), //
+ const quasinode_tyBM* restargs_  __attribute__((unused)))
+{
+  LOCALFRAME_BM (stkf, /*descr:*/ BMK_1PXiQf6nwlO_8J54FkeCF9A,
+   value_tyBM resultv;
+  );
+#warning unimplemented _1PXiQf6nwlO_8J54FkeCF9A routine
+  WEAKASSERT_BM(false && "unimplemented _1PXiQf6nwlO_8J54FkeCF9A routine");
+  LOCALRETURN_BM(_.resultv);
+} /* end reserve°hashmapval_object _1PXiQf6nwlO_8J54FkeCF9A*/
+
+
+// method dump_scan°hashmapval_object _5DQ2V9upFQv_3I4NiDiwsdf
+extern objrout_sigBM ROUTINEOBJNAME_BM (_5DQ2V9upFQv_3I4NiDiwsdf);
+value_tyBM
+ROUTINEOBJNAME_BM (_5DQ2V9upFQv_3I4NiDiwsdf) //
+(struct stackframe_stBM* stkf, //
+ const value_tyBM arg1, //
+ const value_tyBM arg2, //
+ const value_tyBM arg3, //
+ const value_tyBM arg4_  __attribute__((unused)), //
+ const quasinode_tyBM* restargs_  __attribute__((unused)))
+{
+  LOCALFRAME_BM (stkf, /*descr:*/ BMK_5DQ2V9upFQv_3I4NiDiwsdf,
+   value_tyBM resultv;
+  );
+#warning unimplemented _5DQ2V9upFQv_3I4NiDiwsdf routine
+  WEAKASSERT_BM(false && "unimplemented _5DQ2V9upFQv_3I4NiDiwsdf routine");
+  LOCALRETURN_BM(_.resultv);
+} /* end dump_scan°hashmapval_object _5DQ2V9upFQv_3I4NiDiwsdf*/
+
+// method dump_data°hashmapval_object _8AzRspWL4ws_3cdvWV4S1JH
+extern objrout_sigBM ROUTINEOBJNAME_BM (_8AzRspWL4ws_3cdvWV4S1JH);
+
+value_tyBM
+ROUTINEOBJNAME_BM (_8AzRspWL4ws_3cdvWV4S1JH) //
+(struct stackframe_stBM* stkf, //
+ const value_tyBM arg1, //
+ const value_tyBM arg2, //
+ const value_tyBM arg3, //
+ const value_tyBM arg4_  __attribute__((unused)), //
+ const quasinode_tyBM* restargs_  __attribute__((unused)))
+{
+  LOCALFRAME_BM (stkf, /*descr:*/ BMK_8AzRspWL4ws_3cdvWV4S1JH,
+   value_tyBM resultv;
+  );
+#warning unimplemented _8AzRspWL4ws_3cdvWV4S1JH routine
+  WEAKASSERT_BM(false && "unimplemented _8AzRspWL4ws_3cdvWV4S1JH routine");
+  LOCALRETURN_BM(_.resultv);
+} /* end dump_data°hashmapval_object _8AzRspWL4ws_3cdvWV4S1JH*/
