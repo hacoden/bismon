@@ -974,6 +974,8 @@ objputclassinfo_BM (objectval_tyBM * obj, objectval_tyBM * superclass)
   clinf->clinf_superclass = superclass;
   clinf->clinf_dictmeth = NULL;
   objputpayload_BM (obj, clinf);
+  if (objclass_BM (obj) == BMP_object)
+    objputclass_BM (obj, BMP_class);
 }                               /* end objputclassinfo_BM */
 
 
