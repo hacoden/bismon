@@ -4124,8 +4124,7 @@ ROUTINEOBJNAME_BM (_8AzRspWL4ws_3cdvWV4S1JH)    //
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM (stkf, /*descr: */ BMK_8AzRspWL4ws_3cdvWV4S1JH,
-                 objectval_tyBM * recv;
-                 objectval_tyBM * dumpob;
+                 objectval_tyBM * recv; objectval_tyBM * dumpob;
                  objectval_tyBM * bufob; value_tyBM dumpres; value_tyBM nodv;
                  value_tyBM keyv;
                  value_tyBM valv;
