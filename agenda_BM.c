@@ -45,9 +45,9 @@ initialize_agenda_BM (void)
 }                               /* end initialize_agenda_BM */
 
 
-#define GCWAITMILLISECONDS_BM 350
-#define TASKWAITMILLISECONDS_BM 450
-#define STOPWAITMILLISECONDS_BM 300
+#define GCWAITMILLISECONDS_BM 750
+#define TASKWAITMILLISECONDS_BM 850
+#define STOPWAITMILLISECONDS_BM 900
 #define WORKTHREADSTACKSIZE_BM (10*1024*1024)
 // the work routine, passed to pthread_create
 void *
@@ -84,10 +84,13 @@ run_agendaworker_BM (void *ad)
           atomic_store (&curthreadinfo_BM->ti_gc, true);
           do
             {
-              NONPRINTF_BM
+              DBGPRINTF_BM
                 ("run_agendaworker tix#%d needgc tid#%ld elapsed %.3f s",
                  (int) tix, (long) gettid_BM (), elapsedtime_BM ());
               pthread_cond_broadcast (&ti_agendacond_BM);
+              DBGPRINTF_BM
+                ("run_agendaworker tix#%d before timedwait tid#%ld",
+                 (int) tix, (long) gettid_BM ());
               pthread_mutex_lock (&ti_agendamtx_BM);
               {
                 struct timespec ts = { 0, 0 };
@@ -116,7 +119,7 @@ run_agendaworker_BM (void *ad)
             memset (&flspace, 0, sizeof (flspace));
             initialize_failurelockset_BM ((struct failurelockset_stBM *)
                                           &flspace, sizeof (flspace));
-            NONPRINTF_BM
+            DBGPRINTF_BM
               ("run_agendaworker tix%d shouldrun tid#%ld elapsed %.3f s taskob %s",
                (int) tix, (long) gettid_BM (), elapsedtime_BM (),
                objectdbg_BM (taskob));
@@ -130,12 +133,14 @@ run_agendaworker_BM (void *ad)
             curthreadinfo_BM->ti_thstartelapsedtime = 0.0;
             destroy_failurelockset_BM ((struct failurelockset_stBM *)
                                        &flspace);
-            NONPRINTF_BM
+            DBGPRINTF_BM
               ("run_agendaworker tix%d didrun tid#%ld elapsed %.3f s",
                (int) tix, (long) gettid_BM (), elapsedtime_BM ());
           }
         else
           {                     // no task to run
+            DBGPRINTF_BM ("run_agendaworker tix%d tid#%ld notask",
+                          (int) tix, (long) gettid_BM ());
             pthread_mutex_lock (&ti_agendamtx_BM);
             {
               struct timespec ts = { 0, 0 };
@@ -326,7 +331,7 @@ void
 stop_agenda_work_threads_BM (void)
 {
   int nbwth = ti_nbworkers_BM;
-  NONPRINTF_BM
+  DBGPRINTF_BM
     ("stop_agenda_work_threads start nbwth=%d tid#%ld elapsed %.3f s", nbwth,
      (long) gettid_BM (), elapsedtime_BM ());
   {
@@ -350,6 +355,7 @@ stop_agenda_work_threads_BM (void)
           ts.tv_nsec -= BILLION_BM;
           ts.tv_sec++;
         };
+      DBGPRINTF_BM ("stop_agenda_work_threads tid#%ld", (long) gettid_BM ());
       pthread_cond_timedwait (&ti_agendacond_BM, &ti_agendamtx_BM, &ts);
       pthread_mutex_unlock (&ti_agendamtx_BM);
     }
@@ -365,15 +371,18 @@ agenda_suspend_for_gc_BM (void)
   bool alldoinggc = false;
   int nbwth = ti_nbworkers_BM;
   long loopcnt = 0;
-  NONPRINTF_BM ("agenda_suspend_for_gc_BM nwth=%d", nbwth);
+  DBGPRINTF_BM ("agenda_suspend_for_gc_BM nwth=%d", nbwth);
   while (!alldoinggc)
     {
       alldoinggc = false;
+      loopcnt++;
+      DBGPRINTF_BM
+        ("agenda_suspend_for_gc_BM elapsed %.3f s tid%ld loopcnt%ld",
+         elapsedtime_BM (), (long) gettid_BM (), loopcnt);
       pthread_mutex_lock (&ti_agendamtx_BM);
       for (int tix = 1; tix <= nbwth && alldoinggc; tix++)
         alldoinggc = atomic_load (&ti_array_BM[tix].ti_gc);
       pthread_mutex_unlock (&ti_agendamtx_BM);
-      loopcnt++;
       if (!alldoinggc)
         {
           struct timespec ts = { 0, 0 };
@@ -384,10 +393,14 @@ agenda_suspend_for_gc_BM (void)
               ts.tv_nsec -= BILLION_BM;
               ts.tv_sec++;
             };
+          DBGPRINTF_BM ("agenda_suspend_for_gc_BM tid%ld before timedwait",
+                        (long) gettid_BM ());
+          pthread_mutex_lock (&ti_agendamtx_BM);
           pthread_cond_timedwait (&ti_agendacond_BM, &ti_agendamtx_BM, &ts);
+          pthread_mutex_unlock (&ti_agendamtx_BM);
         }
     }
-  NONPRINTF_BM ("agenda_suspend_for_gc_BM done");
+  DBGPRINTF_BM ("agenda_suspend_for_gc_BM done");
 }                               /* end agenda_suspend_for_gc_BM */
 
 void

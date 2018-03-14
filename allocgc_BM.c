@@ -542,8 +542,9 @@ static unsigned long countgc_BM;
 void
 full_garbage_collection_BM (struct stackframe_stBM *stkfram)
 {
-  DBGPRINTF_BM ("start full_garbage_collection_BM stkfram@%p tid#%ld",
-                (void *) stkfram, (long) gettid_BM ());
+  DBGPRINTF_BM
+    ("start full_garbage_collection_BM stkfram@%p tid#%ld elapsed %.3f s",
+     (void *) stkfram, (long) gettid_BM (), elapsedtime_BM ());
   ASSERT_BM (pthread_self () == mainthreadid_BM);
   int nbj = agenda_nb_work_jobs_BM ();
   DBGPRINTF_BM ("full_garbage_collection_BM nbj=%d", nbj);
