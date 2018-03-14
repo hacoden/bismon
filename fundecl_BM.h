@@ -274,6 +274,9 @@ extern void register_failock_BM (struct failurelockset_stBM *,
                                  objectval_tyBM *);
 extern void unregister_failock_BM (struct failurelockset_stBM *,
                                    objectval_tyBM *);
+extern void initialize_failurelockset_BM (struct failurelockset_stBM *,
+                                          size_t);
+extern void destroy_failurelockset_BM (struct failurelockset_stBM *);
 /// message sending
 
 extern value_tyBM send0_BM (const value_tyBM recv,
