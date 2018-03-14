@@ -197,7 +197,7 @@ maybe_reorganize_taskhshet_agenda_BM (struct hashsetobj_stBM *hset)
   unsigned ucnt = ((typedsize_tyBM *) hset)->size;
   int r = g_random_int ();
   if (alsiz > 20 && 3 * ucnt < alsiz && r % 8 == 0)
-    return hashsetobj_grow_BM (hset, NULL);
+    return hashsetobj_grow_BM (hset, 1);
   else if (ucnt == 0 && r % 16 == 1)
     return NULL;
   else if (4 * ucnt + 10 < 3 * alsiz && r % 8 == 0)
@@ -318,7 +318,6 @@ start_agenda_work_threads_BM (int nbjobs)
     }
   usleep (5);
   pthread_attr_destroy (&at);
-#warning start_agenda_work_threads_BM incomplete
 }                               /* end start_agenda_work_threads_BM */
 
 
@@ -412,3 +411,101 @@ agenda_notify_BM (void)
 {
   pthread_cond_broadcast (&ti_agendacond_BM);
 }                               // end agenda_notify_BM
+
+
+static bool agenda_internal_remove_tasklet_BM (objectval_tyBM * taskob);
+bool
+agenda_internal_remove_tasklet_BM (objectval_tyBM * taskob)
+{
+  // caller has locked the ti_agendamtx_BM
+  if (!isobject_BM ((value_tyBM) taskob))
+    return false;
+#define REMOVEPRIOTASKHSET_BM(Thset) do  {		\
+     if (Thset						\
+	 && hashsetobj_contains_BM (Thset, taskob)) {	\
+       Thset = hashsetobj_remove_BM (Thset, taskob);	\
+       return true;					\
+     }							\
+   } while(0)
+  REMOVEPRIOTASKHSET_BM (ti_veryhigh_taskhset_BM);
+  REMOVEPRIOTASKHSET_BM (ti_high_taskhset_BM);
+  REMOVEPRIOTASKHSET_BM (ti_normal_taskhset_BM);
+  REMOVEPRIOTASKHSET_BM (ti_low_taskhset_BM);
+  REMOVEPRIOTASKHSET_BM (ti_verylow_taskhset_BM);
+#undef REMOVEPRIOTASKHSET_BM
+  return false;
+}                               /* end agenda_internal_remove_tasklet_BM */
+
+void
+agenda_add_very_high_priority_tasklet_BM (objectval_tyBM * taskob)
+{
+  if (!isobject_BM ((value_tyBM) taskob))
+    return;
+  pthread_mutex_lock (&ti_agendamtx_BM);
+  agenda_internal_remove_tasklet_BM (taskob);
+  ti_veryhigh_taskhset_BM =
+    hashsetobj_add_BM (ti_veryhigh_taskhset_BM, taskob);
+  pthread_mutex_unlock (&ti_agendamtx_BM);
+  pthread_cond_broadcast (&ti_agendacond_BM);
+}                               /* end agenda_add_very_high_priority_tasklet_BM */
+
+void
+agenda_add_high_priority_tasklet_BM (objectval_tyBM * taskob)
+{
+  if (!isobject_BM ((value_tyBM) taskob))
+    return;
+  pthread_mutex_lock (&ti_agendamtx_BM);
+  agenda_internal_remove_tasklet_BM (taskob);
+  ti_high_taskhset_BM = hashsetobj_add_BM (ti_high_taskhset_BM, taskob);
+  pthread_mutex_unlock (&ti_agendamtx_BM);
+  pthread_cond_broadcast (&ti_agendacond_BM);
+}                               /* end agenda_add_high_priority_tasklet_BM */
+
+void
+agenda_add_normal_priority_tasklet_BM (objectval_tyBM * taskob)
+{
+  if (!isobject_BM ((value_tyBM) taskob))
+    return;
+  pthread_mutex_lock (&ti_agendamtx_BM);
+  agenda_internal_remove_tasklet_BM (taskob);
+  ti_normal_taskhset_BM = hashsetobj_add_BM (ti_normal_taskhset_BM, taskob);
+  pthread_mutex_unlock (&ti_agendamtx_BM);
+  pthread_cond_broadcast (&ti_agendacond_BM);
+}                               /* end agenda_add_normal_priority_tasklet_BM */
+
+void
+agenda_add_low_priority_tasklet_BM (objectval_tyBM * taskob)
+{
+  if (!isobject_BM ((value_tyBM) taskob))
+    return;
+  pthread_mutex_lock (&ti_agendamtx_BM);
+  agenda_internal_remove_tasklet_BM (taskob);
+  ti_low_taskhset_BM = hashsetobj_add_BM (ti_low_taskhset_BM, taskob);
+  pthread_mutex_unlock (&ti_agendamtx_BM);
+  pthread_cond_broadcast (&ti_agendacond_BM);
+}                               /* end agenda_add_low_priority_tasklet_BM */
+
+void
+agenda_add_very_low_priority_tasklet_BM (objectval_tyBM * taskob)
+{
+  if (!isobject_BM ((value_tyBM) taskob))
+    return;
+  pthread_mutex_lock (&ti_agendamtx_BM);
+  agenda_internal_remove_tasklet_BM (taskob);
+  ti_verylow_taskhset_BM = hashsetobj_add_BM (ti_verylow_taskhset_BM, taskob);
+  pthread_mutex_unlock (&ti_agendamtx_BM);
+  pthread_cond_broadcast (&ti_agendacond_BM);
+}                               /* end agenda_add_low_priority_tasklet_BM */
+
+bool
+agenda_remove_tasklet_BM (objectval_tyBM * taskob)
+{
+  if (!isobject_BM ((value_tyBM) taskob))
+    return false;
+  bool r = false;
+  pthread_mutex_lock (&ti_agendamtx_BM);
+  r = agenda_internal_remove_tasklet_BM (taskob);
+  pthread_mutex_unlock (&ti_agendamtx_BM);
+  pthread_cond_broadcast (&ti_agendacond_BM);
+  return r;
+}                               /* end agenda_remove_tasklet_BM */
