@@ -13,6 +13,8 @@
 #define CLEARMGC_BM 0
 #define GCMAGIC_BM 24501383     /*0x175dc87 */
 
+#define MILLION_BM (1000*1000)
+#define BILLION_BM (1000*MILLION_BM)
 // see https://stackoverflow.com/a/11376759/841108
 // integer log in base 2, for a positive X
 #define ILOG2_BM(X) ((unsigned) (8*sizeof (unsigned long long) \
