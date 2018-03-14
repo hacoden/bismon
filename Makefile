@@ -142,7 +142,7 @@ modules: $(patsubst %.c,%.so,$(MODULES_SOURCES))
 bismon: $(OBJECTS) _bm_allconsts.o
 	echo bismoncirc= $^
 	@if [ -f $@ ]; then echo -n backup old executable: ' ' ; mv -v $@ $@~ ; fi
-	$(MAKE) __timestamp.c __timestamp.o
+	$(MAKE) __timestamp.c __timestamp.o _bm_allconsts.o
 	$(LINK.cc)  $(LINKFLAGS) -rdynamic $(OPTIMFLAGS) $(OBJECTS) __timestamp.o $(LIBES) -o $@
 	$(RM) __timestamp.*
 
