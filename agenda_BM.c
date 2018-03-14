@@ -44,6 +44,7 @@ initialize_agenda_BM (void)
   pthread_cond_init (&ti_agendacond_BM, NULL);
 }                               /* end initialize_agenda_BM */
 
+
 #define GCWAITMILLISECONDS_BM 350
 #define TASKWAITMILLISECONDS_BM 450
 #define STOPWAITMILLISECONDS_BM 300
