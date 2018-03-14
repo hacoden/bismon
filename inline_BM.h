@@ -1150,6 +1150,32 @@ objhashsetgrowpayl_BM (objectval_tyBM * obj, unsigned gap)
   obj->ob_payl = hashsetobj_grow_BM (hset, gap);
 }                               /* end objhashsetgrowpayl_BM */
 
+objectval_tyBM *
+objhashsetpickrandompayl_BM (objectval_tyBM * obj)
+{
+  struct hashsetobj_stBM *hset = objgethashsetpayl_BM (obj);
+  if (!hset)
+    return NULL;
+  return hashsetobj_pick_random_BM (hset);
+}                               /* end objhashsetpickrandompayl_BM */
+
+objectval_tyBM *
+objhashsettakerandompayl_BM (objectval_tyBM * obj)
+{
+  struct hashsetobj_stBM *hset = objgethashsetpayl_BM (obj);
+  if (!hset)
+    return NULL;
+  objectval_tyBM *ob = hashsetobj_take_random_BM (hset);
+  if (ob)
+    {
+      unsigned alsiz = ((typedhead_tyBM *) hset)->rlen;
+      unsigned ucnt = ((typedsize_tyBM *) hset)->size;
+      if (alsiz > 30 && 3 * ucnt < alsiz)
+        obj->ob_payl = hashsetobj_grow_BM (hset, NULL);
+    }
+  return ob;
+}                               /* end objhashsettakerandompayl_BM */
+
 const setval_tyBM *
 objhashsettosetpayl_BM (objectval_tyBM * obj)
 {

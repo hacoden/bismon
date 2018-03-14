@@ -471,6 +471,12 @@ extern struct hashsetobj_stBM *hashsetobj_remove_BM (struct hashsetobj_stBM
                                                      *hset,
                                                      const objectval_tyBM *
                                                      obj);
+// pick some random element, and keep it in the hashset
+extern objectval_tyBM *hashsetobj_pick_random_BM (struct hashsetobj_stBM
+                                                  *hset);
+// take some random element, and remove it from the hashset - without reorganizing it
+extern objectval_tyBM *hashsetobj_take_random_BM (struct hashsetobj_stBM
+                                                  *hset);
 extern const setval_tyBM *hashsetobj_to_set_BM (struct hashsetobj_stBM *hset);
 static inline unsigned hashsetobj_cardinal_BM (struct hashsetobj_stBM *hset);
 
@@ -490,6 +496,10 @@ static inline void objhashsetgrowpayl_BM (objectval_tyBM * obj, unsigned gap);
 static inline unsigned objhashsetcardinalpayl_BM (objectval_tyBM * obj);
 static inline const setval_tyBM *objhashsettosetpayl_BM (objectval_tyBM *
                                                          obj);
+static inline objectval_tyBM *objhashsetpickrandompayl_BM (objectval_tyBM *
+                                                           obj);
+static inline objectval_tyBM *objhashsettakerandompayl_BM (objectval_tyBM *
+                                                           obj);
 
 //////////////// mutable data vector of values
 
@@ -1155,6 +1165,7 @@ extern parser_decorate_string_inside_sigBM parsstringinside_guicmd_BM;
 ////////////////////////////////////////////////////////////////
 
 /******** agenda functions ***********/
+extern void initialize_agenda_BM (void);
 extern int agenda_nb_work_jobs_BM (void);
 extern void gcmarkagenda_BM (struct garbcoll_stBM *gc);
 extern void start_agenda_work_threads_BM (int nbjobs);
@@ -1162,14 +1173,11 @@ extern void stop_agenda_work_threads_BM (void);
 // inside the GC, wait for all work thread to idle for garbage collection
 extern void agenda_suspend_for_gc_BM (void);
 extern void agenda_continue_after_gc_BM (void);
-extern void agenda_add_very_high_priority_tasklet_front_BM (objectval_tyBM *);
-extern void agenda_add_very_high_priority_tasklet_back_BM (objectval_tyBM *);
-extern void agenda_add_high_priority_tasklet_front_BM (objectval_tyBM *);
-extern void agenda_add_high_priority_tasklet_back_BM (objectval_tyBM *);
-extern void agenda_add_low_priority_tasklet_front_BM (objectval_tyBM *);
-extern void agenda_add_low_priority_tasklet_back_BM (objectval_tyBM *);
-extern void agenda_add_very_low_priority_tasklet_front_BM (objectval_tyBM *);
-extern void agenda_add_very_low_priority_tasklet_back_BM (objectval_tyBM *);
+extern void agenda_add_very_high_priority_tasklet_BM (objectval_tyBM *);
+extern void agenda_add_high_priority_tasklet_BM (objectval_tyBM *);
+extern void agenda_add_normal_priority_tasklet_back_BM (objectval_tyBM *);
+extern void agenda_add_low_priority_tasklet_BM (objectval_tyBM *);
+extern void agenda_add_very_low_priority_tasklet_BM (objectval_tyBM *);
 extern bool agenda_remove_tasklet_BM (objectval_tyBM *);
 extern bool agenda_has_tasklet_BM (objectval_tyBM *);
 extern void run_agenda_tasklet_BM (objectval_tyBM *,

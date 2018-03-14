@@ -715,6 +715,82 @@ hashsetobj_to_set_BM (struct hashsetobj_stBM *hset)
 }                               /* end hashsetobj_to_set_BM */
 
 
+// return the index of some element, or -1 if none
+static int hashsetobj_random_index_BM (struct hashsetobj_stBM *hset);
+
+int
+hashsetobj_random_index_BM (struct hashsetobj_stBM *hset)
+{
+  if (!hset)
+    return -1;
+  ASSERT_BM (valtype_BM ((const value_tyBM) hset) == typayl_hashsetobj_BM);
+  unsigned alsiz = ((typedhead_tyBM *) hset)->rlen;
+  unsigned ucnt = ((typedsize_tyBM *) hset)->size;
+  if (ucnt == 0)
+    return -1;
+  ASSERT_BM (alsiz > 2);
+  unsigned startix = g_random_int () % alsiz;
+  for (unsigned ix = startix; ix < alsiz; ix++)
+    {
+      objectval_tyBM *curobj = hset->hashset_objs[ix];
+      if (!curobj || curobj == HASHEMPTYSLOT_BM)
+        continue;
+      ASSERT_BM (valtype_BM ((const value_tyBM) curobj) == tyObject_BM);
+      return (int) ix;
+    };
+  for (unsigned ix = 0; ix < startix; ix++)
+    {
+      objectval_tyBM *curobj = hset->hashset_objs[ix];
+      if (!curobj || curobj == HASHEMPTYSLOT_BM)
+        continue;
+      ASSERT_BM (valtype_BM ((const value_tyBM) curobj) == tyObject_BM);
+      return (int) ix;
+    }
+  return -1;
+}                               /* end hashsetobj_random_index_BM */
+
+// pick some random element, and keep it in the hashset
+objectval_tyBM *
+hashsetobj_pick_random_BM (struct hashsetobj_stBM * hset)
+{
+  if (!hset || valtype_BM ((const value_tyBM) hset) != typayl_hashsetobj_BM)
+    return NULL;
+  unsigned alsiz = ((typedhead_tyBM *) hset)->rlen;
+  unsigned ucnt = ((typedsize_tyBM *) hset)->size;
+  if (ucnt == 0)
+    return NULL;
+  ASSERT_BM (alsiz > 2 && ucnt < alsiz);
+  int ix = hashsetobj_random_index_BM (hset);
+  if (ix < 0)
+    return NULL;
+  ASSERT_BM (ix < alsiz);
+  objectval_tyBM *curob = hset->hashset_objs[ix];
+  ASSERT_BM (isobject_BM ((value_tyBM) curob));
+  return curob;
+}                               /* end hashsetobj_pick_random_BM */
+
+// take some random element, and remove it from the hashset - without reorganizing it
+objectval_tyBM *
+hashsetobj_take_random_BM (struct hashsetobj_stBM * hset)
+{
+  if (!hset || valtype_BM ((const value_tyBM) hset) != typayl_hashsetobj_BM)
+    return NULL;
+  unsigned alsiz = ((typedhead_tyBM *) hset)->rlen;
+  unsigned ucnt = ((typedsize_tyBM *) hset)->size;
+  if (ucnt == 0)
+    return NULL;
+  ASSERT_BM (alsiz > 2 && ucnt < alsiz);
+  int ix = hashsetobj_random_index_BM (hset);
+  if (ix < 0)
+    return NULL;
+  ASSERT_BM (ix < alsiz);
+  objectval_tyBM *curob = hset->hashset_objs[ix];
+  ASSERT_BM (isobject_BM ((value_tyBM) curob));
+  hset->hashset_objs[ix] = HASHEMPTYSLOT_BM;
+  ((typedsize_tyBM *) hset)->size = ucnt - 1;
+  return curob;
+}                               /* end hashsetobj_take_random_BM */
+
 void
 hashsetgcmark_BM (struct garbcoll_stBM *gc, struct hashsetobj_stBM *hset)
 {
