@@ -29,7 +29,7 @@ BM_CXXSOURCES= $(sort  $(wildcard [a-zA-Z]*_BM.cc))
 BM_HEADERS= $(sort $(wildcard *_BM.h))
 BM_COLDSOURCES= $(sort $(wildcard *_BM.c))
 GENERATED_HEADERS= $(sort $(wildcard _[a-z0-9]*.h))
-GENERATED_CSOURCES= $(sort $(wildcard _[a-z0-9]*.c))
+GENERATED_CSOURCES= $(filter-out _bm_allconsts.c, $(sort $(wildcard _[a-z0-9]*.c)))
 MARKDOWN_SOURCES= $(sort $(wildcard *.md))
 MODULES_SOURCES= $(sort $(wildcard modules/modbm*.c))
 
@@ -140,10 +140,9 @@ modules/modbm_%.so: modules/modbm_%.c bismon.h  $(GENERATED_HEADERS) $(BM_HEADER
 modules: $(patsubst %.c,%.so,$(MODULES_SOURCES))
 
 bismon: $(OBJECTS) _bm_allconsts.o
-	echo bismoncirc= $^
 	@if [ -f $@ ]; then echo -n backup old executable: ' ' ; mv -v $@ $@~ ; fi
 	$(MAKE) __timestamp.c __timestamp.o _bm_allconsts.o
-	$(LINK.cc)  $(LINKFLAGS) -rdynamic $(OPTIMFLAGS) $(OBJECTS) __timestamp.o $(LIBES) -o $@
+	$(LINK.cc)  $(LINKFLAGS) -rdynamic $(OPTIMFLAGS) $(OBJECTS) __timestamp.o _bm_allconsts.o $(LIBES) -o $@
 	$(RM) __timestamp.*
 
 measured-bismon: measure_plugcc.so
