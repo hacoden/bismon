@@ -36,6 +36,7 @@ static objectval_tyBM *choose_task_internal_agenda_BM (void);
 static struct hashsetobj_stBM *maybe_reorganize_taskhshet_agenda_BM     //
   (struct hashsetobj_stBM *tkhset);
 
+
 void
 initialize_agenda_BM (void)
 {
@@ -85,27 +86,21 @@ run_agendaworker_BM (void *ad)
           do
             {
               DBGPRINTF_BM
-                ("run_agendaworker tix#%d needgc tid#%ld elapsed %.3f s",
+                ("run_agendaworker tix#%d needgc timedwait tid#%ld elapsed %.3f s",
                  (int) tix, (long) gettid_BM (), elapsedtime_BM ());
-              DBGPRINTF_BM
-                ("run_agendaworker tix#%d beforegc timedwait tid#%ld",
-                 (int) tix, (long) gettid_BM ());
               pthread_mutex_lock (&ti_agendamtx_BM);
               {
                 struct timespec ts = { 0, 0 };
-                clock_gettime (CLOCK_REALTIME, &ts);
-                ts.tv_nsec += GCWAITMILLISECONDS_BM * MILLION_BM;
-                while (ts.tv_nsec > BILLION_BM)
-                  {
-                    ts.tv_nsec -= BILLION_BM;
-                    ts.tv_sec++;
-                  };
+                get_realtimespec_delayedms_BM (&ts, GCWAITMILLISECONDS_BM);
                 pthread_cond_timedwait (&ti_agendacond_BM, &ti_agendamtx_BM,
                                         &ts);
               }
               pthread_mutex_unlock (&ti_agendamtx_BM);
             }
           while (atomic_load (&curthreadinfo_BM->ti_gc));
+          DBGPRINTF_BM
+            ("run_agendaworker tix#%d needgc done tid#%ld elapsed %.3f s",
+             (int) tix, (long) gettid_BM (), elapsedtime_BM ());
         }
       /// choose a task to run
       {
@@ -144,17 +139,14 @@ run_agendaworker_BM (void *ad)
             pthread_mutex_lock (&ti_agendamtx_BM);
             {
               struct timespec ts = { 0, 0 };
-              clock_gettime (CLOCK_REALTIME, &ts);
-              ts.tv_nsec += (TASKWAITMILLISECONDS_BM + tix) * MILLION_BM;
-              while (ts.tv_nsec > BILLION_BM)
-                {
-                  ts.tv_nsec -= BILLION_BM;
-                  ts.tv_sec++;
-                };
+              get_realtimespec_delayedms_BM (&ts, TASKWAITMILLISECONDS_BM);
               pthread_cond_timedwait (&ti_agendacond_BM, &ti_agendamtx_BM,
                                       &ts);
             }
             pthread_mutex_unlock (&ti_agendamtx_BM);
+            DBGPRINTF_BM
+              ("run_agendaworker tix%d tid#%ld notask after elapsed %.3f s",
+               (int) tix, (long) gettid_BM (), elapsedtime_BM ());
           }
       }
     };                          /* end forever */
@@ -348,13 +340,7 @@ stop_agenda_work_threads_BM (void)
       usleep (10);
       pthread_mutex_lock (&ti_agendamtx_BM);
       struct timespec ts = { 0, 0 };
-      clock_gettime (CLOCK_REALTIME, &ts);
-      ts.tv_nsec += STOPWAITMILLISECONDS_BM * MILLION_BM;
-      while (ts.tv_nsec > BILLION_BM)
-        {
-          ts.tv_nsec -= BILLION_BM;
-          ts.tv_sec++;
-        };
+      get_realtimespec_delayedms_BM (&ts, STOPWAITMILLISECONDS_BM);
       DBGPRINTF_BM ("stop_agenda_work_threads tid#%ld", (long) gettid_BM ());
       pthread_cond_timedwait (&ti_agendacond_BM, &ti_agendamtx_BM, &ts);
       pthread_mutex_unlock (&ti_agendamtx_BM);
@@ -386,18 +372,16 @@ agenda_suspend_for_gc_BM (void)
       if (!alldoinggc)
         {
           struct timespec ts = { 0, 0 };
-          clock_gettime (CLOCK_REALTIME, &ts);
-          ts.tv_nsec += GCWAITMILLISECONDS_BM * MILLION_BM;
-          while (ts.tv_nsec > BILLION_BM)
-            {
-              ts.tv_nsec -= BILLION_BM;
-              ts.tv_sec++;
-            };
-          DBGPRINTF_BM ("agenda_suspend_for_gc_BM tid%ld before timedwait",
-                        (long) gettid_BM ());
+          get_realtimespec_delayedms_BM (&ts, GCWAITMILLISECONDS_BM);
+          DBGPRINTF_BM
+            ("agenda_suspend_for_gc_BM tid#%ld before timedwait elapsed %.3f s",
+             (long) gettid_BM (), elapsedtime_BM ());
           pthread_mutex_lock (&ti_agendamtx_BM);
           pthread_cond_timedwait (&ti_agendacond_BM, &ti_agendamtx_BM, &ts);
           pthread_mutex_unlock (&ti_agendamtx_BM);
+          DBGPRINTF_BM
+            ("agenda_suspend_for_gc_BM tid#%ld after timedwait elapsed %.3f s",
+             (long) gettid_BM (), elapsedtime_BM ());
         }
     }
   DBGPRINTF_BM ("agenda_suspend_for_gc_BM done");

@@ -35,6 +35,19 @@ elapsedtime_BM (void)
 }                               /* end elapsedtime_BM */
 
 
+void
+get_realtimespec_delayedms_BM (struct timespec *pts, unsigned millisec)
+{
+  ASSERT_BM (pts != NULL);
+  memset (pts, 0, sizeof (struct timespec));
+  clock_gettime (CLOCK_REALTIME, pts);
+  pts->tv_nsec += (long) millisec *MILLION_BM;
+  while (pts->tv_nsec > BILLION_BM)
+    {
+      pts->tv_nsec -= (long) BILLION_BM;
+      pts->tv_sec++;
+    }
+}                               /* end get_realtimespec_delayedms_BM */
 
 bool
 istaggedint_BM (value_tyBM v)
@@ -1171,7 +1184,7 @@ objhashsettakerandompayl_BM (objectval_tyBM * obj)
       unsigned alsiz = ((typedhead_tyBM *) hset)->rlen;
       unsigned ucnt = ((typedsize_tyBM *) hset)->size;
       if (alsiz > 30 && 3 * ucnt < alsiz)
-        obj->ob_payl = hashsetobj_grow_BM (hset, NULL);
+        obj->ob_payl = hashsetobj_grow_BM (hset, 0);
     }
   return ob;
 }                               /* end objhashsettakerandompayl_BM */

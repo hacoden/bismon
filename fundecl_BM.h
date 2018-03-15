@@ -12,6 +12,8 @@ extern int64_t prime_below_BM (int64_t n);
 static inline double clocktime_BM (clockid_t);
 static inline double cputime_BM (void);
 static inline double elapsedtime_BM (void);
+static inline void get_realtimespec_delayedms_BM (struct timespec *pts,
+                                                  unsigned millisec);
 extern double taskletcputime_BM (void);
 extern double taskletelapsedtime_BM (void);
 static inline bool istaggedint_BM (value_tyBM v);
