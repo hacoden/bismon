@@ -33,9 +33,8 @@ static struct hashsetobj_stBM *ti_verylow_taskhset_BM;
 
 static void *run_agendaworker_BM (void *);
 static objectval_tyBM *choose_task_internal_agenda_BM (void);
-static struct hashsetobj_stBM *maybe_reorganize_taskhshet_agenda_BM (struct
-                                                                     hashsetobj_stBM
-                                                                     *tkhset);
+static struct hashsetobj_stBM *maybe_reorganize_taskhshet_agenda_BM     //
+  (struct hashsetobj_stBM *tkhset);
 
 void
 initialize_agenda_BM (void)
@@ -45,9 +44,9 @@ initialize_agenda_BM (void)
 }                               /* end initialize_agenda_BM */
 
 
-#define GCWAITMILLISECONDS_BM 750
-#define TASKWAITMILLISECONDS_BM 850
-#define STOPWAITMILLISECONDS_BM 900
+#define GCWAITMILLISECONDS_BM 2960
+#define TASKWAITMILLISECONDS_BM 2850
+#define STOPWAITMILLISECONDS_BM 2740
 #define WORKTHREADSTACKSIZE_BM (10*1024*1024)
 // the work routine, passed to pthread_create
 void *
@@ -59,7 +58,7 @@ run_agendaworker_BM (void *ad)
   ASSERT_BM (curthreadinfo_BM->ti_magic == TI_MAGICNUM_BM);
   ASSERT_BM (curthreadinfo_BM->ti_rank == (short) tix);
   usleep (5 + 3 * tix);
-  // I need to be sure that clocktime_BM(CLOCK_THREAD_CPUTIME_ID) is positive, so warmup the CPU
+  // be sure that clocktime_BM(CLOCK_THREAD_CPUTIME_ID) is positive, so warmup the CPU
   {
     volatile double x = tix * 0.02 + 0.001;
     while (clocktime_BM (CLOCK_THREAD_CPUTIME_ID) <= 0.0 && x < 0.8)
@@ -82,14 +81,14 @@ run_agendaworker_BM (void *ad)
         {
           // wait for GC to terminate
           atomic_store (&curthreadinfo_BM->ti_gc, true);
+          pthread_cond_broadcast (&ti_agendacond_BM);
           do
             {
               DBGPRINTF_BM
                 ("run_agendaworker tix#%d needgc tid#%ld elapsed %.3f s",
                  (int) tix, (long) gettid_BM (), elapsedtime_BM ());
-              pthread_cond_broadcast (&ti_agendacond_BM);
               DBGPRINTF_BM
-                ("run_agendaworker tix#%d before timedwait tid#%ld",
+                ("run_agendaworker tix#%d beforegc timedwait tid#%ld",
                  (int) tix, (long) gettid_BM ());
               pthread_mutex_lock (&ti_agendamtx_BM);
               {
@@ -139,13 +138,14 @@ run_agendaworker_BM (void *ad)
           }
         else
           {                     // no task to run
-            DBGPRINTF_BM ("run_agendaworker tix%d tid#%ld notask",
-                          (int) tix, (long) gettid_BM ());
+            DBGPRINTF_BM
+              ("run_agendaworker tix%d tid#%ld notask elapsed %.3f s",
+               (int) tix, (long) gettid_BM (), elapsedtime_BM ());
             pthread_mutex_lock (&ti_agendamtx_BM);
             {
               struct timespec ts = { 0, 0 };
               clock_gettime (CLOCK_REALTIME, &ts);
-              ts.tv_nsec += TASKWAITMILLISECONDS_BM * MILLION_BM;
+              ts.tv_nsec += (TASKWAITMILLISECONDS_BM + tix) * MILLION_BM;
               while (ts.tv_nsec > BILLION_BM)
                 {
                   ts.tv_nsec -= BILLION_BM;
@@ -408,6 +408,8 @@ agenda_continue_after_gc_BM (void)
 {
   ASSERT_BM (curthreadinfo_BM == NULL);
   int nbwth = ti_nbworkers_BM;
+  DBGPRINTF_BM ("agenda_continue_after_gc tid#%ld elapsed %.3f s",
+                (long) gettid_BM (), elapsedtime_BM ());
   atomic_store (&ti_needgc_BM, false);
   {
     pthread_mutex_lock (&ti_agendamtx_BM);
@@ -418,6 +420,8 @@ agenda_continue_after_gc_BM (void)
   pthread_cond_broadcast (&ti_agendacond_BM);
   atomic_store (&ti_needgc_BM, false);
   usleep (1);
+  DBGPRINTF_BM ("agenda_continue_after_gc end tid#%ld elapsed %.3f s",
+                (long) gettid_BM (), elapsedtime_BM ());
 }                               /* end agenda_continue_after_gc_BM */
 
 void
