@@ -81,6 +81,9 @@ run_agendaworker_BM (void *ad)
       if (atomic_load (&ti_needgc_BM))
         {
           // wait for GC to terminate
+          DBGPRINTF_BM
+            ("run_agendaworker tix#%d needgc start tid#%ld elapsed %.3f s",
+             (int) tix, (long) gettid_BM (), elapsedtime_BM ());
           atomic_store (&curthreadinfo_BM->ti_gc, true);
           pthread_cond_broadcast (&ti_agendacond_BM);
           do
@@ -96,6 +99,9 @@ run_agendaworker_BM (void *ad)
                                         &ts);
               }
               pthread_mutex_unlock (&ti_agendamtx_BM);
+              DBGPRINTF_BM
+                ("run_agendaworker tix#%d needgcendloop tid#%ld elapsed %.3f s",
+                 (int) tix, (long) gettid_BM (), elapsedtime_BM ());
             }
           while (atomic_load (&curthreadinfo_BM->ti_gc));
           DBGPRINTF_BM
@@ -107,16 +113,16 @@ run_agendaworker_BM (void *ad)
         pthread_mutex_lock (&ti_agendamtx_BM);
         taskob = choose_task_internal_agenda_BM ();
         pthread_mutex_unlock (&ti_agendamtx_BM);
+        DBGPRINTF_BM
+          ("run_agendaworker tix%d choose tid#%ld elapsed %.3f s taskob %s",
+           (int) tix, (long) gettid_BM (), elapsedtime_BM (),
+           objectdbg_BM (taskob));
         if (taskob)
           {
             long flspace[12];
             memset (&flspace, 0, sizeof (flspace));
             initialize_failurelockset_BM ((struct failurelockset_stBM *)
                                           &flspace, sizeof (flspace));
-            DBGPRINTF_BM
-              ("run_agendaworker tix%d shouldrun tid#%ld elapsed %.3f s taskob %s",
-               (int) tix, (long) gettid_BM (), elapsedtime_BM (),
-               objectdbg_BM (taskob));
             curthreadinfo_BM->ti_thstartcputime =
               clocktime_BM (CLOCK_THREAD_CPUTIME_ID);
             curthreadinfo_BM->ti_thstartelapsedtime =
@@ -361,21 +367,23 @@ agenda_suspend_for_gc_BM (void)
   while (!alldoinggc)
     {
       alldoinggc = false;
+      int wix = 0;
       loopcnt++;
       DBGPRINTF_BM
         ("agenda_suspend_for_gc_BM elapsed %.3f s tid%ld loopcnt%ld",
          elapsedtime_BM (), (long) gettid_BM (), loopcnt);
       pthread_mutex_lock (&ti_agendamtx_BM);
-      for (int tix = 1; tix <= nbwth && alldoinggc; tix++)
-        alldoinggc = atomic_load (&ti_array_BM[tix].ti_gc);
+      for (int tix = 1; tix <= nbwth && !wix; tix++)
+        if (!atomic_load (&ti_array_BM[tix].ti_gc))
+          wix = tix;
       pthread_mutex_unlock (&ti_agendamtx_BM);
-      if (!alldoinggc)
+      if (wix > 0)
         {
           struct timespec ts = { 0, 0 };
           get_realtimespec_delayedms_BM (&ts, GCWAITMILLISECONDS_BM);
           DBGPRINTF_BM
-            ("agenda_suspend_for_gc_BM tid#%ld before timedwait elapsed %.3f s",
-             (long) gettid_BM (), elapsedtime_BM ());
+            ("agenda_suspend_for_gc_BM tid#%ld wix=%d before timedwait elapsed %.3f s",
+             (long) gettid_BM (), wix, elapsedtime_BM ());
           pthread_mutex_lock (&ti_agendamtx_BM);
           pthread_cond_timedwait (&ti_agendacond_BM, &ti_agendamtx_BM, &ts);
           pthread_mutex_unlock (&ti_agendamtx_BM);
