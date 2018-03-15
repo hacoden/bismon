@@ -524,3 +524,86 @@ agenda_remove_tasklet_BM (objectval_tyBM * taskob)
   pthread_cond_broadcast (&ti_agendacond_BM);
   return r;
 }                               /* end agenda_remove_tasklet_BM */
+
+long
+agenda_get_counts_BM (long *pveryhigh, long *phigh, long *pnormal, long *plow,
+                      long *pverylow)
+{
+  long totcnt = 0;
+  pthread_mutex_lock (&ti_agendamtx_BM);
+  {
+    long veryhighcnt = hashsetobj_cardinal_BM (ti_veryhigh_taskhset_BM);
+    if (pveryhigh)
+      *pveryhigh = veryhighcnt;
+    totcnt += veryhighcnt;
+  }
+  {
+    long highcnt = hashsetobj_cardinal_BM (ti_high_taskhset_BM);
+    if (phigh)
+      *phigh = highcnt;
+    totcnt += highcnt;
+  }
+  {
+    long normalcnt = hashsetobj_cardinal_BM (ti_normal_taskhset_BM);
+    if (pnormal)
+      *pnormal = normalcnt;
+    totcnt += normalcnt;
+  }
+  {
+    long lowcnt = hashsetobj_cardinal_BM (ti_low_taskhset_BM);
+    if (plow)
+      *plow = lowcnt;
+    totcnt += lowcnt;
+  }
+  {
+    long verylowcnt = hashsetobj_cardinal_BM (ti_verylow_taskhset_BM);
+    if (pverylow)
+      *pverylow = verylowcnt;
+    totcnt += verylowcnt;
+  }
+  pthread_mutex_unlock (&ti_agendamtx_BM);
+  return totcnt;
+}                               /* end agenda_get_counts_BM */
+
+long
+agenda_get_sets_BM (value_tyBM * pveryhighset,
+                    value_tyBM * phighset, value_tyBM * pnormalset,
+                    value_tyBM * plowset, value_tyBM * pverylowset)
+{
+  long totcnt = 0;
+  pthread_mutex_lock (&ti_agendamtx_BM);
+  {
+    long veryhighcnt = hashsetobj_cardinal_BM (ti_veryhigh_taskhset_BM);
+    if (pveryhighset)
+      *pveryhighset =
+        (value_tyBM) hashsetobj_to_set_BM (ti_veryhigh_taskhset_BM);;
+    totcnt += veryhighcnt;
+  }
+  {
+    long highcnt = hashsetobj_cardinal_BM (ti_high_taskhset_BM);
+    if (phighset)
+      *phighset = (value_tyBM) hashsetobj_to_set_BM (ti_high_taskhset_BM);
+    totcnt += highcnt;
+  }
+  {
+    long normalcnt = hashsetobj_cardinal_BM (ti_normal_taskhset_BM);
+    if (pnormalset)
+      *pnormalset = (value_tyBM) hashsetobj_to_set_BM (ti_normal_taskhset_BM);
+    totcnt += normalcnt;
+  }
+  {
+    long lowcnt = hashsetobj_cardinal_BM (ti_low_taskhset_BM);
+    if (plowset)
+      *plowset = (value_tyBM) hashsetobj_to_set_BM (ti_low_taskhset_BM);
+    totcnt += lowcnt;
+  }
+  {
+    long verylowcnt = hashsetobj_cardinal_BM (ti_verylow_taskhset_BM);
+    if (pverylowset)
+      *pverylowset =
+        (value_tyBM) hashsetobj_to_set_BM (ti_verylow_taskhset_BM);
+    totcnt += verylowcnt;
+  }
+  pthread_mutex_unlock (&ti_agendamtx_BM);
+  return totcnt;
+}                               /* end agenda_get_sets_BM */

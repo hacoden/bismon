@@ -1188,9 +1188,10 @@ extern bool agenda_has_tasklet_BM (objectval_tyBM *);
 extern void run_agenda_tasklet_BM (objectval_tyBM *,
                                    struct failurelockset_stBM *);
 // return total number of tasklets
-extern long agenda_get_counts_BM (long *pveryhigh, long *phigh, long *plow,
-                                  long *pverylow);
-extern long agenda_get_tuples_BM (value_tyBM * pveryhightup,
-                                  value_tyBM * phightup, value_tyBM * plowtup,
-                                  value_tyBM * pverylowtup);
+extern long agenda_get_counts_BM (long *pveryhigh, long *phigh, long *pnormal,
+                                  long *plow, long *pverylow);
+extern long agenda_get_sets_BM (value_tyBM * pveryhighset,
+                                value_tyBM * phighset, value_tyBM * pnormset,
+                                value_tyBM * plowset,
+                                value_tyBM * pverylowset);
 #endif /*FUNDECL_BM_INCLUDED */
