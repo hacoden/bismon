@@ -377,6 +377,9 @@ agenda_suspend_for_gc_BM (void)
         if (!atomic_load (&ti_array_BM[tix].ti_gc))
           wix = tix;
       pthread_mutex_unlock (&ti_agendamtx_BM);
+      DBGPRINTF_BM
+        ("agenda_suspend_for_gc_BM tid#%ld wix=%d elapsed %.3f s",
+         (long) gettid_BM (), wix, elapsedtime_BM ());
       if (wix > 0)
         {
           struct timespec ts = { 0, 0 };
@@ -391,6 +394,8 @@ agenda_suspend_for_gc_BM (void)
             ("agenda_suspend_for_gc_BM tid#%ld after timedwait elapsed %.3f s",
              (long) gettid_BM (), elapsedtime_BM ());
         }
+      else
+        break;
     }
   DBGPRINTF_BM ("agenda_suspend_for_gc_BM done");
 }                               /* end agenda_suspend_for_gc_BM */
