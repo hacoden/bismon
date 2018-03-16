@@ -1796,6 +1796,7 @@ ROUTINEOBJNAME_BM (_1eQ1a8KHixZ_1XDNH5iTQ0I)    //
       log_end_message_BM ();
       LOCALRETURN_BM (NULL);
     }
+  int nbhi = 0;
   for (int ix = 0; ix < nbtasklets; ix++)
     {
       _.taskob = makeobj_BM ();
@@ -1803,12 +1804,19 @@ ROUTINEOBJNAME_BM (_1eQ1a8KHixZ_1XDNH5iTQ0I)    //
       objputattr_BM (_.taskob, k_rank, taggedint_BM (ix));
       objtouchnow_BM (_.taskob);
       if (ix % 8 == 0)
-        agenda_add_high_priority_tasklet_BM (_.taskob);
+        {
+          agenda_add_high_priority_tasklet_BM (_.taskob);
+          nbhi++;
+        }
       else
         agenda_add_low_priority_tasklet_BM (_.taskob);
       DBGPRINTF_BM ("test_agenda ix=%d taskob %s", ix,
                     objectdbg_BM (_.taskob));
     }
+  log_begin_message_BM ();
+  log_printf_message_BM
+    (",test_agenda added %d tasklets (with %d of high priority)",
+     nbtasklets, nbhi);
+  log_end_message_BM ();
   LOCALRETURN_BM (BMK_1eQ1a8KHixZ_1XDNH5iTQ0I);
-#warning test_agenda command_handler incomplete
 }                               /* end routine _1eQ1a8KHixZ_1XDNH5iTQ0I */
