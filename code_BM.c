@@ -4193,4 +4193,5 @@ ROUTINEOBJNAME_BM (_1eQ1a8KHixZ_1XDNH5iTQ0I) //
   );
   DBGPRINTF_BM("test_agenda command_handler start");
   LOCALRETURN_BM(_.resultv);
+#warning test_agenda command_handler incomplete
 } /* end routine _1eQ1a8KHixZ_1XDNH5iTQ0I*/
