@@ -4172,3 +4172,25 @@ ROUTINEOBJNAME_BM (_8AzRspWL4ws_3cdvWV4S1JH)    //
   objstrbufferappendcstrpayl_BM (_.bufob, "\n~)\n");
   LOCALRETURN_BM (_.recv);
 }                               /* end dump_data°hashmapval_object _8AzRspWL4ws_3cdvWV4S1JH */
+
+
+
+
+// test_agenda command_handler _1eQ1a8KHixZ_1XDNH5iTQ0I
+
+extern objrout_sigBM ROUTINEOBJNAME_BM (_1eQ1a8KHixZ_1XDNH5iTQ0I);
+value_tyBM
+ROUTINEOBJNAME_BM (_1eQ1a8KHixZ_1XDNH5iTQ0I) //
+(struct stackframe_stBM* stkf, //
+ const value_tyBM arg1, //
+ const value_tyBM arg2, //
+ const value_tyBM arg3, //
+ const value_tyBM arg4_  __attribute__((unused)), //
+ const quasinode_tyBM* restargs_  __attribute__((unused)))
+{
+  LOCALFRAME_BM (stkf, /*descr:*/ BMK_1eQ1a8KHixZ_1XDNH5iTQ0I,
+   value_tyBM resultv;
+  );
+  DBGPRINTF_BM("test_agenda command_handler start");
+  LOCALRETURN_BM(_.resultv);
+} /* end routine _1eQ1a8KHixZ_1XDNH5iTQ0I*/
