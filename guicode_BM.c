@@ -1785,9 +1785,10 @@ ROUTINEOBJNAME_BM (_1eQ1a8KHixZ_1XDNH5iTQ0I)    //
     );
   objectval_tyBM *k_tiny_tasklet = BMK_8dM7Xmdup4k_4jwzwOtmC1a;
   objectval_tyBM *k_rank = BMK_8zRh2medTlP_0ImnPyO8NKH;
-  DBGPRINTF_BM ("test_agenda command_handler start");
   WEAKASSERT_BM (pthread_self () == mainthreadid_BM);
   int nbtasklets = getint_BM (arg1);
+  DBGPRINTF_BM ("test_agenda command_handler start nbtasklets=%d",
+		nbtasklets);
   if (nbtasklets <= 0 || nbtasklets > MILLION_BM)
     {
       log_begin_message_BM ();
