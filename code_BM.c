@@ -4200,6 +4200,8 @@ ROUTINEOBJNAME_BM (_1etImV3nBtp_5rnHSE87XRj)    //
   _.todov = objgetattr_BM (_.recv, k_todo);
   _.resv = apply1_BM (_.todov, (struct stackframe_stBM *) &_, _.recv);
   objunlock_BM (_.recv);
+  DBGPRINTF_BM ("run_tasklet°tiny_tasklet recv %s applied todo %s", objectdbg_BM (_.recv), debug_outstr_value_BM (_.todov,     //
+                                                                                                                   (struct stackframe_stBM *) &_, 0));
   LOCALRETURN_BM (_.resv);
 }                               /* end run_tasklet°tiny_tasklet  _1etImV3nBtp_5rnHSE87XRj */
 
