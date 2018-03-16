@@ -1782,13 +1782,17 @@ ROUTINEOBJNAME_BM (_1eQ1a8KHixZ_1XDNH5iTQ0I)    //
 {
   LOCALFRAME_BM (stkf, /*descr: */ BMK_1eQ1a8KHixZ_1XDNH5iTQ0I,
                  objectval_tyBM * taskob;
+                 value_tyBM * arg1;
     );
   objectval_tyBM *k_tiny_tasklet = BMK_8dM7Xmdup4k_4jwzwOtmC1a;
   objectval_tyBM *k_rank = BMK_8zRh2medTlP_0ImnPyO8NKH;
   WEAKASSERT_BM (pthread_self () == mainthreadid_BM);
+  _.arg1 = arg1;
   int nbtasklets = getint_BM (arg1);
-  DBGPRINTF_BM ("test_agenda command_handler start nbtasklets=%d",
-		nbtasklets);
+  DBGPRINTF_BM ("test_agenda command_handler start nbtasklets=%d arg1=%s",      //
+                nbtasklets,     //
+                debug_outstr_value_BM (_.arg1,  //
+                                       (struct stackframe_stBM *) &_, 0));
   if (nbtasklets <= 0 || nbtasklets > MILLION_BM)
     {
       log_begin_message_BM ();
