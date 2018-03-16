@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 260 objects
+// for 261 objects
 // with 0 modules
 
 
@@ -1479,6 +1479,17 @@ _2mYaTh9kH4I_7ENiXcymRmy |=set|
 !: _0NnNXZqWvmz_1ucZGX0YPu1 |=command_arity|
  3
 !)_16OZeTBZLbW_6SCJt3rgxci
+
+
+
+!(_8zRh2medTlP_0ImnPyO8NKH |=rank|
+!~ name (~ rank
+~)
+!@ 1521203257.04
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "to give the rank"
+!)_8zRh2medTlP_0ImnPyO8NKH
 
 
 

@@ -1768,3 +1768,47 @@ ROUTINEOBJNAME_BM (_0M2jApBzFAy_8H8cpCjGpTi)    //
   }
   LOCALRETURN_BM (_.objbrows);
 }                               /* end browse_data°hashmapval_object _0M2jApBzFAy_8H8cpCjGpTi */
+
+// test_agenda command_handler _1eQ1a8KHixZ_1XDNH5iTQ0I
+extern objrout_sigBM ROUTINEOBJNAME_BM (_1eQ1a8KHixZ_1XDNH5iTQ0I);
+value_tyBM
+ROUTINEOBJNAME_BM (_1eQ1a8KHixZ_1XDNH5iTQ0I)    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // nbtasklets
+ const value_tyBM arg2,         //
+ const value_tyBM arg3,         //
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
+{
+  LOCALFRAME_BM (stkf, /*descr: */ BMK_1eQ1a8KHixZ_1XDNH5iTQ0I,
+                 objectval_tyBM * taskob;
+    );
+  objectval_tyBM *k_tiny_tasklet = BMK_8dM7Xmdup4k_4jwzwOtmC1a;
+  objectval_tyBM *k_rank = BMK_8zRh2medTlP_0ImnPyO8NKH;
+  DBGPRINTF_BM ("test_agenda command_handler start");
+  WEAKASSERT_BM (pthread_self () == mainthreadid_BM);
+  int nbtasklets = getint_BM (arg1);
+  if (nbtasklets <= 0 || nbtasklets > MILLION_BM)
+    {
+      log_begin_message_BM ();
+      log_printf_message_BM (",test_agenda command bad nbtasklets %d",
+                             nbtasklets);
+      log_end_message_BM ();
+      LOCALRETURN_BM (NULL);
+    }
+  for (int ix = 0; ix < nbtasklets; ix++)
+    {
+      _.taskob = makeobj_BM ();
+      objputclass_BM (_.taskob, k_tiny_tasklet);
+      objputattr_BM (_.taskob, k_rank, taggedint_BM (ix));
+      objtouchnow_BM (_.taskob);
+      if (ix % 8 == 0)
+        agenda_add_high_priority_tasklet_BM (_.taskob);
+      else
+        agenda_add_low_priority_tasklet_BM (_.taskob);
+      DBGPRINTF_BM ("test_agenda ix=%d taskob %s", ix,
+                    objectdbg_BM (_.taskob));
+    }
+  LOCALRETURN_BM (BMK_1eQ1a8KHixZ_1XDNH5iTQ0I);
+#warning test_agenda command_handler incomplete
+}                               /* end routine _1eQ1a8KHixZ_1XDNH5iTQ0I */
