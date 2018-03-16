@@ -1031,6 +1031,7 @@ parsecommandbuf_newgui_BM (struct
                                                            (struct
                                                             stackframe_stBM *)
                                                            &_, 0));
+                      argcnt++;
                     }
                 }
               else if (arity >= 0)
@@ -1068,9 +1069,15 @@ parsecommandbuf_newgui_BM (struct
               ASSERT_BM (argcnt >= 0 && argcnt < TINYSIZE_BM);
               if (!nobuild)
                 {
-                  _.result = applyvar_BM (_.cmdhandler,
-                                          (struct stackframe_stBM *) &_,
-                                          argcnt, _.cmdargs);
+                  DBGPRINTF_BM
+                    ("parsecommandbuf_newgui cmdobj=%s arity %d cmdhandler %s",
+                     objectdbg_BM (_.cmdobj), arity,
+                     debug_outstr_value_BM (_.cmdhandler,
+                                            (struct stackframe_stBM *) &_,
+                                            0));
+                  _.result =
+                    applyvar_BM (_.cmdhandler, (struct stackframe_stBM *) &_,
+                                 argcnt, _.cmdargs);
                   if (!_.result)
                     parsererrorprintf_BM (pars,
                                           (struct stackframe_stBM *) &_,
@@ -3353,12 +3360,10 @@ void
 newgui_browse_add_parens_BM (int openoff,
                              int closeoff,
                              int xtraoff,
-                             unsigned
-                             openlen,
-                             unsigned
-                             closelen,
-                             unsigned
-                             xtralen, int depth, struct stackframe_stBM *stkf)
+                             unsigned openlen,
+                             unsigned closelen,
+                             unsigned xtralen, int depth,
+                             struct stackframe_stBM *stkf)
 {
   LOCALFRAME_BM ( /*prev: */ stkf,
                  /*descr: */ NULL,
