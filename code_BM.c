@@ -4196,3 +4196,24 @@ ROUTINEOBJNAME_BM (_1eQ1a8KHixZ_1XDNH5iTQ0I)    //
 #warning test_agenda command_handler incomplete
 }                               /* end routine _1eQ1a8KHixZ_1XDNH5iTQ0I */
 
+
+// method run_tasklet°tiny_tasklet _1etImV3nBtp_5rnHSE87XRj
+extern objrout_sigBM ROUTINEOBJNAME_BM (_1etImV3nBtp_5rnHSE87XRj);
+
+value_tyBM
+ROUTINEOBJNAME_BM (_1etImV3nBtp_5rnHSE87XRj)    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // recv
+ const value_tyBM arg2,         //
+ const value_tyBM arg3,         //
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
+{
+  LOCALFRAME_BM (stkf, /*descr: */ BMK_1etImV3nBtp_5rnHSE87XRj,
+                 objectval_tyBM * recv;
+    );
+  _.recv = objectcast_BM (arg1);
+  WEAKASSERT_BM (_.recv != NULL);
+  DBGPRINTF_BM ("run_tasklet°tiny_tasklet recv %s", objectdbg_BM (_.recv));
+  LOCALRETURN_BM (_.recv);
+}                               /* end run_tasklet°tiny_tasklet  _1etImV3nBtp_5rnHSE87XRj */
