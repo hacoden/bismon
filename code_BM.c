@@ -4189,10 +4189,46 @@ ROUTINEOBJNAME_BM (_1etImV3nBtp_5rnHSE87XRj)    //
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM (stkf, /*descr: */ BMK_1etImV3nBtp_5rnHSE87XRj,
-                 objectval_tyBM * recv;
+                 objectval_tyBM * recv; value_tyBM * todov;
+                 value_tyBM * resv;
     );
+  objectval_tyBM *k_todo = BMK_7ljWW4bj70g_9PL9dZkgBxZ;
   _.recv = objectcast_BM (arg1);
   WEAKASSERT_BM (_.recv != NULL);
   DBGPRINTF_BM ("run_tasklet°tiny_tasklet recv %s", objectdbg_BM (_.recv));
-  LOCALRETURN_BM (_.recv);
+  objlock_BM (_.recv);
+  _.todov = objgetattr_BM (_.recv, k_todo);
+  _.resv = apply1_BM (_.todov, (struct stackframe_stBM *) &_, _.recv);
+  objunlock_BM (_.recv);
+  LOCALRETURN_BM (_.resv);
 }                               /* end run_tasklet°tiny_tasklet  _1etImV3nBtp_5rnHSE87XRj */
+
+// todo function in our test_agenda  _7XDuHagbhi8_3V9zhBpbrrV
+extern objrout_sigBM ROUTINEOBJNAME_BM (_7XDuHagbhi8_3V9zhBpbrrV);
+
+value_tyBM
+ROUTINEOBJNAME_BM (_7XDuHagbhi8_3V9zhBpbrrV)    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // taskob
+ const value_tyBM arg2,         //
+ const value_tyBM arg3,         //
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
+{
+  LOCALFRAME_BM (stkf, /*descr: */ BMK_7XDuHagbhi8_3V9zhBpbrrV,
+                 objectval_tyBM * taskob; value_tyBM resultv;
+                 value_tyBM rankv;
+    );
+  objectval_tyBM *k_rank = BMK_8zRh2medTlP_0ImnPyO8NKH;
+  _.taskob = objectcast_BM (arg1);
+  DBGPRINTF_BM ("todo!test_agenda taskob %s", objectdbg_BM (_.taskob));
+  WEAKASSERT_BM (_.taskob != NULL);
+  objlock_BM (_.taskob);
+  _.rankv = objgetattr_BM (_.taskob, k_rank);
+  objunlock_BM (_.taskob);
+  WEAKASSERT_BM (istaggedint_BM (_.rankv));
+  int rk = getint_BM (_.rankv);
+  DBGPRINTF_BM ("todo!test_agenda taskob %s rk#%d", objectdbg_BM (_.taskob),
+                rk);
+  LOCALRETURN_BM (_.taskob);
+}                               /* end todo in test_agenda _7XDuHagbhi8_3V9zhBpbrrV */

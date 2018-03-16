@@ -1781,17 +1781,21 @@ ROUTINEOBJNAME_BM (_1eQ1a8KHixZ_1XDNH5iTQ0I)    //
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM (stkf, /*descr: */ BMK_1eQ1a8KHixZ_1XDNH5iTQ0I,
-                 objectval_tyBM * taskob;
-                 value_tyBM * arg1;
+                 objectval_tyBM * taskob; value_tyBM arg1v;
+                 value_tyBM arg2v;
+                 value_tyBM closv;
     );
   objectval_tyBM *k_tiny_tasklet = BMK_8dM7Xmdup4k_4jwzwOtmC1a;
   objectval_tyBM *k_rank = BMK_8zRh2medTlP_0ImnPyO8NKH;
+  objectval_tyBM *k_todo = BMK_7ljWW4bj70g_9PL9dZkgBxZ;
+  objectval_tyBM *kk_testagendafun = BMK_7XDuHagbhi8_3V9zhBpbrrV;
   WEAKASSERT_BM (pthread_self () == mainthreadid_BM);
-  _.arg1 = arg1;
+  _.arg1v = arg1;
+  _.arg2v = arg2;
   int nbtasklets = getint_BM (arg1);
   DBGPRINTF_BM ("test_agenda command_handler start nbtasklets=%d arg1=%s",      //
                 nbtasklets,     //
-                debug_outstr_value_BM (_.arg1,  //
+                debug_outstr_value_BM (_.arg1v, //
                                        (struct stackframe_stBM *) &_, 0));
   if (nbtasklets <= 0 || nbtasklets > MILLION_BM)
     {
@@ -1807,6 +1811,8 @@ ROUTINEOBJNAME_BM (_1eQ1a8KHixZ_1XDNH5iTQ0I)    //
       _.taskob = makeobj_BM ();
       objputclass_BM (_.taskob, k_tiny_tasklet);
       objputattr_BM (_.taskob, k_rank, taggedint_BM (ix));
+      _.closv = makeclosurevar_BM (kk_testagendafun, _.arg2v, NULL);
+      objputattr_BM (_.taskob, k_todo, _.closv);
       objtouchnow_BM (_.taskob);
       if (ix % 8 == 0)
         {

@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 261 objects
+// for 262 objects
 // with 0 modules
 
 
@@ -2824,6 +2824,16 @@ _36MhHxakHKT_1ZzV5Xoj5LX
 !# 1
 !& _1UM3ERNWFgo_6pqkY9UiIDv
 !)_7XasLoEUKwe_9upxyFeheD5
+
+
+
+!(_7XDuHagbhi8_3V9zhBpbrrV
+!|*
+!@ 1521225293.43
+!$_2Ir1i8qnrA4_3jSkierlc5z |=basiclo_function|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "todo function of our tasklets in test_agenda"
+!)_7XDuHagbhi8_3V9zhBpbrrV
 
 
 
