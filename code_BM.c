@@ -4220,6 +4220,7 @@ ROUTINEOBJNAME_BM (_7XDuHagbhi8_3V9zhBpbrrV)    //
                  value_tyBM rankv;
     );
   objectval_tyBM *k_rank = BMK_8zRh2medTlP_0ImnPyO8NKH;
+  objectval_tyBM *kk_defer_show = BMK_7rRjqfXs3QI_4Nwk2Lfm569;
   _.taskob = objectcast_BM (arg1);
   DBGPRINTF_BM ("todo!test_agenda taskob %s", objectdbg_BM (_.taskob));
   WEAKASSERT_BM (_.taskob != NULL);
@@ -4230,5 +4231,11 @@ ROUTINEOBJNAME_BM (_7XDuHagbhi8_3V9zhBpbrrV)    //
   int rk = getint_BM (_.rankv);
   DBGPRINTF_BM ("todo!test_agenda taskob %s rk#%d", objectdbg_BM (_.taskob),
                 rk);
+  if (rk < 5 || g_random_int () % 8 == 0)
+    {
+      DBGPRINTF_BM ("todo!test_agenda defergtk %s rk#%d",
+                    objectdbg_BM (_.taskob), rk);
+      gtk_defer_apply3_BM (kk_defer_show, _.taskob, _.rankv, NULL);
+    }
   LOCALRETURN_BM (_.taskob);
 }                               /* end todo in test_agenda _7XDuHagbhi8_3V9zhBpbrrV */

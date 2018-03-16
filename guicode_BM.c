@@ -1831,3 +1831,37 @@ ROUTINEOBJNAME_BM (_1eQ1a8KHixZ_1XDNH5iTQ0I)    //
   log_end_message_BM ();
   LOCALRETURN_BM (BMK_1eQ1a8KHixZ_1XDNH5iTQ0I);
 }                               /* end routine _1eQ1a8KHixZ_1XDNH5iTQ0I */
+
+
+//  test_agenda gtk _7rRjqfXs3QI_4Nwk2Lfm569
+extern objrout_sigBM ROUTINEOBJNAME_BM (_7rRjqfXs3QI_4Nwk2Lfm569);
+
+value_tyBM
+ROUTINEOBJNAME_BM (_7rRjqfXs3QI_4Nwk2Lfm569)    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // taskob
+ const value_tyBM arg2,         // rank
+ const value_tyBM arg3,         //
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
+{
+  LOCALFRAME_BM (stkf, /*descr: */ BMK_7rRjqfXs3QI_4Nwk2Lfm569,
+                 objectval_tyBM * taskob; value_tyBM rankv;
+                 value_tyBM resultv;
+    );
+  _.taskob = objectcast_BM (arg1);
+  _.rankv = arg2;
+  WEAKASSERT_BM (isobject_BM (_.taskob));
+  WEAKASSERT_BM (istaggedint_BM (_.rankv));
+  WEAKASSERT_BM (pthread_self () == mainthreadid_BM);
+  int rk = getint_BM (_.rankv);
+  DBGPRINTF_BM ("test_agenda gtk taskob %s rk %d", objectdbg_BM (_.taskob),
+                rk);
+  log_begin_message_BM ();
+  log_printf_message_BM ("testagenda elapsed %.3f s tasklet ",
+                         elapsedtime_BM ());
+  log_object_message_BM (_.taskob);
+  log_printf_message_BM (" rank %d.", rk);
+  log_end_message_BM ();
+  LOCALRETURN_BM (_.taskob);
+}                               /* end routine _7rRjqfXs3QI_4Nwk2Lfm569 */

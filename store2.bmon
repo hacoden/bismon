@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 262 objects
+// for 263 objects
 // with 0 modules
 
 
@@ -2745,6 +2745,16 @@ _36MhHxakHKT_1ZzV5Xoj5LX
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "method to dump_value a string"
 !)_7mvOlkB1tAJ_3psVFz4QEAn
+
+
+
+!(_7rRjqfXs3QI_4Nwk2Lfm569
+!|*
+!@ 1521229706.33
+!$_2Ir1i8qnrA4_3jSkierlc5z |=basiclo_function|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "gtk test agenda"
+!)_7rRjqfXs3QI_4Nwk2Lfm569
 
 
 
