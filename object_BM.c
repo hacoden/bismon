@@ -250,8 +250,8 @@ growobucket_BM (unsigned bucknum, unsigned gap)
   ASSERT_BM (oldbuck == NULL || oldcnt < oldsiz);
   ASSERT_BM (validobjbucket_BM (oldbuck));
   unsigned long newsiz =
-    prime_above_BM (4 * (oldcnt + gap) / 3 + gap / 64 +
-                    ILOG2_BM (oldcnt + 2) + 5);
+    prime_above_BM (4 * (oldcnt + gap) / 3 + gap / 64 + oldcnt / 128 +
+                    ILOG2_BM (oldcnt + 3) + 6);
   struct objbucket_stBM *newbuck =
     malloc (sizeof (struct objbucket_stBM) + newsiz * sizeof (void *));
   if (!newbuck)
@@ -271,7 +271,10 @@ growobucket_BM (unsigned bucknum, unsigned gap)
       ASSERT_BM (isobject_BM (oldob));
       addtobucket_BM (newbuck, oldob);
     }
-  free (oldbuck), oldbuck = NULL;
+  if (oldbuck)
+    {
+      oldbuck->buckmagic = 0xffff, free (oldbuck), oldbuck = NULL;
+    }
   ASSERT_BM (newbuck->buckcount == oldcnt);
   ASSERT_BM (validobjbucket_BM (newbuck));
 }                               /* end growobucket_BM */
@@ -290,11 +293,11 @@ makeobjofid_BM (const rawid_tyBM id)
   unsigned oldsiz = curbuck ? curbuck->bucksize : 0;
   unsigned oldcnt = curbuck ? curbuck->buckcount : 0;
   ASSERT_BM (validobjbucket_BM (curbuck));
-  if (!curbuck || 4 * oldcnt + 5 > 3 * oldsiz)
+  if (!curbuck || 4 * oldcnt + 10 > 3 * oldsiz)
     {
-      growobucket_BM (bucknum, 6 + ILOG2_BM (oldcnt + 1));
+      growobucket_BM (bucknum, 7 + ILOG2_BM (oldcnt + 1));
       curbuck = buckarr_BM[bucknum];
-      ASSERT_BM (curbuck);
+      ASSERT_BM (curbuck && validobjbucket_BM (curbuck));
     }
   pob = allocgcty_BM (tyObject_BM, sizeof (objectval_tyBM));
   pob->ob_id = id;
@@ -874,12 +877,11 @@ register_predefined_object_BM (objectval_tyBM * pob)
   ASSERT_BM (findobjofid_BM (pob->ob_id) == NULL);
   ASSERT_BM (((typedhead_tyBM *) pob)->hash == hashid_BM (pob->ob_id));
   unsigned bucknum = bucknumserial63_BM (pob->ob_id.id_hi);
-  growobucket_BM (bucknum, 4);
+  growobucket_BM (bucknum, 6);
   struct objbucket_stBM *curbuck = buckarr_BM[bucknum];
-  ASSERT_BM (curbuck != NULL);
+  ASSERT_BM (curbuck != NULL && validobjbucket_BM (curbuck));
   addtobucket_BM (curbuck, pob);
-  ASSERT_BM (curbuck->buckcount > 0
-             && curbuck->buckcount <= curbuck->bucksize);
+  ASSERT_BM (curbuck && validobjbucket_BM (curbuck));
   ASSERT_BM (findobjofid_BM (pob->ob_id) == pob);
   hashset_predefined_objects_BM =       //
     hashsetobj_add_BM (hashset_predefined_objects_BM, pob);
