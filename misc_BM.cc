@@ -887,6 +887,7 @@ gtk_defer_apply3_BM (value_tyBM funv, value_tyBM arg1, value_tyBM arg2, value_ty
     dap.defer_arg3 = arg3;
     deferdeque_BM.emplace_back(dap);
   }
+  DBGPRINTF_BM("gtk_defer_apply ch '%c'", ch);
   int nbtry = 0;
   int wrcnt = 0;
   for(;;)   // most of the time, this loop runs once
@@ -906,6 +907,8 @@ gtk_defer_apply3_BM (value_tyBM funv, value_tyBM arg1, value_tyBM arg2, value_ty
                       );
           return;
         }
+      else
+        DBGPRINTF_BM("gtk_defer_apply ch '%c' wrcnt %d %m", ch, wrcnt);
       usleep(1000);
       nbtry++;
       if (nbtry > 256)

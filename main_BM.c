@@ -440,8 +440,10 @@ deferpipereadhandler_BM (GIOChannel * source,
       gsize nbrd = 0;
       GIOStatus st =
         g_io_channel_read_chars (source, buf, sizeof (buf) - 1, &nbrd, NULL);
+      DBGPRINTF_BM ("deferpipereadhandler_BM nbrd=%d buf '%s' st#%d",
+                    (int) nbrd, buf, (int) st);
       if (st == G_IO_STATUS_EOF)
-        return false;
+        return FALSE;
       if (!did_deferredgtk_BM ())
         return TRUE;
       if (st == G_IO_STATUS_NORMAL && nbrd > 0)
