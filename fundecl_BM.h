@@ -1068,12 +1068,13 @@ extern void hide_object_gui_BM (const objectval_tyBM * objbrows,
 // defer an application, running in the (GTK) main thread
 void
 gtk_defer_apply3_BM (value_tyBM closv, value_tyBM arg1, value_tyBM arg2,
-                     value_tyBM arg3);
+                     value_tyBM arg3, struct stackframe_stBM *stkf);
 
 // defer a message send, running in the (GTK) main thread
 void
 gtk_defer_send3_BM (value_tyBM recv, objectval_tyBM * obsel, value_tyBM arg1,
-                    value_tyBM arg2, value_tyBM arg3);
+                    value_tyBM arg2, value_tyBM arg3,
+                    struct stackframe_stBM *stkf);
 
 extern void clear_command_BM (void);
 // internal, inside browsing methods

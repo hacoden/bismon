@@ -837,9 +837,42 @@ did_deferredgtk_BM (void)
 
 extern "C" int defer_gtk_writepipefd_BM;
 void
-gtk_defer_apply3_BM (value_tyBM closv, value_tyBM arg1, value_tyBM arg2, value_tyBM arg3)
+gtk_defer_apply3_BM (value_tyBM closv, value_tyBM arg1, value_tyBM arg2, value_tyBM arg3,
+                     struct stackframe_stBM*stkf)
 {
-  if (!isclosure_BM(closv)) return;
+  struct thisframe
+  {
+    STACKFRAMEFIELDS_BM;
+    value_tyBM closv;
+    value_tyBM arg1;
+    value_tyBM arg2;
+    value_tyBM arg3;
+  } _;
+  memset ((void*)&_, 0, sizeof(_));
+  _.stkfram_pA.htyp = typayl_StackFrame_BM;
+  _.stkfram_pA.rlen = 4;
+  _.stkfram_prev = stkf;
+  if (!isclosure_BM(closv))
+    {
+      DBGPRINTF_BM("gtk_defer_apply bad closv %s",
+                   debug_outstr_value_BM (_.closv, //
+                                          (struct stackframe_stBM *) &_, 0));
+      return;
+    }
+  _.closv = closv;
+  _.arg1 = arg1;
+  _.arg2 = arg2;
+  _.arg3 = arg3;
+  DBGPRINTF_BM("gtk_defer_apply start closv %s arg1 %s arg2 %s arg3 %s",
+               debug_outstr_value_BM (_.closv, //
+                                      (struct stackframe_stBM *) &_, 0), //
+               debug_outstr_value_BM (_.arg1, //
+                                      (struct stackframe_stBM *) &_, 0), //
+               debug_outstr_value_BM (_.arg2, //
+                                      (struct stackframe_stBM *) &_, 0), //
+               debug_outstr_value_BM (_.arg3, //
+                                      (struct stackframe_stBM *) &_, 0) //
+              );
   if (defer_gtk_writepipefd_BM<0)
     FATAL_BM("gtk_defer_apply3_BM without writepipe");
   char ch = "0123456789abcdefghijklmnopqrstuvwxyz" [valhash_BM (closv) % 36];
@@ -858,7 +891,20 @@ gtk_defer_apply3_BM (value_tyBM closv, value_tyBM arg1, value_tyBM arg2, value_t
   for(;;)   // most of the time, this loop runs once
     {
       wrcnt = write(defer_gtk_writepipefd_BM, &ch, 1);
-      if (wrcnt>0) return;
+      if (wrcnt>0)
+        {
+          DBGPRINTF_BM("gtk_defer_apply done closv %s arg1 %s arg2 %s arg3 %s",
+                       debug_outstr_value_BM (_.closv, //
+                                              (struct stackframe_stBM *) &_, 0), //
+                       debug_outstr_value_BM (_.arg1, //
+                                              (struct stackframe_stBM *) &_, 0), //
+                       debug_outstr_value_BM (_.arg2, //
+                                              (struct stackframe_stBM *) &_, 0), //
+                       debug_outstr_value_BM (_.arg3, //
+                                              (struct stackframe_stBM *) &_, 0) //
+                      );
+          return;
+        }
       usleep(1000);
       nbtry++;
       if (nbtry > 256)

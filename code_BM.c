@@ -4200,8 +4200,10 @@ ROUTINEOBJNAME_BM (_1etImV3nBtp_5rnHSE87XRj)    //
   _.todov = objgetattr_BM (_.recv, k_todo);
   _.resv = apply1_BM (_.todov, (struct stackframe_stBM *) &_, _.recv);
   objunlock_BM (_.recv);
-  DBGPRINTF_BM ("run_tasklet°tiny_tasklet recv %s applied todo %s", objectdbg_BM (_.recv), debug_outstr_value_BM (_.todov,     //
-                                                                                                                   (struct stackframe_stBM *) &_, 0));
+  DBGPRINTF_BM ("run_tasklet°tiny_tasklet recv %s applied todo %s",    //
+                objectdbg_BM (_.recv),  //
+                debug_outstr_value_BM (_.todov, //
+                                       (struct stackframe_stBM *) &_, 0));
   LOCALRETURN_BM (_.resv);
 }                               /* end run_tasklet°tiny_tasklet  _1etImV3nBtp_5rnHSE87XRj */
 
@@ -4220,6 +4222,7 @@ ROUTINEOBJNAME_BM (_7XDuHagbhi8_3V9zhBpbrrV)    //
   LOCALFRAME_BM (stkf, /*descr: */ BMK_7XDuHagbhi8_3V9zhBpbrrV,
                  objectval_tyBM * taskob; value_tyBM resultv;
                  value_tyBM rankv;
+                 value_tyBM gtkclosv;
     );
   objectval_tyBM *k_rank = BMK_8zRh2medTlP_0ImnPyO8NKH;
   objectval_tyBM *kk_defer_show = BMK_7rRjqfXs3QI_4Nwk2Lfm569;
@@ -4233,11 +4236,17 @@ ROUTINEOBJNAME_BM (_7XDuHagbhi8_3V9zhBpbrrV)    //
   int rk = getint_BM (_.rankv);
   DBGPRINTF_BM ("todo!test_agenda taskob %s rk#%d", objectdbg_BM (_.taskob),
                 rk);
-  if (rk < 5 || g_random_int () % 8 == 0)
+  if (rk < 3 || (rk < 10 && rk % 2 == 0) || g_random_int () % 8 == 0)
     {
-      DBGPRINTF_BM ("todo!test_agenda defergtk %s rk#%d",
-                    objectdbg_BM (_.taskob), rk);
-      gtk_defer_apply3_BM (kk_defer_show, _.taskob, _.rankv, NULL);
+      _.gtkclosv = makeclosurevar_BM (kk_defer_show, NULL);
+      DBGPRINTF_BM ("todo!test_agenda defergtk %s rk#%d gtkclosv %s",   //
+                    objectdbg_BM (_.taskob), rk,        //
+                    debug_outstr_value_BM (_.gtkclosv,  //
+                                           (struct stackframe_stBM *) &_, 0));
+      gtk_defer_apply3_BM (_.gtkclosv, _.taskob, _.rankv, NULL,
+                           (struct stackframe_stBM *) &_);
     }
+  DBGPRINTF_BM ("todo!test_agenda end taskob %s rk#%d",
+                objectdbg_BM (_.taskob), rk);
   LOCALRETURN_BM (_.taskob);
 }                               /* end todo in test_agenda _7XDuHagbhi8_3V9zhBpbrrV */

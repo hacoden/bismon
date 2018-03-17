@@ -362,14 +362,16 @@ struct object_stBM              /*tyObject_BM */
   extendedval_tyBM ob_payl;
 };
 
+#define STACKFRAMEFIELDS_BM			\
+  typedhead_tyBM stkfram_pA;			\
+  struct stackframe_stBM *stkfram_prev;		\
+  objectval_tyBM *stkfram_descr;		\
+  value_tyBM stkfram_callfun;			\
+  int stkfram_state;				\
+  int stkfram_xtra
 struct stackframe_stBM
 {                               // for typayl_StackFrame_BM, sitting on the callstack
-  typedhead_tyBM stkfram_pA;    // rlen is the number of values
-  struct stackframe_stBM *stkfram_prev;
-  objectval_tyBM *stkfram_descr;
-  value_tyBM stkfram_callfun;
-  int stkfram_state;
-  int stkfram_xtra;
+  STACKFRAMEFIELDS_BM;
   value_tyBM stkfram_locals[];
 };
 

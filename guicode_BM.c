@@ -1814,21 +1814,26 @@ ROUTINEOBJNAME_BM (_1eQ1a8KHixZ_1XDNH5iTQ0I)    //
       _.closv = makeclosurevar_BM (kk_testagendafun, _.arg2v, NULL);
       objputattr_BM (_.taskob, k_todo, _.closv);
       objtouchnow_BM (_.taskob);
+      bool hi = false;
       if (ix % 8 == 0)
         {
           agenda_add_high_priority_tasklet_BM (_.taskob);
+          hi = true;
           nbhi++;
         }
       else
         agenda_add_low_priority_tasklet_BM (_.taskob);
-      DBGPRINTF_BM ("test_agenda ix=%d taskob %s", ix,
-                    objectdbg_BM (_.taskob));
+      DBGPRINTF_BM ("test_agenda ix=%d taskob %s / %s", ix,
+                    objectdbg_BM (_.taskob), hi ? "hi" : "lo");
     }
   log_begin_message_BM ();
   log_printf_message_BM
     (",test_agenda added %d tasklets (with %d of high priority)",
      nbtasklets, nbhi);
   log_end_message_BM ();
+  DBGPRINTF_BM
+    ("test_agenda command_handler end nbtasklets=%d elapsed %.3f s",
+     nbtasklets, elapsedtime_BM ());
   LOCALRETURN_BM (BMK_1eQ1a8KHixZ_1XDNH5iTQ0I);
 }                               /* end routine _1eQ1a8KHixZ_1XDNH5iTQ0I */
 
