@@ -1764,6 +1764,9 @@ ROUTINEOBJNAME_BM (_0M2jApBzFAy_8H8cpCjGpTi)    //
   LOCALRETURN_BM (_.objbrows);
 }                               /* end browse_data°hashmapval_object _0M2jApBzFAy_8H8cpCjGpTi */
 
+
+
+////////////////////////////////////////////////////////////////
 // test_agenda command_handler _1eQ1a8KHixZ_1XDNH5iTQ0I
 extern objrout_sigBM ROUTINEOBJNAME_BM (_1eQ1a8KHixZ_1XDNH5iTQ0I);
 value_tyBM
@@ -1792,7 +1795,7 @@ ROUTINEOBJNAME_BM (_1eQ1a8KHixZ_1XDNH5iTQ0I)    //
                 nbtasklets,     //
                 debug_outstr_value_BM (_.arg1v, //
                                        (struct stackframe_stBM *) &_, 0));
-  if (nbtasklets <= 0 || nbtasklets > MILLION_BM)
+  if (nbtasklets <= 0 || nbtasklets > 25 * MILLION_BM)
     {
       log_begin_message_BM ();
       log_printf_message_BM (",test_agenda command bad nbtasklets %d",
@@ -1801,6 +1804,12 @@ ROUTINEOBJNAME_BM (_1eQ1a8KHixZ_1XDNH5iTQ0I)    //
       LOCALRETURN_BM (NULL);
     }
   int nbhi = 0;
+  log_begin_message_BM ();
+  log_printf_message_BM (",test_agenda will add %d tasklets.", nbtasklets);
+  log_end_message_BM ();
+  double starteltime = elapsedtime_BM ();
+  double preveltime = 0.0;
+  //
   for (int ix = 0; ix < nbtasklets; ix++)
     {
       _.taskob = makeobj_BM ();
@@ -1820,11 +1829,27 @@ ROUTINEOBJNAME_BM (_1eQ1a8KHixZ_1XDNH5iTQ0I)    //
         agenda_add_low_priority_tasklet_BM (_.taskob);
       NONPRINTF_BM ("test_agenda ix=%d taskob %s / %s", ix,
                     objectdbg_BM (_.taskob), hi ? "hi" : "lo");
+      if (ix % 100 == 0 && preveltime + 0.6 < elapsedtime_BM ())
+        {
+          preveltime = elapsedtime_BM ();
+          DBGPRINTF_BM ("test_agenda **ix#%d taskob %s / %s elapsed %.3f s",
+                        ix, objectdbg_BM (_.taskob), hi ? "hi" : "lo",
+                        preveltime);
+          log_begin_message_BM ();
+          log_printf_message_BM (",test_agenda adding tasklet#%d ", ix);
+          log_object_message_BM (_.taskob);
+          log_printf_message_BM (" (%d of high priority), elapsed %.3f s.",
+                                 nbhi, preveltime);
+          log_end_message_BM ();
+          usleep (1000);
+        }
     }
+  double realduration = elapsedtime_BM () - starteltime;
+  DBGPRINTF_BM("test_agenda ending realduration %.3f %d tasklets", realduration, nbtasklets);
   log_begin_message_BM ();
   log_printf_message_BM
-    (",test_agenda added %d tasklets (with %d of high priority)",
-     nbtasklets, nbhi);
+    (",test_agenda added %d tasklets (with %d hi) in %.3f real seconds (%.2f µs/ob).",
+     nbtasklets, nbhi, realduration, (1.0e6 * realduration) / nbtasklets);
   log_end_message_BM ();
   LOCALRETURN_BM (BMK_1eQ1a8KHixZ_1XDNH5iTQ0I);
 }                               /* end routine _1eQ1a8KHixZ_1XDNH5iTQ0I */
