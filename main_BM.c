@@ -432,7 +432,7 @@ deferpipereadhandler_BM (GIOChannel * source,
                          GIOCondition condition __attribute__ ((unused)),
                          gpointer data __attribute__ ((unused)))
 {
-  DBGPRINTF_BM ("deferpipereadhandler_BM start tid#%ld", (long) gettid_BM ());
+  NONPRINTF_BM ("deferpipereadhandler_BM start tid#%ld", (long) gettid_BM ());
   if (!source)
     return false;
   gchar buf[8] = "";
@@ -443,7 +443,7 @@ deferpipereadhandler_BM (GIOChannel * source,
       // reading more than one byte each time can block the program
       GIOStatus st = g_io_channel_read_chars (source, buf, 1,
                                               &nbrd, NULL);
-      DBGPRINTF_BM ("deferpipereadhandler_BM nbrd=%d buf '%s' st#%d tid#%ld",
+      NONPRINTF_BM ("deferpipereadhandler_BM nbrd=%d buf '%s' st#%d tid#%ld",
                     (int) nbrd, buf, (int) st, (long) gettid_BM ());
       if (st == G_IO_STATUS_EOF)
         return FALSE;

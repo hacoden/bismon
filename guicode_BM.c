@@ -1823,7 +1823,7 @@ ROUTINEOBJNAME_BM (_1eQ1a8KHixZ_1XDNH5iTQ0I)    //
         }
       else
         agenda_add_low_priority_tasklet_BM (_.taskob);
-      DBGPRINTF_BM ("test_agenda ix=%d taskob %s / %s", ix,
+      NONPRINTF_BM ("test_agenda ix=%d taskob %s / %s", ix,
                     objectdbg_BM (_.taskob), hi ? "hi" : "lo");
     }
   log_begin_message_BM ();
@@ -1831,9 +1831,6 @@ ROUTINEOBJNAME_BM (_1eQ1a8KHixZ_1XDNH5iTQ0I)    //
     (",test_agenda added %d tasklets (with %d of high priority)",
      nbtasklets, nbhi);
   log_end_message_BM ();
-  DBGPRINTF_BM
-    ("test_agenda command_handler end nbtasklets=%d elapsed %.3f s",
-     nbtasklets, elapsedtime_BM ());
   LOCALRETURN_BM (BMK_1eQ1a8KHixZ_1XDNH5iTQ0I);
 }                               /* end routine _1eQ1a8KHixZ_1XDNH5iTQ0I */
 

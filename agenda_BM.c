@@ -81,14 +81,14 @@ run_agendaworker_BM (void *ad)
       if (atomic_load (&ti_needgc_BM))
         {
           // wait for GC to terminate
-          DBGPRINTF_BM
+          NONPRINTF_BM
             ("run_agendaworker tix#%d needgc start tid#%ld elapsed %.3f s",
              (int) tix, (long) gettid_BM (), elapsedtime_BM ());
           atomic_store (&curthreadinfo_BM->ti_gc, true);
           pthread_cond_broadcast (&ti_agendacond_BM);
           do
             {
-              DBGPRINTF_BM
+              NONPRINTF_BM
                 ("run_agendaworker tix#%d needgc timedwait tid#%ld elapsed %.3f s",
                  (int) tix, (long) gettid_BM (), elapsedtime_BM ());
               pthread_mutex_lock (&ti_agendamtx_BM);
@@ -99,12 +99,12 @@ run_agendaworker_BM (void *ad)
                                         &ts);
               }
               pthread_mutex_unlock (&ti_agendamtx_BM);
-              DBGPRINTF_BM
+              NONPRINTF_BM
                 ("run_agendaworker tix#%d needgcendloop tid#%ld elapsed %.3f s",
                  (int) tix, (long) gettid_BM (), elapsedtime_BM ());
             }
           while (atomic_load (&curthreadinfo_BM->ti_gc));
-          DBGPRINTF_BM
+          NONPRINTF_BM
             ("run_agendaworker tix#%d needgc done tid#%ld elapsed %.3f s",
              (int) tix, (long) gettid_BM (), elapsedtime_BM ());
         }
@@ -113,7 +113,7 @@ run_agendaworker_BM (void *ad)
         pthread_mutex_lock (&ti_agendamtx_BM);
         taskob = choose_task_internal_agenda_BM ();
         pthread_mutex_unlock (&ti_agendamtx_BM);
-        DBGPRINTF_BM
+        NONPRINTF_BM
           ("run_agendaworker tix%d choose tid#%ld elapsed %.3f s taskob %s",
            (int) tix, (long) gettid_BM (), elapsedtime_BM (),
            objectdbg_BM (taskob));
@@ -133,13 +133,13 @@ run_agendaworker_BM (void *ad)
             curthreadinfo_BM->ti_thstartelapsedtime = 0.0;
             destroy_failurelockset_BM ((struct failurelockset_stBM *)
                                        &flspace);
-            DBGPRINTF_BM
+            NONPRINTF_BM
               ("run_agendaworker tix%d didrun tid#%ld elapsed %.3f s",
                (int) tix, (long) gettid_BM (), elapsedtime_BM ());
           }
         else
           {                     // no task to run
-            DBGPRINTF_BM
+            NONPRINTF_BM
               ("run_agendaworker tix%d tid#%ld notask elapsed %.3f s",
                (int) tix, (long) gettid_BM (), elapsedtime_BM ());
             pthread_mutex_lock (&ti_agendamtx_BM);
@@ -150,7 +150,7 @@ run_agendaworker_BM (void *ad)
                                       &ts);
             }
             pthread_mutex_unlock (&ti_agendamtx_BM);
-            DBGPRINTF_BM
+            NONPRINTF_BM
               ("run_agendaworker tix%d tid#%ld notask after elapsed %.3f s",
                (int) tix, (long) gettid_BM (), elapsedtime_BM ());
           }
@@ -329,7 +329,7 @@ void
 stop_agenda_work_threads_BM (void)
 {
   int nbwth = ti_nbworkers_BM;
-  DBGPRINTF_BM
+  NONPRINTF_BM
     ("stop_agenda_work_threads start nbwth=%d tid#%ld elapsed %.3f s", nbwth,
      (long) gettid_BM (), elapsedtime_BM ());
   {
@@ -347,7 +347,7 @@ stop_agenda_work_threads_BM (void)
       pthread_mutex_lock (&ti_agendamtx_BM);
       struct timespec ts = { 0, 0 };
       get_realtimespec_delayedms_BM (&ts, STOPWAITMILLISECONDS_BM);
-      DBGPRINTF_BM ("stop_agenda_work_threads tid#%ld", (long) gettid_BM ());
+      NONPRINTF_BM ("stop_agenda_work_threads tid#%ld", (long) gettid_BM ());
       pthread_cond_timedwait (&ti_agendacond_BM, &ti_agendamtx_BM, &ts);
       pthread_mutex_unlock (&ti_agendamtx_BM);
     }
@@ -363,13 +363,13 @@ agenda_suspend_for_gc_BM (void)
   bool alldoinggc = false;
   int nbwth = ti_nbworkers_BM;
   long loopcnt = 0;
-  DBGPRINTF_BM ("agenda_suspend_for_gc_BM nwth=%d", nbwth);
+  NONPRINTF_BM ("agenda_suspend_for_gc_BM nwth=%d", nbwth);
   while (!alldoinggc)
     {
       alldoinggc = false;
       int wix = 0;
       loopcnt++;
-      DBGPRINTF_BM
+      NONPRINTF_BM
         ("agenda_suspend_for_gc_BM elapsed %.3f s tid%ld loopcnt%ld",
          elapsedtime_BM (), (long) gettid_BM (), loopcnt);
       pthread_mutex_lock (&ti_agendamtx_BM);
@@ -377,27 +377,27 @@ agenda_suspend_for_gc_BM (void)
         if (!atomic_load (&ti_array_BM[tix].ti_gc))
           wix = tix;
       pthread_mutex_unlock (&ti_agendamtx_BM);
-      DBGPRINTF_BM
+      NONPRINTF_BM
         ("agenda_suspend_for_gc_BM tid#%ld wix=%d elapsed %.3f s",
          (long) gettid_BM (), wix, elapsedtime_BM ());
       if (wix > 0)
         {
           struct timespec ts = { 0, 0 };
           get_realtimespec_delayedms_BM (&ts, GCWAITMILLISECONDS_BM);
-          DBGPRINTF_BM
+          NONPRINTF_BM
             ("agenda_suspend_for_gc_BM tid#%ld wix=%d before timedwait elapsed %.3f s",
              (long) gettid_BM (), wix, elapsedtime_BM ());
           pthread_mutex_lock (&ti_agendamtx_BM);
           pthread_cond_timedwait (&ti_agendacond_BM, &ti_agendamtx_BM, &ts);
           pthread_mutex_unlock (&ti_agendamtx_BM);
-          DBGPRINTF_BM
+          NONPRINTF_BM
             ("agenda_suspend_for_gc_BM tid#%ld after timedwait elapsed %.3f s",
              (long) gettid_BM (), elapsedtime_BM ());
         }
       else
         break;
     }
-  DBGPRINTF_BM ("agenda_suspend_for_gc_BM done");
+  NONPRINTF_BM ("agenda_suspend_for_gc_BM done");
 }                               /* end agenda_suspend_for_gc_BM */
 
 void
@@ -405,7 +405,7 @@ agenda_continue_after_gc_BM (void)
 {
   ASSERT_BM (curthreadinfo_BM == NULL);
   int nbwth = ti_nbworkers_BM;
-  DBGPRINTF_BM ("agenda_continue_after_gc tid#%ld elapsed %.3f s",
+  NONPRINTF_BM ("agenda_continue_after_gc tid#%ld elapsed %.3f s",
                 (long) gettid_BM (), elapsedtime_BM ());
   atomic_store (&ti_needgc_BM, false);
   {
@@ -417,7 +417,7 @@ agenda_continue_after_gc_BM (void)
   pthread_cond_broadcast (&ti_agendacond_BM);
   atomic_store (&ti_needgc_BM, false);
   usleep (1);
-  DBGPRINTF_BM ("agenda_continue_after_gc end tid#%ld elapsed %.3f s",
+  NONPRINTF_BM ("agenda_continue_after_gc end tid#%ld elapsed %.3f s",
                 (long) gettid_BM (), elapsedtime_BM ());
 }                               /* end agenda_continue_after_gc_BM */
 

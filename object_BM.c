@@ -270,6 +270,7 @@ growobucket_BM (unsigned bucknum, unsigned gap)
         continue;
       ASSERT_BM (isobject_BM (oldob));
       addtobucket_BM (newbuck, oldob);
+      ASSERT_BM (validobjbucket_BM (newbuck));
     }
   if (oldbuck)
     {
