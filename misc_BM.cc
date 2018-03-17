@@ -755,7 +755,7 @@ struct deferdoappl_stBM
 {
   union
   {
-    const closure_tyBM *defer_clos;
+    value_tyBM defer_fun;
     objectval_tyBM* defer_obsel;
   };
   value_tyBM defer_recv;
@@ -775,11 +775,11 @@ gcmarkdefergtk_BM(struct garbcoll_stBM*gc)
     {
       if (itd.defer_recv)
         {
-          VALUEGCPROC_BM (gc, itd.defer_clos, 0);
+          VALUEGCPROC_BM (gc, itd.defer_fun, 0);
           gcobjmark_BM(gc, itd.defer_obsel);
         }
       else
-        VALUEGCPROC_BM (gc, itd.defer_clos, 0);
+        VALUEGCPROC_BM (gc, itd.defer_fun, 0);
       if (itd.defer_arg1)
         VALUEGCPROC_BM (gc, itd.defer_arg1, 0);
       if (itd.defer_arg2)
@@ -793,14 +793,14 @@ extern "C" void
 do_internal_deferred_send3_gtk_BM(value_tyBM recv, objectval_tyBM*obsel, value_tyBM arg1, value_tyBM arg2, value_tyBM arg3);
 
 extern "C" void
-do_internal_deferred_apply3_gtk_BM(const closure_tyBM*clos, value_tyBM arg1, value_tyBM arg2, value_tyBM arg3);
+do_internal_deferred_apply3_gtk_BM(value_tyBM fun, value_tyBM arg1, value_tyBM arg2, value_tyBM arg3);
 
 extern "C" bool did_deferredgtk_BM (void);
 
 bool
 did_deferredgtk_BM (void)
 {
-  const closure_tyBM *dclosv = nullptr;
+  value_tyBM dfunv = nullptr;
   objectval_tyBM* dobsel = nullptr;
   value_tyBM darg1v = nullptr;
   value_tyBM darg2v = nullptr;
@@ -817,7 +817,7 @@ did_deferredgtk_BM (void)
       }
     else
       {
-        dclosv = f.defer_clos;
+        dfunv = f.defer_fun;
         drecv = nullptr;
       };
     darg1v = f.defer_arg1;
@@ -828,7 +828,7 @@ did_deferredgtk_BM (void)
   if (drecv)
     do_internal_deferred_send3_gtk_BM(drecv, dobsel, darg1v, darg2v, darg3v);
   else
-    do_internal_deferred_apply3_gtk_BM(dclosv, darg1v, darg2v, darg3v);
+    do_internal_deferred_apply3_gtk_BM(dfunv, darg1v, darg2v, darg3v);
   return true;
 } // end did_deferredgtk_BM
 
@@ -837,13 +837,13 @@ did_deferredgtk_BM (void)
 
 extern "C" int defer_gtk_writepipefd_BM;
 void
-gtk_defer_apply3_BM (value_tyBM closv, value_tyBM arg1, value_tyBM arg2, value_tyBM arg3,
+gtk_defer_apply3_BM (value_tyBM funv, value_tyBM arg1, value_tyBM arg2, value_tyBM arg3,
                      struct stackframe_stBM*stkf)
 {
   struct thisframe
   {
     STACKFRAMEFIELDS_BM;
-    value_tyBM closv;
+    value_tyBM funv;
     value_tyBM arg1;
     value_tyBM arg2;
     value_tyBM arg3;
@@ -852,19 +852,20 @@ gtk_defer_apply3_BM (value_tyBM closv, value_tyBM arg1, value_tyBM arg2, value_t
   _.stkfram_pA.htyp = typayl_StackFrame_BM;
   _.stkfram_pA.rlen = 4;
   _.stkfram_prev = stkf;
-  if (!isclosure_BM(closv))
-    {
-      DBGPRINTF_BM("gtk_defer_apply bad closv %s",
-                   debug_outstr_value_BM (_.closv, //
-                                          (struct stackframe_stBM *) &_, 0));
-      return;
-    }
-  _.closv = closv;
+  //
+  _.funv = funv;
   _.arg1 = arg1;
   _.arg2 = arg2;
   _.arg3 = arg3;
-  DBGPRINTF_BM("gtk_defer_apply start closv %s arg1 %s arg2 %s arg3 %s",
-               debug_outstr_value_BM (_.closv, //
+  if (!isclosure_BM(funv) && !isobject_BM(funv))
+    {
+      DBGPRINTF_BM("gtk_defer_apply bad funv %s",
+                   debug_outstr_value_BM (_.funv, //
+                                          (struct stackframe_stBM *) &_, 0));
+      return;
+    }
+  DBGPRINTF_BM("gtk_defer_apply start funv %s arg1 %s arg2 %s arg3 %s",
+               debug_outstr_value_BM (_.funv, //
                                       (struct stackframe_stBM *) &_, 0), //
                debug_outstr_value_BM (_.arg1, //
                                       (struct stackframe_stBM *) &_, 0), //
@@ -875,11 +876,11 @@ gtk_defer_apply3_BM (value_tyBM closv, value_tyBM arg1, value_tyBM arg2, value_t
               );
   if (defer_gtk_writepipefd_BM<0)
     FATAL_BM("gtk_defer_apply3_BM without writepipe");
-  char ch = "0123456789abcdefghijklmnopqrstuvwxyz" [valhash_BM (closv) % 36];
+  char ch = "0123456789abcdefghijklmnopqrstuvwxyz" [valhash_BM (_.funv) % 36];
   {
     std::lock_guard<std::mutex> _g(deferqmtx_BM);
     struct deferdoappl_stBM dap = {};
-    dap.defer_clos = closurecast_BM(closv);
+    dap.defer_fun = _.funv;
     dap.defer_recv = nullptr;
     dap.defer_arg1 = arg1;
     dap.defer_arg2 = arg2;
@@ -893,8 +894,8 @@ gtk_defer_apply3_BM (value_tyBM closv, value_tyBM arg1, value_tyBM arg2, value_t
       wrcnt = write(defer_gtk_writepipefd_BM, &ch, 1);
       if (wrcnt>0)
         {
-          DBGPRINTF_BM("gtk_defer_apply done closv %s arg1 %s arg2 %s arg3 %s",
-                       debug_outstr_value_BM (_.closv, //
+          DBGPRINTF_BM("gtk_defer_apply done funv %s arg1 %s arg2 %s arg3 %s",
+                       debug_outstr_value_BM (_.funv, //
                                               (struct stackframe_stBM *) &_, 0), //
                        debug_outstr_value_BM (_.arg1, //
                                               (struct stackframe_stBM *) &_, 0), //
