@@ -451,7 +451,7 @@ deferpipereadhandler_BM (GIOChannel * source,
 }                               /* end deferpipereadhandler_BM */
 
 
-extern void do_internal_deferred_apply3_gtk_BM (const closure_tyBM * clos,
+extern void do_internal_deferred_apply3_gtk_BM (value_tyBM funv,
                                                 value_tyBM arg1,
                                                 value_tyBM arg2,
                                                 value_tyBM arg3);
@@ -463,15 +463,15 @@ extern void do_internal_deferred_send3_gtk_BM (value_tyBM recv,
 
 // called from did_deferredgtk_BM
 void
-do_internal_deferred_apply3_gtk_BM (const closure_tyBM * clos,
+do_internal_deferred_apply3_gtk_BM (value_tyBM fun,
                                     value_tyBM arg1, value_tyBM arg2,
                                     value_tyBM arg3)
 {
   LOCALFRAME_BM ( /*prev stackf: */ NULL, /*descr: */ NULL,
-                 const closure_tyBM * dclosv; value_tyBM arg1v, arg2v, arg3v;
+                 value_tyBM funv; value_tyBM arg1v, arg2v, arg3v;
                  value_tyBM failres;
     );
-  _.dclosv = clos;
+  _.funv = fun;
   _.arg1v = arg1;
   _.arg2v = arg2;
   _.arg3v = arg3;
@@ -483,7 +483,20 @@ do_internal_deferred_apply3_gtk_BM (const closure_tyBM * clos,
       curfailurehandle_BM = NULL;
       return;
     }
-  (void) apply3_BM (clos, (struct stackframe_stBM *) &_, arg1, arg2, arg3);
+  DBGPRINTF_BM ("internaldeferapply funv %s arg1 %s arg2 %s arg3 %s",   //
+                debug_outstr_value_BM (_.funv,  //
+                                       (struct stackframe_stBM *) &_, 0),       //
+                debug_outstr_value_BM (_.arg1v, //
+                                       (struct stackframe_stBM *) &_, 0),       //
+                debug_outstr_value_BM (_.arg2v, //
+                                       (struct stackframe_stBM *) &_, 0),       //
+                debug_outstr_value_BM (_.arg3v, //
+                                       (struct stackframe_stBM *) &_, 0));
+  (void) apply3_BM (_.funv, (struct stackframe_stBM *) &_, _.arg1v, _.arg2v,
+                    _.arg3v);
+  DBGPRINTF_BM ("internaldeferapply applied funv %s",   //
+                debug_outstr_value_BM (_.funv,  //
+                                       (struct stackframe_stBM *) &_, 0));
   curfailurehandle_BM = NULL;
 }                               /* end do_internal_defer_apply3_BM */
 
@@ -512,8 +525,22 @@ do_internal_deferred_send3_gtk_BM (value_tyBM recv, objectval_tyBM * obsel,
       curfailurehandle_BM = NULL;
       return;
     }
+  DBGPRINTF_BM ("internaldefersend recv %s obsel %s arg1 %s arg2 %s arg3 %s",   //
+                debug_outstr_value_BM (_.recva, //
+                                       (struct stackframe_stBM *) &_, 0),       //
+                objectdbg_BM (_.obsel), //
+                debug_outstr_value_BM (_.arg1v, //
+                                       (struct stackframe_stBM *) &_, 0),       //
+                debug_outstr_value_BM (_.arg2v, //
+                                       (struct stackframe_stBM *) &_, 0),       //
+                debug_outstr_value_BM (_.arg3v, //
+                                       (struct stackframe_stBM *) &_, 0));
   (void) send3_BM (recv, obsel, (struct stackframe_stBM *) &_, arg1, arg2,
                    arg3);
+  DBGPRINTF_BM ("internaldefersend did send recv %s obsel %s",  //
+                debug_outstr_value_BM (_.recva, //
+                                       (struct stackframe_stBM *) &_, 0),       //
+                objectdbg_BM (_.obsel));
   curfailurehandle_BM = NULL;
 }                               /* end do_internal_defer_send3_BM */
 
