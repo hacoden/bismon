@@ -1065,7 +1065,7 @@ parsecommandbuf_newgui_BM (struct
                                       cmdtok.tok_line,
                                       cmdtok.tok_col,
                                       "command %s not followed by leftparen",
-                                      objectdbg_BM (_.cmdobj), arity);
+                                      objectdbg_BM (_.cmdobj));
               ASSERT_BM (argcnt >= 0 && argcnt < TINYSIZE_BM);
               if (!nobuild)
                 {
@@ -2126,7 +2126,7 @@ void
                  const stringval_tyBM * namev; value_tyBM val;);
   _.namev = namev;
   _.val = val;
-  ASSERT_BM (isstring_BM (namev));
+  ASSERT_BM (isstring_BM ((value_tyBM)namev));
   ASSERT_BM (val != NULL);
   ASSERT_BM (idx <= browsednvulen_BM);
   ASSERT_BM (idx < browsednvsize_BM);
@@ -3554,7 +3554,8 @@ refresh_obwin_newgui_cbBM (gpointer data)
     gettimeofday (&tv, NULL);
     time_t ti = tv.tv_sec;
     localtime_r (&ti, &ltm);
-    strftime (shortimbuf, sizeof (shortimbuf), "%a %d, %H:%M:%S.___ %Z", &ltm);
+    strftime (shortimbuf, sizeof (shortimbuf), "%a %d, %H:%M:%S.___ %Z",
+              &ltm);
     char *dot = strstr (shortimbuf, ".___");
     if (dot)
       {
