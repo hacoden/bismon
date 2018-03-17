@@ -907,7 +907,7 @@ gtk_defer_apply3_BM (value_tyBM funv, value_tyBM arg1, value_tyBM arg2, value_ty
       wrcnt = write(defer_gtk_writepipefd_BM, &ch, 1);
       if (wrcnt>0)
         {
-          DBGPRINTF_BM("gtk_defer_apply done funv %s arg1 %s arg2 %s arg3 %s",
+          NONPRINTF_BM("gtk_defer_apply done funv %s arg1 %s arg2 %s arg3 %s",
                        debug_outstr_value_BM (_.funv, //
                                               (struct stackframe_stBM *) &_, 0), //
                        debug_outstr_value_BM (_.arg1, //
