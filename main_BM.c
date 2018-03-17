@@ -330,6 +330,7 @@ main (int argc, char **argv)
   memset ((char *) myhostname_BM, 0, sizeof (myhostname_BM));
   if (gethostname ((char *) myhostname_BM, sizeof (myhostname_BM) - 1))
     FATAL_BM ("gethostname failure %m");
+  DBGPRINTF_BM ("main begin tid#%ld", (long) gettid_BM ());
   initialize_garbage_collector_BM ();
   check_delims_BM ();
   initialize_globals_BM ();
@@ -431,17 +432,19 @@ deferpipereadhandler_BM (GIOChannel * source,
                          GIOCondition condition __attribute__ ((unused)),
                          gpointer data __attribute__ ((unused)))
 {
+  DBGPRINTF_BM ("deferpipereadhandler_BM start tid#%ld", (long) gettid_BM ());
   if (!source)
     return false;
-  gchar buf[32] = "";
+  gchar buf[8] = "";
   for (;;)
     {
       memset (buf, 0, sizeof (buf));
       gsize nbrd = 0;
-      GIOStatus st =
-        g_io_channel_read_chars (source, buf, sizeof (buf) - 1, &nbrd, NULL);
-      DBGPRINTF_BM ("deferpipereadhandler_BM nbrd=%d buf '%s' st#%d",
-                    (int) nbrd, buf, (int) st);
+      // reading more than one byte each time can block the program
+      GIOStatus st = g_io_channel_read_chars (source, buf, 1,
+                                              &nbrd, NULL);
+      DBGPRINTF_BM ("deferpipereadhandler_BM nbrd=%d buf '%s' st#%d tid#%ld",
+                    (int) nbrd, buf, (int) st, (long) gettid_BM ());
       if (st == G_IO_STATUS_EOF)
         return FALSE;
       if (!did_deferredgtk_BM ())
@@ -562,6 +565,8 @@ rungui_BM (bool newgui, int nbjobs)
     FATAL_BM ("failed to pipe GTK deferpipe");
   defer_gtk_readpipefd_BM = deferpipes[0];
   defer_gtk_writepipefd_BM = deferpipes[1];
+  DBGPRINTF_BM ("rungui defer_gtk_readpipefd=%d defer_gtk_writepipefd_BM=%d",
+                defer_gtk_readpipefd_BM, defer_gtk_writepipefd_BM);
   defer_gtk_readpipechan_BM = g_io_channel_unix_new (defer_gtk_readpipefd_BM);
   g_io_add_watch (defer_gtk_readpipechan_BM, G_IO_IN, deferpipereadhandler_BM,
                   NULL);

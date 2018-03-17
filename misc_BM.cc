@@ -806,9 +806,16 @@ did_deferredgtk_BM (void)
   value_tyBM darg2v = nullptr;
   value_tyBM darg3v = nullptr;
   value_tyBM drecv = nullptr;
+  DBGPRINTF_BM("did_deferredgtk_BM start tid#%ld elapsed %.3f s",
+               (long)gettid_BM(), elapsedtime_BM());
   {
     std::lock_guard<std::mutex> _g(deferqmtx_BM);
-    if (deferdeque_BM.empty()) return false;
+    if (deferdeque_BM.empty())
+      {
+        DBGPRINTF_BM("did_deferredgtk_BM empty tid#%ld",
+                     (long)gettid_BM());
+        return false;
+      }
     auto f = deferdeque_BM.front();
     if (f.defer_recv)
       {
@@ -825,10 +832,14 @@ did_deferredgtk_BM (void)
     darg3v = f.defer_arg3;
     deferdeque_BM.pop_front();
   }
+  DBGPRINTF_BM("did_deferredgtk_BM tid#%ld before dointernal",
+               (long)gettid_BM());
   if (drecv)
     do_internal_deferred_send3_gtk_BM(drecv, dobsel, darg1v, darg2v, darg3v);
   else
     do_internal_deferred_apply3_gtk_BM(dfunv, darg1v, darg2v, darg3v);
+  DBGPRINTF_BM("did_deferredgtk_BM tid#%ld end",
+               (long)gettid_BM());
   return true;
 } // end did_deferredgtk_BM
 
@@ -864,7 +875,8 @@ gtk_defer_apply3_BM (value_tyBM funv, value_tyBM arg1, value_tyBM arg2, value_ty
                                           (struct stackframe_stBM *) &_, 0));
       return;
     }
-  DBGPRINTF_BM("gtk_defer_apply start funv %s arg1 %s arg2 %s arg3 %s",
+  DBGPRINTF_BM("gtk_defer_apply start tid#%ld funv %s arg1 %s arg2 %s arg3 %s",
+               (long)gettid_BM(),
                debug_outstr_value_BM (_.funv, //
                                       (struct stackframe_stBM *) &_, 0), //
                debug_outstr_value_BM (_.arg1, //
@@ -887,7 +899,7 @@ gtk_defer_apply3_BM (value_tyBM funv, value_tyBM arg1, value_tyBM arg2, value_ty
     dap.defer_arg3 = arg3;
     deferdeque_BM.emplace_back(dap);
   }
-  DBGPRINTF_BM("gtk_defer_apply ch '%c'", ch);
+  DBGPRINTF_BM("gtk_defer_apply ch '%c' elapsed %.3f s", ch, elapsedtime_BM());
   int nbtry = 0;
   int wrcnt = 0;
   for(;;)   // most of the time, this loop runs once
