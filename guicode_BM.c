@@ -1089,13 +1089,8 @@ ROUTINEOBJNAME_BM (_1Xc5XJ7S5r7_3nYIzlf2XAw)    //
   _.recv = arg1;
   _.attv = arg2;
   _.compv = arg3;
-  DBGPRINTF_BM ("commandhandler°put recv=%s attv=%s compv=%s",
-                objectdbg_BM (_.recv),
-                debug_outstr_value_BM
-                (_.attv,
-                 (struct stackframe_stBM *) &_,
-                 0),
-                debug_outstr_value_BM
+  NONPRINTF_BM ("commandhandler°put recv=%s attv=%s compv=%s", objectdbg_BM (_.recv), debug_outstr_value_BM    //
+                (_.attv, (struct stackframe_stBM *) &_, 0), debug_outstr_value_BM       //
                 (_.compv, (struct stackframe_stBM *) &_, 0));
   if (isobject_BM (_.attv))
     {
@@ -1179,7 +1174,7 @@ ROUTINEOBJNAME_BM (_5v5ChlG1IYh_1Pv87MZJFPl)    //
     }
   _.recv = arg1;
   _.compv = arg2;
-  DBGPRINTF_BM ("commandhandler°add recv=%s compv=%s",
+  NONPRINTF_BM ("commandhandler°add recv=%s compv=%s",
                 objectdbg_BM (_.recv),
                 debug_outstr_value_BM
                 (_.compv, (struct stackframe_stBM *) &_, 0));
@@ -1220,7 +1215,7 @@ ROUTINEOBJNAME_BM (_0zf6nSKwSlU_6Cv3LMh1MmV)    //
     }
   _.recv = arg1;
   _.attv = arg2;
-  DBGPRINTF_BM ("commandhandler°remove recv=%s attv=%s",
+  NONPRINTF_BM ("commandhandler°remove recv=%s attv=%s",
                 objectdbg_BM (_.recv),
                 debug_outstr_value_BM
                 (_.attv, (struct stackframe_stBM *) &_, 0));
@@ -1857,7 +1852,7 @@ ROUTINEOBJNAME_BM (_7rRjqfXs3QI_4Nwk2Lfm569)    //
   WEAKASSERT_BM (istaggedint_BM (_.rankv));
   WEAKASSERT_BM (pthread_self () == mainthreadid_BM);
   int rk = getint_BM (_.rankv);
-  DBGPRINTF_BM ("test_agenda gtk taskob %s rk %d", objectdbg_BM (_.taskob),
+  NONPRINTF_BM ("test_agenda gtk taskob %s rk %d", objectdbg_BM (_.taskob),
                 rk);
   log_begin_message_BM ();
   log_printf_message_BM ("testagenda elapsed %.3f s tasklet ",

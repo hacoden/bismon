@@ -488,7 +488,7 @@ do_internal_deferred_apply3_gtk_BM (value_tyBM fun,
       curfailurehandle_BM = NULL;
       return;
     }
-  DBGPRINTF_BM ("internaldeferapply funv %s arg1 %s arg2 %s arg3 %s",   //
+  NONPRINTF_BM ("internaldeferapply funv %s arg1 %s arg2 %s arg3 %s",   //
                 debug_outstr_value_BM (_.funv,  //
                                        (struct stackframe_stBM *) &_, 0),       //
                 debug_outstr_value_BM (_.arg1v, //
@@ -499,7 +499,7 @@ do_internal_deferred_apply3_gtk_BM (value_tyBM fun,
                                        (struct stackframe_stBM *) &_, 0));
   (void) apply3_BM (_.funv, (struct stackframe_stBM *) &_, _.arg1v, _.arg2v,
                     _.arg3v);
-  DBGPRINTF_BM ("internaldeferapply applied funv %s",   //
+  NONPRINTF_BM ("internaldeferapply applied funv %s",   //
                 debug_outstr_value_BM (_.funv,  //
                                        (struct stackframe_stBM *) &_, 0));
   curfailurehandle_BM = NULL;

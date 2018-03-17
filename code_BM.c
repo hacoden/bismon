@@ -4195,12 +4195,12 @@ ROUTINEOBJNAME_BM (_1etImV3nBtp_5rnHSE87XRj)    //
   objectval_tyBM *k_todo = BMK_7ljWW4bj70g_9PL9dZkgBxZ;
   _.recv = objectcast_BM (arg1);
   WEAKASSERT_BM (_.recv != NULL);
-  DBGPRINTF_BM ("run_tasklet°tiny_tasklet recv %s", objectdbg_BM (_.recv));
+  NONPRINTF_BM ("run_tasklet°tiny_tasklet recv %s", objectdbg_BM (_.recv));
   objlock_BM (_.recv);
   _.todov = objgetattr_BM (_.recv, k_todo);
   _.resv = apply1_BM (_.todov, (struct stackframe_stBM *) &_, _.recv);
   objunlock_BM (_.recv);
-  DBGPRINTF_BM ("run_tasklet°tiny_tasklet recv %s applied todo %s",    //
+  NONPRINTF_BM ("run_tasklet°tiny_tasklet recv %s applied todo %s",    //
                 objectdbg_BM (_.recv),  //
                 debug_outstr_value_BM (_.todov, //
                                        (struct stackframe_stBM *) &_, 0));
@@ -4226,23 +4226,23 @@ ROUTINEOBJNAME_BM (_7XDuHagbhi8_3V9zhBpbrrV)    //
   objectval_tyBM *k_rank = BMK_8zRh2medTlP_0ImnPyO8NKH;
   objectval_tyBM *kk_defer_show = BMK_7rRjqfXs3QI_4Nwk2Lfm569;
   _.taskob = objectcast_BM (arg1);
-  DBGPRINTF_BM ("todo!test_agenda taskob %s", objectdbg_BM (_.taskob));
+  NONPRINTF_BM ("todo!test_agenda taskob %s", objectdbg_BM (_.taskob));
   WEAKASSERT_BM (_.taskob != NULL);
   objlock_BM (_.taskob);
   _.rankv = objgetattr_BM (_.taskob, k_rank);
   objunlock_BM (_.taskob);
   WEAKASSERT_BM (istaggedint_BM (_.rankv));
   int rk = getint_BM (_.rankv);
-  DBGPRINTF_BM ("todo!test_agenda taskob %s rk#%d", objectdbg_BM (_.taskob),
+  NONPRINTF_BM ("todo!test_agenda taskob %s rk#%d", objectdbg_BM (_.taskob),
                 rk);
   if (rk < 3 || (rk < 10 && rk % 2 == 0) || g_random_int () % 8 == 0)
     {
-      DBGPRINTF_BM ("todo!test_agenda defergtk %s rk#%d",       //
+      NONPRINTF_BM ("todo!test_agenda defergtk %s rk#%d",       //
                     objectdbg_BM (_.taskob), rk);
       gtk_defer_apply3_BM (kk_defer_show, _.taskob, _.rankv, NULL,
                            (struct stackframe_stBM *) &_);
     }
-  DBGPRINTF_BM ("todo!test_agenda end taskob %s rk#%d",
+  NONPRINTF_BM ("todo!test_agenda end taskob %s rk#%d",
                 objectdbg_BM (_.taskob), rk);
   LOCALRETURN_BM (_.taskob);
 }                               /* end todo in test_agenda _7XDuHagbhi8_3V9zhBpbrrV */

@@ -583,7 +583,7 @@ full_garbage_collection_BM (struct stackframe_stBM *stkfram)
     }
   GCdata.gc_scanlist = makelist_BM ();
   GCdata.gc_hset =              //
-    hashsetobj_grow_BM (NULL, prime_above_BM (alcnt / 32 + 100));
+    hashsetobj_grow_BM (NULL, prime_above_BM (alcnt / 16 + 300));
   gcmarkpredefinedobjects_BM (&GCdata);
   gcmarkconstants_BM (&GCdata);
   gcmarkglobals_BM (&GCdata);
