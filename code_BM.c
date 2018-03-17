@@ -4236,8 +4236,7 @@ ROUTINEOBJNAME_BM (_7XDuHagbhi8_3V9zhBpbrrV)    //
   NONPRINTF_BM ("todo!test_agenda taskob %s rk#%d", objectdbg_BM (_.taskob),
                 rk);
   if (rk < 3 || (rk < 10 && rk % 2 == 0)
-      || rk % 10000 == 0
-      || (rk % 64 == 0 && g_random_int () % 64 == 0))
+      || rk % 10000 == 0 || (rk % 64 == 0 && g_random_int () % 64 == 0))
     {
       NONPRINTF_BM ("todo!test_agenda defergtk %s rk#%d",       //
                     objectdbg_BM (_.taskob), rk);

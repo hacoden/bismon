@@ -1866,17 +1866,8 @@ find_named_value_newgui_BM (const char *vstr, struct stackframe_stBM * stkf)
   return _.val;
 }                               /* end find_named_value_newgui_BM */
 
-static void
-add_indexed_named_value_newgui_BM (const
-                                   stringval_tyBM
-                                   * namev,
-                                   const
-                                   value_tyBM
-                                   val,
-                                   int
-                                   browsdepth,
-                                   unsigned
-                                   index, struct stackframe_stBM *stkf);
+static void add_indexed_named_value_newgui_BM (const stringval_tyBM * namev, const value_tyBM val, int browsdepth, unsigned index,      //
+                                               struct stackframe_stBM *stkf);
 static void
   replace_indexed_named_value_newgui_BM
   (const value_tyBM val, int browsdepth,
@@ -3553,6 +3544,30 @@ refresh_obwin_newgui_cbBM (gpointer data)
   int ulen = obw->obw_ulen;
   NONPRINTF_BM ("refresh_obwin_newgui_cbBM obw@%p #%d start ulen=%d", obw,
                 obw->obw_rank, ulen);
+  char labelbuf[80];
+  memset (labelbuf, 0, sizeof (labelbuf));
+  {
+    char shortimbuf[48];
+    memset (shortimbuf, 0, sizeof (shortimbuf));
+    struct timeval tv = { 0, 0 };
+    struct tm ltm = { 0 };
+    gettimeofday (&tv, NULL);
+    time_t ti = tv.tv_sec;
+    localtime_r (&ti, &ltm);
+    strftime (shortimbuf, sizeof (shortimbuf), "%a %d, %H:%M:%S.___ %Z", &ltm);
+    char *dot = strstr (shortimbuf, ".___");
+    if (dot)
+      {
+        char secbuf[8];
+        snprintf (secbuf, sizeof (secbuf), "%03d", (int) (tv.tv_usec * 1000));
+        dot[1] = secbuf[0];
+        dot[2] = secbuf[1];
+        dot[3] = secbuf[3];
+      }
+    snprintf (labelbuf, sizeof (labelbuf),
+              "bismonob#%d <small>%s</small>", obw->obw_rank, shortimbuf);
+    gtk_label_set_markup (GTK_LABEL (obw->obw_label), labelbuf);
+  }
   struct objectview_newgui_stBM **warr = obw->obw_arr;
   ASSERT_BM (ulen == 0 || warr != NULL);
   for (int ix = 0; ix < ulen; ix++)
@@ -3565,6 +3580,7 @@ refresh_obwin_newgui_cbBM (gpointer data)
       fill_objectviewbuffer_BM (obv, (struct stackframe_stBM *) &_);
     }
   NONPRINTF_BM ("refresh_obwin_newgui_cbBM obw#%d end", obw->obw_rank);
+  gtk_widget_show_all (obw->obw_window);
   if (obw->obw_refreshperiod > 0)
     return G_SOURCE_CONTINUE;
   else

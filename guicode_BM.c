@@ -1845,7 +1845,8 @@ ROUTINEOBJNAME_BM (_1eQ1a8KHixZ_1XDNH5iTQ0I)    //
         }
     }
   double realduration = elapsedtime_BM () - starteltime;
-  DBGPRINTF_BM("test_agenda ending realduration %.3f %d tasklets", realduration, nbtasklets);
+  DBGPRINTF_BM ("test_agenda ending realduration %.3f %d tasklets",
+                realduration, nbtasklets);
   log_begin_message_BM ();
   log_printf_message_BM
     (",test_agenda added %d tasklets (with %d hi) in %.3f real seconds (%.2f µs/ob).",
