@@ -58,9 +58,11 @@ sortnamedobjarr_BM (objectval_tyBM ** obarr, size_t arrsiz)
 }                               /* end sortnamedobjarr_BM */
 
 
-
+#define BUCKETMAGIC_BM 125018767        /* 0x773a28f */
 struct objbucket_stBM
 {
+  unsigned buckmagic;           // always BUCKETMAGIC_BM
+  unsigned buckrank;            /* rank in buckarr_BM */
   unsigned bucksize;            /* a prime number */
   unsigned buckcount;           // used count
   objectval_tyBM *buckobjs[];   // allocated size is bucksize
@@ -69,6 +71,19 @@ struct objbucket_stBM
 static struct objbucket_stBM *buckarr_BM[MAXBUCKETS_BM];
 
 #define EMPTYSLOTOB_BM ((objectval_tyBM*)(-1))
+
+static inline bool
+validobjbucket_BM (struct objbucket_stBM *buck)
+{
+  if (!buck)
+    return true;
+  if (buck->buckmagic != BUCKETMAGIC_BM || buck->buckrank >= MAXBUCKETS_BM
+      || buckarr_BM[buck->buckrank] != buck)
+    return false;
+  if (buck->buckcount > buck->bucksize)
+    return false;
+  return true;
+}                               /* end validobjbucket_BM */
 
 const setval_tyBM *
 setobjectsofidprefixed_BM (const char *prefix)
@@ -89,6 +104,7 @@ setobjectsofidprefixed_BM (const char *prefix)
   struct objbucket_stBM *curbuck = buckarr_BM[bucknum];
   if (!curbuck)
     return NULL;
+  ASSERT_BM (validobjbucket_BM (curbuck));
   const objectval_tyBM *tinyarr[TINYSIZE_BM] = { };
   const objectval_tyBM **arr = tinyarr;
   unsigned siz = TINYSIZE_BM;
@@ -109,7 +125,7 @@ setobjectsofidprefixed_BM (const char *prefix)
           if (cnt >= siz)
             {
               unsigned newsiz =
-                prime_above_BM (4 * cnt / 3 + TINYSIZE_BM + 2);
+                prime_above_BM (4 * cnt / 3 + TINYSIZE_BM + 3);
               const objectval_tyBM **newarr =
                 calloc (newsiz, sizeof (void *));
               if (!newarr)
@@ -140,6 +156,7 @@ findobjofid_BM (const rawid_tyBM id)
   struct objbucket_stBM *curbuck = buckarr_BM[bucknum];
   if (!curbuck)
     return NULL;
+  ASSERT_BM (validobjbucket_BM (curbuck));
   unsigned busiz = curbuck->bucksize;
   ASSERT_BM (busiz >= 4 && busiz % 2 != 0 && busiz % 3 != 0);
   ASSERT_BM (curbuck->buckcount < curbuck->bucksize);
@@ -172,6 +189,7 @@ static void
 addtobucket_BM (struct objbucket_stBM *buck, objectval_tyBM * ob)
 {
   ASSERT_BM (buck != NULL);
+  ASSERT_BM (validobjbucket_BM (buck));
   ASSERT_BM (valtype_BM (ob) == tyObject_BM);
   hash_tyBM h = objecthash_BM (ob);
   ASSERT_BM (h > 0);
@@ -229,26 +247,33 @@ growobucket_BM (unsigned bucknum, unsigned gap)
   struct objbucket_stBM *oldbuck = buckarr_BM[bucknum];
   unsigned oldsiz = oldbuck ? oldbuck->bucksize : 0;
   unsigned oldcnt = oldbuck ? oldbuck->buckcount : 0;
+  ASSERT_BM (oldbuck == NULL || oldcnt < oldsiz);
+  ASSERT_BM (validobjbucket_BM (oldbuck));
   unsigned long newsiz =
-    prime_above_BM (4 * (oldcnt + gap) / 3 + gap / 64 + 4);
+    prime_above_BM (4 * (oldcnt + gap) / 3 + gap / 64 +
+                    ILOG2_BM (oldcnt + 2) + 5);
   struct objbucket_stBM *newbuck =
     malloc (sizeof (struct objbucket_stBM) + newsiz * sizeof (void *));
   if (!newbuck)
     FATAL_BM ("out of memory for newbuck#%d of newsiz %lu", bucknum, newsiz);
   memset (newbuck, 0,
           sizeof (struct objbucket_stBM) + newsiz * sizeof (void *));
+  newbuck->buckmagic = BUCKETMAGIC_BM;
+  newbuck->buckrank = bucknum;
   newbuck->bucksize = newsiz;
   newbuck->buckcount = 0;
+  buckarr_BM[bucknum] = newbuck;
   for (unsigned oix = 0; oix < oldsiz; oix++)
     {
       objectval_tyBM *oldob = oldbuck->buckobjs[oix];
       if (!oldob || oldob == EMPTYSLOTOB_BM)
         continue;
+      ASSERT_BM (isobject_BM (oldob));
       addtobucket_BM (newbuck, oldob);
     }
   free (oldbuck), oldbuck = NULL;
   ASSERT_BM (newbuck->buckcount == oldcnt);
-  buckarr_BM[bucknum] = newbuck;
+  ASSERT_BM (validobjbucket_BM (newbuck));
 }                               /* end growobucket_BM */
 
 
@@ -264,9 +289,10 @@ makeobjofid_BM (const rawid_tyBM id)
   struct objbucket_stBM *curbuck = buckarr_BM[bucknum];
   unsigned oldsiz = curbuck ? curbuck->bucksize : 0;
   unsigned oldcnt = curbuck ? curbuck->buckcount : 0;
+  ASSERT_BM (validobjbucket_BM (curbuck));
   if (!curbuck || 4 * oldcnt + 5 > 3 * oldsiz)
     {
-      growobucket_BM (bucknum, 6);
+      growobucket_BM (bucknum, 6 + ILOG2_BM (oldcnt + 1));
       curbuck = buckarr_BM[bucknum];
       ASSERT_BM (curbuck);
     }
@@ -299,6 +325,7 @@ objectgcdestroy_BM (struct garbcoll_stBM *gc, objectval_tyBM * obj)
   unsigned bucknum = bucknumserial63_BM (id.id_hi);
   struct objbucket_stBM *curbuck = buckarr_BM[bucknum];
   ASSERT_BM (curbuck != NULL);
+  ASSERT_BM (validobjbucket_BM (curbuck));
   unsigned busiz = curbuck->bucksize;
   unsigned bucnt = curbuck->buckcount;
   ASSERT_BM (bucnt < busiz);
