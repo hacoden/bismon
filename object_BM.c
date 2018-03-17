@@ -567,6 +567,7 @@ hashsetobj_grow_BM (struct hashsetobj_stBM *hset, unsigned gap)
   if (!hset || valtype_BM ((const value_tyBM) hset) != typayl_hashsetobj_BM)
     {
       unsigned newsiz = prime_above_BM (4 * gap / 3 + 10);
+      ASSERT_BM (newsiz < MAXSIZE_BM);
       hset =                    //
         allocgcty_BM (typayl_hashsetobj_BM,
                       sizeof (struct hashsetobj_stBM)
@@ -582,6 +583,7 @@ hashsetobj_grow_BM (struct hashsetobj_stBM *hset, unsigned gap)
   unsigned newsiz = prime_above_BM ((4 * (ucnt + gap)) / 3 + gap / 32 + 11);
   if (alsiz >= newsiz)
     return hset;
+  ASSERT_BM (newsiz < MAXSIZE_BM);
   struct hashsetobj_stBM *newhset =     //
     allocgcty_BM (typayl_hashsetobj_BM,
                   sizeof (struct hashsetobj_stBM) + newsiz * sizeof (void *));

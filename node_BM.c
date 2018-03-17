@@ -15,6 +15,7 @@ makeclosure_BM (const objectval_tyBM * connob, unsigned nbval,
   for (unsigned ix = 0; ix < nbval; ix++)
     if (valtype_BM (closvalarr[ix]))
       cnt++;
+  ASSERT_BM (cnt < MAXSIZE_BM);
   unsigned long closiz =
     sizeof (closure_tyBM)
     + ((cnt > 0) ? (prime_above_BM (cnt - 1) * sizeof (value_tyBM)) : 0);
@@ -148,6 +149,7 @@ makenode_BM (const objectval_tyBM * connob, unsigned nbval,
   for (unsigned ix = 0; ix < nbval; ix++)
     if (valtype_BM (sonvalarr[ix]))
       cnt++;
+  ASSERT_BM (cnt < MAXSIZE_BM);
   unsigned long nodsiz =
     sizeof (node_tyBM)
     + ((cnt > 0) ? (prime_above_BM (cnt - 1) * sizeof (value_tyBM)) : 0);

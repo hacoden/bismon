@@ -40,7 +40,8 @@ assocpair_put_BM (struct assocpairs_stBM *apairs,
         }
       // should grow
       unsigned long newlen =
-        prime_above_BM (4 * oldlen / 3 + oldlen / 64 + 2);
+        prime_above_BM (4 * oldlen / 3 + oldlen / 64 + ILOG2_BM (oldlen + 2) +
+                        3);
       if (newlen >= MAXSIZE_BM)
         FATAL_BM ("too big assocpairs %lu for oldlen %u", newlen, oldlen);
       newpairs =
@@ -210,12 +211,10 @@ assoc_reorganize_BM (anyassoc_tyBM ** passoc, unsigned gap)
                     ILOG2_BM (oldcnt + gap + 1) / 4 + 4);
   if (newnbuckets > MAXSIZE_BM)
     FATAL_BM ("too big #buckets %u in assoc", newnbuckets);
-  struct assocbucket_stBM *newbuckets = allocgcty_BM (typayl_assocbucket_BM,
-                                                      sizeof (struct
-                                                              assocbucket_stBM)
-                                                      +
-                                                      newnbuckets *
-                                                      sizeof (void *));
+  struct assocbucket_stBM *newbuckets = //
+    allocgcty_BM (typayl_assocbucket_BM,
+                  sizeof (struct assocbucket_stBM)
+                  + newnbuckets * sizeof (newbuckets->abuck_pairs[0]));
   ((typedhead_tyBM *) newbuckets)->rlen = newnbuckets;
   if (oldassocisbucket)
     {

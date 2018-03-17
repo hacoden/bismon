@@ -132,8 +132,9 @@ makestring_BM (const char *cstr)
     FATAL_BM ("makestring invalid string");
   int l = sll;
   hash_tyBM h = stringhash_BM (cstr);
-  stringval_tyBM *strv =
-    allocgcty_BM (tyString_BM, (sizeof (stringval_tyBM) + (sll | 0xf) + 1));
+  stringval_tyBM *strv = allocgcty_BM (tyString_BM,
+                                       (sizeof (stringval_tyBM) +
+                                        (prime_above_BM (sll) | 0xf) + 1));
   ((typedhead_tyBM *) strv)->hash = h;
   ((typedsize_tyBM *) strv)->size = l;
   memcpy (strv->strv_bytes, cstr, l);
@@ -153,7 +154,8 @@ makestringlen_BM (const char *cstr, long len)
   if (!g_utf8_validate (cstr, len, NULL))
     FATAL_BM ("makestringlen invalid string");
   hash_tyBM h = stringhashlen_BM (cstr, len);
-  unsigned long strsiz = sizeof (stringval_tyBM) + (len | 0xf) + 1;
+  unsigned long strsiz =
+    sizeof (stringval_tyBM) + (prime_above_BM (len) | 0xf) + 1;
   ASSERT_BM (strsiz < (4L * MAXSIZE_BM / 3 + 5L) * sizeof (void *));
   stringval_tyBM *strv = allocgcty_BM (tyString_BM, strsiz);
   ((typedhead_tyBM *) strv)->hash = h;

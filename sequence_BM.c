@@ -15,6 +15,7 @@ maketuple_BM (objectval_tyBM ** arr, unsigned rawsiz)
   for (unsigned ix = 0; ix < rawsiz; ix++)
     if (arr[ix])
       siz++;
+  ASSERT_BM (siz < MAXSIZE_BM);
   unsigned long tupsiz =        //
     sizeof (tupleval_tyBM)      //
     + ((siz > 0)                //
