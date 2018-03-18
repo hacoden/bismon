@@ -15,6 +15,10 @@
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+----
+    Contact me (Basile Starynkevitch) by email
+    basile@starynkevitch.net and/or basile.starynkevitch@cea.fr
 ***/
 #include "bismon.h"
 #include <gtk/gtk.h>
