@@ -1,7 +1,7 @@
 // file misc_BM.cc
 
 /***
-    BISMON 
+    BISMON
     Copyright © 2018 Basile Starynkevitch (working at CEA, LIST, France)
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

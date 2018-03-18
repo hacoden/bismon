@@ -2143,7 +2143,7 @@ void
                  const stringval_tyBM * namev; value_tyBM val;);
   _.namev = namev;
   _.val = val;
-  ASSERT_BM (isstring_BM ((value_tyBM)namev));
+  ASSERT_BM (isstring_BM ((value_tyBM) namev));
   ASSERT_BM (val != NULL);
   ASSERT_BM (idx <= browsednvulen_BM);
   ASSERT_BM (idx < browsednvsize_BM);

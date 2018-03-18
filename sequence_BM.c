@@ -46,6 +46,8 @@ maketuple_BM (objectval_tyBM ** arr, unsigned rawsiz)
     if (arr[ix])
       {
         const objectval_tyBM *curob = arr[ix];
+        if (!isobject_BM (curob))
+          continue;
         hash_tyBM curhash = objecthash_BM (curob);
         if (curhash == 0)
           FATAL_BM ("invalid object#%d in tuple", ix);
@@ -157,6 +159,8 @@ makeset_BM (const objectval_tyBM ** arr, unsigned rawsiz)
   for (unsigned ix = 0; ix < rawsiz; ix++)
     if (arr[ix])
       {
+        if (!isobject_BM (arr[ix]))
+          continue;
         siz++;
       };
   if (siz > MAXSIZE_BM)
@@ -169,7 +173,7 @@ makeset_BM (const objectval_tyBM ** arr, unsigned rawsiz)
     FATAL_BM ("makeset cannot allocate tmparr siz=%u", siz);
   unsigned cnt = 0;
   for (unsigned ix = 0; ix < rawsiz; ix++)
-    if (arr[ix])
+    if (isobject_BM (arr[ix]))
       tmparr[cnt++] = arr[ix];
   ASSERT_BM (cnt == siz);
   sortobjarr_BM ((objectval_tyBM **) tmparr, siz);

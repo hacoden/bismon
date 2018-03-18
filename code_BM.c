@@ -3605,8 +3605,7 @@ ROUTINEOBJNAME_BM (_6gwxdBT3Mhv_8Gtgu8feoy3)    //
   if (!pars)
     LOCALRETURN_BM (NULL);
   NONPRINTF_BM ("start when readmacro cexpansion _42gEKfF4qca_6gGwxSFC1FO"
-                " lineno=%d colpos=%d nodwidth=%u",
-		lineno, colpos, nodwidth);
+                " lineno=%d colpos=%d nodwidth=%u", lineno, colpos, nodwidth);
   const objectval_tyBM *k_test = BMK_2j84OTHlFdJ_1pMyQfgsmAz;
   WEAKASSERT_BM (k_test != NULL);
   const objectval_tyBM *k_basiclo_when = BMK_3fvdRZNCmJS_5bTAPr83mXg;
