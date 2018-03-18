@@ -865,7 +865,7 @@ ROUTINEOBJNAME_BM (_7BhZWKS2grS_3TnuK6o8ZFH)    //
 (struct stackframe_stBM * stkf, //
  const value_tyBM arg1,         // reciever
  const value_tyBM arg2,         // content
- const value_tyBM arg3_, __attribute__ ((unused))       //
+ const value_tyBM arg3_ __attribute__ ((unused)),       //
  const value_tyBM arg4_ __attribute__ ((unused)),       //
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
