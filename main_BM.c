@@ -575,14 +575,14 @@ static void endguilog_BM (void);
 void
 rungui_BM (bool newgui, int nbjobs)
 {
-  DBGPRINTF_BM ("rungui %s nbjobs %d start tid#%ld", newgui ? "new" : "old",
+  NONPRINTF_BM ("rungui %s nbjobs %d start tid#%ld", newgui ? "new" : "old",
                 nbjobs, (long) gettid_BM ());
   int deferpipes[2] = { -1, -1 };
   if (pipe (deferpipes) < 0)
     FATAL_BM ("failed to pipe GTK deferpipe");
   defer_gtk_readpipefd_BM = deferpipes[0];
   defer_gtk_writepipefd_BM = deferpipes[1];
-  DBGPRINTF_BM ("rungui defer_gtk_readpipefd=%d defer_gtk_writepipefd_BM=%d",
+  NONPRINTF_BM ("rungui defer_gtk_readpipefd=%d defer_gtk_writepipefd_BM=%d",
                 defer_gtk_readpipefd_BM, defer_gtk_writepipefd_BM);
   defer_gtk_readpipechan_BM = g_io_channel_unix_new (defer_gtk_readpipefd_BM);
   g_io_add_watch (defer_gtk_readpipechan_BM, G_IO_IN, deferpipereadhandler_BM,
@@ -590,14 +590,14 @@ rungui_BM (bool newgui, int nbjobs)
   gui_is_running_BM = true;
   startguilog_BM (newgui);
   start_agenda_work_threads_BM (nbjobs);
-  DBGPRINTF_BM ("rungui %s nbjobs %d before gtkmain", newgui ? "new" : "old",
+  NONPRINTF_BM ("rungui %s nbjobs %d before gtkmain", newgui ? "new" : "old",
                 nbjobs);
   gtk_main ();
-  DBGPRINTF_BM
+  NONPRINTF_BM
     ("rungui %s nbjobs %d after gtkmain before stopagendawork tid#%ld elapsed %.3f s",
      newgui ? "new" : "old", nbjobs, (long) gettid_BM (), elapsedtime_BM ());
   stop_agenda_work_threads_BM ();
-  DBGPRINTF_BM ("rungui %s nbjobs %d after stopagendawork elapsed %.3f s",
+  NONPRINTF_BM ("rungui %s nbjobs %d after stopagendawork elapsed %.3f s",
                 newgui ? "new" : "old", nbjobs, elapsedtime_BM ());
   g_io_channel_shutdown (defer_gtk_readpipechan_BM, false, NULL);
   g_io_channel_unref (defer_gtk_readpipechan_BM), defer_gtk_readpipechan_BM =
@@ -607,7 +607,7 @@ rungui_BM (bool newgui, int nbjobs)
   gui_is_running_BM = false;
   if (gui_command_log_file_BM)
     endguilog_BM ();
-  DBGPRINTF_BM ("rungui %s nbjobs %d ending tid#%ld elapsed %.3f s",
+  NONPRINTF_BM ("rungui %s nbjobs %d ending tid#%ld elapsed %.3f s",
                 newgui ? "new" : "old", nbjobs, (long) gettid_BM (),
                 elapsedtime_BM ());
 }                               /* end rungui_BM */

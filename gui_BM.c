@@ -1011,7 +1011,7 @@ browse_add_parens_BM (int openoff, int closeoff, int xtraoff,
                       unsigned xtralen, int depth,
                       struct stackframe_stBM *stkf)
 {
-  DBGPRINTF_BM ("browse_add_parens openoff=%d closeoff=%d xtraoff=%d\n"
+  NONPRINTF_BM ("browse_add_parens openoff=%d closeoff=%d xtraoff=%d\n"
                 ".. openlen=%u closelen=%u xtralen=%u depth=%d",
                 openoff, closeoff, xtraoff,
                 openlen, closelen, xtralen, depth);

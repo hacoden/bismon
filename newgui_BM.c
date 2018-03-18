@@ -692,7 +692,7 @@ runcommand_newgui_BM (bool erase)
   else                          /* error */
     {
       // the errormessagedialog_BM was created in parserrorcmd_BM
-      DBGPRINTF_BM ("runcommand_newgui errpars %d", errpars);
+      NONPRINTF_BM ("runcommand_newgui errpars %d", errpars);
       if (errormessagedialog_BM)
         {
           gtk_dialog_run (GTK_DIALOG (errormessagedialog_BM));

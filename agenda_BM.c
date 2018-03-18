@@ -62,9 +62,9 @@ initialize_agenda_BM (void)
 }                               /* end initialize_agenda_BM */
 
 
-#define GCWAITMILLISECONDS_BM 2960
-#define TASKWAITMILLISECONDS_BM 2850
-#define STOPWAITMILLISECONDS_BM 2740
+#define GCWAITMILLISECONDS_BM 550
+#define TASKWAITMILLISECONDS_BM 300
+#define STOPWAITMILLISECONDS_BM 440
 #define WORKTHREADSTACKSIZE_BM (10*1024*1024)
 // the work routine, passed to pthread_create
 void *
