@@ -983,7 +983,7 @@ parsecommandbuf_newgui_BM (struct
                                       cmdtok.tok_col,
                                       "command %s has no handler",
                                       objectdbg_BM (_.cmdobj));
-              DBGPRINTF_BM ("parsecommandbuf_newgui command %s arity %d",
+              NONPRINTF_BM ("parsecommandbuf_newgui command %s arity %d",
                             objectdbg_BM (_.cmdobj), arity);
               if (arity > TINYSIZE_BM)
                 parsererrorprintf_BM (pars,
@@ -1068,7 +1068,7 @@ parsecommandbuf_newgui_BM (struct
                                               cmdtok.tok_col,
                                               "missing argument %d for command %s",
                                               argix, objectdbg_BM (_.cmdobj));
-                      DBGPRINTF_BM ("parsecommandbuf_newgui argix#%d arg=%s",
+                      NONPRINTF_BM ("parsecommandbuf_newgui argix#%d arg=%s",
                                     argix,
                                     debug_outstr_value_BM
                                     (_.cmdargs[argix],
@@ -2856,7 +2856,7 @@ void
                  objectval_tyBM * curshobsel;);
   _.obj = obj;
   _.shobsel = shobsel;
-  DBGPRINTF_BM
+  NONPRINTF_BM
     ("show_object_in_obwin_newgui obj=%s shobsel=%s depth=%d ulen=%d obw@%p start",
      objectdbg_BM (_.obj), objectdbg1_BM (_.shobsel), depth, obw->obw_ulen,
      obw);

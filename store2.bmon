@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 263 objects
+// for 265 objects
 // with 0 modules
 
 
@@ -843,6 +843,15 @@ _6QdXYI1ivTg_8NnpdDMRQK5 ])
 !@ 1504875287.86
 !$_7T9OwSFlgov_0wVJaK1eZbn |=object|
 !)_43dxTPqTsQQ_3M5JFtY76r1
+
+
+
+!(_58l4H04s9na_5H7OfXO5DEn |=expertises|
+!~ name (~ expertises
+~)
+!@ 1521364643.98
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!)_58l4H04s9na_5H7OfXO5DEn
 
 
 
@@ -2121,6 +2130,15 @@ _0EfjiBTrXEo_3ppwTZ0M7xf |=foreach_in_tuple|
 ) ~)
 
 !)_1ufPZmTnWhp_7FX9NANZCAW
+
+
+
+!(_1zexIhXfZgP_0d6ostHCsjs
+!@ 1521364643.98
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "hashset of expertises"
+!)_1zexIhXfZgP_0d6ostHCsjs
 
 
 
