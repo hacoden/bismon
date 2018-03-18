@@ -2134,10 +2134,13 @@ _0EfjiBTrXEo_3ppwTZ0M7xf |=foreach_in_tuple|
 
 
 !(_1zexIhXfZgP_0d6ostHCsjs
-!@ 1521364643.98
-!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!@ 1521365891.03
+!$_8c9otZ4pwR6_55k81qyyYV2 |=hset_object|
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "hashset of expertises"
+!~ todo (~ _9pvzBeIKHXF_8YDPCrQ6OEK |=put|   { }
+~)
+
 !)_1zexIhXfZgP_0d6ostHCsjs
 
 
