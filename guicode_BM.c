@@ -1088,7 +1088,7 @@ ROUTINEOBJNAME_BM (_1Xc5XJ7S5r7_3nYIzlf2XAw)    //
  const value_tyBM arg1,         // the reciever
  const value_tyBM arg2,         // the attr or index
  const value_tyBM arg3,         // the comp
- const value_tyBM arg4 __attribute__ ((unused)),        // 
+ const value_tyBM arg4_ __attribute__ ((unused)),       // 
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,

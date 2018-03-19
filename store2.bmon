@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 265 objects
+// for 268 objects
 // with 0 modules
 
 
@@ -734,6 +734,15 @@ _6bQLwLF3pc5_5gSAmlh5Nsx
 
 
 
+!(_1Lw70JO0z4y_7VFmnlVAN2U |=current_expertise|
+!~ name (~ current_expertise
+~)
+!@ 1521439289.95
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!)_1Lw70JO0z4y_7VFmnlVAN2U
+
+
+
 !(_5gWmR723ioX_8A2DiFQ2dlj |=curtuple|
 !~ name (~ curtuple
 ~)
@@ -843,6 +852,24 @@ _6QdXYI1ivTg_8NnpdDMRQK5 ])
 !@ 1504875287.86
 !$_7T9OwSFlgov_0wVJaK1eZbn |=object|
 !)_43dxTPqTsQQ_3M5JFtY76r1
+
+
+
+!(_3BK1iRJQKks_9em7267pi4g |=expertise|
+!~ name (~ expertise
+~)
+!@ 1521440428.67
+!$_0LK4TzFd6u1_0JFUsrQ4odG |=class|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "command expertise"
+!: _0xbmmxnN8E8_0ZuEqJmqMNH |=command_handler|
+_5W4PPQFYdj2_3HYUlMsu3oZ
+!: _0NnNXZqWvmz_1ucZGX0YPu1 |=command_arity|
+ 1
+!~ class (~ |supercl object:| _7T9OwSFlgov_0wVJaK1eZbn
+~)
+
+!)_3BK1iRJQKks_9em7267pi4g
 
 
 
@@ -2565,6 +2592,16 @@ _36MhHxakHKT_1ZzV5Xoj5LX
 !: _4rz1Bi4weGz_8Y03gU81cRL |=see|
  { _80060zKi6Un_3isCStegT8A }
 !)_5KWAjUEGiiq_2B6rbvkCcgc
+
+
+
+!(_5W4PPQFYdj2_3HYUlMsu3oZ
+!|*
+!@ 1521439599.53
+!$_2Ir1i8qnrA4_3jSkierlc5z |=basiclo_function|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "expertise command_handler"
+!)_5W4PPQFYdj2_3HYUlMsu3oZ
 
 
 
