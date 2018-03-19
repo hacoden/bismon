@@ -48,7 +48,14 @@ ROUTINEOBJNAME_BM (_5W4PPQFYdj2_3HYUlMsu3oZ)    //
       _.thisexpertiseob = _.argv;
       bool good = false;
       objlock_BM (_.thisexpertiseob);
-      good = objectisinstance_BM (_.thisexpertiseob, k_expertise);
+      if (objclass_BM (_.thisexpertiseob) == BMP_object)
+        {
+          objputclass_BM (_.thisexpertiseob, k_expertise);
+          objtouchnow_BM (_.thisexpertiseob);
+          good = true;
+        }
+      else
+        good = objectisinstance_BM (_.thisexpertiseob, k_expertise);
       objunlock_BM (_.thisexpertiseob);
       if (!good)
         {
@@ -58,6 +65,8 @@ ROUTINEOBJNAME_BM (_5W4PPQFYdj2_3HYUlMsu3oZ)    //
               log_puts_message_BM
                 ("invalid argument to ,expertise command: ");
               log_object_message_BM (_.thisexpertiseob);
+              log_puts_message_BM
+                ("; should be a plain `object`, or an instance of `expertise` or a string.");
               log_end_message_BM ();
             };
           LOCALRETURN_BM (NULL);
@@ -101,6 +110,11 @@ ROUTINEOBJNAME_BM (_5W4PPQFYdj2_3HYUlMsu3oZ)    //
       }
     objunlock_BM (BMP_the_system);
   }
+  if (isobject_BM (_.prevexpertiseob)
+      && _.prevexpertiseob != _.thisexpertiseob)
+    {
+      // should trigger some expertise_processor from the_system ?
+    }
 #warning incomplete expertise command_handler _5W4PPQFYdj2_3HYUlMsu3oZ
   WEAKASSERT_BM (false
                  &&
