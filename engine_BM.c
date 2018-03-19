@@ -44,12 +44,39 @@ ROUTINEOBJNAME_BM (_5W4PPQFYdj2_3HYUlMsu3oZ)    //
   objectval_tyBM *k_expertise = BMK_3BK1iRJQKks_9em7267pi4g;
   _.argv = arg1;
   if (isobject_BM (_.argv))
-    _.thisexpertiseob = _.argv;
+    {
+      _.thisexpertiseob = _.argv;
+      bool good = false;
+      objlock_BM (_.thisexpertiseob);
+      good = objectisinstance_BM (_.thisexpertiseob, k_expertise);
+      objunlock_BM (_.thisexpertiseob);
+      if (!good)
+        {
+          if (pthread_self () == mainthreadid_BM)
+            {
+              log_begin_message_BM ();
+              log_puts_message_BM
+                ("invalid argument to ,expertise command: ");
+              log_object_message_BM (_.thisexpertiseob);
+              log_end_message_BM ();
+            };
+          LOCALRETURN_BM (NULL);
+        }
+    }
   else if (isstring_BM (_.argv))
     {
       _.thisexpertiseob = makeobj_BM ();
       objputclass_BM (_.thisexpertiseob, k_expertise);
+      objputspacenum_BM (_.thisexpertiseob, GlobalSp_BM);
       objputattr_BM (_.thisexpertiseob, BMP_comment, _.argv);
+      if (pthread_self () == mainthreadid_BM)
+        {
+          log_begin_message_BM ();
+          log_puts_message_BM (",expertise created ");
+          log_object_message_BM (_.thisexpertiseob);
+          log_printf_message_BM (" : %s", bytstring_BM (_.argv));
+          log_end_message_BM ();
+        };
     }
   else
     {
@@ -66,6 +93,12 @@ ROUTINEOBJNAME_BM (_5W4PPQFYdj2_3HYUlMsu3oZ)    //
     objlock_BM (BMP_the_system);
     _.prevexpertiseob =
       objectcast_BM (objgetattr_BM (BMP_the_system, k_current_expertise));
+    if (_.prevexpertiseob != _.thisexpertiseob)
+      {
+        objputattr_BM (BMP_the_system, k_current_expertise,
+                       _.thisexpertiseob);
+        objtouchnow_BM (BMP_the_system);
+      }
     objunlock_BM (BMP_the_system);
   }
 #warning incomplete expertise command_handler _5W4PPQFYdj2_3HYUlMsu3oZ
