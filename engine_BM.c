@@ -38,10 +38,11 @@ ROUTINEOBJNAME_BM (_5W4PPQFYdj2_3HYUlMsu3oZ)    //
                  value_tyBM argv;
                  objectval_tyBM * prevexpertiseob;
                  objectval_tyBM * thisexpertiseob;
-                 value_tyBM resultv;
+                 value_tyBM exprocv;
     );
   objectval_tyBM *k_current_expertise = BMK_1Lw70JO0z4y_7VFmnlVAN2U;
   objectval_tyBM *k_expertise = BMK_3BK1iRJQKks_9em7267pi4g;
+  objectval_tyBM *k_expertise_processor = BMK_3MH3SdE0EjN_03eZz7SPOY1;
   _.argv = arg1;
   if (isobject_BM (_.argv))
     {
@@ -102,6 +103,7 @@ ROUTINEOBJNAME_BM (_5W4PPQFYdj2_3HYUlMsu3oZ)    //
     objlock_BM (BMP_the_system);
     _.prevexpertiseob =
       objectcast_BM (objgetattr_BM (BMP_the_system, k_current_expertise));
+    _.exprocv = objgetattr_BM(BMP_the_system, k_expertise_processor);
     if (_.prevexpertiseob != _.thisexpertiseob)
       {
         objputattr_BM (BMP_the_system, k_current_expertise,
@@ -113,11 +115,7 @@ ROUTINEOBJNAME_BM (_5W4PPQFYdj2_3HYUlMsu3oZ)    //
   if (isobject_BM (_.prevexpertiseob)
       && _.prevexpertiseob != _.thisexpertiseob)
     {
-      // should trigger some expertise_processor from the_system ?
+      apply1_BM(_.exprocv, (struct stackframe_stBM*)&_, _.prevexpertiseob);
     }
-#warning incomplete expertise command_handler _5W4PPQFYdj2_3HYUlMsu3oZ
-  WEAKASSERT_BM (false
-                 &&
-                 "incomplete expertise command_handler _5W4PPQFYdj2_3HYUlMsu3oZ");
-  LOCALRETURN_BM (NULL);
+  LOCALRETURN_BM (_.argv);
 }                               /* end expertise command_handler _5W4PPQFYdj2_3HYUlMsu3oZ */

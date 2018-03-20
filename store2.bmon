@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 268 objects
+// for 269 objects
 // with 0 modules
 
 
@@ -870,6 +870,17 @@ _5W4PPQFYdj2_3HYUlMsu3oZ
 ~)
 
 !)_3BK1iRJQKks_9em7267pi4g
+
+
+
+!(_3MH3SdE0EjN_03eZz7SPOY1 |=expertise_processor|
+!~ name (~ expertise_processor
+~)
+!@ 1521526573.05
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "in the_system gives the closure to apply to completed expertises"
+!)_3MH3SdE0EjN_03eZz7SPOY1
 
 
 
