@@ -671,20 +671,32 @@ ROUTINEOBJNAME_BM (_2juH5YMCcog_8pQGCuE5mod)    // add°hset_object
     LOCALRETURN_BM (NULL);
   _.recv = arg1;
   if (!objhashashsetvalpayl_BM (_.recv))
-    LOCALRETURN_BM (NULL);
+    {
+      DBGPRINTF_BM ("add°hset_object bad recv %s", objectdbg_BM (_.recv));
+      LOCALRETURN_BM (NULL);
+    }
+  DBGPRINTF_BM ("add°hset_object recv %s start", objectdbg_BM (_.recv));
   _.addend = arg2;
   if (isobject_BM (_.addend))
     {
       objhashsetaddpayl_BM (_.recv, _.addend);
+      DBGPRINTF_BM ("add°hset_object recv %s addob %s",
+                    objectdbg_BM (_.recv),
+                    objectdbg1_BM ((objectval_tyBM *) _.addend));
       LOCALRETURN_BM (_.recv);
     }
   else if (issequence_BM (_.addend))
     {
       unsigned nbadd = sequencesize_BM (_.addend);
+      DBGPRINTF_BM ("add°hset_object recv %s addseq nbadd=%d",
+                    objectdbg_BM (_.recv), nbadd);
       objhashsetgrowpayl_BM (_.recv, nbadd + 1);
       for (unsigned ix = 0; ix < nbadd; ix++)
         {
           _.curob = sequencenthcomp_BM (_.addend, ix);
+          DBGPRINTF_BM ("add°hset_object recv %s curob %s",
+                        objectdbg_BM (_.recv),
+                        objectdbg1_BM ((objectval_tyBM *) _.curob));
           objhashsetaddpayl_BM (_.recv, _.curob);
         };
       LOCALRETURN_BM (_.recv);
