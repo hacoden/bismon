@@ -1137,7 +1137,11 @@ objhashsetaddpayl_BM (objectval_tyBM * obj, objectval_tyBM * obelem)
     return;
   struct hashsetobj_stBM *hset = objgethashsetpayl_BM (obj);
   if (hset)
-    hashsetobj_add_BM (hset, obelem);
+    {
+      struct hashsetobj_stBM *newhset = hashsetobj_add_BM (hset, obelem);
+      if (newhset != hset)
+        obj->ob_payl = newhset;
+    }
 }                               /* end objhashsetaddpayl_BM */
 
 void
@@ -1147,7 +1151,11 @@ objhashsetremovepayl_BM (objectval_tyBM * obj, objectval_tyBM * obelem)
     return;
   struct hashsetobj_stBM *hset = objgethashsetpayl_BM (obj);
   if (hset)
-    hashsetobj_remove_BM (hset, obelem);
+    {
+      struct hashsetobj_stBM *newhset = hashsetobj_remove_BM (hset, obelem);
+      if (newhset != hset)
+        obj->ob_payl = newhset;
+    }
 }                               /* end objhashsetremovepayl_BM */
 
 unsigned
