@@ -667,32 +667,32 @@ ROUTINEOBJNAME_BM (_2juH5YMCcog_8pQGCuE5mod)    // add°hset_object
                  objectval_tyBM * recv; value_tyBM addend;
                  const seqobval_tyBM * putseqv; objectval_tyBM * curob;
     );
-  struct hashsetobj_stBM *hset = NULL;
   if (!isobject_BM (arg1))
     LOCALRETURN_BM (NULL);
   _.recv = arg1;
-  hset = hashsetobjcast_BM (objpayload_BM (_.recv));
+  if (!objhashashsetvalpayl_BM (_.recv))
+    LOCALRETURN_BM (NULL);
   _.addend = arg2;
   if (isobject_BM (_.addend))
     {
-      hset = hashsetobj_add_BM (hset, (objectval_tyBM *) _.addend);
-      objputpayload_BM (_.recv, hset);
+      objhashsetaddpayl_BM (_.recv, _.addend);
       LOCALRETURN_BM (_.recv);
     }
   else if (issequence_BM (_.addend))
     {
       unsigned nbadd = sequencesize_BM (_.addend);
-      hset = hashsetobj_grow_BM (hset, nbadd + 1);
+      objhashsetgrowpayl_BM (_.recv, nbadd + 1);
       for (unsigned ix = 0; ix < nbadd; ix++)
         {
           _.curob = sequencenthcomp_BM (_.addend, ix);
-          hset = hashsetobj_add_BM (hset, _.curob);
+          objhashsetaddpayl_BM (_.recv, _.curob);
         };
-      objputpayload_BM (_.recv, hset);
       LOCALRETURN_BM (_.recv);
     }
   LOCALRETURN_BM (NULL);
 }                               /* end ROUTINE _2juH5YMCcog_8pQGCuE5mod add°hset_object */
+
+
 
 // for the method remove°hset_object
 extern objrout_sigBM ROUTINEOBJNAME_BM (_5hedSPIXD0o_5ef69rR2kzb);
@@ -710,20 +710,15 @@ ROUTINEOBJNAME_BM (_5hedSPIXD0o_5ef69rR2kzb)    // remove°hset_object
                  objectval_tyBM * recv; value_tyBM removedv;
                  const seqobval_tyBM * putseqv; objectval_tyBM * curob;
     );
-  struct hashsetobj_stBM *hset = NULL;
   if (!isobject_BM (arg1))
     LOCALRETURN_BM (NULL);
   _.recv = arg1;
-  if (!objpayload_BM (_.recv))
-    LOCALRETURN_BM (_.recv);
-  hset = hashsetobjcast_BM (objpayload_BM (_.recv));
-  if (!hset)
+  if (!objhashashsetvalpayl_BM (_.recv))
     LOCALRETURN_BM (NULL);
   _.removedv = arg2;
   if (isobject_BM (_.removedv))
     {
-      hset = hashsetobj_remove_BM (hset, _.removedv);
-      objputpayload_BM (_.recv, hset);
+      objhashsetremovepayl_BM (_.recv, _.removedv);
       LOCALRETURN_BM (_.recv);
     }
   else if (issequence_BM (_.removedv))
@@ -732,11 +727,10 @@ ROUTINEOBJNAME_BM (_5hedSPIXD0o_5ef69rR2kzb)    // remove°hset_object
       for (unsigned ix = 0; ix < nbrem; ix++)
         {
           _.curob = sequencenthcomp_BM (_.removedv, ix);
-          hset = hashsetobj_remove_BM (hset, _.curob);
+          objhashsetremovepayl_BM (_.recv, _.curob);
         };
       if (nbrem > TINYSIZE_BM)
-        hset = hashsetobj_grow_BM (hset, 1);    /* could reorganize the hset */
-      objputpayload_BM (_.recv, hset);
+        objhashsetgrowpayl_BM (_.recv, 1);      /* could reorganize the hset */
       LOCALRETURN_BM (_.recv);
     }
   else
