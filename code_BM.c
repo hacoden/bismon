@@ -670,17 +670,17 @@ ROUTINEOBJNAME_BM (_2juH5YMCcog_8pQGCuE5mod)    // add°hset_object
   if (!isobject_BM (arg1))
     LOCALRETURN_BM (NULL);
   _.recv = arg1;
-  if (!objhashashsetvalpayl_BM (_.recv))
+  if (!objhashashsetpayl_BM (_.recv))
     {
-      DBGPRINTF_BM ("add°hset_object bad recv %s", objectdbg_BM (_.recv));
+      NONPRINTF_BM ("add°hset_object bad recv %s", objectdbg_BM (_.recv));
       LOCALRETURN_BM (NULL);
     }
-  DBGPRINTF_BM ("add°hset_object recv %s start", objectdbg_BM (_.recv));
+  NONPRINTF_BM ("add°hset_object recv %s start", objectdbg_BM (_.recv));
   _.addend = arg2;
   if (isobject_BM (_.addend))
     {
       objhashsetaddpayl_BM (_.recv, _.addend);
-      DBGPRINTF_BM ("add°hset_object recv %s addob %s",
+      NONPRINTF_BM ("add°hset_object recv %s addob %s",
                     objectdbg_BM (_.recv),
                     objectdbg1_BM ((objectval_tyBM *) _.addend));
       LOCALRETURN_BM (_.recv);
@@ -725,7 +725,7 @@ ROUTINEOBJNAME_BM (_5hedSPIXD0o_5ef69rR2kzb)    // remove°hset_object
   if (!isobject_BM (arg1))
     LOCALRETURN_BM (NULL);
   _.recv = arg1;
-  if (!objhashashsetvalpayl_BM (_.recv))
+  if (!objhashashsetpayl_BM (_.recv))
     LOCALRETURN_BM (NULL);
   _.removedv = arg2;
   if (isobject_BM (_.removedv))

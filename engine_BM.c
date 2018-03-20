@@ -103,7 +103,7 @@ ROUTINEOBJNAME_BM (_5W4PPQFYdj2_3HYUlMsu3oZ)    //
     objlock_BM (BMP_the_system);
     _.prevexpertiseob =
       objectcast_BM (objgetattr_BM (BMP_the_system, k_current_expertise));
-    _.exprocv = objgetattr_BM(BMP_the_system, k_expertise_processor);
+    _.exprocv = objgetattr_BM (BMP_the_system, k_expertise_processor);
     if (_.prevexpertiseob != _.thisexpertiseob)
       {
         objputattr_BM (BMP_the_system, k_current_expertise,
@@ -115,7 +115,7 @@ ROUTINEOBJNAME_BM (_5W4PPQFYdj2_3HYUlMsu3oZ)    //
   if (isobject_BM (_.prevexpertiseob)
       && _.prevexpertiseob != _.thisexpertiseob)
     {
-      apply1_BM(_.exprocv, (struct stackframe_stBM*)&_, _.prevexpertiseob);
+      apply1_BM (_.exprocv, (struct stackframe_stBM *) &_, _.prevexpertiseob);
     }
   LOCALRETURN_BM (_.argv);
 }                               /* end expertise command_handler _5W4PPQFYdj2_3HYUlMsu3oZ */
