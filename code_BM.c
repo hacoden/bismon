@@ -492,13 +492,16 @@ ROUTINEOBJNAME_BM (_4DvEF1tVGFD_6VVLpFn6FPW)    //  dump_scan°hset_object
   WEAKASSERT_BM (isobject_BM (arg1));
   _.recv = arg1;
   _.dumpob = objectcast_BM (arg2);
-  WEAKASSERT_BM (obdumpgetdumper_BM (_.dumpob) != NULL);
-  WEAKASSERT_BM (valtype_BM (arg2) == typayl_dumper_BM);
-  extendedval_tyBM payl = objpayload_BM (_.recv);
-  WEAKASSERT_BM (valtype_BM (payl) == typayl_hashsetobj_BM);
   WEAKASSERT_BM (arg3_ == NULL);
-  ASSERT_BM (restargs_ == NULL);
-  _.setv = hashsetobj_to_set_BM (payl);
+  WEAKASSERT_BM (restargs_ == NULL);
+  WEAKASSERT_BM (isobject_BM (_.dumpob));
+  WEAKASSERT_BM (obdumpgetdumper_BM (_.dumpob) != NULL);
+  WEAKASSERT_BM (objhashashsetpayl_BM (_.recv));
+  _.setv = objhashsettosetpayl_BM (_.recv);
+  NONPRINTF_BM ("dump_scan°hset_object recv=%s setv=%s",
+                objectdbg_BM (_.recv),
+                debug_outstr_value_BM (_.setv,
+                                       (struct stackframe_stBM *) &_, 1));
   obdumpscanvalue_BM (_.dumpob, (value_tyBM) _.setv, 0);
   LOCALRETURN_BM ((value_tyBM) _.recv);
 }                               /* end dump_scan°hset_object ROUTINE _4DvEF1tVGFD_6VVLpFn6FPW */
