@@ -883,8 +883,11 @@ ROUTINEOBJNAME_BM (_4IshjBIv6ol_5korHKUIjeK)    //
   int tyval = valtype_BM (_.curval);
   WEAKASSERT_BM (tyval == typayl_hashsetobj_BM);
   _.setk = hashsetobj_to_set_BM (_.curval);
+  char commbuf[32];
+  memset (commbuf, 0, sizeof (commbuf));
+  snprintf (commbuf, sizeof (commbuf), "|hset %d:|", setcardinal_BM (_.setk));
   gtk_text_buffer_insert_with_tags (brobuf,
-                                    &browserit_BM, "|hset:|", -1,
+                                    &browserit_BM, commbuf, -1,
                                     miscomm_brotag_BM, NULL);
   gtk_text_buffer_insert (brobuf, &browserit_BM, "\n", -1);
   browse_value_BM ((const value_tyBM) _.setk,
