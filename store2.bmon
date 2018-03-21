@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 272 objects
+// for 273 objects
 // with 0 modules
 
 
@@ -764,10 +764,14 @@ _6bQLwLF3pc5_5gSAmlh5Nsx
 !(_4kpOdmUag0O_4noJhwkmXjO |=dump|
 !~ name (~ dump
 ~)
-!@ 1521640628.56
+!@ 1521640705.68
 !$_7T9OwSFlgov_0wVJaK1eZbn |=object|
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "dump command"
+!: _0xbmmxnN8E8_0ZuEqJmqMNH |=command_handler|
+ % _5oSaKNehPiO_3GSlpH5boCW ()
+!: _0NnNXZqWvmz_1ucZGX0YPu1 |=command_arity|
+ 1
 !)_4kpOdmUag0O_4noJhwkmXjO
 
 
@@ -2577,6 +2581,16 @@ _36MhHxakHKT_1ZzV5Xoj5LX
 ) ~)
 
 !)_5mnsT1wsdWs_2Qnqsf3wqaP
+
+
+
+!(_5oSaKNehPiO_3GSlpH5boCW
+!|*
+!@ 1521640705.68
+!$_2Ir1i8qnrA4_3jSkierlc5z |=basiclo_function|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "dump command_handler"
+!)_5oSaKNehPiO_3GSlpH5boCW
 
 
 

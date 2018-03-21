@@ -1910,11 +1910,11 @@ ROUTINEOBJNAME_BM (_7rRjqfXs3QI_4Nwk2Lfm569)    //
 }                               /* end routine _7rRjqfXs3QI_4Nwk2Lfm569 */
 
 
-#if 0
-// dump command_handler _1G8fjMWu0ra_5oRWebIKg4L
-extern objrout_sigBM ROUTINEOBJNAME_BM (_1G8fjMWu0ra_5oRWebIKg4L);
+
+// dump command_handler _5oSaKNehPiO_3GSlpH5boCW
+extern objrout_sigBM ROUTINEOBJNAME_BM (_5oSaKNehPiO_3GSlpH5boCW);
 value_tyBM
-ROUTINEOBJNAME_BM (_1G8fjMWu0ra_5oRWebIKg4L)    //
+ROUTINEOBJNAME_BM (_5oSaKNehPiO_3GSlpH5boCW)    //
 (struct stackframe_stBM * stkf, //
  const value_tyBM arg1,         // optional dumpstring
  const value_tyBM arg2_,        //
@@ -1922,7 +1922,7 @@ ROUTINEOBJNAME_BM (_1G8fjMWu0ra_5oRWebIKg4L)    //
  const value_tyBM arg4_ __attribute__ ((unused)),       //
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
-  LOCALFRAME_BM (stkf, /*descr: */ NULL, //BMk_1G8fjMWu0ra_5oRWebIKg4L,
+  LOCALFRAME_BM (stkf, /*descr: */ BMK_5oSaKNehPiO_3GSlpH5boCW,
                  value_tyBM argv;
     );
   extern char *dump_dir_bm;
@@ -1974,5 +1974,5 @@ ROUTINEOBJNAME_BM (_1G8fjMWu0ra_5oRWebIKg4L)    //
   free (dumpstr), dumpstr = NULL;
   free (realstr), realstr = NULL;
   LOCALRETURN_BM (_.argv);
-}                               /* end dump command_handler _1G8fjMWu0ra_5oRWebIKg4L */
-#endif /*0*/
+}                               /* end dump command_handler _5oSaKNehPiO_3GSlpH5boCW */
+
