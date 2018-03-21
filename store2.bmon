@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 273 objects
+// for 274 objects
 // with 0 modules
 
 
@@ -1206,6 +1206,20 @@ _3JH05KgIzty_1K7IDyF43V2 |=assoc|
 !@ 1507030591.77
 !$_7T9OwSFlgov_0wVJaK1eZbn |=object|
 !)_4KF9OJNVSba_96RJF3rETrY
+
+
+
+!(_3CDY5oT7poq_6DZU5iVg2Ft |=mini_tasklet|
+!~ name (~ mini_tasklet
+~)
+!@ 1521652052.31
+!$_0LK4TzFd6u1_0JFUsrQ4odG |=class|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "class of mini tasklets"
+!~ class (~ |supercl object:| _7T9OwSFlgov_0wVJaK1eZbn
+~)
+
+!)_3CDY5oT7poq_6DZU5iVg2Ft
 
 
 
