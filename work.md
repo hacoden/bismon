@@ -27,6 +27,7 @@ So the agenda API is with functions like
 `agenda_remove_tasklet_BM` to remove a tasklet.
 
 The worker threads are running tasklets of `very_high` then `high`
-... priority first. Occasionally a lower priority task could be run
-(once every 32 times, randomly). The order in which tasklets of same
-priority are running is unspecified (and essentially random).
+... up to `very_low` priority first. Occasionally a lower priority
+task could be run (once every 32 times, randomly). The order in which
+tasklets of same priority are running is unspecified (and essentially
+random).
