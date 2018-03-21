@@ -49,7 +49,8 @@ static struct hashsetobj_stBM *ti_low_taskhset_BM;
 static struct hashsetobj_stBM *ti_verylow_taskhset_BM;
 
 static void *run_agendaworker_BM (void *);
-static void run_agenda_internal_tasklet_BM (objectval_tyBM * obtk, struct failurelockset_stBM *flh);
+static void run_agenda_internal_tasklet_BM (objectval_tyBM * obtk,
+                                            struct failurelockset_stBM *flh);
 static objectval_tyBM *choose_task_internal_agenda_BM (void);
 static struct hashsetobj_stBM *maybe_reorganize_taskhshet_agenda_BM     //
   (struct hashsetobj_stBM *tkhset);
@@ -146,7 +147,8 @@ run_agendaworker_BM (void *ad)
             curthreadinfo_BM->ti_thstartelapsedtime =
               clocktime_BM (CLOCK_MONOTONIC);
             run_agenda_internal_tasklet_BM (taskob,
-                                   (struct failurelockset_stBM *) &flspace);
+                                            (struct failurelockset_stBM *)
+                                            &flspace);
             curthreadinfo_BM->ti_thstartcputime = 0.0;
             curthreadinfo_BM->ti_thstartelapsedtime = 0.0;
             destroy_failurelockset_BM ((struct failurelockset_stBM *)
@@ -627,7 +629,8 @@ agenda_get_sets_BM (value_tyBM * pveryhighset,
 }                               /* end agenda_get_sets_BM */
 
 void
-run_agenda_internal_tasklet_BM (objectval_tyBM * obtk, struct failurelockset_stBM *flh)
+run_agenda_internal_tasklet_BM (objectval_tyBM * obtk,
+                                struct failurelockset_stBM *flh)
 {
   if (!isobject_BM (obtk))      // should never happen
     FATAL_BM ("bad tasklet object @%p", obtk);

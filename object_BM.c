@@ -1447,4 +1447,3 @@ sendmanyvar_BM (const value_tyBM recv,
     memcpy (locargs + 1, argarr, nbargs * sizeof (value_tyBM));
   return applyvar_BM ((const value_tyBM) mclos, stkf, nbargs + 1, locargs);
 }                               /* end sendmanyvar_BM */
-

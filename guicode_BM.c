@@ -1908,3 +1908,69 @@ ROUTINEOBJNAME_BM (_7rRjqfXs3QI_4Nwk2Lfm569)    //
   log_end_message_BM ();
   LOCALRETURN_BM (_.taskob);
 }                               /* end routine _7rRjqfXs3QI_4Nwk2Lfm569 */
+
+// dump command_handler _1G8fjMWu0ra_5oRWebIKg4L
+extern objrout_sigBM ROUTINEOBJNAME_BM (_1G8fjMWu0ra_5oRWebIKg4L);
+
+value_tyBM
+ROUTINEOBJNAME_BM (_1G8fjMWu0ra_5oRWebIKg4L)    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         // optional dumpstring
+ const value_tyBM arg2_,        //
+ const value_tyBM arg3_,        //
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
+{
+  LOCALFRAME_BM (stkf, /*descr: */ BMK_1G8fjMWu0ra_5oRWebIKg4L,
+                 value_tyBM argv;
+    );
+  extern char *dump_dir_bm;
+  char *dumpstr = NULL;
+  char *realstr = NULL;
+  _.argv = arg1;
+  if (isstring_BM (_.argv))
+    {
+      dumpstr = strdup (bytstring_BM (_.argv));
+      if (!dumpstr)
+        FATAL_BM ("failed to strdup dump string %s", bytstring_BM (_.argv));
+    }
+  else
+    {
+      dumpstr = strdup (dump_dir_bm ? dump_dir_bm : ".");
+      if (!dumpstr)
+        FATAL_BM ("failed to strdup default dump string %s",
+                  dump_dir_bm ? dump_dir_bm : ".");
+      _.argv = makestring_BM (dumpstr);
+    }
+  realstr = realpath (dumpstr, NULL);
+  log_begin_message_BM ();
+  log_printf_message_BM (",dump into  directory %s (%s)", dumpstr,
+                         realstr ? realstr : "??");
+  log_puts_message_BM (".\n");
+  struct dumpinfo_stBM di = dump_BM (dump_dir_bm, NULL);
+  log_printf_message_BM ("dump: scanned %ld, emitted %ld objects\n",
+                         di.dumpinfo_scanedobjectcount,
+                         di.dumpinfo_emittedobjectcount);
+  log_printf_message_BM ("did %ld todos, wrote %ld files\n",
+                         di.dumpinfo_todocount, di.dumpinfo_wrotefilecount);
+  log_printf_message_BM ("in %.3f elapsed, %.4f cpu seconds.\n",
+                         di.dumpinfo_elapsedtime, di.dumpinfo_cputime);
+  log_end_message_BM ();
+  if (gui_command_log_file_BM)
+    {
+      time_t nowtim = time (NULL);
+      struct tm nowtm = { };
+      localtime_r (&nowtim, &nowtm);
+      char nowbuf[64];
+      memset (nowbuf, 0, sizeof (nowbuf));
+      strftime (nowbuf, sizeof (nowbuf), "%c", &nowtm);
+      fprintf (gui_command_log_file_BM,
+               "\n//// dumped %ld objects, %ld files to %s at %s\n\n",
+               di.dumpinfo_emittedobjectcount, di.dumpinfo_wrotefilecount,
+               realstr ? realstr : dumpstr, nowbuf);
+      fflush (gui_command_log_file_BM);
+    }
+  free (dumpstr), dumpstr = NULL;
+  free (realstr), realstr = NULL;
+  LOCALRETURN_BM (_.argv);
+}                               /* end dump command_handler _1G8fjMWu0ra_5oRWebIKg4L */
