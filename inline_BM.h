@@ -502,6 +502,16 @@ objgetcomp_BM (const objectval_tyBM * obj, int rk)
   return datavectnth_BM (obj->ob_compvec, rk);
 }                               /* end objgetcomp_BM */
 
+value_tyBM
+objlastcomp_BM (const objectval_tyBM * obj)
+{
+  if (!isobject_BM ((const value_tyBM) obj))
+    return NULL;
+  if (!obj->ob_compvec)
+    return NULL;
+  return datavectlast_BM (obj->ob_compvec);
+}                               /* end objlastcomp_BM */
+
 void
 objputcomp_BM (objectval_tyBM * obj, int rk, const value_tyBM valcomp)
 {
@@ -513,6 +523,15 @@ objputcomp_BM (objectval_tyBM * obj, int rk, const value_tyBM valcomp)
     datavectputnth_BM (obj->ob_compvec, rk, valcomp);
 }                               /* end objputcomp_BM */
 
+void
+objpoplastcomp_BM (objectval_tyBM * obj)
+{
+  if (!isobject_BM ((const value_tyBM) obj))
+    return;
+  if (!obj->ob_compvec)
+    return;
+  obj->ob_compvec = datavect_pop_BM (obj->ob_compvec);
+}                               /* end objpoplastcomp_BM */
 
 void
 objreservecomps_BM (objectval_tyBM * obj, unsigned gap)
@@ -880,6 +899,15 @@ datavectnth_BM (const struct datavectval_stBM * dvec, int rk)
   return NULL;
 }                               /* end datavectnth_BM */
 
+value_tyBM
+datavectlast_BM (const struct datavectval_stBM * dvec)
+{
+  unsigned sz = datavectlen_BM (dvec);
+  if (!sz)
+    return NULL;
+  return dvec->vec_data[sz - 1];
+}                               /* end datavectlast_BM */
+
 void
 datavectputnth_BM (struct datavectval_stBM *dvec,
                    int rk, const value_tyBM valcomp)
@@ -954,6 +982,7 @@ objdatavectreservepayl_BM (objectval_tyBM * obj, unsigned gap)
 {
   struct datavectval_stBM *dvec = objgetdatavectpayl_BM (obj);
   if (dvec)
+
     {
       struct datavectval_stBM *newdvec = datavect_reserve_BM (dvec, gap);
       if (newdvec != dvec)

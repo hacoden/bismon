@@ -357,6 +357,8 @@ static inline void objreservecomps_BM (objectval_tyBM * obj, unsigned gap);
 static inline void objresetcomps_BM (objectval_tyBM * obj, unsigned len);
 static inline void objappendcomp_BM (objectval_tyBM * obj,
                                      value_tyBM compval);
+static inline value_tyBM objlastcomp_BM (const objectval_tyBM * obj);
+static inline void objpoplastcomp_BM (objectval_tyBM * obj);
 static inline void objgrowcomps_BM (objectval_tyBM * obj, unsigned gap);
 
 ///
@@ -539,9 +541,10 @@ extern struct datavectval_stBM *datavect_reserve_BM (struct datavectval_stBM
 extern struct datavectval_stBM *datavect_append_BM (struct datavectval_stBM
                                                     *dvec, value_tyBM val);
 
+extern struct datavectval_stBM *datavect_pop_BM (struct datavectval_stBM
+                                                 *dvec);
 extern struct datavectval_stBM *datavect_insert_BM (struct datavectval_stBM
-                                                    *dvec,
-                                                    int rk,
+                                                    *dvec, int rk,
                                                     value_tyBM * valarr,
                                                     unsigned len);
 static inline struct datavectval_stBM *datavect_insertone_BM (struct
@@ -556,11 +559,12 @@ extern const node_tyBM *datavect_to_node_BM (struct datavectval_stBM *dvec,
                                              const objectval_tyBM * obconn);
 static inline value_tyBM datavectnth_BM (const struct datavectval_stBM *dvec,
                                          int rk);
-static inline void datavectputnth_BM (struct datavectval_stBM *dvec,
-                                      int rk, const value_tyBM valcomp);
+static inline value_tyBM datavectlast_BM (const struct datavectval_stBM
+                                          *dvec);
+static inline void datavectputnth_BM (struct datavectval_stBM *dvec, int rk,
+                                      const value_tyBM valcomp);
 extern void *datavectgcproc_BM (struct garbcoll_stBM *gc,
-                                struct datavectval_stBM *dvec,
-                                int depth)
+                                struct datavectval_stBM *dvec, int depth)
   __attribute__ ((warn_unused_result));
 extern void datavectgcdestroy_BM (struct garbcoll_stBM *gc,
                                   struct datavectval_stBM *dvec);

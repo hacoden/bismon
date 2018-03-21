@@ -522,6 +522,37 @@ datavect_append_BM (struct datavectval_stBM *dvec, value_tyBM val)
   return newdvec;
 }                               /* end datavect_append_BM */
 
+struct datavectval_stBM *
+datavect_pop_BM (struct datavectval_stBM *dvec)
+{
+  if (valtype_BM ((const value_tyBM) dvec) != typayl_vectval_BM)
+    return NULL;
+  unsigned oldlen = ((typedhead_tyBM *) dvec)->rlen;
+  unsigned oldcnt = ((typedsize_tyBM *) dvec)->size;
+  if (oldcnt > 0)
+    {
+      dvec->vec_data[oldcnt - 1] = NULL;
+      ((typedsize_tyBM *) dvec)->size = --oldcnt;
+    };
+  if (oldlen > 6 && 2 * oldcnt < oldlen)
+    {
+      unsigned newlen =
+        prime_above_BM (9 * oldcnt / 8 + ILOG2_BM (oldcnt + 2) + 3);
+      if (newlen < oldlen)
+        {
+          struct datavectval_stBM *newdvec =    //
+            allocgcty_BM (typayl_vectval_BM,
+                          sizeof (struct datavectval_stBM)
+                          + newlen * sizeof (void *));
+          ((typedhead_tyBM *) newdvec)->rlen = newlen;
+          ((typedsize_tyBM *) newdvec)->size = oldcnt;
+          memcpy (newdvec->vec_data, dvec->vec_data,
+                  oldcnt * sizeof (void *));
+          return newdvec;
+        }
+    }
+  return dvec;
+}                               /* end datavect_pop_BM */
 
 struct datavectval_stBM *
 datavect_insert_BM (struct datavectval_stBM *dvec,
