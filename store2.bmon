@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 271 objects
+// for 272 objects
 // with 0 modules
 
 
@@ -758,6 +758,17 @@ _6bQLwLF3pc5_5gSAmlh5Nsx
 !@ 1516304622.60
 !$_7T9OwSFlgov_0wVJaK1eZbn |=object|
 !)_17YdW6dWrBA_2mn4QmBjMNs
+
+
+
+!(_4kpOdmUag0O_4noJhwkmXjO |=dump|
+!~ name (~ dump
+~)
+!@ 1521640628.56
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "dump command"
+!)_4kpOdmUag0O_4noJhwkmXjO
 
 
 

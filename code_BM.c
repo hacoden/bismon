@@ -4277,7 +4277,7 @@ ROUTINEOBJNAME_BM (_43m9jyNirvE_0wkbsL0Nvkp)    //
   {
     objlock_BM (BMP_the_system);
     isnewob = !objhashsetcontainspayl_BM (BMP_the_system, _.ob);
-    if (!isnewob)
+    if (isnewob)
       {
         objhashsetaddpayl_BM (BMP_the_system, _.ob);
         objtouchnow_BM (BMP_the_system);
