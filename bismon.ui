@@ -238,7 +238,7 @@
                 <property name="font">Arial Regular</property>
                 <property name="scale">0.90</property>
                 <property name="foreground">cadetblue4</property>
-                <property name="background">lightivory</property>
+                <property name="background">ivory</property>
             </object>
         </child>
       <!-- epilogue_brotag for epilogue -->
