@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 269 objects
+// for 271 objects
 // with 0 modules
 
 
@@ -1764,6 +1764,21 @@ _7XasLoEUKwe_9upxyFeheD5
 
 
 
+!(_9b8m2z3Zx1m_7lvJF32Kzpz |=sysdata|
+!~ name (~ sysdata
+~)
+!@ 1521619326.14
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "command to add a some data into the_system"
+!: _0xbmmxnN8E8_0ZuEqJmqMNH |=command_handler|
+_43m9jyNirvE_0wkbsL0Nvkp
+!: _0NnNXZqWvmz_1ucZGX0YPu1 |=command_arity|
+ 1
+!)_9b8m2z3Zx1m_7lvJF32Kzpz
+
+
+
 !(_6FWWN47uih2_5BhwEm9gnHu |=taggedint|
 !~ name (~ taggedint
 ~)
@@ -2391,6 +2406,16 @@ _0EfjiBTrXEo_3ppwTZ0M7xf |=foreach_in_tuple|
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "method to dump_value a set"
 !)_3Tc3E4uo2p5_4EXWCPwCR5b
+
+
+
+!(_43m9jyNirvE_0wkbsL0Nvkp
+!|*
+!@ 1521619326.14
+!$_2Ir1i8qnrA4_3jSkierlc5z |=basiclo_function|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "sysdata command_handler routine"
+!)_43m9jyNirvE_0wkbsL0Nvkp
 
 
 

@@ -486,7 +486,7 @@ ROUTINEOBJNAME_BM (_4DvEF1tVGFD_6VVLpFn6FPW)    //  dump_scan°hset_object
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 const objectval_tyBM * recv;
+                 objectval_tyBM * recv;
                  objectval_tyBM * dumpob; const setval_tyBM * setv;
     );
   WEAKASSERT_BM (isobject_BM (arg1));
@@ -500,7 +500,7 @@ ROUTINEOBJNAME_BM (_4DvEF1tVGFD_6VVLpFn6FPW)    //  dump_scan°hset_object
   _.setv = objhashsettosetpayl_BM (_.recv);
   NONPRINTF_BM ("dump_scan°hset_object recv=%s setv=%s",
                 objectdbg_BM (_.recv),
-                debug_outstr_value_BM (_.setv,
+                debug_outstr_value_BM ((value_tyBM) _.setv,
                                        (struct stackframe_stBM *) &_, 1));
   obdumpscanvalue_BM (_.dumpob, (value_tyBM) _.setv, 0);
   LOCALRETURN_BM ((value_tyBM) _.recv);
@@ -1948,7 +1948,7 @@ ROUTINEOBJNAME_BM (_1gME6zn82Kf_8hzWibLFRfz)    //
   objectval_tyBM *k_simple_module_generation = BMK_2HlKptD03wA_7JJCG7lN5nS;
   objectval_tyBM *k_prepare_module = BMK_17mrxkMdNtH_2CduQ2WDIy5;
   objectval_tyBM *k_plain_module = BMK_8g1WBJBhDT9_1QK8IcuWYx2;
-  objectval_tyBM *k_generate_module = BMK_9mq0jsuz4XQ_4doHfd987Q6;
+  //objectval_tyBM *k_generate_module = BMK_9mq0jsuz4XQ_4doHfd987Q6;
   if (!isobject_BM (arg1))
     LOCALRETURN_BM (NULL);
   _.recv = (objectval_tyBM *) arg1;
@@ -3881,8 +3881,8 @@ ROUTINEOBJNAME_BM (_8RsUtTTwcw0_9DjQfQrNouU)    //  dump_scan°hashsetval_object
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ BMK_8RsUtTTwcw0_9DjQfQrNouU,
-                 const objectval_tyBM * recv;
-                 const objectval_tyBM * curattrob; value_tyBM curval;
+                 objectval_tyBM * recv;
+                 objectval_tyBM * curattrob; value_tyBM curval;
                  objectval_tyBM * dumpob; const setval_tyBM * setv;
     );
   WEAKASSERT_BM (isobject_BM (arg1));
@@ -3913,7 +3913,7 @@ ROUTINEOBJNAME_BM (_6UxkFEHhNQS_0f65oUlZ7b5)    // dump_data°hashsetval_object
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ BMK_6UxkFEHhNQS_0f65oUlZ7b5,
-                 const objectval_tyBM * recv;
+                 objectval_tyBM * recv;
                  objectval_tyBM * dumpob; objectval_tyBM * bufob;
                  const setval_tyBM * setv; objectval_tyBM * curattrob;
                  value_tyBM curval; value_tyBM contv;
@@ -4275,3 +4275,68 @@ ROUTINEOBJNAME_BM (_7XDuHagbhi8_3V9zhBpbrrV)    //
                 objectdbg_BM (_.taskob), rk);
   LOCALRETURN_BM (_.taskob);
 }                               /* end todo in test_agenda _7XDuHagbhi8_3V9zhBpbrrV */
+
+
+
+
+// sysdata command_handler _43m9jyNirvE_0wkbsL0Nvkp
+extern objrout_sigBM ROUTINEOBJNAME_BM (_43m9jyNirvE_0wkbsL0Nvkp);
+
+value_tyBM
+ROUTINEOBJNAME_BM (_43m9jyNirvE_0wkbsL0Nvkp)    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         //newob
+ const value_tyBM arg2_ __attribute__ ((unused)),       //
+ const value_tyBM arg3_ __attribute__ ((unused)),       //
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
+{
+  LOCALFRAME_BM (stkf, /*descr: */ BMK_43m9jyNirvE_0wkbsL0Nvkp,
+                 objectval_tyBM * ob;
+    );
+  _.ob = objectcast_BM (arg1);
+  if (!_.ob)
+    {
+      if (pthread_self () == mainthreadid_BM)
+        {
+          log_begin_message_BM ();
+          log_puts_message_BM (",sysdata expects an object.");
+          log_end_message_BM ();
+        }
+      LOCALRETURN_BM (NULL);
+    }
+  bool isnewob = false;
+  {
+    objlock_BM (BMP_the_system);
+    isnewob = !objhashsetcontainspayl_BM (BMP_the_system, _.ob);
+    if (!isnewob)
+      {
+        objhashsetaddpayl_BM (BMP_the_system, _.ob);
+        objtouchnow_BM (BMP_the_system);
+      }
+    objunlock_BM (BMP_the_system);
+  }
+  if (pthread_self () == mainthreadid_BM)
+    {
+      if (isnewob)
+        {
+          log_begin_message_BM ();
+          log_puts_message_BM (",sysdata added new object ");
+          log_object_message_BM (_.ob);
+          log_puts_message_BM (".");
+          log_end_message_BM ();
+        }
+      else
+        {
+          log_begin_message_BM ();
+          log_puts_message_BM (",sysdata did not add existing object ");
+          log_object_message_BM (_.ob);
+          log_puts_message_BM (".");
+          log_end_message_BM ();
+        }
+    }
+  if (isnewob)
+    LOCALRETURN_BM (_.ob);
+  else
+    LOCALRETURN_BM (NULL);
+}                               /* end  sysdata command_handler  _43m9jyNirvE_0wkbsL0Nvkp */
