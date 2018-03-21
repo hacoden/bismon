@@ -1203,9 +1203,6 @@ extern void agenda_add_low_priority_tasklet_BM (objectval_tyBM *);
 extern void agenda_add_very_low_priority_tasklet_BM (objectval_tyBM *);
 extern bool agenda_remove_tasklet_BM (objectval_tyBM *);
 extern bool agenda_has_tasklet_BM (objectval_tyBM *);
-// internal
-extern void run_agenda_tasklet_BM (objectval_tyBM *,
-                                   struct failurelockset_stBM *);
 // return total number of tasklets
 extern long agenda_get_counts_BM (long *pveryhigh, long *phigh, long *pnormal,
                                   long *plow, long *pverylow);

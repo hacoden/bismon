@@ -49,6 +49,7 @@ static struct hashsetobj_stBM *ti_low_taskhset_BM;
 static struct hashsetobj_stBM *ti_verylow_taskhset_BM;
 
 static void *run_agendaworker_BM (void *);
+static void run_agenda_internal_tasklet_BM (objectval_tyBM * obtk, struct failurelockset_stBM *flh);
 static objectval_tyBM *choose_task_internal_agenda_BM (void);
 static struct hashsetobj_stBM *maybe_reorganize_taskhshet_agenda_BM     //
   (struct hashsetobj_stBM *tkhset);
@@ -144,7 +145,7 @@ run_agendaworker_BM (void *ad)
               clocktime_BM (CLOCK_THREAD_CPUTIME_ID);
             curthreadinfo_BM->ti_thstartelapsedtime =
               clocktime_BM (CLOCK_MONOTONIC);
-            run_agenda_tasklet_BM (taskob,
+            run_agenda_internal_tasklet_BM (taskob,
                                    (struct failurelockset_stBM *) &flspace);
             curthreadinfo_BM->ti_thstartcputime = 0.0;
             curthreadinfo_BM->ti_thstartelapsedtime = 0.0;
@@ -624,3 +625,48 @@ agenda_get_sets_BM (value_tyBM * pveryhighset,
   pthread_mutex_unlock (&ti_agendamtx_BM);
   return totcnt;
 }                               /* end agenda_get_sets_BM */
+
+void
+run_agenda_internal_tasklet_BM (objectval_tyBM * obtk, struct failurelockset_stBM *flh)
+{
+  if (!isobject_BM (obtk))      // should never happen
+    FATAL_BM ("bad tasklet object @%p", obtk);
+  ASSERT_BM (flh != NULL);
+  LOCALFRAME_BM ( /*prev: */ NULL, /*descr: */ NULL,
+                 objectval_tyBM * obtk;
+                 value_tyBM failres;);
+  _.obtk = obtk;
+  curfailurehandle_BM = NULL;
+  objlock_BM (_.obtk);
+  volatile int failcod = 0;
+  struct failurehandler_stBM fh =       //
+  {
+    .pA = {.htyp = typayl_FailureHandler_BM},
+    .failh_magic = FAILUREHANDLEMAGIC_BM,
+    .failh_lockset = NULL,
+    .failh_reason = NULL,
+    .failh_jmpbuf = {}
+  };
+  fh.failh_lockset = flh;
+  curfailurehandle_BM = &fh;
+  failcod = setjmp (fh.failh_jmpbuf);
+  if (!failcod)
+    {
+      (void) send0_BM (_.obtk, BMP_run_tasklet,
+                       (struct stackframe_stBM *) &_);
+    }
+  else
+    {
+      char curidbuf[32];
+      memset (curidbuf, 0, sizeof (curidbuf));
+      idtocbuf32_BM (objid_BM (_.obtk), curidbuf);
+      _.failres = fh.failh_reason;
+      char *failmsg =
+        debug_outstr_value_BM (_.failres, (struct stackframe_stBM *) &_,
+                               0);
+      fprintf (stderr, "tasklet %s failed code#%d reason %s\n", curidbuf,
+               failcod, failmsg);
+    };
+  curfailurehandle_BM = NULL;
+  objunlock_BM (_.obtk);
+}                               /* end run_agenda_internal_tasklet_BM */
