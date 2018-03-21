@@ -129,8 +129,8 @@ value_tyBM
 ROUTINEOBJNAME_BM (_1etImV3nBtp_5rnHSE87XRj)    //
 (struct stackframe_stBM * stkf, //
  const value_tyBM arg1,         // recv
- const value_tyBM arg2,         //
- const value_tyBM arg3,         //
+ const value_tyBM arg2_ __attribute__ ((unused)),       //
+ const value_tyBM arg3_ __attribute__ ((unused)),       //
  const value_tyBM arg4_ __attribute__ ((unused)),       //
  const quasinode_tyBM * restargs_ __attribute__ ((unused)))
 {
@@ -152,3 +152,38 @@ ROUTINEOBJNAME_BM (_1etImV3nBtp_5rnHSE87XRj)    //
                                        (struct stackframe_stBM *) &_, 0));
   LOCALRETURN_BM (_.resv);
 }                               /* end run_tasklet°tiny_tasklet  _1etImV3nBtp_5rnHSE87XRj */
+
+// run_tasklet°mini_tasklet _8gAuOE933W3_5s7IF0hgpkz
+
+extern objrout_sigBM ROUTINEOBJNAME_BM (_8gAuOE933W3_5s7IF0hgpkz);
+#define MINICPUTHRESHOLD_BM 0.005
+#define MINIELAPSEDTHRESHOLD_BM 0.03
+value_tyBM
+ROUTINEOBJNAME_BM (_8gAuOE933W3_5s7IF0hgpkz)    //
+(struct stackframe_stBM * stkf, //
+ const value_tyBM arg1,         //taskob
+ const value_tyBM arg2_ __attribute__ ((unused)),       //
+ const value_tyBM arg3_ __attribute__ ((unused)),       //
+ const value_tyBM arg4_ __attribute__ ((unused)),       //
+ const quasinode_tyBM * restargs_ __attribute__ ((unused)))
+{
+  LOCALFRAME_BM (stkf, /*descr: */ BMK_8gAuOE933W3_5s7IF0hgpkz,
+                 objectval_tyBM * taskob;
+                 objectval_tyBM * framob;
+    );
+  _.taskob = arg1;
+  do
+    {
+      unsigned nbc = objnbcomps_BM (_.taskob);
+      if (!nbc)
+        break;
+      _.framob = objectcast_BM(objlastcomp_BM(_.taskob));
+      objpoplastcomp_BM(_.taskob);
+      if (!_.framob) continue;
+    }
+  while (taskletcputime_BM () < MINICPUTHRESHOLD_BM
+         && taskletelapsedtime_BM () < MINIELAPSEDTHRESHOLD_BM);
+#warning unimplemented _8gAuOE933W3_5s7IF0hgpkz routine
+  WEAKASSERT_BM (false && "unimplemented _8gAuOE933W3_5s7IF0hgpkz routine");
+  LOCALRETURN_BM (_.taskob);
+}                               /* end run_tasklet°mini_tasklet _8gAuOE933W3_5s7IF0hgpkz */

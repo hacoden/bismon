@@ -15,10 +15,11 @@ Each worker thread loops by taking (and removing) a tasklet from the
 agenda, and runs that tasklet, and repeat. The running step of a
 tasklet is expected to be short (a few milliseconds) and should be
 bounded (see also `taskletcputime_BM` giving its CPU time, and
-`taskletelapsed_BM` giving its elapsed time). A tasklet is run by
-sending it the `run_tasklet` selector (without additional
-arguments). That run would usually (but not always) add some tasklets
-into the agenda.
+`taskletelapsed_BM` giving its elapsed time) and without significant
+I/O (so some "CPU-intensive" computation). A tasklet is run by sending
+it the `run_tasklet` selector (without additional arguments), with the
+tasklet being locked. That run would usually (but not always) add some
+tasklets into the agenda.
 
 So the agenda API is with functions like
 `agenda_add_very_high_priority_tasklet_BM`
