@@ -210,9 +210,12 @@ run_mini_frame_BM (objectval_tyBM * framob, objectval_tyBM * taskob,
   LOCALFRAME_BM (stkf, /*descr: */ NULL,
                  objectval_tyBM * taskob;
                  objectval_tyBM * framob;
+		 objectval_tyBM * curstatev;
     );
+  objectval_tyBM* k_state = BMK_5zHhLVgR3Dv_1zf1cxOQlJ4;
   _.framob = framob;
   _.taskob = taskob;
+  _.curstatev = objgetattr_BM(_.framob, k_state);
   WEAKASSERT_BM (false && "unimplemented run_mini_frame_BM");  
 #warning unimplemented run_mini_frame_BM
 }                               /* end run_mini_frame_BM */

@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 276 objects
+// for 277 objects
 // with 0 modules
 
 
@@ -1775,6 +1775,17 @@ _2mYaTh9kH4I_7ENiXcymRmy |=set|
 ~)
 
 !)_4tiUQqbr6oh_5gZVoUWsppH
+
+
+
+!(_5zHhLVgR3Dv_1zf1cxOQlJ4 |=state|
+!~ name (~ state
+~)
+!@ 1521786179.83
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "give the state, e.g. of a frame"
+!)_5zHhLVgR3Dv_1zf1cxOQlJ4
 
 
 
