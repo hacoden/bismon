@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 277 objects
+// for 278 objects
 // with 0 modules
 
 
@@ -836,6 +836,15 @@ _6QdXYI1ivTg_8NnpdDMRQK5 ])
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "in c_enum gives the computed tuple of enumerators"
 !)_7BROpIWQHzA_8b1C6i49Pkz
+
+
+
+!(_2GSI180a7F4_082QzwxJSry |=evaluate_sequence|
+!~ name (~ evaluate_sequence
+~)
+!@ 1521885016.41
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!)_2GSI180a7F4_082QzwxJSry
 
 
 
@@ -3041,10 +3050,12 @@ _36MhHxakHKT_1ZzV5Xoj5LX
 
 !(_8gAuOE933W3_5s7IF0hgpkz
 !|*
-!@ 1521652559.60
+!@ 1521885016.41
 !$_2Ir1i8qnrA4_3jSkierlc5z |=basiclo_function|
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "run_tasklet\u00b0mini_tasklet method"
+!: _4rz1Bi4weGz_8Y03gU81cRL |=see|
+ { _2GSI180a7F4_082QzwxJSry _8zRh2medTlP_0ImnPyO8NKH }
 !)_8gAuOE933W3_5s7IF0hgpkz
 
 
