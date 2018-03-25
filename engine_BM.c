@@ -242,7 +242,8 @@ evaluate_in_mini_frame_BM (value_tyBM expv, objectval_tyBM * framob,
 {
   LOCALFRAME_BM (stkf, /*descr: */ NULL,
                  objectval_tyBM * taskob;
-                 objectval_tyBM * framob; objectval_tyBM * connob;
+                 objectval_tyBM * framob;
+                 objectval_tyBM * connob; objectval_tyBM * varob;
                  value_tyBM expv);
   _.expv = expv;
   _.taskob = taskob;
@@ -256,6 +257,14 @@ evaluate_in_mini_frame_BM (value_tyBM expv, objectval_tyBM * framob,
       LOCALRETURN_BM (_.expv);
     }
   _.connob = nodeconn_BM (_.expv);
+  unsigned exparity = nodewidth_BM (_.expv);
+  if (_.connob == BMP_question && exparity == 1)
+    {
+      _.varob = objectcast_BM (nodenthson_BM (_.expv, 0));
+      if (!_.varob)
+        FAILURE_BM (__LINE__, _.expv, (struct stackframe_stBM*) &_);
+      // find _.varob in some frame
+    }
 #warning evaluate_in_mini_frame_BM very incomplete
   WEAKASSERT_BM (false && "unimplemented evaluate_in_mini_frame_BM");
 }                               /* end evaluate_in_mini_frame_BM */
