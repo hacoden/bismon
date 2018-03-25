@@ -263,7 +263,7 @@ evaluate_in_mini_frame_BM (value_tyBM expv, objectval_tyBM * framob,
       _.varob = objectcast_BM (nodenthson_BM (_.expv, 0));
       if (!_.varob)
         FAILURE_BM (__LINE__, _.expv, (struct stackframe_stBM*) &_);
-      // find _.varob in some frame
+      // find _.varob's binding in some frame
     }
 #warning evaluate_in_mini_frame_BM very incomplete
   WEAKASSERT_BM (false && "unimplemented evaluate_in_mini_frame_BM");
