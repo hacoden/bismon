@@ -203,13 +203,17 @@ ROUTINEOBJNAME_BM (_8gAuOE933W3_5s7IF0hgpkz)    //
   LOCALRETURN_BM (_.taskob);
 }                               /* end run_tasklet°mini_tasklet _8gAuOE933W3_5s7IF0hgpkz */
 
+static value_tyBM evaluate_in_mini_frame_BM (value_tyBM expv,
+                                             objectval_tyBM * framob,
+                                             objectval_tyBM * taskob,
+                                             bool * pneedeval,
+                                             struct stackframe_stBM *stkf);
 void
 run_mini_frame_BM (objectval_tyBM * framob, objectval_tyBM * taskob,
                    struct stackframe_stBM *stkf)
 {
   LOCALFRAME_BM (stkf, /*descr: */ NULL,
-                 objectval_tyBM * taskob;
-                 objectval_tyBM * framob;
+                 objectval_tyBM * taskob; objectval_tyBM * framob;
                  objectval_tyBM * curstatev; value_tyBM * curseqv;
                  value_tyBM * curcompv;
     );
@@ -228,3 +232,30 @@ run_mini_frame_BM (objectval_tyBM * framob, objectval_tyBM * taskob,
   WEAKASSERT_BM (false && "unimplemented run_mini_frame_BM");
 #warning unimplemented run_mini_frame_BM
 }                               /* end run_mini_frame_BM */
+
+
+
+value_tyBM
+evaluate_in_mini_frame_BM (value_tyBM expv, objectval_tyBM * framob,
+                           objectval_tyBM * taskob, bool * pneedeval,
+                           struct stackframe_stBM *stkf)
+{
+  LOCALFRAME_BM (stkf, /*descr: */ NULL,
+                 objectval_tyBM * taskob;
+                 objectval_tyBM * framob; objectval_tyBM * connob;
+                 value_tyBM expv);
+  _.expv = expv;
+  _.taskob = taskob;
+  _.framob = framob;
+  WEAKASSERT_BM (isobject_BM (_.taskob));
+  WEAKASSERT_BM (isobject_BM (_.framob));
+  ASSERT_BM (pneedeval != NULL);
+  if (!isnode_BM (_.expv))
+    {
+      *pneedeval = false;
+      LOCALRETURN_BM (_.expv);
+    }
+  _.connob = nodeconn_BM (_.expv);
+#warning evaluate_in_mini_frame_BM very incomplete
+  WEAKASSERT_BM (false && "unimplemented evaluate_in_mini_frame_BM");
+}                               /* end evaluate_in_mini_frame_BM */
