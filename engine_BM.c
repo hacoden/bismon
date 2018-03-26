@@ -246,6 +246,7 @@ evaluate_in_mini_frame_BM (value_tyBM expv, objectval_tyBM * framob,
                  value_tyBM expv;
                  value_tyBM errorv;);
   objectval_tyBM *k_syntax_error = BMK_7UGHYP5h2vc_5O70fk0ifBL;
+  objectval_tyBM *k_unbound_variable_error = BMK_68PQkZp1UAq_8RNb44Ea88z;
   _.expv = expv;
   _.taskob = taskob;
   _.framob = framob;
@@ -268,6 +269,8 @@ evaluate_in_mini_frame_BM (value_tyBM expv, objectval_tyBM * framob,
           FAILURE_BM (__LINE__, _.errorv, (struct stackframe_stBM *) &_);
         }
       // find _.varob's binding in some frame
+      /// while (isobject_BM(_.framob)) {
+      /// }
     }
 #warning evaluate_in_mini_frame_BM very incomplete
   WEAKASSERT_BM (false && "unimplemented evaluate_in_mini_frame_BM");
