@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 278 objects
+// for 280 objects
 // with 0 modules
 
 
@@ -1828,6 +1828,17 @@ _7XasLoEUKwe_9upxyFeheD5
 
 
 
+!(_7UGHYP5h2vc_5O70fk0ifBL |=syntax_error|
+!~ name (~ syntax_error
+~)
+!@ 1522046100.92
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "failure for syntax error"
+!)_7UGHYP5h2vc_5O70fk0ifBL
+
+
+
 !(_9b8m2z3Zx1m_7lvJF32Kzpz |=sysdata|
 !~ name (~ sysdata
 ~)
@@ -1926,6 +1937,17 @@ _7XasLoEUKwe_9upxyFeheD5
 !@ 1507032173.70
 !$_7T9OwSFlgov_0wVJaK1eZbn |=object|
 !)_98LwKjUO4P2_5CU6mAoKUxQ
+
+
+
+!(_68PQkZp1UAq_8RNb44Ea88z |=unbound_variable_error|
+!~ name (~ unbound_variable_error
+~)
+!@ 1522046298.10
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "error for unbound variable"
+!)_68PQkZp1UAq_8RNb44Ea88z
 
 
 

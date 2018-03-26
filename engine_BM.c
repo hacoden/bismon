@@ -241,10 +241,11 @@ evaluate_in_mini_frame_BM (value_tyBM expv, objectval_tyBM * framob,
                            struct stackframe_stBM *stkf)
 {
   LOCALFRAME_BM (stkf, /*descr: */ NULL,
-                 objectval_tyBM * taskob;
-                 objectval_tyBM * framob;
+                 objectval_tyBM * taskob; objectval_tyBM * framob;
                  objectval_tyBM * connob; objectval_tyBM * varob;
-                 value_tyBM expv);
+                 value_tyBM expv;
+                 value_tyBM errorv;);
+  objectval_tyBM *k_syntax_error = BMK_7UGHYP5h2vc_5O70fk0ifBL;
   _.expv = expv;
   _.taskob = taskob;
   _.framob = framob;
@@ -262,7 +263,10 @@ evaluate_in_mini_frame_BM (value_tyBM expv, objectval_tyBM * framob,
     {
       _.varob = objectcast_BM (nodenthson_BM (_.expv, 0));
       if (!_.varob)
-        FAILURE_BM (__LINE__, _.expv, (struct stackframe_stBM*) &_);
+        {
+          _.errorv = makenodevar_BM (k_syntax_error, _.expv, NULL);
+          FAILURE_BM (__LINE__, _.errorv, (struct stackframe_stBM *) &_);
+        }
       // find _.varob's binding in some frame
     }
 #warning evaluate_in_mini_frame_BM very incomplete
