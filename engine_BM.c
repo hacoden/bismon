@@ -245,7 +245,7 @@ evaluate_in_mini_frame_BM (value_tyBM expv, objectval_tyBM * framob,
 {
   LOCALFRAME_BM (stkf, /*descr: */ NULL,
                  objectval_tyBM * taskob; objectval_tyBM * framob;
-                 objectval_tyBM * connob;
+                 objectval_tyBM * initialframob; objectval_tyBM * connob;
                  objectval_tyBM * varob; value_tyBM expv;
                  value_tyBM valv;
                  value_tyBM errorv;);
@@ -258,6 +258,7 @@ evaluate_in_mini_frame_BM (value_tyBM expv, objectval_tyBM * framob,
   _.framob = framob;
   WEAKASSERT_BM (isobject_BM (_.taskob));
   WEAKASSERT_BM (isobject_BM (_.framob));
+  _.initialframob = _.framob;
   ASSERT_BM (pneedeval != NULL);
   if (!isnode_BM (_.expv))
     {
@@ -266,6 +267,7 @@ evaluate_in_mini_frame_BM (value_tyBM expv, objectval_tyBM * framob,
     }
   _.connob = nodeconn_BM (_.expv);
   unsigned exparity = nodewidth_BM (_.expv);
+  // ?var retrieves the var's value
   if (_.connob == BMP_question && exparity == 1)
     {
       _.varob = objectcast_BM (nodenthson_BM (_.expv, 0));
@@ -295,6 +297,18 @@ evaluate_in_mini_frame_BM (value_tyBM expv, objectval_tyBM * framob,
             }
           _.framob = objgetattr_BM (_.framob, k_previous_frame);
         }
+      {
+        _.errorv =
+          makenodevar_BM (k_unbound_variable_error, _.varob, _.framob, NULL);
+        FAILURE_BM (__LINE__, _.errorv, (struct stackframe_stBM *) &_);
+      }
+    }                           /* end ?var */
+  // !thing gives the thing (like quote in lisp)
+  else if (_.connob == BMP_exclam && exparity == 1)
+    {
+      _.valv = objectcast_BM (nodenthson_BM (_.expv, 0));
+      *pneedeval = false;
+      LOCALRETURN_BM (_.valv);
     }
 #warning evaluate_in_mini_frame_BM very incomplete
   WEAKASSERT_BM (false && "unimplemented evaluate_in_mini_frame_BM");
