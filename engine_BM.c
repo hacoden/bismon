@@ -215,8 +215,9 @@ run_mini_frame_BM (objectval_tyBM * framob, objectval_tyBM * taskob,
 {
   LOCALFRAME_BM (stkf, /*descr: */ NULL,
                  objectval_tyBM * taskob; objectval_tyBM * framob;
-                 objectval_tyBM * curstatev; value_tyBM * curseqv;
-                 value_tyBM * curcompv;
+                 objectval_tyBM * curstatev;
+                 value_tyBM curseqv; value_tyBM curcompv;
+                 value_tyBM curvalv;
     );
   objectval_tyBM *k_state = BMK_5zHhLVgR3Dv_1zf1cxOQlJ4;
   objectval_tyBM *k_evaluate_sequence = BMK_8gAuOE933W3_5s7IF0hgpkz;
@@ -231,6 +232,11 @@ run_mini_frame_BM (objectval_tyBM * framob, objectval_tyBM * taskob,
       _.curseqv = objgetattr_BM (_.framob, k_evaluate_sequence);
       int rk = getint_BM (objgetattr_BM (_.framob, k_rank));
       _.curcompv = nodenthson_BM (_.curseqv, rk);
+      _.curvalv = NULL;
+      bool needeval = false;
+      _.curvalv =
+        evaluate_in_mini_frame_BM (_.curcompv, _.framob, _.taskob, &needeval,
+                                   (struct stackframe_stBM *) &_);
     }
   WEAKASSERT_BM (false && "unimplemented run_mini_frame_BM");
 #warning unimplemented run_mini_frame_BM
