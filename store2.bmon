@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 280 objects
+// for 281 objects
 // with 0 modules
 
 
@@ -1221,11 +1221,11 @@ _3JH05KgIzty_1K7IDyF43V2 |=assoc|
 !(_7iXMCmAFuoe_5IaAOnyr7vZ |=mini_frame|
 !~ name (~ mini_frame
 ~)
-!@ 1521710537.52
+!@ 1522126131.28
 !$_0LK4TzFd6u1_0JFUsrQ4odG |=class|
 !: _01h86SAfOfg_1q2oMegGRwW |=comment|
  "class of mini frames in mini_tasklets"
-!~ class (~ |supercl object:| _7T9OwSFlgov_0wVJaK1eZbn
+!~ class (~ |supercl assoc_object:| _6ZQ05nCv3Ys_8LA6B5LkZgm
 ~)
 
 !)_7iXMCmAFuoe_5IaAOnyr7vZ
@@ -1542,6 +1542,17 @@ _2HlKptD03wA_7JJCG7lN5nS |=simple_module_generation|  _17mrxkMdNtH_2CduQ2WDIy5 |
 !: _83kM1HtO8K3_6k0F2KYQT3W |=c_type|
 _2mYaTh9kH4I_7ENiXcymRmy |=set| 
 !)_4jQFQ7bwCsI_3TM3IY3tFyW
+
+
+
+!(_7ALBmiM4ZPF_2LtorcTj8gO |=previous_frame|
+!~ name (~ previous_frame
+~)
+!@ 1522129404.29
+!$_7T9OwSFlgov_0wVJaK1eZbn |=object|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "give the previous frame"
+!)_7ALBmiM4ZPF_2LtorcTj8gO
 
 
 

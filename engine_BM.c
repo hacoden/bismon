@@ -21,6 +21,7 @@
 #include "bismon.h"
 #include "engine_BM.const.h"
 
+#define MAXMINIFRAMEDEPTH_BM 256
 // expertise command_handler _5W4PPQFYdj2_3HYUlMsu3oZ
 extern objrout_sigBM ROUTINEOBJNAME_BM (_5W4PPQFYdj2_3HYUlMsu3oZ);
 
@@ -220,8 +221,10 @@ run_mini_frame_BM (objectval_tyBM * framob, objectval_tyBM * taskob,
   objectval_tyBM *k_state = BMK_5zHhLVgR3Dv_1zf1cxOQlJ4;
   objectval_tyBM *k_evaluate_sequence = BMK_8gAuOE933W3_5s7IF0hgpkz;
   objectval_tyBM *k_rank = BMK_8zRh2medTlP_0ImnPyO8NKH;
+  objectval_tyBM *k_mini_frame = BMK_7iXMCmAFuoe_5IaAOnyr7vZ;
   _.framob = framob;
   _.taskob = taskob;
+  WEAKASSERT_BM(objectisinstance_BM (_.framob, k_mini_frame));
   _.curstatev = objgetattr_BM (_.framob, k_state);
   if (_.curstatev == k_evaluate_sequence)
     {
@@ -244,9 +247,12 @@ evaluate_in_mini_frame_BM (value_tyBM expv, objectval_tyBM * framob,
                  objectval_tyBM * taskob; objectval_tyBM * framob;
                  objectval_tyBM * connob; objectval_tyBM * varob;
                  value_tyBM expv;
+                 value_tyBM valv;
                  value_tyBM errorv;);
   objectval_tyBM *k_syntax_error = BMK_7UGHYP5h2vc_5O70fk0ifBL;
   objectval_tyBM *k_unbound_variable_error = BMK_68PQkZp1UAq_8RNb44Ea88z;
+  objectval_tyBM *k_mini_frame = BMK_7iXMCmAFuoe_5IaAOnyr7vZ;
+  objectval_tyBM *k_previous_frame = BMK_7ALBmiM4ZPF_2LtorcTj8gO;
   _.expv = expv;
   _.taskob = taskob;
   _.framob = framob;
@@ -269,8 +275,23 @@ evaluate_in_mini_frame_BM (value_tyBM expv, objectval_tyBM * framob,
           FAILURE_BM (__LINE__, _.errorv, (struct stackframe_stBM *) &_);
         }
       // find _.varob's binding in some frame
-      /// while (isobject_BM(_.framob)) {
-      /// }
+      int framedepth = 0;
+     while (isobject_BM(_.framob)) {
+       framedepth++;
+       if (framedepth > MAXMINIFRAMEDEPTH_BM
+	   || !objectisinstance_BM (_.framob, k_mini_frame)
+	   || !objhasassocpayl_BM(_.framob)) {
+	 _.errorv = makenodevar_BM(k_mini_frame, _.framob,
+				   taggedint_BM(framedepth), NULL);
+	 FAILURE_BM(__LINE__, _.errorv, (struct stackframe_stBM*) &_);
+       }
+       _.valv = objassocgetattrpayl_BM(_.framob, _.varob);
+       if (_.valv) {
+      *pneedeval = false;
+      LOCALRETURN_BM (_.valv);
+       }
+       _.framob = objgetattr_BM(_.framob, k_previous_frame);
+     }
     }
 #warning evaluate_in_mini_frame_BM very incomplete
   WEAKASSERT_BM (false && "unimplemented evaluate_in_mini_frame_BM");
