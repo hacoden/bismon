@@ -214,8 +214,8 @@ run_mini_frame_BM (objectval_tyBM * framob, objectval_tyBM * taskob,
                    struct stackframe_stBM *stkf)
 {
   LOCALFRAME_BM (stkf, /*descr: */ NULL,
-                 objectval_tyBM * taskob; objectval_tyBM * framob;
-                 objectval_tyBM * curstatev;
+                 objectval_tyBM * taskob;
+                 objectval_tyBM * framob; objectval_tyBM * curstatev;
                  value_tyBM curseqv; value_tyBM curcompv;
                  value_tyBM curvalv;
     );
@@ -237,6 +237,9 @@ run_mini_frame_BM (objectval_tyBM * framob, objectval_tyBM * taskob,
       _.curvalv =
         evaluate_in_mini_frame_BM (_.curcompv, _.framob, _.taskob, &needeval,
                                    (struct stackframe_stBM *) &_);
+      objputattr_BM (_.framob, k_rank, taggedint_BM (rk + 1));
+      if (needeval)
+        return;
     }
   WEAKASSERT_BM (false && "unimplemented run_mini_frame_BM");
 #warning unimplemented run_mini_frame_BM
@@ -247,7 +250,7 @@ run_mini_frame_BM (objectval_tyBM * framob, objectval_tyBM * taskob,
 value_tyBM
 evaluate_in_mini_frame_BM (value_tyBM expv, objectval_tyBM * framob,
                            objectval_tyBM * taskob, bool * pneedeval,
-                           struct stackframe_stBM *stkf)
+                           struct stackframe_stBM * stkf)
 {
   LOCALFRAME_BM (stkf, /*descr: */ NULL,
                  objectval_tyBM * taskob; objectval_tyBM * framob;
