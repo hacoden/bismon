@@ -626,9 +626,14 @@ ROUTINEOBJNAME_BM (_0zzJJsAL6Qm_2uw3eoWQHEq)    //
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
                  objectval_tyBM * recv;
                  objectval_tyBM * routprepob; objectval_tyBM * fromblockob;
-                 objectval_tyBM * compob;
+                 objectval_tyBM * compob; value_tyBM testexpv;
+                 value_tyBM resv;
     );
+  objectval_tyBM *k_basiclo_when = BMK_3fvdRZNCmJS_5bTAPr83mXg;
+  objectval_tyBM *k_test = BMK_2j84OTHlFdJ_1pMyQfgsmAz;
+  objectval_tyBM *k_miniscan_expr = BMK_7k3xb0vred0_9ZRHcZmhw77;
   int depth = 0;
+  bool badson = false;
   _.recv = objectcast_BM (arg1);
   _.routprepob = objectcast_BM (arg2);
   depth = getint_BM (arg3);
@@ -639,18 +644,37 @@ ROUTINEOBJNAME_BM (_0zzJJsAL6Qm_2uw3eoWQHEq)    //
      objectdbg2_BM (_.fromblockob));
   objlock_BM (_.recv);
   unsigned nbsons = objnbcomps_BM (_.recv);
-  for (unsigned ix = 0; ix < nbsons; ix++)
+  for (unsigned ix = 0; ix < nbsons && !badson; ix++)
     {
       _.compob = objectcast_BM (objgetcomp_BM (_.recv, ix));
       DBGPRINTF_BM
         ("miniscan_stmt°basiclo_cond recv=%s ix=%u compob=%s",
          objectdbg_BM (_.recv), ix, objectdbg1_BM (_.compob));
       WEAKASSERT_BM (isobject_BM (_.compob));
+      objlock_BM (_.compob);
+      if (objectisinstance_BM (_.compob, k_basiclo_when))
+        {
+          _.testexpv = objgetattr_BM (_.compob, k_test);
+          _.resv = send3_BM (_.testexpv,
+                             k_miniscan_expr,
+                             (struct stackframe_stBM *) &_,
+                             _.routprepob, taggedint_BM (depth + 1), _.recv);
+          unsigned nbsubcomp = objnbcomps_BM (_.compob);
+          for (unsigned cix = 0; cix < nbsubcomp && !badson; cix++)
+            {
+            }
+#warning miniscan_stmt°basiclo_cond incomplete, should handle components of compob
+        }
+      else
+        badson = false;
+      objunlock_BM (_.compob);
     }
   objunlock_BM (_.recv);
   DBGPRINTF_BM
     ("miniscan_stmt°basiclo_cond unimplemented end recv=%s",
      objectdbg_BM (_.recv));
-#warning miniscan_stmt°basiclo_cond unimplemented
-  LOCALRETURN_BM (NULL);
+  if (badson)
+    LOCALRETURN_BM (NULL);
+  else
+    LOCALRETURN_BM (_.recv);
 }                               /* end routine miniscan_stmt°basiclo_cond _0zzJJsAL6Qm_2uw3eoWQHEq */
