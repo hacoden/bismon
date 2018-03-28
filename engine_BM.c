@@ -251,6 +251,7 @@ run_mini_frame_BM (objectval_tyBM * framob, objectval_tyBM * taskob,
         evaluate_in_mini_frame_BM (_.curcompv, _.framob, _.taskob, &es,
                                    (struct stackframe_stBM *) &_);
       objputattr_BM (_.framob, k_rank, taggedint_BM (rk + 1));
+      WEAKASSERT_BM(es >= mes_withresult && es <= mes_taskletchange);
       if (es == mes_framechange || mes_withresult)
         return false;
       else if (es == mes_taskletchange)
