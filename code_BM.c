@@ -1960,6 +1960,10 @@ ROUTINEOBJNAME_BM (_1gME6zn82Kf_8hzWibLFRfz)    //
   objtouchnow_BM (_.modgenob);
   _.resprep = send1_BM (_.recv, k_prepare_module,
                         (struct stackframe_stBM *) &_, _.modgenob);
+  DBGPRINTF_BM ("@@emit_module recv=%s modgenob=%s resprep=%s", //
+                objectdbg_BM (_.recv), objectdbg1_BM (_.modgenob),      //
+                debug_outstr_value_BM (_.resprep,       //
+                                       (struct stackframe_stBM *) &_, 0));
   if (!_.resprep)
     {
       DBGPRINTF_BM ("@@emit_module recv=%s prepare_module failed",
@@ -1968,8 +1972,8 @@ ROUTINEOBJNAME_BM (_1gME6zn82Kf_8hzWibLFRfz)    //
     }
   else
     DBGPRINTF_BM
-      ("@@emit_module recv=%s prepare_module done before generate_module",
-       objectdbg_BM (_.recv));
+      ("@@emit_module recv=%s prepare_module done before generate_module modgenob=%s",
+       objectdbg_BM (_.recv), objectdbg1_BM (_.modgenob));
   _.resgen =
     send2_BM (_.recv, _.generate_module, (struct stackframe_stBM *) &_,
               _.modgenob, _.resprep);
