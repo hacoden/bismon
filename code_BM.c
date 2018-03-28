@@ -1979,8 +1979,10 @@ ROUTINEOBJNAME_BM (_1gME6zn82Kf_8hzWibLFRfz)    //
               _.modgenob, _.resprep);
   if (!_.resgen)
     {
-      DBGPRINTF_BM ("@@emit_module recv=%s generate_module failed",
-                    objectdbg_BM (_.recv));
+      DBGPRINTF_BM
+        ("@@emit_module recv=%s generate_module failed modgenob=%s sbuf %s",
+         objectdbg_BM (_.recv), objectdbg1_BM (_.modgenob),
+         objstrbufferbytespayl_BM (_.modgenob));
       LOCALRETURN_BM (NULL);
     }
   else
@@ -2154,6 +2156,9 @@ ROUTINEOBJNAME_BM (_8zNBXSMY2Ts_1VI5dmY4umA)    //
   _.partres =
     send1_BM (_.recv, k_complete_module, (struct stackframe_stBM *) &_,
               _.modgen);
+  DBGPRINTF_BM ("@@prepare_module°basiclo*module recv %s partres %s", objectdbg_BM (_.recv),   //
+                debug_outstr_value_BM (_.partres,       //
+                                       (struct stackframe_stBM *) &_, 0));
   if (isset_BM (_.partres))
     {
       _.setfun = _.partres;
@@ -3527,7 +3532,8 @@ ROUTINEOBJNAME_BM (_42gEKfF4qca_6gGwxSFC1FO)    //
                 objectdbg1_BM (k_expander), objectdbg2_BM (_.resobj));
   if (nbresults > 0)
     {
-      objectval_tyBM *tinyarr[TINYSIZE_BM] = { };
+      objectval_tyBM *tinyarr[TINYSIZE_BM] = {
+      };
       objectval_tyBM **arr =
         (nbresults < TINYSIZE_BM) ? tinyarr
         : calloc (nbresults, sizeof (objectval_tyBM *));
@@ -3548,7 +3554,8 @@ ROUTINEOBJNAME_BM (_42gEKfF4qca_6gGwxSFC1FO)    //
     objremoveattr_BM (_.resobj, k_results);
   if (nbargs > 0)
     {
-      value_tyBM tinyarrv[TINYSIZE_BM] = { };
+      value_tyBM tinyarrv[TINYSIZE_BM] = {
+      };
       value_tyBM *arrv =
         (nbargs < TINYSIZE_BM) ? tinyarrv
         : calloc (nbargs, sizeof (value_tyBM));
