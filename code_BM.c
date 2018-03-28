@@ -1941,25 +1941,26 @@ ROUTINEOBJNAME_BM (_1gME6zn82Kf_8hzWibLFRfz)    //
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 objectval_tyBM * recv;
-                 objectval_tyBM * modgenob; objectval_tyBM * generate_module;
+                 objectval_tyBM * recv; objectval_tyBM * modgenob;
                  value_tyBM resprep; value_tyBM resgen;
     );
   objectval_tyBM *k_simple_module_generation = BMK_2HlKptD03wA_7JJCG7lN5nS;
   objectval_tyBM *k_prepare_module = BMK_17mrxkMdNtH_2CduQ2WDIy5;
   objectval_tyBM *k_plain_module = BMK_8g1WBJBhDT9_1QK8IcuWYx2;
-  //objectval_tyBM *k_generate_module = BMK_9mq0jsuz4XQ_4doHfd987Q6;
+  objectval_tyBM *k_generate_module = BMK_9mq0jsuz4XQ_4doHfd987Q6;
   if (!isobject_BM (arg1))
     LOCALRETURN_BM (NULL);
   _.recv = (objectval_tyBM *) arg1;
-  DBGPRINTF_BM ("@@plain_module°emit_module recv=%s", objectdbg_BM (_.recv));
   _.modgenob = makeobj_BM ();
   objputclass_BM (_.modgenob, k_simple_module_generation);
   objputattr_BM (_.modgenob, k_plain_module, _.recv);
   objputstrbufferpayl_BM (_.modgenob, (1024 * 1024));
   objtouchnow_BM (_.modgenob);
-  _.resprep = send1_BM (_.recv, k_prepare_module,
-                        (struct stackframe_stBM *) &_, _.modgenob);
+  DBGPRINTF_BM ("@@plain_module°emit_module recv=%s made modgenob=%s *sbuf*",
+                objectdbg_BM (_.recv), objectdbg1_BM (_.modgenob));
+  _.resprep =
+    send1_BM (_.recv, k_prepare_module, (struct stackframe_stBM *) &_,
+              _.modgenob);
   DBGPRINTF_BM ("@@emit_module recv=%s modgenob=%s resprep=%s", //
                 objectdbg_BM (_.recv), objectdbg1_BM (_.modgenob),      //
                 debug_outstr_value_BM (_.resprep,       //
@@ -1971,17 +1972,20 @@ ROUTINEOBJNAME_BM (_1gME6zn82Kf_8hzWibLFRfz)    //
       LOCALRETURN_BM (NULL);
     }
   else
-    DBGPRINTF_BM
-      ("@@emit_module recv=%s prepare_module done before generate_module modgenob=%s",
-       objectdbg_BM (_.recv), objectdbg1_BM (_.modgenob));
+    DBGPRINTF_BM ("@@emit_module recv=%s prepare_module done before generate_module modgenob=%s resprep=%s", objectdbg_BM (_.recv), objectdbg1_BM (_.modgenob), //
+                  debug_outstr_value_BM (_.resprep,     //
+                                         (struct stackframe_stBM *) &_, 0));
+  WEAKASSERT_BM (objhasstrbufferpayl_BM (_.modgenob));
   _.resgen =
-    send2_BM (_.recv, _.generate_module, (struct stackframe_stBM *) &_,
+    send2_BM (_.recv, k_generate_module, (struct stackframe_stBM *) &_,
               _.modgenob, _.resprep);
+  WEAKASSERT_BM (objhasstrbufferpayl_BM (_.modgenob));
   if (!_.resgen)
     {
       DBGPRINTF_BM
-        ("@@emit_module recv=%s generate_module failed modgenob=%s sbuf %s",
+        ("@@emit_module recv=%s generate_module failed modgenob=%s sbuf.l%u '''\n%s\n'''\n",
          objectdbg_BM (_.recv), objectdbg1_BM (_.modgenob),
+         objstrbufferlengthpayl_BM (_.modgenob),
          objstrbufferbytespayl_BM (_.modgenob));
       LOCALRETURN_BM (NULL);
     }
@@ -2224,25 +2228,23 @@ ROUTINEOBJNAME_BM (_50d65bJypCN_6IJeVtssx9I)    //
                  value_tyBM prepmod;
     );
   _.recv = arg1;
-  objectval_tyBM *k_prepare_routine = NULL;
-  objectval_tyBM *k_prepared_routines = NULL;
+  objectval_tyBM *k_prepare_routine = BMK_6qi1DW0Ygkl_4Aqdxq4n5IV;
+  objectval_tyBM *k_prepared_routines = BMK_9qn0Hp8HaF5_7yeAJiNYtp5;
   ASSERT_BM (isobject_BM (_.recv));
   DBGPRINTF_BM
-    ("@@generate_module°basiclo*module _50d65bJypCN_6IJeVtssx9I recv=%s\n"
+    ("@@generate_module°basiclo*module  recv=%s\n"
      "... is a %s\n",
      objectdbg_BM (_.recv), objectdbg1_BM (objclass_BM (_.recv)));
-  k_prepare_routine = BMK_6qi1DW0Ygkl_4Aqdxq4n5IV;
-  k_prepared_routines = BMK_9qn0Hp8HaF5_7yeAJiNYtp5;
-  _.modgen = arg2;
+  _.modgen = objectcast_BM (arg2);
   _.prepval = arg3;
-  if (!isobject_BM (_.modgen))
+  if (!_.modgen)
     {
       DBGPRINTF_BM ("@@generate_module°basiclo*module bad modgen");
       LOCALRETURN_BM (NULL);
     };
-  DBGPRINTF_BM ("@@generate_module°basiclo*module modgen=%s is a %s\n",
-                objectdbg_BM (_.modgen),
-                objectdbg1_BM (objclass_BM (_.modgen)));
+  DBGPRINTF_BM ("@@generate_module°basiclo*module modgen=%s is a %s prepval=%s\n", objectdbg_BM (_.modgen), objectdbg1_BM (objclass_BM (_.modgen)),    //
+                debug_outstr_value_BM ((value_tyBM) _.prepval,
+                                       (struct stackframe_stBM *) &_, 1));
   if (!isset_BM (_.prepval))
     {
       DBGPRINTF_BM ("@@generate_module°basiclo*module bad prepval");
