@@ -548,8 +548,8 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
     {
       _.curob = objectcast_BM (objgetcomp_BM (_.recv, blockix + off));
       DBGPRINTF_BM
-        ("collect_blocks°basiclo_block blockix#%d curob %s", blockix,
-         objectdbg_BM (_.curob));
+        ("collect_blocks°basiclo_block recv %s blockix#%d curob %s",
+         objectdbg_BM (_.recv), blockix, objectdbg1_BM (_.curob));
       if (!_.curob)
         {
           fprintf (stderr,
@@ -560,10 +560,13 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
       if (objectisinstance_BM (_.curob, k_basiclo_block))
         {
           /// should send k_miniscan_block
-          _.resv = send3_BM (_.curob,
-                             k_miniscan_block,
-                             (struct stackframe_stBM *) &_,
-                             _.routprep, taggedint_BM (depth), _.recv);
+          DBGPRINTF_BM
+            ("collect_blocks°basiclo_block recv %s miniscan_block-> %s",
+             objectdbg_BM (_.recv), objectdbg1_BM (_.curob));
+          _.resv =
+            send3_BM (_.curob, k_miniscan_block,
+                      (struct stackframe_stBM *) &_, _.routprep,
+                      taggedint_BM (depth), _.recv);
           if (!_.resv)
             {
               fprintf (stderr,
@@ -574,6 +577,9 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
         }
       else if (objectisinstance_BM (_.curob, k_basiclo_statement))
         {
+          DBGPRINTF_BM
+            ("collect_blocks°basiclo_block recv %s miniscan_stmt-> %s",
+             objectdbg_BM (_.recv), objectdbg1_BM (_.curob));
           /// should send k_miniscan_stmt
           _.resv = send3_BM (_.curob,
                              k_miniscan_stmt,
@@ -594,9 +600,12 @@ ROUTINEOBJNAME_BM (_0gkYrIdnOg2_0wLEAh1QuYu)    //
                    objectdbg_BM (_.curob), blockix);
           LOCALRETURN_BM (NULL);
         }
+      DBGPRINTF_BM
+        ("collect_blocks°basiclo_block recv %s blockix#%d done curob %s",
+         objectdbg_BM (_.recv), blockix, objectdbg1_BM (_.curob));
     }
   DBGPRINTF_BM
-    ("collect_blocks°basiclo_block _0gkYrIdnOg2_0wLEAh1QuYu done recv=%s routprep=%s depth %d",
+    ("collect_blocks°basiclo_block done recv=%s routprep=%s depth %d",
      objectdbg_BM (_.recv), objectdbg1_BM (_.routprep), depth);
   LOCALRETURN_BM (_.routprep);
 }                               /* end collect_blocks°basiclo_block _0gkYrIdnOg2_0wLEAh1QuYu */

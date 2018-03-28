@@ -1972,10 +1972,13 @@ ROUTINEOBJNAME_BM (_1gME6zn82Kf_8hzWibLFRfz)    //
       LOCALRETURN_BM (NULL);
     }
   else
-    DBGPRINTF_BM ("@@emit_module recv=%s prepare_module done before generate_module modgenob=%s resprep=%s", objectdbg_BM (_.recv), objectdbg1_BM (_.modgenob), //
+    DBGPRINTF_BM ("@@emit_module recv=%s prepare_module done before generate_module modgenob=%s resprep=%s",    //
+                  objectdbg_BM (_.recv), objectdbg1_BM (_.modgenob),    //
                   debug_outstr_value_BM (_.resprep,     //
                                          (struct stackframe_stBM *) &_, 0));
   WEAKASSERT_BM (objhasstrbufferpayl_BM (_.modgenob));
+  objstrbufferprintfpayl_BM (_.modgenob, "// generated module %s\n",
+                             objectdbg_BM (_.recv));
   _.resgen =
     send2_BM (_.recv, k_generate_module, (struct stackframe_stBM *) &_,
               _.modgenob, _.resprep);
