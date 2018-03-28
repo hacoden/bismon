@@ -624,8 +624,9 @@ ROUTINEOBJNAME_BM (_0zzJJsAL6Qm_2uw3eoWQHEq)    //
  const quasinode_tyBM * restargs __attribute__ ((unused)))
 {
   LOCALFRAME_BM ( /*prev: */ stkf, /*descr: */ NULL,
-                 objectval_tyBM * recv; objectval_tyBM * routprepob;
-                 objectval_tyBM * fromblockob;
+                 objectval_tyBM * recv;
+                 objectval_tyBM * routprepob; objectval_tyBM * fromblockob;
+                 objectval_tyBM * compob;
     );
   int depth = 0;
   _.recv = objectcast_BM (arg1);
@@ -633,9 +634,23 @@ ROUTINEOBJNAME_BM (_0zzJJsAL6Qm_2uw3eoWQHEq)    //
   depth = getint_BM (arg3);
   _.fromblockob = objectcast_BM (arg4);
   DBGPRINTF_BM
-    ("miniscan_stmt°basiclo_cond start recv=%s routprepob=%s depth#%d fromblockob=%s unimplemented",
+    ("miniscan_stmt°basiclo_cond start recv=%s routprepob=%s depth#%d fromblockob=%s start",
      objectdbg_BM (_.recv), objectdbg1_BM (_.routprepob), depth,
      objectdbg2_BM (_.fromblockob));
+  objlock_BM (_.recv);
+  unsigned nbsons = objnbcomps_BM (_.recv);
+  for (unsigned ix = 0; ix < nbsons; ix++)
+    {
+      _.compob = objectcast_BM (objgetcomp_BM (_.recv, ix));
+      DBGPRINTF_BM
+        ("miniscan_stmt°basiclo_cond recv=%s ix=%u compob=%s",
+         objectdbg_BM (_.recv), ix, objectdbg1_BM (_.compob));
+      WEAKASSERT_BM (isobject_BM (_.compob));
+    }
+  objunlock_BM (_.recv);
+  DBGPRINTF_BM
+    ("miniscan_stmt°basiclo_cond unimplemented end recv=%s",
+     objectdbg_BM (_.recv));
 #warning miniscan_stmt°basiclo_cond unimplemented
   LOCALRETURN_BM (NULL);
 }                               /* end routine miniscan_stmt°basiclo_cond _0zzJJsAL6Qm_2uw3eoWQHEq */
