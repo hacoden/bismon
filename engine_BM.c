@@ -154,8 +154,8 @@ ROUTINEOBJNAME_BM (_1etImV3nBtp_5rnHSE87XRj)    //
   LOCALRETURN_BM (_.resv);
 }                               /* end run_tasklet°tiny_tasklet  _1etImV3nBtp_5rnHSE87XRj */
 
-
-static void run_mini_frame_BM (objectval_tyBM * framob,
+// run a mini frame, and returns true if the current tasklet should be interrupted
+static bool run_mini_frame_BM (objectval_tyBM * framob,
                                objectval_tyBM * taskob,
                                struct stackframe_stBM *stkf);
 
@@ -189,12 +189,15 @@ ROUTINEOBJNAME_BM (_8gAuOE933W3_5s7IF0hgpkz)    //
       if (!_.framob)
         continue;
       {
+        bool stoprun = false;
         objlock_BM (_.framob);
         _.frclassob = objclass_BM (_.framob);
         if (_.frclassob == k_mini_frame)
-          run_mini_frame_BM (_.framob, _.taskob,
-                             (struct stackframe_stBM *) &_);
+          stoprun = run_mini_frame_BM (_.framob, _.taskob,
+                                       (struct stackframe_stBM *) &_);
         objunlock_BM (_.framob);
+        if (stoprun)
+          break;
       }
     }
   while (taskletcputime_BM () < MINICPUTHRESHOLD_BM
@@ -204,12 +207,22 @@ ROUTINEOBJNAME_BM (_8gAuOE933W3_5s7IF0hgpkz)    //
   LOCALRETURN_BM (_.taskob);
 }                               /* end run_tasklet°mini_tasklet _8gAuOE933W3_5s7IF0hgpkz */
 
-static value_tyBM evaluate_in_mini_frame_BM (value_tyBM expv,
-                                             objectval_tyBM * framob,
-                                             objectval_tyBM * taskob,
-                                             bool * pneedeval,
-                                             struct stackframe_stBM *stkf);
-void
+enum minievalstate_enBM
+{
+  mes__NONE,
+  mes_withresult,
+  mes_framechange,
+  mes_taskletchange,
+};
+
+static value_tyBM
+evaluate_in_mini_frame_BM (value_tyBM expv,
+                           objectval_tyBM * framob,
+                           objectval_tyBM * taskob,
+                           enum minievalstate_enBM *pevalstate,
+                           struct stackframe_stBM *stkf);
+
+bool
 run_mini_frame_BM (objectval_tyBM * framob, objectval_tyBM * taskob,
                    struct stackframe_stBM *stkf)
 {
@@ -229,17 +242,19 @@ run_mini_frame_BM (objectval_tyBM * framob, objectval_tyBM * taskob,
   _.curstatev = objgetattr_BM (_.framob, k_state);
   if (_.curstatev == k_evaluate_sequence)
     {
+      enum minievalstate_enBM es = mes__NONE;
       _.curseqv = objgetattr_BM (_.framob, k_evaluate_sequence);
       int rk = getint_BM (objgetattr_BM (_.framob, k_rank));
       _.curcompv = nodenthson_BM (_.curseqv, rk);
       _.curvalv = NULL;
-      bool needeval = false;
       _.curvalv =
-        evaluate_in_mini_frame_BM (_.curcompv, _.framob, _.taskob, &needeval,
+        evaluate_in_mini_frame_BM (_.curcompv, _.framob, _.taskob, &es,
                                    (struct stackframe_stBM *) &_);
       objputattr_BM (_.framob, k_rank, taggedint_BM (rk + 1));
-      if (needeval)
-        return;
+      if (es == mes_framechange || mes_withresult)
+        return false;
+      else if (es == mes_taskletchange)
+        return true;
     }
   WEAKASSERT_BM (false && "unimplemented run_mini_frame_BM");
 #warning unimplemented run_mini_frame_BM
@@ -249,7 +264,8 @@ run_mini_frame_BM (objectval_tyBM * framob, objectval_tyBM * taskob,
 
 value_tyBM
 evaluate_in_mini_frame_BM (value_tyBM expv, objectval_tyBM * framob,
-                           objectval_tyBM * taskob, bool * pneedeval,
+                           objectval_tyBM * taskob,
+                           enum minievalstate_enBM * pevalstate,
                            struct stackframe_stBM * stkf)
 {
   LOCALFRAME_BM (stkf, /*descr: */ NULL,
@@ -268,10 +284,10 @@ evaluate_in_mini_frame_BM (value_tyBM expv, objectval_tyBM * framob,
   WEAKASSERT_BM (isobject_BM (_.taskob));
   WEAKASSERT_BM (isobject_BM (_.framob));
   _.initialframob = _.framob;
-  ASSERT_BM (pneedeval != NULL);
+  ASSERT_BM (pevalstate != NULL);
   if (!isnode_BM (_.expv))
     {
-      *pneedeval = false;
+      *pevalstate = mes_withresult;
       LOCALRETURN_BM (_.expv);
     }
   _.connob = nodeconn_BM (_.expv);
@@ -301,7 +317,7 @@ evaluate_in_mini_frame_BM (value_tyBM expv, objectval_tyBM * framob,
           _.valv = objassocgetattrpayl_BM (_.framob, _.varob);
           if (_.valv)
             {
-              *pneedeval = false;
+              *pevalstate = mes_withresult;
               LOCALRETURN_BM (_.valv);
             }
           _.framob = objgetattr_BM (_.framob, k_previous_frame);
@@ -316,7 +332,7 @@ evaluate_in_mini_frame_BM (value_tyBM expv, objectval_tyBM * framob,
   else if (_.connob == BMP_exclam && exparity == 1)
     {
       _.valv = objectcast_BM (nodenthson_BM (_.expv, 0));
-      *pneedeval = false;
+      *pevalstate = mes_withresult;
       LOCALRETURN_BM (_.valv);
     }
 #warning evaluate_in_mini_frame_BM very incomplete
