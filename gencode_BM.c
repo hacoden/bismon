@@ -33,7 +33,7 @@ ROUTINEOBJNAME_BM (_5mnsT1wsdWs_2Qnqsf3wqaP)    // prepare_routine:basiclo_funct
                  objectval_tyBM * modgenob;
                  value_tyBM args; value_tyBM curarg;
                  objectval_tyBM * routprepob; value_tyBM prepvalset;
-                 anyassoc_tyBM * assocbind;
+                 objectval_tyBM * bindob;
     );
   const objectval_tyBM *k_arguments = BMK_0jFqaPPHgYH_5JpjOPxQ67p;
   const objectval_tyBM *k_block = BMK_2U8Sj78DMbl_5eerKpaJsNq;
@@ -43,6 +43,7 @@ ROUTINEOBJNAME_BM (_5mnsT1wsdWs_2Qnqsf3wqaP)    // prepare_routine:basiclo_funct
     BMK_80060zKi6Un_3isCStegT8A;
   const objectval_tyBM *k_body = BMK_7DQyvJFMOrC_9IfC3CtYknn;
   const objectval_tyBM *k_bindings = BMK_1zpi50AYid5_0j6it2DwVqm;
+  const objectval_tyBM *k_binding = BMK_6zu0x6tqX60_8QhJjiAOwul;
   // retrieve arguments
   _.recv = /*function object */ (arg1);
   _.modgenob = /*module generation object */ objectcast_BM (arg2);
@@ -58,10 +59,16 @@ ROUTINEOBJNAME_BM (_5mnsT1wsdWs_2Qnqsf3wqaP)    // prepare_routine:basiclo_funct
   /// assign _3jiDSyFdbdk_2PQpjqDkEUJ:
   _.routprepob = makeobj_BM ();
   /// assign _0cBpCT3lEHS_338HjZpF4UE:
-  _.assocbind = make_assoc_BM (10);
+  _.bindob = makeobj_BM ();
+  objputclass_BM (_.bindob, k_binding);
+  objtouchnow_BM (_.bindob);
   /// run _2hJWe55ydpv_5kaGdOUymFI:
 #warning the putattr of bindings is wrong, since an assoc
-  objputattr_BM (_.routprepob, k_bindings, _.assocbind);
+  objputattr_BM (_.routprepob, k_bindings, _.bindob);
+  DBGPRINTF_BM
+    ("prepare_routine:basiclo_function recv %s routprepob %s bindob %s",
+     objectdbg_BM (_.recv), objectdbg1_BM (_.routprepob),
+     objectdbg2_BM (_.bindob));
   /// assign _9YS82HkgghD_71BLsDAKRfg
   _.args = objgetattr_BM (_.recv, k_arguments);
   /// foreach_in_tuple(args curarg curargix args ...) _0UqUZ7mQGG5_69QlCmcSwTi
@@ -69,10 +76,12 @@ ROUTINEOBJNAME_BM (_5mnsT1wsdWs_2Qnqsf3wqaP)    // prepare_routine:basiclo_funct
   for (unsigned curargix = 0; curargix < nbargs; curargix++)
     {
       _.curarg = tuplecompnth_BM (_.args, curargix);
-      if (assoc_getattr_BM (_.assocbind, _.curarg))
-        {
-        }
+      //if (assoc_getattr_BM (_.assocbind, _.curarg))
+      {
+      }
     }
+  DBGPRINTF_BM
+    ("prepare_routine:basiclo_function end recv %s", objectdbg_BM (_.recv));
 #warning incomplete  prepare_routine:basiclo_function _5mnsT1wsdWs_2Qnqsf3wqaP
   LOCALRETURN_BM (NULL);
 }                               /* end  prepare_routine:basiclo_function _5mnsT1wsdWs_2Qnqsf3wqaP */

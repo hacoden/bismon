@@ -1,5 +1,5 @@
 // generated file store2.bmon
-// for 281 objects
+// for 282 objects
 // with 0 modules
 
 
@@ -403,6 +403,20 @@ _9pCSj6h5qCP_1OZyKlhcrSY
 ~)
 
 !)_4Af5NOOf7Qe_7KQdGPoNdJ0
+
+
+
+!(_6zu0x6tqX60_8QhJjiAOwul |=binding|
+!~ name (~ binding
+~)
+!@ 1522299922.69
+!$_0LK4TzFd6u1_0JFUsrQ4odG |=class|
+!: _01h86SAfOfg_1q2oMegGRwW |=comment|
+ "class of bindings"
+!~ class (~ |supercl assoc_object:| _6ZQ05nCv3Ys_8LA6B5LkZgm
+~)
+
+!)_6zu0x6tqX60_8QhJjiAOwul
 
 
 
