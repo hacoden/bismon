@@ -35,7 +35,7 @@ MODULES_SOURCES= $(sort $(wildcard modules/modbm*.c))
 
 OBJECTS= $(patsubst %.c,%.o,$(BM_COLDSOURCES) $(GENERATED_CSOURCES)) $(patsubst %.cc,%.o,$(BM_CXXSOURCES))
 
-.PHONY: all clean indent count modules measure measured-bismon doc redump outdump
+.PHONY: all clean indent count modules measure measured-bismon doc redump outdump checksum
 all: bismon doc
 
 clean:
@@ -102,6 +102,8 @@ bismon.h.gch: bismon.h $(GENERATED_HEADERS) $(BM_HEADERS)
 	$(COMPILE.c)   $< -o $@
 
 
+checksum:
+	@cat bismon.h $(BM_HEADERS) $(CSOURCES) | $(MD5SUM) | cut -d' ' -f1
 
 %_BM.i: %_BM.c  %_BM.const.h bismon.h  $(GENERATED_HEADERS) $(BM_HEADERS)
 	$(CC) $(CFLAGS) -C -E $< | sed s:^#://#: | $(INDENT) -gnu > $@

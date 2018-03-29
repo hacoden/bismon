@@ -100,7 +100,7 @@ struct
 
 bool batch_bm;
 bool oldgui_BM;
-
+bool give_version_bm;
 
 
 void
@@ -266,6 +266,14 @@ const GOptionEntry optab[] = {
    .description = "run the old GUI",
    .arg_description = NULL},
   //
+  //
+  {.long_name = "version",.short_name = (char) 0,
+   .flags = G_OPTION_FLAG_NONE,
+   .arg = G_OPTION_ARG_NONE,
+   .arg_data = &give_version_bm,
+   .description = "gives version information",
+   .arg_description = NULL},
+  //
   {}
 };
 
@@ -332,6 +340,7 @@ idqcmp_BM (const void *p1, const void *p2)
 
 static void rungui_BM (bool newgui, int nbjobs);
 
+static void give_prog_version_BM (const char *progname);
 
 
 //// see also https://github.com/dtrebbien/GNOME.supp and
@@ -342,6 +351,7 @@ main (int argc, char **argv)
 {
   clock_gettime (CLOCK_MONOTONIC, &startrealtimespec_BM);
   dlprog_BM = dlopen (NULL, RTLD_NOW | RTLD_GLOBAL);
+  char *progname = argv[0];
   if (!dlprog_BM)
     {
       fprintf (stderr, "%s: dlopen for whole program fails %s\n",
@@ -351,7 +361,6 @@ main (int argc, char **argv)
   memset ((char *) myhostname_BM, 0, sizeof (myhostname_BM));
   if (gethostname ((char *) myhostname_BM, sizeof (myhostname_BM) - 1))
     FATAL_BM ("gethostname failure %m");
-  DBGPRINTF_BM ("main begin tid#%ld", (long) gettid_BM ());
   initialize_garbage_collector_BM ();
   check_delims_BM ();
   initialize_globals_BM ();
@@ -363,10 +372,14 @@ main (int argc, char **argv)
   GError *err = NULL;
   bool guiok = gtk_init_with_args (&argc, &argv, " - The bismon program",
                                    optab, NULL, &err);
+  if (give_version_bm)
+    give_prog_version_BM (progname);
   if (nbworkjobs_BM < MINNBWORKJOBS_BM)
     nbworkjobs_BM = MINNBWORKJOBS_BM;
   else if (nbworkjobs_BM > MAXNBWORKJOBS_BM)
     nbworkjobs_BM = MAXNBWORKJOBS_BM;
+  DBGPRINTF_BM ("main begin tid#%ld pid %d",
+                (long) gettid_BM (), (int) getpid ());
   if (count_emit_has_predef_bm > 0)
     {
       rawid_tyBM *idarr =
@@ -698,3 +711,19 @@ endguilog_BM (void)
   gui_command_log_file_BM = NULL;
   fflush (NULL);
 }                               /* end endguilog_BM */
+
+
+void
+give_prog_version_BM (const char *progname)
+{
+  printf ("%s: version information\n", progname);
+  printf ("\t timestamp: %s\n", bismon_timestamp);
+  printf ("\t last git commit: %s\n", bismon_lastgitcommit);
+  printf ("\t last git tag: %s\n", bismon_lastgittag);
+  printf ("\t source checksum: %s\n", bismon_checksum);
+  printf ("\t source dir: %s\n", bismon_directory);
+  printf ("\t makefile: %s\n", bismon_makefile);
+  printf ("########\n");
+  printf ("run\n" "\t   %s --help\n" "to get help.\n", progname);
+  exit (EXIT_SUCCESS);
+}                               /* end give_prog_version_BM */
